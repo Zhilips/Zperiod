@@ -4294,8 +4294,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const dots = document.querySelectorAll('.slider-dots .dot');
         const slides = document.querySelectorAll('.card-slide');
         const lockBtn = document.getElementById('level-lock-btn');
+
+        if (!slider || slides.length < 2) return;
+
         let currentIndex = window.isLevelLocked ? window.lockedLevelIndex : 0;
         const gap = 20;
+        let isDragging = false;
+        let startX = 0;
+        let startScrollLeft = 0;
+
+        // Lock button setup
         if (lockBtn) {
             lockBtn.style.display = 'flex';
             const newLockBtn = lockBtn.cloneNode(true);
@@ -4307,222 +4315,118 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.isLevelLocked = !window.isLevelLocked;
                 window.lockedLevelIndex = currentIndex;
                 newLockBtn.classList.toggle('locked', window.isLevelLocked);
-                newLockBtn.title = window.isLevelLocked ? `Level ${currentIndex + 1} locked` : 'Lock this level';
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('locked', window.isLevelLocked && i === currentIndex);
-                });
+                updateDots();
             });
         }
-        if (!slider || slides.length < 2) return;
-        let isDragging = false;
-        let startX = 0;
-        let startScrollLeft = 0;
-        let wheelTimeout;
-        function update3DEffect() {
-            const scrollLeft = slider.scrollLeft;
-            const width = slider.clientWidth;
-            const slideWidth = width + gap;
-            slides.forEach((slide, index) => {
-                const slideX = slideWidth * index;
-                const offset = (slideX - scrollLeft) / width;
-                if (Math.abs(offset) < 1.5) {
-                    const rotY = -30 * offset;
-                    const scale = 1 - (0.15 * Math.abs(offset));
-                    const opacity = 1 - (0.5 * Math.abs(offset));
-                    const zIndex = 100 - Math.round(Math.abs(offset) * 10);
-                    slide.style.transform = `perspective(800px) rotateY(${rotY}deg) scale(${scale})`;
-                    slide.style.opacity = Math.max(0, opacity);
-                    slide.style.zIndex = zIndex;
-                    slide.style.willChange = 'transform, opacity';
-                    slide.style.display = 'block';
-                } else {
-                    slide.style.opacity = '0';
-                    slide.style.zIndex = -1;
-                }
-            });
+
+        function getSlideWidth() {
+            return slider.clientWidth + gap;
         }
-        function animateScroll(targetLeft, duration) {
-            const startLeft = slider.scrollLeft;
-            const distance = targetLeft - startLeft;
-            let startTime = null;
-            function animation(currentTime) {
-                if (startTime === null) startTime = currentTime;
-                const timeElapsed = currentTime - startTime;
-                const progress = Math.min(timeElapsed / duration, 1);
-                const ease = 1 - Math.pow(1 - progress, 4);
-                slider.scrollLeft = startLeft + (distance * ease);
-                update3DEffect();
-                if (timeElapsed < duration) {
-                    requestAnimationFrame(animation);
-                }
-            }
-            requestAnimationFrame(animation);
-        }
-        function snapToSlide(index) {
-            const width = slider.clientWidth;
-            if (index < 0) index = 0;
-            if (index >= slides.length) index = slides.length - 1;
-            currentIndex = index;
-            const slideWidth = width + gap;
-            const targetLeft = index * slideWidth;
-            animateScroll(targetLeft, 600);
+
+        function updateDots() {
             dots.forEach((dot, i) => {
-                const isActive = i === index;
-                dot.classList.toggle('active', isActive);
+                dot.classList.toggle('active', i === currentIndex);
                 dot.classList.toggle('locked', window.isLevelLocked && i === window.lockedLevelIndex);
             });
-            const currentEl = window.currentAtomElement || window.currentPrimaryElement;
-            if (currentEl) {
-                const targetLevel = String(index + 1);
-                switchToLevel(targetLevel, currentEl);
-                const levelBtns = document.querySelectorAll('.level-btn');
-                if (levelBtns.length > 0) {
-                    levelBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.level === targetLevel));
+        }
+
+        function update3DEffect() {
+            const scrollLeft = slider.scrollLeft;
+            const slideWidth = getSlideWidth();
+            slides.forEach((slide, index) => {
+                const offset = (index * slideWidth - scrollLeft) / slider.clientWidth;
+                if (Math.abs(offset) < 2) {
+                    const rotY = -25 * offset;
+                    const scale = 1 - 0.12 * Math.abs(offset);
+                    const opacity = 1 - 0.4 * Math.abs(offset);
+                    slide.style.transform = `perspective(800px) rotateY(${rotY}deg) scale(${scale})`;
+                    slide.style.opacity = Math.max(0.3, opacity);
+                    slide.style.zIndex = 10 - Math.abs(Math.round(offset));
+                } else {
+                    slide.style.opacity = '0';
                 }
-            }
-            if (window.isLevelLocked && lockBtn) {
-                lockBtn.title = `Level ${currentIndex + 1} locked`;
-            }
+            });
         }
-        slider.addEventListener('mousedown', dragStart);
-        slider.addEventListener('touchstart', dragStart, { passive: false });
-        slider.addEventListener('mousemove', dragMove);
-        slider.addEventListener('touchmove', dragMove, { passive: false });
-        slider.addEventListener('mouseup', dragEnd);
-        slider.addEventListener('mouseleave', dragEnd);
-        slider.addEventListener('touchend', dragEnd);
+
+        function snapToSlide(index, animated = true) {
+            index = Math.max(0, Math.min(index, slides.length - 1));
+            currentIndex = index;
+            const target = index * getSlideWidth();
+
+            if (animated) {
+                slider.style.scrollBehavior = 'smooth';
+                slider.scrollLeft = target;
+                setTimeout(() => { slider.style.scrollBehavior = 'auto'; }, 400);
+            } else {
+                slider.scrollLeft = target;
+            }
+
+            updateDots();
+
+            // Update content
+            const el = window.currentAtomElement;
+            if (el) switchToLevel(String(index + 1), el);
+        }
+
+        // Touch/Mouse Events
         function getX(e) {
-            return e.type.includes('mouse') ? e.pageX : e.touches[0].clientX;
+            return e.touches ? e.touches[0].clientX : e.pageX;
         }
-        function dragStart(e) {
+
+        slider.addEventListener('mousedown', startDrag);
+        slider.addEventListener('touchstart', startDrag, { passive: true });
+
+        function startDrag(e) {
             isDragging = true;
             startX = getX(e);
             startScrollLeft = slider.scrollLeft;
             slider.style.scrollBehavior = 'auto';
             slider.style.cursor = 'grabbing';
         }
-        function dragMove(e) {
+
+        document.addEventListener('mousemove', moveDrag);
+        document.addEventListener('touchmove', moveDrag, { passive: true });
+
+        function moveDrag(e) {
             if (!isDragging) return;
-            if (e.cancelable) e.preventDefault();
-            const currentX = getX(e);
-            const diff = startX - currentX;
-            const width = slider.clientWidth;
-            const slideWidth = width + gap;
-            let targetScroll = startScrollLeft + diff;
-            const minScroll = (currentIndex - 1) * slideWidth;
-            const maxScroll = (currentIndex + 1) * slideWidth;
-            if (targetScroll < minScroll) targetScroll = minScroll;
-            if (targetScroll > maxScroll) targetScroll = maxScroll;
-            const maxTotal = (slides.length - 1) * slideWidth;
-            if (targetScroll < 0) targetScroll = 0;
-            if (targetScroll > maxTotal) targetScroll = maxTotal;
-            slider.scrollLeft = targetScroll;
+            const x = getX(e);
+            const diff = startX - x;
+            slider.scrollLeft = startScrollLeft + diff;
             update3DEffect();
         }
-        function dragEnd(e) {
+
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+
+        function endDrag() {
             if (!isDragging) return;
             isDragging = false;
             slider.style.cursor = 'grab';
-            const width = slider.clientWidth;
-            const slideWidth = width + gap;
-            const moved = slider.scrollLeft - (currentIndex * slideWidth);
-            const threshold = width * 0.1;
-            if (moved > threshold) {
-                snapToSlide(currentIndex + 1);
-            } else if (moved < -threshold) {
-                snapToSlide(currentIndex - 1);
-            } else {
-                snapToSlide(currentIndex);
-            }
+
+            // Determine which slide to snap to
+            const slideWidth = getSlideWidth();
+            const scrollPos = slider.scrollLeft;
+            const nearestIndex = Math.round(scrollPos / slideWidth);
+            snapToSlide(nearestIndex);
         }
-        slider.addEventListener('wheel', (e) => {
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                e.preventDefault();
-                if (Math.abs(e.deltaX) < 2) return;
-                slider.style.scrollBehavior = 'auto';
-                const width = slider.clientWidth;
-                const slideWidth = width + gap;
-                let newScroll = slider.scrollLeft + e.deltaX;
-                const minScroll = (currentIndex - 1) * slideWidth;
-                const maxScroll = (currentIndex + 1) * slideWidth;
-                if (newScroll < minScroll) newScroll = minScroll;
-                if (newScroll > maxScroll) newScroll = maxScroll;
-                if (newScroll < 0) newScroll = 0;
-                const maxTotal = (slides.length - 1) * slideWidth;
-                if (newScroll > maxTotal) newScroll = maxTotal;
-                slider.scrollLeft = newScroll;
-                update3DEffect();
-                clearTimeout(wheelTimeout);
-                wheelTimeout = setTimeout(() => {
-                    const moved = slider.scrollLeft - (currentIndex * slideWidth);
-                    const threshold = width * 0.2;
-                    if (moved > threshold) {
-                        snapToSlide(currentIndex + 1);
-                    } else if (moved < -threshold) {
-                        snapToSlide(currentIndex - 1);
-                    } else {
-                        snapToSlide(currentIndex);
-                    }
-                }, 30);
-            }
-        }, { passive: false });
-        update3DEffect();
-        if (window.isLevelLocked && window.lockedLevelIndex >= 0 && window.lockedLevelIndex < slides.length) {
-            const width = slider.clientWidth;
-            const slideWidth = width + gap;
-            slider.scrollLeft = window.lockedLevelIndex * slideWidth;
-            currentIndex = window.lockedLevelIndex;
-            update3DEffect();
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentIndex);
-                dot.classList.toggle('locked', i === currentIndex);
-            });
-        }
-        slider.addEventListener('scroll', () => {
-            if (!isDragging) update3DEffect();
-            const width = slider.clientWidth;
-            const slideWidth = width + gap;
-            const realIndex = Math.round(slider.scrollLeft / slideWidth);
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === realIndex);
-            });
-            currentIndex = realIndex;
-        });
+
+        // Dot clicks
         dots.forEach((dot, index) => {
             dot.addEventListener('click', () => snapToSlide(index));
         });
-        if (lockBtn) {
-            lockBtn.onclick = () => {
-                if (lockedSlideIndex !== null) {
-                    dots.forEach(dot => dot.classList.remove('locked'));
-                    lockedSlideIndex = null;
-                    lockBtn.classList.remove('locked');
-                    lockBtn.title = 'Lock this level';
-                } else {
-                    dots.forEach((dot, i) => {
-                        dot.classList.toggle('locked', i === currentIndex);
-                    });
-                    lockedSlideIndex = currentIndex;
-                    lockBtn.classList.add('locked');
-                    lockBtn.title = `Level ${currentIndex + 1} locked`;
-                }
-            };
-        }
-        function updateDotsLockedState() {
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('locked', lockedSlideIndex !== null && i === lockedSlideIndex);
-            });
-        }
-        if (lockedSlideIndex !== null && lockedSlideIndex > 0) {
-            const width = slider.clientWidth;
-            const slideWidth = width + gap;
-            slider.scrollLeft = lockedSlideIndex * slideWidth;
-            update3DEffect();
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === lockedSlideIndex);
-                dot.classList.toggle('locked', i === lockedSlideIndex);
-            });
-        }
+
+        // Scroll event for live updates
+        slider.addEventListener('scroll', () => {
+            if (!isDragging) {
+                update3DEffect();
+                const realIndex = Math.round(slider.scrollLeft / getSlideWidth());
+                dots.forEach((dot, i) => dot.classList.toggle('active', i === realIndex));
+            }
+        });
+
+        // Initialize
+        snapToSlide(currentIndex, false);
+        update3DEffect();
     }
 });
 let activeLegendCategory = null;

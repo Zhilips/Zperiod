@@ -2940,20 +2940,23 @@ document.addEventListener('DOMContentLoaded', () => {
             camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
             camera.position.z = 16;
             try {
-                renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+                renderer = new THREE.WebGLRenderer({
+                    antialias: true,
+                    alpha: true,
+                    powerPreference: "default",
+                    failIfMajorPerformanceCaveat: false
+                });
             } catch (e1) {
-                console.warn("init3DScene: Standard WebGLRenderer failed, trying without antialias.", e1);
                 try {
-                    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+                    renderer = new THREE.WebGLRenderer({
+                        antialias: false,
+                        alpha: true,
+                        powerPreference: "low-power"
+                    });
                 } catch (e2) {
-                    console.error("init3DScene: WebGLRenderer creation failed entirely.", e2);
                     const msg = document.createElement('div');
-                    msg.style.color = '#333';
-                    msg.style.display = 'flex';
-                    msg.style.justifyContent = 'center';
-                    msg.style.alignItems = 'center';
-                    msg.style.height = '100%';
-                    msg.textContent = "3D View Unavailable";
+                    msg.style.cssText = 'color:#333;display:flex;justify-content:center;align-items:center;height:100%;flex-direction:column;text-align:center;padding:20px;';
+                    msg.innerHTML = '<div style="font-size:1.2rem;margin-bottom:10px;">3D View Unavailable</div><div style="font-size:0.8rem;opacity:0.7;">请在Chrome地址栏输入 chrome://settings/system<br>确保"使用硬件加速"已开启，然后刷新页面</div>';
                     atomContainer.appendChild(msg);
                     return;
                 }

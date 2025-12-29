@@ -4,6 +4,8 @@ A beautiful, interactive periodic table with 3D atomic models built using Three.
 
 一个使用 Three.js 构建的精美交互式元素周期表，带有3D原子模型。
 
+![Preview](preview.png)
+
 ## ✨ Features / 功能
 
 - **3D Atomic Models** - 旋转的电子云和原子核动画
@@ -17,7 +19,7 @@ A beautiful, interactive periodic table with 3D atomic models built using Three.
 1. Clone this repository / 克隆仓库
 2. Open `index.html` in a browser / 在浏览器中打开 `index.html`
 
-或者直接访问在线版本：[GitHub Pages 链接]
+或者直接访问在线版本：**https://zhilips.github.io/Zperiod/**
 
 ## 📁 File Structure / 文件结构
 

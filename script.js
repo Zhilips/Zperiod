@@ -4354,9 +4354,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = index * getSlideWidth();
 
             if (animated) {
-                slider.style.scrollBehavior = 'smooth';
-                slider.scrollLeft = target;
-                setTimeout(() => { slider.style.scrollBehavior = 'auto'; }, 400);
+                // Custom smooth animation with easing
+                const start = slider.scrollLeft;
+                const distance = target - start;
+                const duration = 200; // ms - faster snap
+                let startTime = null;
+
+                function animate(currentTime) {
+                    if (!startTime) startTime = currentTime;
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Ease out cubic for smooth deceleration
+                    const eased = 1 - Math.pow(1 - progress, 3);
+
+                    slider.scrollLeft = start + distance * eased;
+                    update3DEffect();
+
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                }
+                requestAnimationFrame(animate);
             } else {
                 slider.scrollLeft = target;
             }
@@ -4380,7 +4399,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isDragging = true;
             startX = getX(e);
             startScrollLeft = slider.scrollLeft;
-            slider.style.scrollBehavior = 'auto';
             slider.style.cursor = 'grabbing';
         }
 
@@ -4403,11 +4421,21 @@ document.addEventListener('DOMContentLoaded', () => {
             isDragging = false;
             slider.style.cursor = 'grab';
 
-            // Determine which slide to snap to
+            // Calculate how far we moved from current slide
             const slideWidth = getSlideWidth();
-            const scrollPos = slider.scrollLeft;
-            const nearestIndex = Math.round(scrollPos / slideWidth);
-            snapToSlide(nearestIndex);
+            const currentPos = currentIndex * slideWidth;
+            const moved = slider.scrollLeft - currentPos;
+            const threshold = slideWidth * 0.15; // Need to drag 15% to flip
+
+            let targetIndex = currentIndex;
+            if (moved > threshold) {
+                targetIndex = currentIndex + 1; // Next slide
+            } else if (moved < -threshold) {
+                targetIndex = currentIndex - 1; // Previous slide
+            }
+            // If didn't pass threshold, snap back to current
+
+            snapToSlide(targetIndex);
         }
 
         // Dot clicks

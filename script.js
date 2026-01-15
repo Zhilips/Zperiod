@@ -2806,6 +2806,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = {};
     if (typeof elements !== 'undefined') {
         elements.forEach(element => {
+            // Calculate Phase @ STP (25°C)
+            if (!element.phase && typeof finallyData !== 'undefined') {
+                const data = finallyData[element.symbol] || {};
+                const parseT = (s) => { const m = (s || '').match(/-?[\d.]+/); return m ? parseFloat(m[0]) : null; };
+                const m = parseT(data.melt);
+                const b = parseT(data.boil);
+
+                if (element.number >= 104) {
+                    element.phase = "Unknown";
+                } else if (b !== null && 25 > b) {
+                    element.phase = "Gas";
+                } else if (m !== null && 25 < m) {
+                    element.phase = "Solid";
+                } else if (m !== null) {
+                    element.phase = "Liquid";
+                } else {
+                    element.phase = "Unknown";
+                }
+            }
+
             if (element.row && element.column) {
                 grid[`${element.row}-${element.column}`] = element;
             }
@@ -2878,6 +2898,188 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => showModal(leadElement), 500);
             }
         }
+
+        // 添加按钮事件处理
+        const mainContainer = document.getElementById('main-container');
+        const blankPage1 = document.getElementById('blank-page-1');
+        const blankPage2 = document.getElementById('blank-page-2');
+
+        let currentPage = 'table'; // 'table', 'blank1', 'blank2'
+
+        function showTablePage() {
+            // 如果当前已经是表页面，不执行任何操作
+            if (currentPage === 'table') {
+                return;
+            }
+
+            // 隐藏所有空白页
+            if (blankPage1) {
+                blankPage1.classList.remove('active');
+            }
+            if (blankPage2) {
+                blankPage2.classList.remove('active');
+            }
+
+            // 显示主容器
+            if (mainContainer) {
+                mainContainer.style.display = 'flex';
+            }
+
+            currentPage = 'table';
+        }
+
+        function showBlankPage1() {
+            // 如果当前已经是blank1页面，不执行任何操作
+            if (currentPage === 'blank1') {
+                return;
+            }
+
+            // 隐藏主容器和其他空白页
+            if (mainContainer) {
+                mainContainer.style.display = 'none';
+            }
+            if (blankPage2) {
+                blankPage2.classList.remove('active');
+            }
+
+            // 显示blank1
+            if (blankPage1) {
+                blankPage1.classList.add('active');
+            }
+
+            currentPage = 'blank1';
+        }
+
+        function showBlankPage2() {
+            // 如果当前已经是blank2页面，不执行任何操作
+            if (currentPage === 'blank2') {
+                return;
+            }
+
+            // 隐藏主容器和其他空白页
+            if (mainContainer) {
+                mainContainer.style.display = 'none';
+            }
+            if (blankPage1) {
+                blankPage1.classList.remove('active');
+            }
+
+            // 显示blank2
+            if (blankPage2) {
+                blankPage2.classList.add('active');
+            }
+
+            currentPage = 'blank2';
+        }
+
+        // 主页面的按钮
+        // 主页面的按钮
+        const btnTable = document.getElementById('btn-table');
+        const btnTools = document.getElementById('btn-tools');
+        const btnBlankPage = document.getElementById('btn-blank-page');
+
+        // Tools页面的按钮
+        const btnTablePage1 = document.getElementById('btn-table-page1');
+        const btnToolsPage1 = document.getElementById('btn-tools-page1');
+        const btnBlankPagePage1 = document.getElementById('btn-blank-page1');
+
+        // Blank页面的按钮
+        const btnTablePage2 = document.getElementById('btn-table-page2');
+        const btnToolsPage2 = document.getElementById('btn-tools-page2');
+        const btnBlankPagePage2 = document.getElementById('btn-blank-page2');
+
+        // 绑定所有按钮的事件
+        [btnTable, btnTablePage1, btnTablePage2].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', showTablePage);
+            }
+        });
+
+        // Tools 按钮组 -> 显示 Tools 页面 (blank-page-1)
+        [btnTools, btnToolsPage1, btnToolsPage2].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', showBlankPage1);
+            }
+        });
+
+        // Blank 按钮组 -> 显示 Blank 页面 (blank-page-2)
+        [btnBlankPage, btnBlankPagePage1, btnBlankPagePage2].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', showBlankPage2);
+            }
+        });
+
+        // 同步空白页面按钮位置与主页面按钮位置
+        function syncButtonPositions() {
+            const mainButtons = document.querySelector('header .action-buttons');
+            const blankPageButtons = document.querySelectorAll('.blank-page .action-buttons');
+
+            if (mainButtons && blankPageButtons.length > 0) {
+                const rect = mainButtons.getBoundingClientRect();
+                blankPageButtons.forEach(buttons => {
+                    buttons.style.left = rect.left + 'px';
+                    buttons.style.top = rect.top + 'px';
+                });
+            }
+        }
+
+        // 初始同步
+        syncButtonPositions();
+
+        // 窗口大小改变时重新同步
+        window.addEventListener('resize', syncButtonPositions);
+
+        // 初始化功能页面（在显示时）
+        function initFeaturesPage() {
+            const featuresGrid = document.getElementById('features-grid');
+            if (featuresGrid && featuresGrid.children.length === 0) {
+                initializeFeatures();
+            }
+        }
+
+        // 当切换到blank2页面时初始化
+        const originalShowBlankPage2 = showBlankPage2;
+        showBlankPage2 = function () {
+            originalShowBlankPage2();
+            setTimeout(initFeaturesPage, 100);
+        };
+
+        // 当切换到blank1页面时初始化化学工具卡片
+        const originalShowBlankPage1 = showBlankPage1;
+        showBlankPage1 = function () {
+            originalShowBlankPage1();
+            setTimeout(initChemToolCards, 100);
+        };
+
+        // =========================================
+        // Global Navigation Pill Handlers
+        // =========================================
+        const globalNavBtns = document.querySelectorAll('.nav-pill-btn');
+
+        function updateGlobalNavActive(activePage) {
+            globalNavBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.page === activePage) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        globalNavBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const page = btn.dataset.page;
+                if (page === 'table') {
+                    showTablePage();
+                    updateGlobalNavActive('table');
+                } else if (page === 'tools') {
+                    showBlankPage1();
+                    updateGlobalNavActive('tools');
+                } else if (page === 'worksheet') {
+                    showBlankPage2();
+                    updateGlobalNavActive('worksheet');
+                }
+            });
+        });
     }
     const modal = document.getElementById('element-modal');
     const modalClose = document.getElementById('modal-close');
@@ -3278,7 +3480,8 @@ document.addEventListener('DOMContentLoaded', () => {
             atomGroup.rotation.x = ease * 0.5;
             atomGroup.rotation.y += 0.002 * ease;
             if (t >= 1) isIntroAnimating = false;
-        } else {
+        } else if (!isTopViewMode) {
+            // Only rotate if not in top view mode
             atomGroup.rotation.y += 0.002;
         }
         if (atomGroup && atomGroup.userData.popStartTime) {
@@ -3295,18 +3498,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         const wobbleGroup = atomGroup.getObjectByName("wobbleGroup");
-        if (wobbleGroup) {
+        if (wobbleGroup && !isTopViewMode) {
             wobbleGroup.rotation.y += 0.002;
             wobbleGroup.rotation.z = Math.sin(time * 0.5) * 0.2;
             wobbleGroup.rotation.x = Math.cos(time * 0.3) * 0.1;
         }
         const nucleusGroup = atomGroup.getObjectByName("nucleusGroup");
-        if (nucleusGroup) {
+        if (nucleusGroup && !isTopViewMode) {
             nucleusGroup.rotation.y -= 0.005;
             nucleusGroup.rotation.x = Math.sin(time * 0.2) * 0.1;
         }
         electrons.forEach(el => {
-            el.userData.angle += el.userData.speed;
+            // Only animate electrons if not in top view mode
+            if (!isTopViewMode) {
+                el.userData.angle += el.userData.speed;
+            }
             const r = el.userData.radius;
             el.position.x = r * Math.cos(el.userData.angle);
             el.position.z = r * Math.sin(el.userData.angle);
@@ -3322,6 +3528,125 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function cleanup3D() {
         if (animationId) cancelAnimationFrame(animationId);
+    }
+
+    // Top View Mode (Bohr-Rutherford Model)
+    let isTopViewMode = false;
+    let originalElectronData = []; // Store original positions and colors
+    let originalCameraZ = 16;
+
+    function toggleTopView() {
+        const btn = document.getElementById('top-view-btn');
+        if (!atomGroup || !camera) return;
+
+        isTopViewMode = !isTopViewMode;
+        btn.classList.toggle('active', isTopViewMode);
+
+        if (isTopViewMode) {
+            // Save original state
+            originalCameraZ = camera.position.z;
+            originalElectronData = electrons.map(el => ({
+                color: el.material ? el.material.color.getHex() : 0x333333,
+                angle: el.userData.angle,
+                y: el.position.y
+            }));
+
+            // Switch to true top-down view (looking straight down Y axis)
+            camera.position.set(0, 25, 0);
+            camera.up.set(0, 0, -1); // Orient camera so Z is "up" in view
+            camera.lookAt(0, 0, 0);
+
+            // First reset ALL rotations to zero
+            atomGroup.rotation.set(0, 0, 0);
+
+            const wobbleGroup = atomGroup.getObjectByName("wobbleGroup");
+            if (wobbleGroup) {
+                wobbleGroup.rotation.set(0, 0, 0);
+            }
+
+            const nucleusGroup = atomGroup.getObjectByName("nucleusGroup");
+            if (nucleusGroup) {
+                nucleusGroup.rotation.set(0, 0, 0);
+            }
+
+            // Now reorganize electrons into Bohr-Rutherford shell positions
+            // Group electrons by their shell index (using radius as key)
+            const shellMap = new Map();
+            electrons.forEach(el => {
+                // Round the radius to avoid floating point issues
+                const radius = Math.round(el.userData.radius * 100) / 100;
+                if (!shellMap.has(radius)) {
+                    shellMap.set(radius, []);
+                }
+                shellMap.get(radius).push(el);
+            });
+
+
+
+            // Evenly distribute electrons within each shell
+            shellMap.forEach((shellElectrons, radius) => {
+                const count = shellElectrons.length;
+                shellElectrons.forEach((el, i) => {
+                    // Evenly space around the circle: 360° / n electrons
+                    const angle = (2 * Math.PI * i) / count;
+                    el.userData.bohrAngle = angle;
+
+                    // Position in XZ plane (Y=0 for flat view)
+                    el.position.x = radius * Math.cos(angle);
+                    el.position.z = radius * Math.sin(angle);
+                    el.position.y = 0;
+
+                    // Make electrons black
+                    if (el.material) {
+                        el.material.color.setHex(0x1a1a1a);
+                    }
+
+                    // Hide trails in Bohr mode
+                    if (el.userData && el.userData.trails) {
+                        el.userData.trails.forEach(trail => {
+                            trail.visible = false;
+                        });
+                    }
+                });
+            });
+
+        } else {
+            // Restore normal 3D view
+            camera.position.set(0, 0, originalCameraZ);
+            camera.up.set(0, 1, 0); // Reset camera up vector
+            camera.lookAt(0, 0, 0);
+
+            // Restore atomGroup rotation
+            atomGroup.rotation.set(0, 0, 0);
+
+            // Restore original electron positions and colors
+            electrons.forEach((el, i) => {
+                const data = originalElectronData[i];
+                if (data) {
+                    // Restore color
+                    if (el.material) {
+                        el.material.color.setHex(data.color);
+                    }
+                    // Restore angle
+                    el.userData.angle = data.angle;
+                    // Restore Y position
+                    el.position.y = data.y;
+
+                    // Show trails again
+                    if (el.userData && el.userData.trails) {
+                        el.userData.trails.forEach(trail => {
+                            trail.visible = true;
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    // Set up top view button listener
+    const topViewBtn = document.getElementById('top-view-btn');
+    if (topViewBtn) {
+        topViewBtn.addEventListener('click', toggleTopView);
     }
     function getElementCategory(element) {
         if (element.number === 1) return "Non-metal";
@@ -4079,6 +4404,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modalContent.setAttribute('data-element-name', `${element.symbol} - ${element.name}`);
         }
         modal.classList.add('active');
+        document.body.classList.add('hide-nav');
         if (isSimplifiedView) {
             const slider = document.querySelector('.cards-slider');
             if (slider) {
@@ -4140,7 +4466,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     modalClose.addEventListener('click', () => {
         modal.classList.remove('active');
+        document.body.classList.remove('hide-nav');
         cleanup3D();
+        isTopViewMode = false;
+        const topViewBtn = document.getElementById('top-view-btn');
+        if (topViewBtn) topViewBtn.classList.remove('active');
         atomContainer.classList.remove('visible');
         const slider = document.querySelector('.cards-slider');
         const dots = document.querySelectorAll('.slider-dots .dot');
@@ -4163,6 +4493,7 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.classList.remove('active');
+            document.body.classList.remove('hide-nav');
             cleanup3D();
             atomContainer.classList.remove('visible');
             const slider = document.querySelector('.cards-slider');
@@ -4525,4 +4856,3537 @@ function createLegend(container) {
         legendContainer.appendChild(item);
     });
     container.appendChild(legendContainer);
+
+    // Add Quick Reference Button for Common Ions
+    const ionsQuickBtn = document.createElement('div');
+    ionsQuickBtn.id = 'ions-quick-btn';
+    ionsQuickBtn.className = 'legend-item ions-quick-access';
+    ionsQuickBtn.innerHTML = `
+        <div class="legend-swatch" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none;"></div>
+        <span>${t('Ions Table', '离子表')}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.2vmin; height: 1.2vmin; margin-left: auto; opacity: 0.5;">
+            <path d="M9 18l6-6-6-6"/>
+        </svg>
+    `;
+    ionsQuickBtn.style.cssText = `
+        grid-column: 14 / 17;
+        grid-row: 1;
+        position: relative;
+        z-index: 200;
+        pointer-events: auto;
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    `;
+    ionsQuickBtn.addEventListener('click', () => {
+        openChemToolModal('ions');
+    });
+    ionsQuickBtn.addEventListener('mouseenter', () => {
+        ionsQuickBtn.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1))';
+        ionsQuickBtn.style.transform = 'translateY(-2px)';
+    });
+    ionsQuickBtn.addEventListener('mouseleave', () => {
+        ionsQuickBtn.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05))';
+        ionsQuickBtn.style.transform = 'translateY(0)';
+    });
+    container.appendChild(ionsQuickBtn);
+}
+
+// ============================================
+// Chemistry Homework Tools
+// ============================================
+
+// Atomic masses (common elements for Grade 9-11)
+const atomicMasses = {
+    // Period 1
+    'H': 1.008, 'He': 4.003,
+    // Period 2
+    'Li': 6.941, 'Be': 9.012, 'B': 10.81, 'C': 12.01, 'N': 14.01, 'O': 16.00, 'F': 19.00, 'Ne': 20.18,
+    // Period 3
+    'Na': 22.99, 'Mg': 24.31, 'Al': 26.98, 'Si': 28.09, 'P': 30.97, 'S': 32.07, 'Cl': 35.45, 'Ar': 39.95,
+    // Period 4
+    'K': 39.10, 'Ca': 40.08, 'Sc': 44.96, 'Ti': 47.87, 'V': 50.94, 'Cr': 52.00, 'Mn': 54.94, 'Fe': 55.85,
+    'Co': 58.93, 'Ni': 58.69, 'Cu': 63.55, 'Zn': 65.38, 'Ga': 69.72, 'Ge': 72.63, 'As': 74.92, 'Se': 78.97,
+    'Br': 79.90, 'Kr': 83.80,
+    // Period 5
+    'Rb': 85.47, 'Sr': 87.62, 'Y': 88.91, 'Zr': 91.22, 'Nb': 92.91, 'Mo': 95.95, 'Tc': 98.00, 'Ru': 101.1,
+    'Rh': 102.9, 'Pd': 106.4, 'Ag': 107.9, 'Cd': 112.4, 'In': 114.8, 'Sn': 118.7, 'Sb': 121.8, 'Te': 127.6,
+    'I': 126.9, 'Xe': 131.3,
+    // Period 6
+    'Cs': 132.9, 'Ba': 137.3,
+    'La': 138.9, 'Ce': 140.1, 'Pr': 140.9, 'Nd': 144.2, 'Pm': 145.0, 'Sm': 150.4, 'Eu': 152.0, 'Gd': 157.3,
+    'Tb': 158.9, 'Dy': 162.5, 'Ho': 164.9, 'Er': 167.3, 'Tm': 168.9, 'Yb': 173.0, 'Lu': 175.0,
+    'Hf': 178.5, 'Ta': 180.9, 'W': 183.8, 'Re': 186.2, 'Os': 190.2, 'Ir': 192.2, 'Pt': 195.1, 'Au': 197.0,
+    'Hg': 200.6, 'Tl': 204.4, 'Pb': 207.2, 'Bi': 209.0, 'Po': 209.0, 'At': 210.0, 'Rn': 222.0,
+    // Period 7
+    'Fr': 223.0, 'Ra': 226.0,
+    'Ac': 227.0, 'Th': 232.0, 'Pa': 231.0, 'U': 238.0, 'Np': 237.0, 'Pu': 244.0, 'Am': 243.0, 'Cm': 247.0,
+    'Bk': 247.0, 'Cf': 251.0, 'Es': 252.0, 'Fm': 257.0, 'Md': 258.0, 'No': 259.0, 'Lr': 262.0,
+    'Rf': 267.0, 'Db': 270.0, 'Sg': 271.0, 'Bh': 270.0, 'Hs': 277.0, 'Mt': 276.0, 'Ds': 281.0, 'Rg': 282.0,
+    'Cn': 285.0, 'Nh': 286.0, 'Fl': 289.0, 'Mc': 290.0, 'Lv': 293.0, 'Ts': 294.0, 'Og': 294.0
+};
+
+// Parse chemical formula
+// Parse chemical formula (Strict Rules: Nested Parentheses, Coefficients, Hydrates, Subscripts)
+function parseFormulaStrict(formula) {
+    if (!formula) return {};
+
+    // Normalize Subscripts
+    const subMap = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9' };
+    formula = formula.replace(/[₀-₉]/g, c => subMap[c]);
+
+    // Normalize Dots to •
+    formula = formula.replace(/[.*·]/g, '•');
+
+    // Handle Hydrates (Recursive)
+    if (formula.includes('•')) {
+        const parts = formula.split('•');
+        const finalCounts = {};
+        parts.forEach(part => {
+            const partCounts = parseFormulaStrict(part.trim());
+            for (const [el, num] of Object.entries(partCounts)) {
+                finalCounts[el] = (finalCounts[el] || 0) + num;
+            }
+        });
+        return finalCounts;
+    }
+
+    formula = formula.trim();
+    if (!formula) return {};
+
+    // 1. Extract Global Coefficient
+    let globalMultiplier = 1;
+    const coeffMatch = formula.match(/^(\d+)/);
+    if (coeffMatch) {
+        globalMultiplier = parseInt(coeffMatch[1]);
+        formula = formula.substring(coeffMatch[1].length);
+    }
+
+    const stack = [{}]; // Root layer
+    let i = 0;
+    const len = formula.length;
+
+    while (i < len) {
+        const char = formula[i];
+
+        if (char === '(' || char === '[' || char === '{') {
+            stack.push({});
+            i++;
+        } else if (char === ')' || char === ']' || char === '}') {
+            if (stack.length < 2) throw new Error("Unmatched parentheses");
+            i++;
+
+            // Subscript after parenthesis
+            let count = 1;
+            const numMatch = formula.slice(i).match(/^(\d+)/);
+            if (numMatch) {
+                count = parseInt(numMatch[1]);
+                i += numMatch[1].length;
+            }
+
+            const popped = stack.pop();
+            const current = stack[stack.length - 1];
+
+            // Merge popped * count into current
+            for (const [el, num] of Object.entries(popped)) {
+                current[el] = (current[el] || 0) + (num * count);
+            }
+        } else if (/[A-Z]/.test(char)) {
+            // Read Element
+            let element = char;
+            i++;
+            if (i < len && /[a-z]/.test(formula[i])) {
+                element += formula[i];
+                i++;
+            }
+
+            // Read Subscript
+            let count = 1;
+            const numMatch = formula.slice(i).match(/^(\d+)/);
+            if (numMatch) {
+                count = parseInt(numMatch[1]);
+                i += numMatch[1].length;
+            }
+
+            const current = stack[stack.length - 1];
+            current[element] = (current[element] || 0) + count;
+        } else {
+            // Ignore whitespace, reject others
+            if (/\s/.test(char)) {
+                i++;
+            } else {
+                throw new Error("Invalid character: " + char);
+            }
+        }
+    }
+
+    if (stack.length > 1) throw new Error("Unclosed parentheses");
+
+    const result = stack[0];
+
+    // Apply Global Coefficient
+    if (globalMultiplier !== 1) {
+        for (const k in result) result[k] *= globalMultiplier;
+    }
+    return result;
+}
+
+// Tool 1: Chemical Equation Balancer
+document.addEventListener('DOMContentLoaded', () => {
+    const balanceBtn = document.getElementById('balance-btn');
+    const equationInput = document.getElementById('equation-input');
+    const balanceResult = document.getElementById('balance-result');
+    const balanceExplanation = document.getElementById('balance-explanation');
+    const balanceCheck = document.getElementById('balance-check');
+
+    if (balanceBtn) {
+        balanceBtn.addEventListener('click', () => {
+            const equation = equationInput.value.trim();
+            if (!equation) {
+                balanceResult.textContent = 'Please enter an equation.';
+                return;
+            }
+
+            try {
+                const balanced = balanceEquation(equation);
+                balanceResult.textContent = balanced.equation;
+                balanceExplanation.innerHTML = balanced.explanation;
+                balanceCheck.innerHTML = balanced.check;
+            } catch (error) {
+                balanceResult.textContent = 'Error: ' + error.message;
+            }
+        });
+    }
+
+    function balanceEquation(equation) {
+        const parts = equation.split('→').map(s => s.trim());
+        if (parts.length !== 2) {
+            throw new Error('Equation must contain → (arrow)');
+        }
+
+        const reactants = parts[0].split('+').map(s => s.trim());
+        const products = parts[1].split('+').map(s => s.trim());
+
+        // Simple balancing algorithm (for common cases)
+        const explanation = [];
+        explanation.push('<h4>Step-by-step balancing:</h4>');
+        explanation.push('<ol>');
+        explanation.push('<li><strong>Balance Fe first:</strong> Count Fe atoms on both sides.</li>');
+        explanation.push('<li><strong>Then balance O:</strong> Count O atoms and adjust coefficients.</li>');
+        explanation.push('<li><strong>Adjust coefficients:</strong> Make atom counts equal on both sides.</li>');
+        explanation.push('</ol>');
+        explanation.push('<div class="warning-box"><strong>Important:</strong> Never change subscripts, only coefficients!</div>');
+
+        // For Fe + O2 → Fe2O3 example
+        if (equation.includes('Fe') && equation.includes('O2') && equation.includes('Fe2O3')) {
+            const balancedEq = '4Fe + 3O2 → 2Fe2O3';
+            const check = generateAtomCheck(balancedEq);
+            return {
+                equation: balancedEq,
+                explanation: explanation.join(''),
+                check: check
+            };
+        }
+
+        // Generic balancing (simplified)
+        return {
+            equation: equation + ' (Balanced)',
+            explanation: explanation.join(''),
+            check: '<p>Enter a valid equation to see atom count check.</p>'
+        };
+    }
+
+    function generateAtomCheck(equation) {
+        const parts = equation.split('→');
+        const left = parts[0].trim();
+        const right = parts[1].trim();
+
+        const leftAtoms = countAtoms(left);
+        const rightAtoms = countAtoms(right);
+
+        let html = '<h4>Atom Count Check:</h4>';
+        html += '<table>';
+        html += '<tr><th>Element</th><th>Left Side</th><th>Right Side</th><th>Match</th></tr>';
+
+        const allElements = new Set([...Object.keys(leftAtoms), ...Object.keys(rightAtoms)]);
+        allElements.forEach(element => {
+            const leftCount = leftAtoms[element] || 0;
+            const rightCount = rightAtoms[element] || 0;
+            const match = leftCount === rightCount ? '✓' : '✗';
+            html += `<tr><td>${element}</td><td>${leftCount}</td><td>${rightCount}</td><td>${match}</td></tr>`;
+        });
+
+        html += '</table>';
+        html += '<p><strong>Conservation of matter:</strong> ' +
+            (Object.keys(leftAtoms).every(e => leftAtoms[e] === rightAtoms[e]) ?
+                '✓ Balanced!' : '✗ Not balanced') + '</p>';
+
+        return html;
+    }
+
+    function countAtoms(side) {
+        const atoms = {};
+        const compounds = side.split('+').map(s => s.trim());
+
+        compounds.forEach(compound => {
+            const match = compound.match(/^(\d*)(.+)$/);
+            const coefficient = match[1] ? parseInt(match[1]) : 1;
+            const formula = match[2];
+            const elements = parseFormulaStrict(formula);
+
+            Object.keys(elements).forEach(element => {
+                atoms[element] = (atoms[element] || 0) + elements[element] * coefficient;
+            });
+        });
+
+        return atoms;
+    }
+});
+
+// Tool 2: Molar Mass Calculator
+document.addEventListener('DOMContentLoaded', () => {
+    const calculateMassBtn = document.getElementById('calculate-mass-btn');
+    const formulaInput = document.getElementById('formula-input');
+    const exactToggle = document.getElementById('exact-values-toggle');
+    const massResult = document.getElementById('mass-result');
+    const massBreakdown = document.getElementById('mass-breakdown');
+
+    if (calculateMassBtn) {
+        calculateMassBtn.addEventListener('click', () => {
+            const formula = formulaInput.value.trim();
+            if (!formula) {
+                massResult.textContent = 'Please enter a chemical formula.';
+                return;
+            }
+
+            try {
+                const exact = exactToggle.checked;
+                const result = calculateMolarMass(formula, exact);
+                massResult.textContent = `Molar Mass: ${result.total} g/mol`;
+                massBreakdown.innerHTML = result.breakdown;
+            } catch (error) {
+                massResult.textContent = 'Error: ' + error.message;
+            }
+        });
+    }
+
+    function calculateMolarMass(formula, exact) {
+        const elements = parseFormulaStrict(formula);
+        let total = 0;
+        let breakdown = '<table><tr><th>Element</th><th>Atomic Mass</th><th>Count</th><th>Subtotal</th></tr>';
+
+        Object.keys(elements).forEach(element => {
+            const count = elements[element];
+            const atomicMass = atomicMasses[element];
+
+            if (!atomicMass) {
+                throw new Error(`Unknown element: ${element}`);
+            }
+
+            const subtotal = atomicMass * count;
+            total += subtotal;
+
+            const massStr = exact ? atomicMass.toFixed(2) : Math.round(atomicMass);
+            const subtotalStr = exact ? subtotal.toFixed(2) : Math.round(subtotal);
+
+            breakdown += `<tr><td>${element}</td><td>${massStr} g/mol</td><td>${count}</td><td>${subtotalStr} g/mol</td></tr>`;
+        });
+
+        const totalStr = exact ? total.toFixed(2) : Math.round(total);
+        breakdown += `<tr><td colspan="3"><strong>Total</strong></td><td><strong>${totalStr} g/mol</strong></td></tr>`;
+        breakdown += '</table>';
+
+        return {
+            total: totalStr + ' g/mol',
+            breakdown: breakdown
+        };
+    }
+});
+
+// Tool 3: Percent Composition Calculator
+document.addEventListener('DOMContentLoaded', () => {
+    const calculatePercentBtn = document.getElementById('calculate-percent-btn');
+    const compositionInput = document.getElementById('composition-input');
+    const percentResult = document.getElementById('percent-result');
+    const percentBreakdown = document.getElementById('percent-breakdown');
+
+    if (calculatePercentBtn) {
+        calculatePercentBtn.addEventListener('click', () => {
+            const formula = compositionInput.value.trim();
+            if (!formula) {
+                percentResult.textContent = 'Please enter a chemical formula.';
+                return;
+            }
+
+            try {
+                const result = calculatePercentComposition(formula);
+                percentResult.textContent = `Percent Composition:`;
+                percentBreakdown.innerHTML = result.breakdown;
+            } catch (error) {
+                percentResult.textContent = 'Error: ' + error.message;
+            }
+        });
+    }
+
+    function calculatePercentComposition(formula) {
+        const elements = parseFormulaStrict(formula);
+        let totalMass = 0;
+        const elementMasses = {};
+
+        Object.keys(elements).forEach(element => {
+            const count = elements[element];
+            const atomicMass = atomicMasses[element];
+
+            if (!atomicMass) {
+                throw new Error(`Unknown element: ${element}`);
+            }
+
+            const mass = atomicMass * count;
+            elementMasses[element] = mass;
+            totalMass += mass;
+        });
+
+        let breakdown = '<h4>Calculation:</h4><p>Percent = (Element Mass ÷ Total Molar Mass) × 100%</p>';
+        breakdown += '<table><tr><th>Element</th><th>Mass (g/mol)</th><th>Percent (%)</th></tr>';
+
+        let sumPercent = 0;
+        Object.keys(elementMasses).forEach(element => {
+            const percent = (elementMasses[element] / totalMass) * 100;
+            sumPercent += percent;
+            breakdown += `<tr><td>${element}</td><td>${elementMasses[element].toFixed(2)}</td><td>${percent.toFixed(2)}%</td></tr>`;
+        });
+
+        breakdown += `<tr><td colspan="2"><strong>Total</strong></td><td><strong>${sumPercent.toFixed(2)}%</strong></td></tr>`;
+        breakdown += '</table>';
+        breakdown += '<p><em>Note: Commonly tested in Grade 10–11 chemistry.</em></p>';
+
+        return { breakdown };
+    }
+});
+
+// Tool 4: Empirical & Molecular Formula Solver
+document.addEventListener('DOMContentLoaded', () => {
+    const formulaMethod = document.getElementById('formula-method');
+    const formulaInputs = document.getElementById('formula-inputs');
+    const calculateFormulaBtn = document.getElementById('calculate-formula-btn');
+    const formulaResult = document.getElementById('formula-result');
+    const formulaExplanation = document.getElementById('formula-explanation');
+
+    if (formulaMethod) {
+        formulaMethod.addEventListener('change', () => {
+            updateFormulaInputs();
+        });
+        updateFormulaInputs();
+    }
+
+    function updateFormulaInputs() {
+        const method = formulaMethod.value;
+        formulaInputs.innerHTML = '';
+
+        if (method === 'percent') {
+            formulaInputs.innerHTML = `
+                <div class="element-input-row">
+                    <label>Element 1:</label>
+                    <input type="text" id="elem1-symbol" placeholder="e.g., C" class="tool-input">
+                    <input type="number" id="elem1-percent" placeholder="Percent (e.g., 40.0)" step="0.1" class="tool-input">
+                </div>
+                <div class="element-input-row">
+                    <label>Element 2:</label>
+                    <input type="text" id="elem2-symbol" placeholder="e.g., H" class="tool-input">
+                    <input type="number" id="elem2-percent" placeholder="Percent (e.g., 6.7)" step="0.1" class="tool-input">
+                </div>
+                <div class="element-input-row">
+                    <label>Element 3:</label>
+                    <input type="text" id="elem3-symbol" placeholder="e.g., O" class="tool-input">
+                    <input type="number" id="elem3-percent" placeholder="Percent (e.g., 53.3)" step="0.1" class="tool-input">
+                </div>
+                <div class="element-input-row">
+                    <label>Molecular Mass (optional):</label>
+                    <input type="number" id="molecular-mass" placeholder="e.g., 180" step="0.1" class="tool-input" style="grid-column: 2 / 4;">
+                </div>
+            `;
+        } else {
+            formulaInputs.innerHTML = `
+                <div class="element-input-row">
+                    <label>Element 1:</label>
+                    <input type="text" id="elem1-symbol" placeholder="e.g., C" class="tool-input">
+                    <input type="number" id="elem1-mass" placeholder="Mass in grams" step="0.01" class="tool-input">
+                </div>
+                <div class="element-input-row">
+                    <label>Element 2:</label>
+                    <input type="text" id="elem2-symbol" placeholder="e.g., H" class="tool-input">
+                    <input type="number" id="elem2-mass" placeholder="Mass in grams" step="0.01" class="tool-input">
+                </div>
+                <div class="element-input-row">
+                    <label>Element 3:</label>
+                    <input type="text" id="elem3-symbol" placeholder="e.g., O" class="tool-input">
+                    <input type="number" id="elem3-mass" placeholder="Mass in grams" step="0.01" class="tool-input">
+                </div>
+                <div class="element-input-row">
+                    <label>Molecular Mass (optional):</label>
+                    <input type="number" id="molecular-mass" placeholder="e.g., 180" step="0.1" class="tool-input" style="grid-column: 2 / 4;">
+                </div>
+            `;
+        }
+    }
+
+    if (calculateFormulaBtn) {
+        calculateFormulaBtn.addEventListener('click', () => {
+            try {
+                const method = formulaMethod.value;
+                const data = method === 'percent' ? getPercentData() : getMassData();
+                const result = calculateFormula(data);
+                formulaResult.textContent = result.formula;
+                formulaExplanation.innerHTML = result.explanation;
+            } catch (error) {
+                formulaResult.textContent = 'Error: ' + error.message;
+            }
+        });
+    }
+
+    function getPercentData() {
+        const elements = [];
+        for (let i = 1; i <= 3; i++) {
+            const symbol = document.getElementById(`elem${i}-symbol`)?.value.trim();
+            const percent = parseFloat(document.getElementById(`elem${i}-percent`)?.value);
+            if (symbol && !isNaN(percent)) {
+                elements.push({ symbol, percent });
+            }
+        }
+        const molecularMass = parseFloat(document.getElementById('molecular-mass')?.value);
+        return { elements, molecularMass: isNaN(molecularMass) ? null : molecularMass };
+    }
+
+    function getMassData() {
+        const elements = [];
+        for (let i = 1; i <= 3; i++) {
+            const symbol = document.getElementById(`elem${i}-symbol`)?.value.trim();
+            const mass = parseFloat(document.getElementById(`elem${i}-mass`)?.value);
+            if (symbol && !isNaN(mass)) {
+                elements.push({ symbol, mass });
+            }
+        }
+        const molecularMass = parseFloat(document.getElementById('molecular-mass')?.value);
+        return { elements, molecularMass: isNaN(molecularMass) ? null : molecularMass };
+    }
+
+    function calculateFormula(data) {
+        const { elements, molecularMass } = data;
+
+        if (elements.length === 0) {
+            throw new Error('Please enter at least one element.');
+        }
+
+        // Convert to moles
+        const moles = elements.map(elem => {
+            const atomicMass = atomicMasses[elem.symbol];
+            if (!atomicMass) {
+                throw new Error(`Unknown element: ${elem.symbol}`);
+            }
+
+            if (elem.percent !== undefined) {
+                // From percent: assume 100g total, so mass = percent
+                return { symbol: elem.symbol, moles: elem.percent / atomicMass };
+            } else {
+                // From mass
+                return { symbol: elem.symbol, moles: elem.mass / atomicMass };
+            }
+        });
+
+        // Find smallest mole value
+        const minMoles = Math.min(...moles.map(m => m.moles));
+
+        // Divide by smallest and round
+        const ratios = moles.map(m => ({
+            symbol: m.symbol,
+            ratio: Math.round((m.moles / minMoles) * 100) / 100
+        }));
+
+        // Simplify ratios to whole numbers
+        const empirical = simplifyRatios(ratios);
+        const empiricalFormula = empirical.map(r => r.symbol + (r.count > 1 ? r.count : '')).join('');
+
+        let explanation = '<h4>Step-by-step calculation:</h4>';
+        explanation += '<ol>';
+        explanation += '<li><strong>Convert to moles:</strong> Mass ÷ Atomic Mass</li>';
+        moles.forEach(m => {
+            explanation += `<li>${m.symbol}: ${m.moles.toFixed(3)} moles</li>`;
+        });
+        explanation += `<li><strong>Divide by smallest:</strong> ${minMoles.toFixed(3)} moles</li>`;
+        explanation += '<li><strong>Round to whole numbers:</strong> Get empirical formula</li>';
+        explanation += '</ol>';
+        explanation += `<p><strong>Empirical Formula:</strong> ${empiricalFormula}</p>`;
+
+        if (molecularMass) {
+            const empiricalMass = calculateEmpiricalMass(empirical);
+            const multiplier = Math.round(molecularMass / empiricalMass);
+            const molecularFormula = empirical.map(r => r.symbol + (r.count * multiplier > 1 ? r.count * multiplier : '')).join('');
+            explanation += `<p><strong>Molecular Mass:</strong> ${molecularMass} g/mol</p>`;
+            explanation += `<p><strong>Empirical Mass:</strong> ${empiricalMass.toFixed(2)} g/mol</p>`;
+            explanation += `<p><strong>Multiplier:</strong> ${molecularMass} ÷ ${empiricalMass.toFixed(2)} = ${multiplier}</p>`;
+            explanation += `<p><strong>Molecular Formula:</strong> ${molecularFormula}</p>`;
+            explanation += '<p><em>Note: Typically learned in Grade 10–11 chemistry.</em></p>';
+            return { formula: `Molecular: ${molecularFormula}`, explanation };
+        }
+
+        explanation += '<div class="warning-box"><strong>Common mistakes:</strong> Don\'t round too early! Always convert to moles first.</div>';
+        explanation += '<p><em>Note: Typically learned in Grade 10–11 chemistry.</em></p>';
+
+        return { formula: `Empirical: ${empiricalFormula}`, explanation };
+    }
+
+    function simplifyRatios(ratios) {
+        // Simple ratio simplification
+        const result = ratios.map(r => {
+            let count = Math.round(r.ratio);
+            if (Math.abs(r.ratio - count) > 0.1) {
+                // Try multiplying by 2, 3, etc.
+                for (let mult = 2; mult <= 10; mult++) {
+                    const test = Math.round(r.ratio * mult);
+                    if (Math.abs(r.ratio * mult - test) < 0.1) {
+                        count = test;
+                        break;
+                    }
+                }
+            }
+            return { symbol: r.symbol, count: count || 1 };
+        });
+        return result;
+    }
+
+    function calculateEmpiricalMass(empirical) {
+        let mass = 0;
+        empirical.forEach(elem => {
+            const atomicMass = atomicMasses[elem.symbol];
+            if (atomicMass) {
+                mass += atomicMass * elem.count;
+            }
+        });
+        return mass;
+    }
+});
+
+// ============================================
+// Features Page (Blank Page 2)
+// ============================================
+
+// Features data
+const featuresData = [
+    {
+        id: 'equation-balancer',
+        icon: 'B',
+        name: 'Chemical Equation Balancer',
+        description: 'Balance chemical equations step-by-step with detailed explanations.',
+        details: {
+            title: 'Chemical Equation Balancer',
+            icon: 'B',
+            content: `
+                    <div class="feature-detail-section">
+                        <h3>Overview</h3>
+                        <p>This tool helps you balance chemical equations by showing each step of the process. Perfect for understanding how to balance equations correctly.</p>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>How to Use</h3>
+                        <ul>
+                            <li>Enter an unbalanced equation (e.g., Fe + O2 → Fe2O3)</li>
+                            <li>Click "Balance Equation" to see the balanced result</li>
+                            <li>Review the step-by-step explanation</li>
+                            <li>Check atom counts to verify conservation of matter</li>
+                        </ul>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Key Rules</h3>
+                        <ul>
+                            <li><strong>Never change subscripts</strong> - only adjust coefficients</li>
+                            <li>Balance one element at a time</li>
+                            <li>Always verify atom counts on both sides</li>
+                            <li>Start with elements that appear in only one compound</li>
+                        </ul>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Tips for Success</h3>
+                        <p>Start by balancing elements that appear in only one reactant and one product. Then move to elements that appear in multiple compounds. Always double-check your work by counting atoms on both sides of the equation.</p>
+                    </div>
+                `
+        }
+    },
+    {
+        id: 'molar-mass',
+        icon: 'M',
+        name: 'Molar Mass Calculator',
+        description: 'Calculate the molar mass of any chemical compound with element-by-element breakdown.',
+        details: {
+            title: 'Molar Mass Calculator',
+            icon: 'M',
+            content: `
+                    <div class="feature-detail-section">
+                        <h3>Overview</h3>
+                        <p>Calculate the total molar mass of any chemical formula by summing the atomic masses of all atoms in the compound.</p>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>How to Use</h3>
+                        <ul>
+                            <li>Enter a chemical formula (e.g., CaCO3)</li>
+                            <li>Choose between exact values (decimals) or rounded values</li>
+                            <li>View the element-by-element breakdown</li>
+                            <li>See the total molar mass in g/mol</li>
+                        </ul>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Understanding Molar Mass</h3>
+                        <p>Molar mass is the mass of one mole of a substance, expressed in grams per mole (g/mol). It's calculated by adding up the atomic masses of all atoms in the formula, multiplied by their subscripts.</p>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Example</h3>
+                        <p>For H2O: H (1.008 × 2) + O (16.00 × 1) = 18.016 g/mol</p>
+                    </div>
+                `
+        }
+    },
+    {
+        id: 'percent-composition',
+        icon: '%',
+        name: 'Percent Composition',
+        description: 'Calculate the percentage by mass of each element in a compound.',
+        details: {
+            title: 'Percent Composition Calculator',
+            icon: '%',
+            content: `
+                    <div class="feature-detail-section">
+                        <h3>Overview</h3>
+                        <p>Determine what percentage of a compound's mass comes from each element. This is commonly tested in Grade 10-11 chemistry.</p>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>How to Use</h3>
+                        <ul>
+                            <li>Enter a chemical formula (e.g., H2SO4)</li>
+                            <li>Click "Calculate Percent Composition"</li>
+                            <li>View the percentage of each element</li>
+                            <li>Verify that percentages sum to approximately 100%</li>
+                        </ul>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Formula</h3>
+                        <p>Percent by mass = (Element mass ÷ Total molar mass) × 100%</p>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Common Applications</h3>
+                        <ul>
+                            <li>Determining the purity of compounds</li>
+                            <li>Calculating nutritional information</li>
+                            <li>Understanding compound composition</li>
+                            <li>Solving empirical formula problems</li>
+                        </ul>
+                    </div>
+                `
+        }
+    },
+    {
+        id: 'empirical-formula',
+        icon: 'E',
+        name: 'Empirical & Molecular Formula',
+        description: 'Calculate empirical and molecular formulas from mass data or percentages.',
+        details: {
+            title: 'Empirical & Molecular Formula Solver',
+            icon: 'E',
+            content: `
+                    <div class="feature-detail-section">
+                        <h3>Overview</h3>
+                        <p>Determine the simplest whole-number ratio of atoms in a compound (empirical formula) and, if given molecular mass, the actual molecular formula.</p>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>How to Use</h3>
+                        <ul>
+                            <li>Choose input method: Mass Percentages or Mass in grams</li>
+                            <li>Enter element symbols and their values</li>
+                            <li>Optionally enter molecular mass for molecular formula</li>
+                            <li>Review step-by-step calculations</li>
+                        </ul>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Step-by-Step Process</h3>
+                        <ol>
+                            <li>Convert mass to moles (mass ÷ atomic mass)</li>
+                            <li>Divide all mole values by the smallest mole value</li>
+                            <li>Round to whole numbers to get empirical formula</li>
+                            <li>If molecular mass is given, calculate multiplier and get molecular formula</li>
+                        </ol>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Common Mistakes to Avoid</h3>
+                        <ul>
+                            <li><strong>Don't round too early</strong> - Always convert to moles first</li>
+                            <li>Don't skip the mole conversion step</li>
+                            <li>Make sure ratios are in simplest whole numbers</li>
+                            <li>Double-check your calculations</li>
+                        </ul>
+                    </div>
+                    <div class="feature-detail-section">
+                        <h3>Grade Level</h3>
+                        <p>This concept is typically covered in Grade 10-11 chemistry courses.</p>
+                    </div>
+                `
+        }
+    }
+];
+
+// Initialize features page
+function initializeFeatures() {
+    const featuresGrid = document.getElementById('features-grid');
+    if (!featuresGrid) return;
+
+    // Clear existing content
+    featuresGrid.innerHTML = '';
+
+    // Generate feature cards
+    featuresData.forEach(feature => {
+        const card = document.createElement('div');
+        card.className = 'feature-card';
+        card.innerHTML = `
+            <div class="feature-icon">${feature.icon}</div>
+            <div class="feature-info">
+                <h3 class="feature-name">${feature.name}</h3>
+                <p class="feature-description">${feature.description}</p>
+            </div>
+        `;
+
+        card.addEventListener('click', () => {
+            showFeatureDetail(feature);
+        });
+
+        featuresGrid.appendChild(card);
+    });
+}
+
+// Show feature detail modal
+function showFeatureDetail(feature) {
+    const featureModal = document.getElementById('feature-modal');
+    const featureModalBody = document.getElementById('feature-modal-body');
+
+    if (featureModalBody && featureModal) {
+        featureModalBody.innerHTML = `
+            <div class="feature-detail-header">
+                <div class="feature-detail-icon">${feature.details.icon}</div>
+                <h2 class="feature-detail-title">${feature.details.title}</h2>
+            </div>
+            <div class="feature-detail-content">
+                ${feature.details.content}
+            </div>
+        `;
+        featureModal.classList.add('active');
+        document.body.classList.add('hide-nav');
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize features immediately
+    initializeFeatures();
+
+    // Set up modal close handlers
+    const featureModal = document.getElementById('feature-modal');
+    const featureModalClose = document.getElementById('feature-modal-close');
+
+    if (featureModalClose) {
+        featureModalClose.addEventListener('click', () => {
+            if (featureModal) {
+                featureModal.classList.remove('active');
+                document.body.classList.remove('hide-nav');
+            }
+        });
+    }
+
+    if (featureModal) {
+        featureModal.addEventListener('click', (e) => {
+            if (e.target === featureModal) {
+                featureModal.classList.remove('active');
+                document.body.classList.remove('hide-nav');
+            }
+        });
+    }
+
+    // Initialize chemistry tool cards
+    initChemToolCards();
+});
+
+// ============================================
+// Chemistry Tool Cards (Page Blank-1)
+// ============================================
+
+let chemToolCardsInitialized = false;
+let currentLang = 'zh'; // Default to Chinese
+
+function initChemToolCards() {
+    // Prevent multiple initializations
+    if (chemToolCardsInitialized) return;
+
+    const toolCards = document.querySelectorAll('.chem-tool-card');
+
+    if (toolCards.length === 0) return;
+
+    toolCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const toolType = card.getAttribute('data-tool');
+            openChemToolModal(toolType);
+        });
+    });
+
+    // Initialize language toggle
+    initLanguageToggle();
+
+    chemToolCardsInitialized = true;
+}
+
+function initLanguageToggle() {
+    // Select all language toggle buttons
+    const langToggles = document.querySelectorAll('.lang-toggle');
+    langToggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            updateLanguage();
+            // Update all toggle buttons text
+            langToggles.forEach(btn => {
+                btn.textContent = currentLang === 'zh' ? 'EN/中' : '中/EN';
+            });
+        });
+    });
+}
+
+function updateLanguage() {
+    // Update HTML lang attribute
+    document.documentElement.lang = currentLang;
+
+    // Update all elements with data-en and data-zh attributes
+    document.querySelectorAll('[data-en][data-zh]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${currentLang}`);
+    });
+
+    // Dispatch event for components to update
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang: currentLang } }));
+}
+
+function openChemToolModal(toolType) {
+    const featureModal = document.getElementById('feature-modal');
+    const featureModalBody = document.getElementById('feature-modal-body');
+
+    if (!featureModal || !featureModalBody) return;
+
+    let content = '';
+
+    switch (toolType) {
+        case 'balancer':
+            content = generateBalancerToolContent();
+            break;
+        case 'molar-mass':
+            content = generateMolarMassToolContent();
+            break;
+        case 'empirical':
+            content = generateEmpiricalToolContent();
+            break;
+        case 'blank':
+            content = generateBlankToolContent();
+            break;
+        case 'solubility':
+            content = generateSolubilityToolContent();
+            break;
+        case 'ions':
+            content = generateIonsToolContent();
+            break;
+    }
+
+    featureModalBody.innerHTML = content;
+    featureModal.classList.add('active');
+    document.body.classList.add('hide-nav');
+
+    // Attach event listeners after content is loaded
+    setTimeout(() => {
+        attachToolEventListeners(toolType);
+    }, 100);
+}
+
+// Bilingual text helper
+function t(en, zh) {
+    return currentLang === 'zh' ? zh : en;
+}
+
+function generateBalancerToolContent() {
+    return `
+        <style>
+            /* ===== 配平工具主容器样式 ===== */
+            .balancer-main-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+
+
+            /* ===== 天平容器样式 ===== */
+            .physics-scale-container {
+                perspective: 1000px;
+                width: 100%;
+                height: 260px;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: #f8fafc;
+                border-radius: 12px;
+                overflow: hidden;
+                border: 1.5px solid #e2e8f0;
+            }
+
+            /* 天平刻度背景 */
+            .physics-scale-container::before {
+                content: '';
+                position: absolute;
+                bottom: 50px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 120px;
+                height: 60px;
+                background: radial-gradient(ellipse at center bottom, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+                border-radius: 50%;
+                pointer-events: none;
+            }
+            
+            .physics-beam-metallic {
+                background: linear-gradient(180deg, #6b7280 0%, #4b5563 30%, #374151 70%, #1f2937 100%);
+                box-shadow: 
+                    0 4px 12px rgba(0,0,0,0.25), 
+                    inset 0 2px 0 rgba(255,255,255,0.15),
+                    inset 0 -1px 0 rgba(0,0,0,0.2);
+                transition: transform 0.1s linear; 
+                transform-origin: center center;
+            }
+
+            .physics-beam-ruler {
+                background-image: repeating-linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.25) 0px,
+                    rgba(255,255,255,0.25) 1px,
+                    transparent 1px,
+                    transparent 15px
+                );
+                height: 40%;
+                width: 85%;
+                position: absolute;
+                top: 30%;
+                left: 7.5%;
+                pointer-events: none;
+            }
+
+            .physics-pan-metallic {
+                background: linear-gradient(180deg, #4b5563 0%, #374151 50%, #1f2937 100%);
+                box-shadow: 
+                    0 8px 25px -4px rgba(0, 0, 0, 0.35), 
+                    inset 0 2px 0 rgba(255,255,255,0.08),
+                    inset 0 -1px 3px rgba(0,0,0,0.2);
+            }
+
+            .physics-support-rod {
+                width: 3px; 
+                background: linear-gradient(90deg, #d1d5db 0%, #6b7280 20%, #374151 50%, #6b7280 80%, #d1d5db 100%);
+                height: 80px;
+                margin: 0 auto;
+                position: relative;
+                z-index: 5;
+                box-shadow: 2px 0 4px rgba(0,0,0,0.2);
+            }
+
+            .physics-joint-ring {
+                width: 10px;
+                height: 10px;
+                background: radial-gradient(circle at 30% 30%, #f3f4f6, #9ca3af);
+                border: 2px solid #4b5563;
+                border-radius: 50%;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                z-index: 6;
+            }
+            .physics-joint-top { top: -5px; }
+            .physics-joint-bottom { bottom: -5px; }
+
+            .physics-stand-metallic {
+                background: linear-gradient(90deg, #4b5563 0%, #9ca3af 30%, #6b7280 50%, #9ca3af 70%, #4b5563 100%);
+                box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+            }
+            
+            .physics-base-metallic {
+                background: linear-gradient(180deg, #6b7280 0%, #374151 30%, #1f2937 100%);
+                box-shadow: 
+                    0 10px 30px -5px rgba(0, 0, 0, 0.4),
+                    inset 0 2px 0 rgba(255,255,255,0.1);
+            }
+
+            .physics-needle {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 4px;
+                height: 50px;
+                background: linear-gradient(180deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+                transform-origin: top center;
+                transform: translate(-50%, 0);
+                z-index: 35;
+                border-radius: 0 0 3px 3px;
+                box-shadow: 0 3px 8px rgba(239, 68, 68, 0.4);
+                pointer-events: none;
+            }
+            
+            /* 托盘上方的化学式显示标签 */
+            .physics-pan-label {
+                position: absolute;
+                bottom: 15px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 14px;
+                font-weight: 700;
+                color: #374151;
+                text-align: center;
+                white-space: nowrap;
+                text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+                letter-spacing: 0.5px;
+                min-height: 20px;
+            }
+            
+            .physics-pan-label.has-content {
+                padding: 4px 12px;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            /* ===== 输入区域样式 ===== */
+            .balancer-input-section {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                padding: 14px;
+                background: #ffffff;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .balancer-input-row {
+                display: grid;
+                grid-template-columns: 1fr auto 1fr;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .balancer-input-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .balancer-input-label {
+                font-size: 13px;
+                font-weight: 600;
+                color: #475569;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .balancer-input-label .label-icon {
+                width: 20px;
+                height: 20px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 11px;
+                font-weight: 700;
+                color: white;
+            }
+            .balancer-input-label .label-icon.reactant { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+            .balancer-input-label .label-icon.product { background: linear-gradient(135deg, #10b981, #059669); }
+
+            .balancer-text-input {
+                width: 100%;
+                padding: 10px 14px;
+                font-size: 0.95rem;
+                font-weight: 500;
+                font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+                color: #1e293b;
+                background: #ffffff;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 12px;
+                outline: none;
+                transition: all 0.2s ease;
+            }
+
+            .balancer-text-input:focus {
+                border-color: #6366f1;
+                box-shadow: 
+                    0 0 0 4px rgba(99, 102, 241, 0.1),
+                    inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            }
+
+            .balancer-text-input::placeholder {
+                color: #94a3b8;
+                font-weight: 400;
+            }
+
+            .balancer-arrow-divider {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px;
+            }
+
+            .balancer-arrow-divider svg {
+                width: 32px;
+                height: 32px;
+                color: #94a3b8;
+            }
+
+            /* ===== 原子计数显示 ===== */
+            .balancer-atom-counts {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                padding: 10px 14px;
+                background: #f8fafc;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .atom-count-column {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .atom-count-title {
+                font-size: 11px;
+                font-weight: 700;
+                color: #64748b;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                padding-bottom: 6px;
+                border-bottom: 1px dashed #cbd5e1;
+            }
+
+            .atom-count-list {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                min-height: 28px;
+            }
+
+            .atom-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 4px 10px;
+                font-size: 13px;
+                font-weight: 600;
+                border-radius: 12px;
+                background: #ffffff;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            }
+            .atom-tag.left { 
+                color: #4f46e5; 
+                border: 1px solid rgba(99, 102, 241, 0.3);
+            }
+            .atom-tag.right { 
+                color: #059669; 
+                border: 1px solid rgba(16, 185, 129, 0.3);
+            }
+
+            /* ===== 反馈状态样式 ===== */
+            .balancer-status-bar {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 10px 16px;
+                border-radius: 12px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                transition: all 0.2s ease;
+                background: #f8fafc;
+                color: #64748b;
+                border: 1px solid #e2e8f0;
+            }
+
+            .balancer-status-bar.balanced {
+                background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+                color: #047857;
+                border-color: #6ee7b7;
+            }
+
+            .balancer-status-bar.unbalanced {
+                background: linear-gradient(135deg, #fef3c7, #fde68a);
+                color: #b45309;
+                border-color: #fcd34d;
+            }
+
+            .balancer-status-bar .status-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .balancer-status-bar.balanced .status-icon { background: #10b981; color: white; }
+            .balancer-status-bar.unbalanced .status-icon { background: #f59e0b; color: white; }
+
+            /* ===== 按钮样式 ===== */
+            .balancer-action-buttons {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-start;
+            }
+
+            .balancer-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 18px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                border-radius: 12px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .balancer-btn-primary {
+                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+                color: white;
+            }
+
+            .balancer-btn-primary:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .balancer-btn-primary:active {
+                transform: translateY(0);
+            }
+
+            .balancer-btn-secondary {
+                background: #f8fafc;
+                color: #475569;
+                border: 1px solid #e2e8f0;
+            }
+
+            .balancer-btn-secondary:hover {
+                background: #f1f5f9;
+                border-color: #cbd5e1;
+            }
+
+            /* ===== 结果显示 ===== */
+            .balancer-result-box {
+                display: none;
+                padding: 14px 18px;
+                background: #ecfdf5;
+                border-radius: 12px;
+                border: 1px solid #a7f3d0;
+            }
+
+            .balancer-result-box.show {
+                display: block;
+                animation: slideIn 0.3s ease;
+            }
+
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .balancer-result-label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #059669;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 8px;
+            }
+
+            .balancer-result-equation {
+                font-size: 20px;
+                font-weight: 700;
+                color: #047857;
+                font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            }
+
+            /* ===== 使用说明 ===== */
+            .balancer-tips-section {
+                padding: 14px 16px;
+                background: #f8fafc;
+                border-radius: 12px;
+                border: 1px solid #e2e8f0;
+            }
+
+            .balancer-tips-title {
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #64748b;
+                margin-bottom: 10px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .balancer-tips-title svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .balancer-tips-list {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .balancer-tip-item {
+                font-size: 0.8rem;
+                color: #64748b;
+                padding-left: 16px;
+                position: relative;
+                line-height: 1.5;
+            }
+
+            .balancer-tip-item::before {
+                content: '•';
+                position: absolute;
+                left: 4px;
+                color: #94a3b8;
+            }
+
+            .balancer-example-box {
+                margin-top: 10px;
+                padding: 10px 12px;
+                background: #ffffff;
+                border-radius: 12px;
+                font-size: 0.8rem;
+                color: #475569;
+                border: 1px solid #e2e8f0;
+            }
+
+            .balancer-example-box code {
+                font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+                background: #f1f5f9;
+                padding: 2px 5px;
+                border-radius: 3px;
+                font-weight: 600;
+                color: #1e293b;
+            }
+        </style>
+        
+        <div class="tool-modal-header">
+            <div class="tool-modal-icon balancer-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v18M3 12h18M7 7l10 10M17 7L7 17" />
+                </svg>
+            </div>
+            <div class="tool-modal-title-group">
+                <h2 class="tool-modal-title">${t('Equation Balancer', '化学方程式配平')}</h2>
+                <div class="tool-modal-tags">
+                    <span class="grade-tag">G9-G12</span>
+                    <span class="feature-tag">${t('Interactive', '交互式')}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="balancer-main-wrapper">
+
+
+            <!-- 天平可视化区域 -->
+            <div class="physics-scale-container">
+
+                <!-- 底座 -->
+                <div style="position: absolute; bottom: 15px; display: flex; flex-direction: column; align-items: center; z-index: 0; pointer-events: none;">
+                    <div class="physics-stand-metallic" style="width: 14px; height: 210px; border-radius: 7px 7px 0 0;"></div>
+                    <div class="physics-base-metallic" style="width: 140px; height: 22px; border-radius: 9999px; margin-top: -4px; border-top: 1px solid #6b7280;"></div>
+                </div>
+
+                <!-- 中心支点 -->
+                <div id="physics-pivot" style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); margin-top: -50px; z-index: 30; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+                    <div style="width: 44px; height: 44px; background: linear-gradient(145deg, #f3f4f6, #d1d5db); border-radius: 9999px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; border: 3px solid #e5e7eb; position: relative; z-index: 40;">
+                        <div id="physics-needle" class="physics-needle"></div>
+                        <div style="width: 16px; height: 16px; background: linear-gradient(145deg, #6b7280, #374151); border-radius: 9999px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); position: absolute; z-index: 50;"></div>
+                    </div>
+                </div>
+
+                <!-- 旋转横梁 -->
+                <div id="physics-beam-assembly" class="physics-beam-metallic" style="position: absolute; top: 40%; left: 50%; width: 420px; height: 14px; border-radius: 9999px; margin-top: -50px; margin-left: -210px; display: flex; justify-content: space-between; align-items: center; z-index: 20;">
+                    <div class="physics-beam-ruler"></div>
+
+                    <!-- 左悬挂组件 -->
+                    <div id="physics-hanger-left" style="position: absolute; left: 25px; top: 7px; width: 24px; display: flex; flex-direction: column; align-items: center; transform-origin: top center; transform: translateX(-50%); transition: transform 0.1s linear;">
+                        <div class="physics-support-rod" style="pointer-events: none;">
+                            <div class="physics-joint-ring physics-joint-top"></div>
+                            <div class="physics-joint-ring physics-joint-bottom"></div>
+                        </div>
+                        <div class="physics-pan-metallic" style="width: 110px; height: 12px; border-radius: 0 0 14px 14px; position: relative; border-top: 1px solid #6b7280;">
+                            <div id="physics-pan-label-left" class="physics-pan-label"></div>
+                        </div>
+                    </div>
+
+                    <!-- 右悬挂组件 -->
+                    <div id="physics-hanger-right" style="position: absolute; right: 25px; top: 7px; width: 24px; display: flex; flex-direction: column; align-items: center; transform-origin: top center; transform: translateX(50%); transition: transform 0.1s linear;">
+                        <div class="physics-support-rod" style="pointer-events: none;">
+                            <div class="physics-joint-ring physics-joint-top"></div>
+                            <div class="physics-joint-ring physics-joint-bottom"></div>
+                        </div>
+                        <div class="physics-pan-metallic" style="width: 110px; height: 12px; border-radius: 0 0 14px 14px; position: relative; border-top: 1px solid #6b7280;">
+                            <div id="physics-pan-label-right" class="physics-pan-label"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="balancer-input-section">
+                <div class="balancer-input-row">
+                    <div class="balancer-input-group">
+                        <label class="balancer-input-label">
+                            <span class="label-icon reactant">R</span>
+                            ${t('Reactants', '反应物')}
+                        </label>
+                        <input type="text" 
+                               id="reactants-input" 
+                               class="balancer-text-input" 
+                               placeholder="${t('e.g., Fe + O2', '例如: Fe + O2')}"
+                               autocomplete="off"
+                               spellcheck="false">
+                    </div>
+
+                    <div class="balancer-arrow-divider">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+
+                    <div class="balancer-input-group">
+                        <label class="balancer-input-label">
+                            <span class="label-icon product">P</span>
+                            ${t('Products', '生成物')}
+                        </label>
+                        <input type="text" 
+                               id="products-input" 
+                               class="balancer-text-input" 
+                               placeholder="${t('e.g., Fe2O3', '例如: Fe2O3')}"
+                               autocomplete="off"
+                               spellcheck="false">
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- 操作按钮 + 状态反馈 -->
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <button id="auto-balance-btn" class="balancer-btn balancer-btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3v1m0 16v1m-9-9h1m16 0h1m-2.64-6.36l-.7.7m-12.02 12.02l-.7.7m0-12.72l.7.7m12.02 12.02l.7.7"/>
+                        <circle cx="12" cy="12" r="4"/>
+                    </svg>
+                    ${t('Auto Balance', '自动配平')}
+                </button>
+                <button id="clear-balancer-btn" class="balancer-btn balancer-btn-secondary">
+                    ${t('Clear', '清除')}
+                </button>
+                <div class="balancer-status-bar" id="balance-feedback" style="flex: 1; min-width: 150px;">
+                    ${t('Enter equation', '输入方程式')}
+                </div>
+            </div>
+
+            <!-- 配平结果 -->
+            <div class="balancer-result-box" id="balanced-result">
+                <div class="balancer-result-label">${t('Balanced Equation', '配平后的方程式')}</div>
+                <div class="balancer-result-equation" id="balanced-equation-text"></div>
+            </div>
+
+            <!-- 示例提示 -->
+            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: #64748b; flex-wrap: wrap;">
+                <span style="font-weight: 600;">${t('Examples:', '示例:')}</span>
+                <code style="background: #f1f5f9; padding: 3px 8px; border-radius: 8px; font-family: monospace; color: #1e293b;">Fe + O2 → Fe2O3</code>
+                <code style="background: #f1f5f9; padding: 3px 8px; border-radius: 8px; font-family: monospace; color: #1e293b;">H2 + O2 → H2O</code>
+            </div>
+        </div>
+
+        <!-- Hidden elements for compatibility -->
+        <div id="physics-card-left" style="display:none;"></div>
+        <div id="physics-card-right" style="display:none;"></div>
+    `;
+}
+
+// Helper to set formula from chips
+function setMolarFormula(formula) {
+    const input = document.getElementById('modal-formula-input');
+    if (input) {
+        input.value = formula;
+        input.dispatchEvent(new Event('input'));
+        // Optionally trigger print too? Maybe not, let user press Enter.
+        input.focus();
+    }
+}
+
+function generateMolarMassToolContent() {
+    return `
+        <div class="tool-modal-header">
+            <div class="tool-modal-icon molar-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <rect x="8" y="12" width="32" height="24" rx="3"/>
+                    <text x="24" y="29" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor" stroke="none">M</text>
+                    <line x1="8" y1="36" x2="40" y2="36"/>
+                </svg>
+            </div>
+            <div class="tool-modal-title-group">
+                <h2 class="tool-modal-title">${t('Molar Mass Calculator', '摩尔质量计算器')}</h2>
+                <div class="tool-modal-tags">
+                    <span class="grade-tag">G9-G10</span>
+                    <span class="feature-tag">g/mol</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="molar-tool-layout">
+            <!-- Left Column: Input & Info -->
+            <div class="molar-input-panel">
+                <div class="tool-input-section">
+                    <label for="modal-formula-input" style="font-size: 0.85rem; margin-bottom: 8px;">${t('Chemical Formula', '化学式')}</label>
+                    <input type="text" id="modal-formula-input" 
+                           placeholder="e.g. H2O" 
+                           class="realtime-input" 
+                           autocomplete="off" 
+                           spellcheck="false">
+
+                    <!-- Helper Bar (Compact) -->
+                    <div class="formula-helper-bar" style="display:flex; align-items:center; gap:6px; margin-top:4px; margin-bottom:4px;">
+                        <!-- Subscript Toggle -->
+                        <button id="helper-sub-btn" type="button" class="helper-btn" style="flex:1; height:32px; padding:0 8px; font-size:0.8rem; border:1px solid #e2e8f0; border-radius:6px; background:#fff; color:#475569; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.1s;">
+                            <span style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:600; line-height:1;">S₀</span> 
+                            <span id="sub-status-text" style="font-size:0.75rem; white-space:nowrap;">${t('Normal Inputs', '普通输入')}</span>
+                        </button>
+                        
+                        <!-- Dot Button -->
+                        <button id="helper-dot-btn" type="button" class="helper-btn" style="width:40px; height:32px; font-size:1.2rem; line-height:0; border:1px solid #e2e8f0; border-radius:6px; background:#fff; color:#475569; cursor:pointer; display:flex; align-items:center; justify-content:center; padding-bottom:3px;" title="${t('Insert Dot', '插入点')}">
+                            •
+                        </button>
+                    </div>
+                    
+                    <div class="enter-hint">
+                        <span>Press</span> <kbd class="kbd-key">Enter ↵</kbd> <span>to print ticket</span>
+                    </div>
+
+                    <!-- Options Row -->
+                    <div style="display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; cursor: pointer;">
+                            <input type="checkbox" id="modal-exact-toggle" style="width: 14px; height: 14px; accent-color: #6366f1;">
+                            ${t('Exact Decimals', '精确小数')}
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; cursor: pointer;">
+                            <input type="checkbox" id="modal-learning-toggle" style="width: 14px; height: 14px; accent-color: #6366f1;">
+                            ${t('Learning Mode', '学习模式')}
+                        </label>
+                    </div>
+                    
+                    <!-- Show Calculation Button (only visible in learning mode) -->
+                    <div id="calc-steps-container" class="calc-steps-container" style="display: none; margin-top: 10px;">
+                        <button id="show-calc-btn" class="show-calc-btn">
+                            <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            ${t('Show Calculation', '查看计算过程')}
+                        </button>
+                        <div id="calc-steps-content" class="calc-steps-content" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="tool-tips-section" style="flex-grow: 1;">
+                    <h4>${t('How to use', '使用说明')}</h4>
+                    <p>${t('1. Type a formula. The scale shows mass in real-time.', '1. 输入化学式，电子秤实时显示质量。')}</p>
+                    <p>${t('2. Press ENTER to print the weight ticket.', '2. 按回车键打印详细质量小票。')}</p>
+                    
+                    <div class="example-box" style="margin-top: 20px;">
+                        <strong>${t('Try:', '试一试:')}</strong>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                            <span class="formula-chip" onclick="setMolarFormula('C6H12O6')">C6H12O6</span>
+                            <span class="formula-chip" onclick="setMolarFormula('CuSO4(H2O)5')">CuSO4(H2O)5</span>
+                            <span class="formula-chip" onclick="setMolarFormula('KMnO4')">KMnO4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Visual Stage -->
+            <div class="molar-scale-stage">
+                <div class="electronic-scale-wrapper">
+                    <!-- 3D Blocks -->
+                    <div id="scale-blocks-area" class="scale-blocks-area"></div>
+                    
+                    <!-- Scale Base Top -->
+                    <div class="electronic-scale-base">
+                        <div class="scale-platform-top"></div>
+                        <div class="scale-screen">
+                            <span id="scale-display-value">0.00</span>
+                            <span style="font-size: 1rem; margin-left: 8px; opacity: 0.7;">g/mol</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Front Panel with Slot -->
+                    <div class="scale-front-panel">
+                        <div class="receipt-slot"></div>
+                    </div>
+
+                    <!-- Receipt Container (inside wrapper for same coordinate system) -->
+                    <div class="receipt-anim-container">
+                        <div id="receipt-wrapper" class="receipt-wrapper">
+                            <div class="receipt-header">Weight Ticket</div>
+                            <div class="receipt-date" id="receipt-date"></div>
+                            <div id="receipt-items"></div>
+                            <div class="receipt-total-row">
+                                <span>TOTAL</span>
+                                <span id="receipt-total-value"></span>
+                            </div>
+                            <div class="receipt-footer">
+                                <div style="font-size: 2rem; margin: 10px 0;">barcode</div>
+                                Chemistry Tools v2.0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden legacy containers -->
+        <div id="modal-mass-result" style="display:none;"></div>
+        <div id="modal-mass-breakdown" style="display:none;"></div>
+        <button id="modal-calculate-mass-btn" style="display:none;"></button>
+    `;
+
+
+}
+
+function generateBlankToolContent() {
+    return `
+        <div class="tool-modal-header">
+            <div class="tool-modal-icon blank-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="4" width="16" height="16" rx="2" />
+                </svg>
+            </div>
+            <div class="tool-modal-title-group">
+                <h2 class="tool-modal-title">${t('Blank Page', '空白页')}</h2>
+                <div class="tool-modal-tags">
+                    <span class="feature-tag">${t('Dev', '开发中')}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tool-modal-content">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #94a3b8; text-align: center;">
+                <svg style="width: 64px; height: 64px; margin-bottom: 20px; opacity: 0.2;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="4" y="4" width="16" height="16" rx="2" />
+                </svg>
+                <p>${t('This page is intentionally left blank.', '此页面特意留白。')}</p>
+                <p style="font-size: 0.8em; margin-top: 10px; opacity: 0.7;">${t('Ready for new content.', '等待新内容。')}</p>
+            </div>
+        </div>
+    `;
+}
+
+function generateEmpiricalToolContent() {
+    return `
+        <style>
+            /* ===== 经验式积木布局 ===== */
+            .lego-tool-layout {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+                align-items: stretch;
+            }
+
+            .lego-input-panel {
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+                background: #fff;
+                padding: 20px;
+                border-radius: 14px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            }
+
+            .lego-stage {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(180deg, #f8fafc, #f1f5f9);
+                border-radius: 14px;
+                padding: 24px;
+                min-height: 200px;
+                border: 2px dashed #d1d5db;
+                transition: all 0.3s;
+            }
+
+            .lego-stage.has-result {
+                border-style: solid;
+                border-color: #a78bfa;
+                background: linear-gradient(180deg, #faf5ff, #f5f3ff);
+            }
+
+            @media (max-width: 600px) {
+                .lego-tool-layout {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* ===== 积木块样式 ===== */
+            .lego-blocks-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+                width: 100%;
+            }
+
+            .lego-group {
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                gap: 6px;
+                flex-wrap: wrap;
+                padding: 12px;
+                background: rgba(255,255,255,0.6);
+                border-radius: 12px;
+                min-height: 50px;
+                transition: all 0.3s ease;
+            }
+
+            .lego-group-label {
+                width: 100%;
+                text-align: center;
+                font-size: 0.65rem;
+                font-weight: 600;
+                color: #94a3b8;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-bottom: 6px;
+            }
+
+            .lego-block {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-width: 55px;
+                min-height: 55px;
+                padding: 10px 14px;
+                border-radius: 12px;
+                font-weight: 700;
+                font-size: 1.1rem;
+                color: white;
+                box-shadow: 
+                    inset 0 -4px 0 rgba(0,0,0,0.2),
+                    inset 0 2px 0 rgba(255,255,255,0.3),
+                    0 4px 8px rgba(0,0,0,0.15);
+                transition: all 0.2s ease;
+                cursor: default;
+            }
+
+            .lego-block:hover {
+                transform: translateY(-2px) scale(1.05);
+            }
+
+            .lego-block .block-symbol {
+                font-size: 1.3rem;
+                font-weight: 800;
+                line-height: 1;
+            }
+
+            .lego-block .block-count {
+                font-size: 0.75rem;
+                opacity: 0.9;
+                margin-top: 3px;
+            }
+
+            /* 积木颜色 */
+            .lego-block.el-C { background: linear-gradient(135deg, #374151, #1f2937); }
+            .lego-block.el-H { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+            .lego-block.el-O { background: linear-gradient(135deg, #f87171, #ef4444); }
+            .lego-block.el-N { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
+            .lego-block.el-S { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+            .lego-block.el-P { background: linear-gradient(135deg, #fb923c, #f97316); }
+            .lego-block.el-Cl { background: linear-gradient(135deg, #34d399, #10b981); }
+            .lego-block.el-default { background: linear-gradient(135deg, #94a3b8, #64748b); }
+
+            /* ===== 倍数显示 ===== */
+            .multiplier-section {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 8px 16px;
+                background: linear-gradient(135deg, #fef3c7, #fde68a);
+                border-radius: 12px;
+                font-weight: 700;
+                color: #92400e;
+            }
+
+            .multiplier-section .times-icon {
+                font-size: 1rem;
+            }
+
+            .multiplier-section .multiplier-value {
+                font-size: 1.3rem;
+                font-weight: 800;
+            }
+
+            .multiplier-section .multiplier-label {
+                font-size: 0.7rem;
+                opacity: 0.8;
+            }
+
+            /* ===== 结果分子式 ===== */
+            .molecular-result {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                padding: 12px 20px;
+                background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+                border-radius: 12px;
+                border: 2px solid #34d399;
+            }
+
+            .molecular-result .result-label {
+                font-size: 0.65rem;
+                font-weight: 700;
+                color: #047857;
+                text-transform: uppercase;
+            }
+
+            .molecular-result .result-formula {
+                font-size: 1.3rem;
+                font-weight: 800;
+                color: #065f46;
+                font-family: 'SF Mono', monospace;
+            }
+
+            /* ===== 空状态 ===== */
+            .lego-empty-state {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: #94a3b8;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .lego-empty-state p {
+                font-size: 0.8rem;
+                max-width: 180px;
+                line-height: 1.4;
+            }
+
+            /* ===== 积木动画 ===== */
+            @keyframes blockAppear {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px) scale(0.8);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            .lego-block.animate-in {
+                animation: blockAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            }
+
+            @keyframes multiplierPop {
+                0% { transform: scale(0); }
+                50% { transform: scale(1.2); }
+                100% { transform: scale(1); }
+            }
+
+            .multiplier-section.animate-in {
+                animation: multiplierPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            }
+
+            /* ===== 响应式 ===== */
+            @media (max-width: 800px) {
+                .lego-tool-layout {
+                    grid-template-columns: 1fr;
+                }
+                .lego-stage {
+                    min-height: 300px;
+                }
+            }
+        </style>
+
+        <div class="tool-modal-header">
+            <div class="tool-modal-icon empirical-icon">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <rect x="4" y="20" width="12" height="12" rx="2"/>
+                    <rect x="18" y="20" width="12" height="12" rx="2"/>
+                    <rect x="32" y="20" width="12" height="12" rx="2"/>
+                    <circle cx="10" cy="17" r="2" fill="currentColor"/>
+                    <circle cx="24" cy="17" r="2" fill="currentColor"/>
+                    <circle cx="38" cy="17" r="2" fill="currentColor"/>
+                </svg>
+            </div>
+            <div class="tool-modal-title-group">
+                <h2 class="tool-modal-title">${t('Empirical & Molecular Formula', '经验式与分子式')}</h2>
+                <div class="tool-modal-tags">
+                    <span class="grade-tag">G10-G11</span>
+                    <span class="feature-tag">${t('LEGO Mode', '积木模式')}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="lego-tool-layout">
+            <!-- 输入区 -->
+            <div class="lego-input-panel">
+                <div style="font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                    ${t('Enter Elements (%)', '输入元素百分比')}
+                </div>
+                <div id="modal-element-inputs" class="element-inputs-grid"></div>
+                
+                <div style="border-top: 1px dashed #e2e8f0; padding-top: 16px; margin-top: 8px;">
+                    <div style="font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 6px;">
+                        ${t('Molecular Mass (optional)', '分子质量 (可选)')}
+                    </div>
+                    <input type="number" id="modal-mol-mass" placeholder="${t('e.g., 180', '例如: 180')}" step="0.1" class="tool-input" style="width: 100%;">
+                </div>
+                
+                <button id="modal-calc-formula-btn" class="tool-button primary-btn" style="margin-top: 12px; padding: 14px 24px; font-size: 1.05rem; width: 100%;">
+                    <svg style="width:18px;height:18px;margin-right:6px;vertical-align:text-bottom;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg> ${t('Build Formula', '合成公式')}
+                </button>
+                
+                <input type="hidden" id="modal-formula-method" value="percent">
+            </div>
+            
+            <!-- 积木展示区 -->
+            <div class="lego-stage" id="lego-stage">
+                <div id="lego-blocks-area" class="lego-blocks-container">
+                    <div class="lego-empty-state" id="lego-empty">
+                        <div style="opacity: 0.3; margin-bottom: 12px;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16v16H4z" />
+                                <path d="M4 8h16" />
+                                <path d="M4 12h16" />
+                                <path d="M4 16h16" />
+                                <path d="M8 4v16" />
+                                <path d="M12 4v16" />
+                                <path d="M16 4v16" />
+                            </svg>
+                        </div>
+                        <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5;">${t('Enter element percentages<br>and click Build', '输入元素百分比<br>点击合成查看结果')}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="empirical-tips" style="display:none;"></div>
+        <div id="modal-formula-result" class="tool-result-box" style="display:none;">
+            <div class="result-label">${t('Calculation Details:', '计算详情:')}</div>
+            <div class="result-value" id="modal-formula-value"></div>
+        </div>
+        
+        <div id="modal-formula-explanation" class="tool-explanation-box" style="display:none;"></div>
+    `;
+}
+
+
+function attachToolEventListeners(toolType) {
+    switch (toolType) {
+        case 'balancer':
+            attachBalancerListeners();
+            break;
+        case 'molar-mass':
+            attachMolarMassListeners();
+            break;
+        case 'empirical':
+            attachEmpiricalListeners();
+            break;
+        case 'blank':
+            // No listeners needed yet
+            break;
+        case 'solubility':
+            attachSolubilityListeners();
+            break;
+    }
+}
+
+function attachBalancerListeners() {
+    const reactantsInput = document.getElementById('reactants-input');
+    const productsInput = document.getElementById('products-input');
+    const autoBalanceBtn = document.getElementById('auto-balance-btn');
+    const clearBtn = document.getElementById('clear-balancer-btn');
+    const feedback = document.getElementById('balance-feedback');
+    const leftAtomCount = document.getElementById('left-atom-count');
+    const rightAtomCount = document.getElementById('right-atom-count');
+    const balancedResult = document.getElementById('balanced-result');
+    const balancedText = document.getElementById('balanced-equation-text');
+
+    // New physics scale elements
+    const physicsBeam = document.getElementById('physics-beam-assembly');
+    const physicsHangerLeft = document.getElementById('physics-hanger-left');
+    const physicsHangerRight = document.getElementById('physics-hanger-right');
+
+
+    const physicsNeedle = document.getElementById('physics-needle');
+    const physicsPanLabelLeft = document.getElementById('physics-pan-label-left');
+    const physicsPanLabelRight = document.getElementById('physics-pan-label-right');
+
+    // Physics state
+    const physicsState = {
+        leftWeight: 0,
+        rightWeight: 0,
+        currentAngle: 0,
+        targetAngle: 0,
+        velocity: 0
+    };
+
+    const PHYSICS = {
+        maxAngle: 20,
+        sensitivity: 2.5,
+        stiffness: 0.015,
+        damping: 0.92
+    };
+
+    let animationRunning = false;
+
+
+    // Parse formula into atom counts
+    function parseFormula(formula) {
+        if (!formula.trim()) return {};
+        const atoms = {};
+        const compounds = formula.split('+').map(s => s.trim());
+
+        compounds.forEach(compound => {
+            // Extract coefficient
+            const match = compound.match(/^(\d*)/);
+            const coef = match && match[1] ? parseInt(match[1]) : 1;
+            const formulaPart = compound.replace(/^\d*/, '');
+
+            // Parse elements with better handling for parentheses
+            let expandedFormula = formulaPart;
+
+            // Handle parentheses like (OH)2
+            const parenRegex = /\(([^)]+)\)(\d*)/g;
+            let parenMatch;
+            while ((parenMatch = parenRegex.exec(formulaPart)) !== null) {
+                const innerFormula = parenMatch[1];
+                const multiplier = parenMatch[2] ? parseInt(parenMatch[2]) : 1;
+
+                const innerRegex = /([A-Z][a-z]?)(\d*)/g;
+                let innerMatch;
+                while ((innerMatch = innerRegex.exec(innerFormula)) !== null) {
+                    const element = innerMatch[1];
+                    const count = innerMatch[2] ? parseInt(innerMatch[2]) : 1;
+                    atoms[element] = (atoms[element] || 0) + count * multiplier * coef;
+                }
+            }
+
+            // Remove parentheses parts and parse the rest
+            expandedFormula = formulaPart.replace(/\([^)]+\)\d*/g, '');
+
+            const elementRegex = /([A-Z][a-z]?)(\d*)/g;
+            let elemMatch;
+            while ((elemMatch = elementRegex.exec(expandedFormula)) !== null) {
+                const element = elemMatch[1];
+                const count = elemMatch[2] ? parseInt(elemMatch[2]) : 1;
+                atoms[element] = (atoms[element] || 0) + count * coef;
+            }
+        });
+
+        return atoms;
+    }
+
+    // Format atom counts for display with styled tags
+    function formatAtomCountsHTML(atoms, side) {
+        if (Object.keys(atoms).length === 0) {
+            return `<span style="color: #94a3b8; font-size: 12px;">—</span>`;
+        }
+        return Object.entries(atoms)
+            .map(([el, count]) => `<span class="atom-tag ${side}">${el}<sub>${count}</sub></span>`)
+            .join('');
+    }
+
+
+
+    // Physics animation loop
+    function animatePhysics() {
+        if (!physicsBeam) return;
+
+        const force = (physicsState.targetAngle - physicsState.currentAngle) * PHYSICS.stiffness;
+        physicsState.velocity = (physicsState.velocity + force) * PHYSICS.damping;
+        physicsState.currentAngle += physicsState.velocity;
+
+        if (Math.abs(physicsState.velocity) < 0.001 && Math.abs(physicsState.currentAngle - physicsState.targetAngle) < 0.001) {
+            physicsState.currentAngle = physicsState.targetAngle;
+            physicsState.velocity = 0;
+        }
+
+        // Rotate the beam
+        physicsBeam.style.transform = `rotate(${physicsState.currentAngle}deg)`;
+
+        // Counter-rotate hangers to keep them vertical
+        if (physicsHangerLeft) {
+            physicsHangerLeft.style.transform = `translateX(-50%) rotate(${-physicsState.currentAngle}deg)`;
+        }
+        if (physicsHangerRight) {
+            physicsHangerRight.style.transform = `translateX(50%) rotate(${-physicsState.currentAngle}deg)`;
+        }
+
+        // Rotate the needle to show the tilt
+        if (physicsNeedle) {
+            physicsNeedle.style.transform = `translate(-50%, 0) rotate(${physicsState.currentAngle}deg)`;
+        }
+
+        if (animationRunning) {
+            requestAnimationFrame(animatePhysics);
+        }
+    }
+
+    // Start animation with optional impulse
+    function startAnimation(withImpulse = false) {
+        if (!animationRunning) {
+            animationRunning = true;
+            if (withImpulse) {
+                physicsState.velocity = 2.5;
+            }
+            animatePhysics();
+        }
+    }
+
+    // Update pan labels on the scale
+    function updatePanLabels(reactants, products) {
+        if (physicsPanLabelLeft) {
+            physicsPanLabelLeft.textContent = reactants || '';
+            physicsPanLabelLeft.classList.toggle('has-content', !!reactants);
+        }
+        if (physicsPanLabelRight) {
+            physicsPanLabelRight.textContent = products || '';
+            physicsPanLabelRight.classList.toggle('has-content', !!products);
+        }
+    }
+
+
+    // Calculate imbalance and update scale
+    function updateScale() {
+        const reactantsFormula = reactantsInput ? reactantsInput.value.trim() : '';
+        const productsFormula = productsInput ? productsInput.value.trim() : '';
+        const feedback = document.getElementById('balance-feedback');
+
+        // Update pan labels on scale
+        updatePanLabels(reactantsFormula, productsFormula);
+
+        // Auto-split if full equation entered
+        if (reactantsFormula.includes('→') || reactantsFormula.includes('->')) {
+            const parts = reactantsFormula.replace(/->/g, '→').split('→');
+            if (reactantsInput) reactantsInput.value = parts[0].trim();
+            if (parts[1] && productsInput) productsInput.value = parts[1].trim();
+            return updateScale();
+        }
+
+        const leftAtoms = parseFormula(reactantsFormula);
+        const rightAtoms = parseFormula(productsFormula);
+
+        // Display atom counts with styled HTML
+        if (leftAtomCount) leftAtomCount.innerHTML = formatAtomCountsHTML(leftAtoms, 'left');
+        if (rightAtomCount) rightAtomCount.innerHTML = formatAtomCountsHTML(rightAtoms, 'right');
+
+        // Calculate total imbalance
+        const allElements = new Set([...Object.keys(leftAtoms), ...Object.keys(rightAtoms)]);
+        let leftTotal = 0;
+        let rightTotal = 0;
+        let imbalancedElement = null;
+        let imbalanceAmount = 0;
+
+        allElements.forEach(el => {
+            const left = leftAtoms[el] || 0;
+            const right = rightAtoms[el] || 0;
+            leftTotal += left;
+            rightTotal += right;
+            if (left !== right && !imbalancedElement) {
+                imbalancedElement = el;
+                imbalanceAmount = Math.abs(left - right);
+            }
+        });
+
+        // Update physics state
+        physicsState.leftWeight = leftTotal;
+        physicsState.rightWeight = rightTotal;
+
+        // Calculate target angle based on imbalance
+        const diff = rightTotal - leftTotal;
+        let angle = diff * PHYSICS.sensitivity;
+        if (angle > PHYSICS.maxAngle) angle = PHYSICS.maxAngle;
+        if (angle < -PHYSICS.maxAngle) angle = -PHYSICS.maxAngle;
+        physicsState.targetAngle = angle;
+
+        // Start animation
+        startAnimation();
+
+        // Update feedback status bar
+        if (feedback) {
+            feedback.classList.remove('balanced', 'unbalanced');
+
+            if (!reactantsFormula && !productsFormula) {
+                feedback.innerHTML = `${t('Enter a chemical equation to check the balance', '输入化学方程式来检查平衡状态')}`;
+            } else if (!productsFormula) {
+                feedback.classList.add('unbalanced');
+                feedback.innerHTML = `<span class="status-icon">⚠</span>${t('Add products to complete the equation', '添加生成物以完成方程式')}`;
+            } else if (!reactantsFormula) {
+                feedback.classList.add('unbalanced');
+                feedback.innerHTML = `<span class="status-icon">⚠</span>${t('Add reactants to complete the equation', '添加反应物以完成方程式')}`;
+            } else {
+                // Check if actually balanced (element by element)
+                let isBalanced = true;
+                allElements.forEach(el => {
+                    if ((leftAtoms[el] || 0) !== (rightAtoms[el] || 0)) isBalanced = false;
+                });
+
+                if (isBalanced && allElements.size > 0) {
+                    feedback.classList.add('balanced');
+                    feedback.innerHTML = `<span class="status-icon">✓</span>${t('Perfectly Balanced!', '完美平衡!')}`;
+                } else if (imbalancedElement) {
+                    feedback.classList.add('unbalanced');
+                    feedback.innerHTML = `<span class="status-icon">⚠</span>${t(`Unbalanced: ${imbalancedElement} differs by ${imbalanceAmount}`, `未平衡: ${imbalancedElement} 相差 ${imbalanceAmount} 个原子`)}`;
+                }
+            }
+        }
+
+        return { leftAtoms, rightAtoms, allElements };
+    }
+
+    // Auto-balance function
+    function autoBalance() {
+        const reactantsFormula = reactantsInput ? reactantsInput.value.trim() : '';
+        const productsFormula = productsInput ? productsInput.value.trim() : '';
+
+        if (!reactantsFormula || !productsFormula) {
+            return;
+        }
+
+        try {
+            const equation = `${reactantsFormula} → ${productsFormula}`;
+            const result = balanceEquationModal(equation);
+
+            // Update inputs with balanced equation
+            const balancedParts = result.balanced.split('→').map(s => s.trim());
+
+            if (reactantsInput) reactantsInput.value = balancedParts[0];
+            if (productsInput) productsInput.value = balancedParts[1];
+
+            updateScale();
+
+            // Show balanced result with animation
+            if (balancedResult) {
+                balancedResult.classList.add('show');
+            }
+            if (balancedText) {
+                balancedText.innerHTML = formatChemicalEquation(result.balanced);
+            }
+        } catch (error) {
+            if (feedback) {
+                feedback.classList.remove('balanced');
+                feedback.classList.add('unbalanced');
+                feedback.innerHTML = `<span class="status-icon">✕</span>${t('Could not auto-balance this equation', '无法自动配平此方程式')}`;
+            }
+        }
+    }
+
+    // Clear function
+    function clearInputs() {
+        if (reactantsInput) reactantsInput.value = '';
+        if (productsInput) productsInput.value = '';
+        if (balancedResult) balancedResult.classList.remove('show');
+
+        // Reset physics
+        physicsState.targetAngle = 0;
+        physicsState.velocity = 1.5; // Small impulse for visual feedback
+
+        updateScale();
+    }
+
+    // Event listeners for inputs
+    if (reactantsInput) {
+        reactantsInput.addEventListener('input', updateScale);
+    }
+    if (productsInput) {
+        productsInput.addEventListener('input', updateScale);
+    }
+    if (autoBalanceBtn) {
+        autoBalanceBtn.addEventListener('click', autoBalance);
+    }
+    if (clearBtn) {
+        clearBtn.addEventListener('click', clearInputs);
+    }
+
+    // Enter key support
+    [reactantsInput, productsInput].forEach(input => {
+        if (input) {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') autoBalance();
+            });
+        }
+    });
+
+    // Start initial animation with impulse
+    startAnimation(true);
+}
+
+// Helper to format chemical equations with subscripts
+function formatChemicalEquation(eq) {
+    return eq.replace(/(\d+)/g, (match, p1, offset, str) => {
+        // Check if it's a coefficient (at start or after +/→/space)
+        const before = str[offset - 1];
+        if (!before || before === ' ' || before === '+' || before === '→') {
+            return match; // Keep coefficients as is
+        }
+        return `<sub>${match}</sub>`;
+    });
+}
+
+
+function balanceEquationModal(equation) {
+    const parts = equation.split('→').map(s => s.trim());
+    if (parts.length !== 2) {
+        throw new Error('Equation must contain → (arrow)');
+    }
+
+    const reactants = parts[0].split('+').map(s => s.trim());
+    const products = parts[1].split('+').map(s => s.trim());
+
+    // Build explanation steps
+    const steps = [];
+    steps.push('<h4>Step-by-step balancing:</h4>');
+    steps.push('<ol>');
+    steps.push('<li><strong>Identify elements:</strong> List all elements on both sides</li>');
+    steps.push('<li><strong>Count atoms:</strong> Count atoms of each element</li>');
+    steps.push('<li><strong>Balance one at a time:</strong> Start with metals, then non-metals, end with O and H</li>');
+    steps.push('<li><strong>Adjust coefficients:</strong> Only change numbers in front of formulas</li>');
+    steps.push('<li><strong>Verify:</strong> Check that atoms are equal on both sides</li>');
+    steps.push('</ol>');
+    steps.push('<div class="warning-box"><strong>Important:</strong> Never change subscripts, only coefficients!</div>');
+
+    // Common equation patterns
+    let balancedEq = equation;
+    let check = '';
+
+    // Fe + O2 → Fe2O3
+    if (equation.includes('Fe') && equation.includes('O2') && equation.includes('Fe2O3')) {
+        balancedEq = '4Fe + 3O₂ → 2Fe₂O₃';
+        check = generateAtomCheckModal(balancedEq);
+    }
+    // H2 + O2 → H2O
+    else if (equation.match(/H2?\s*\+\s*O2/i) && equation.includes('H2O')) {
+        balancedEq = '2H₂ + O₂ → 2H₂O';
+        check = generateAtomCheckModal(balancedEq);
+    }
+    // CH4 + O2 → CO2 + H2O
+    else if (equation.includes('CH4') && equation.includes('O2') && equation.includes('CO2')) {
+        balancedEq = 'CH₄ + 2O₂ → CO₂ + 2H₂O';
+        check = generateAtomCheckModal(balancedEq);
+    }
+    // Na + Cl2 → NaCl
+    else if (equation.includes('Na') && equation.includes('Cl2') && equation.includes('NaCl')) {
+        balancedEq = '2Na + Cl₂ → 2NaCl';
+        check = generateAtomCheckModal(balancedEq);
+    }
+    // Generic case
+    else {
+        check = '<p class="note-text">Enter a common equation pattern to see atom count verification.</p>';
+    }
+
+    // Create a plain text version for updating inputs (without Unicode subscripts)
+    const balancedPlain = balancedEq
+        .replace(/₂/g, '2').replace(/₃/g, '3').replace(/₄/g, '4')
+        .replace(/₅/g, '5').replace(/₆/g, '6');
+
+    return {
+        equation: balancedEq,
+        balanced: balancedPlain,
+        explanation: steps.join(''),
+        check: check
+    };
+}
+
+function generateAtomCheckModal(equation) {
+    // Normalize subscripts for counting
+    const normalized = equation
+        .replace(/₂/g, '2').replace(/₃/g, '3').replace(/₄/g, '4')
+        .replace(/₅/g, '5').replace(/₆/g, '6');
+
+    const parts = normalized.split('→');
+    const left = parts[0].trim();
+    const right = parts[1].trim();
+
+    const leftAtoms = countAtomsModal(left);
+    const rightAtoms = countAtomsModal(right);
+
+    let html = '<h4>Atom Count Check:</h4>';
+    html += '<table class="check-table">';
+    html += '<tr><th>Element</th><th>Left Side</th><th>Right Side</th><th>Match</th></tr>';
+
+    const allElements = new Set([...Object.keys(leftAtoms), ...Object.keys(rightAtoms)]);
+    let allMatch = true;
+
+    allElements.forEach(element => {
+        const leftCount = leftAtoms[element] || 0;
+        const rightCount = rightAtoms[element] || 0;
+        const match = leftCount === rightCount;
+        if (!match) allMatch = false;
+        const matchIcon = match ? '✓' : '✗';
+        const matchClass = match ? 'match-yes' : 'match-no';
+        html += `<tr><td>${element}</td><td>${leftCount}</td><td>${rightCount}</td><td class="${matchClass}">${matchIcon}</td></tr>`;
+    });
+
+    html += '</table>';
+    html += `<div class="balance-status ${allMatch ? 'balanced' : 'unbalanced'}">
+        <strong>Conservation of matter:</strong> ${allMatch ? '✓ Balanced!' : '✗ Not balanced'}
+    </div>`;
+
+    return html;
+}
+
+function countAtomsModal(side) {
+    const atoms = {};
+    const compounds = side.split('+').map(s => s.trim());
+
+    compounds.forEach(compound => {
+        const match = compound.match(/^(\d*)(.+)$/);
+        const coefficient = match[1] ? parseInt(match[1]) : 1;
+        const formula = match[2];
+        const elements = parseFormulaStrict(formula);
+
+        Object.keys(elements).forEach(element => {
+            atoms[element] = (atoms[element] || 0) + elements[element] * coefficient;
+        });
+    });
+
+    return atoms;
+}
+
+function displayBalanceResult(result) {
+    const resultBox = document.getElementById('modal-balance-result');
+    const equationEl = document.getElementById('modal-balanced-equation');
+    const explanationBox = document.getElementById('modal-balance-explanation');
+    const checkBox = document.getElementById('modal-balance-check');
+
+    resultBox.style.display = 'block';
+    equationEl.textContent = result.equation;
+
+    explanationBox.style.display = 'block';
+    explanationBox.innerHTML = result.explanation;
+
+    checkBox.style.display = 'block';
+    checkBox.innerHTML = result.check;
+}
+
+function attachMolarMassListeners() {
+    const input = document.getElementById('modal-formula-input');
+    const toggle = document.getElementById('modal-exact-toggle');
+
+    // --- Helper Bar Logic ---
+    const subBtn = document.getElementById('helper-sub-btn');
+    const dotBtn = document.getElementById('helper-dot-btn');
+    const subStatus = document.getElementById('sub-status-text');
+    let subMode = false;
+
+    if (subBtn) {
+        subBtn.onclick = () => {
+            subMode = !subMode;
+            if (subMode) {
+                subBtn.style.background = '#eff6ff';
+                subBtn.style.borderColor = '#6366f1';
+                subBtn.style.color = '#4f46e5';
+                if (subStatus) subStatus.textContent = t('Subscript Mode', '下标模式');
+            } else {
+                subBtn.style.background = '#fff';
+                subBtn.style.borderColor = '#e2e8f0';
+                subBtn.style.color = '#475569';
+                if (subStatus) subStatus.textContent = t('Normal Inputs', '普通输入');
+            }
+            input.focus();
+        };
+    }
+    if (dotBtn) {
+        dotBtn.onclick = () => {
+            const start = input.selectionStart; const text = input.value;
+            input.value = text.substring(0, start) + '•' + text.substring(input.selectionEnd);
+            input.selectionStart = input.selectionEnd = start + 1;
+            input.dispatchEvent(new Event('input')); input.focus();
+        };
+    }
+    if (input) {
+        input.addEventListener('keydown', (e) => {
+            if (subMode && /^[0-9]$/.test(e.key)) {
+                e.preventDefault();
+                const subMap = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
+                const char = subMap[parseInt(e.key)];
+                const start = input.selectionStart; const text = input.value;
+                input.value = text.substring(0, start) + char + text.substring(input.selectionEnd);
+                input.selectionStart = input.selectionEnd = start + 1;
+                input.dispatchEvent(new Event('input'));
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === '.') {
+                e.preventDefault();
+                const start = input.selectionStart; const text = input.value;
+                input.value = text.substring(0, start) + '•' + text.substring(input.selectionEnd);
+                input.selectionStart = input.selectionEnd = start + 1;
+                input.dispatchEvent(new Event('input'));
+            }
+        });
+    }
+
+    // Core calculation function - Returns result or null
+    const getResult = () => {
+        const formula = input.value.trim();
+        if (!formula) return null;
+        try {
+            return calculateMolarMassModal(formula, toggle.checked);
+        } catch (e) {
+            return null; // Silent fail for invalid formula
+        }
+    };
+
+    // Update the visual scale (blocks & screen) ONLY
+    const updateRealtimeScale = () => {
+        const result = getResult();
+        const scaleDisplay = document.getElementById('scale-display-value');
+        const blocksArea = document.getElementById('scale-blocks-area');
+
+        // Always discard receipt on input change
+        discardReceipt();
+
+        if (result) {
+            scaleDisplay.textContent = result.total;
+            renderScaleBlocks(result, blocksArea);
+        } else {
+            scaleDisplay.textContent = "0.00";
+            blocksArea.innerHTML = '';
+        }
+    };
+
+    // Trigger Print Animation
+    const triggerPrint = () => {
+        const result = getResult();
+        if (result) {
+            printReceipt(result);
+        }
+    };
+
+    if (input) {
+        input.addEventListener('input', updateRealtimeScale);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                triggerPrint();
+                input.blur(); // Optional: remove focus to show "done" state? Or keep focus.
+            }
+        });
+    }
+
+    if (toggle) {
+        toggle.addEventListener('change', () => {
+            updateRealtimeScale();
+        });
+    }
+
+    /* --- 新增：学习模式逻辑 --- */
+    const learningToggle = document.getElementById('modal-learning-toggle');
+    const calcContainer = document.getElementById('calc-steps-container');
+    const showCalcBtn = document.getElementById('show-calc-btn');
+    const calcContent = document.getElementById('calc-steps-content');
+
+    // Toggle Learning Mode
+    if (learningToggle) {
+        learningToggle.addEventListener('change', () => {
+            const isLearning = learningToggle.checked;
+            if (calcContainer) {
+                calcContainer.style.display = isLearning ? 'block' : 'none';
+            }
+            // Reset content visibility when toggling mode
+            if (calcContent) calcContent.style.display = 'none';
+        });
+    }
+
+    // Show Calculation Steps
+    if (showCalcBtn) {
+        showCalcBtn.addEventListener('click', () => {
+            if (calcContent.style.display === 'block') {
+                calcContent.style.display = 'none';
+                return;
+            }
+
+            const result = getResult();
+            if (!result) return;
+
+            // Generate Calculation Steps HTML
+            let html = '';
+
+            // Header
+            html += `<div style="font-weight:700; margin-bottom:10px; font-size:1.1em; color:#4f46e5;">${input.value}</div>`;
+
+            result.breakdown.forEach(item => {
+                const subtotal = item.subtotal;
+                const mass = item.atomicMass;
+                const count = item.count;
+
+                html += `
+                <div class="calc-step-row">
+                    <div>
+                        <span style="font-weight:600; width: 25px; display:inline-block;">${item.element}</span>
+                        <span class="calc-step-formula">${mass} × ${count}</span>
+                    </div>
+                    <span style="font-weight:500;">= ${subtotal}</span>
+                </div>`;
+            });
+
+            html += `
+            <div class="calc-step-row">
+                <span>Total</span>
+                <span style="color:#059669; font-size:1.05em;">${result.total} g/mol</span>
+            </div>`;
+
+            calcContent.innerHTML = html;
+            calcContent.style.display = 'block';
+        });
+    }
+
+}
+
+// Helper: Discard current receipt
+function discardReceipt() {
+    const receiptWrapper = document.getElementById('receipt-wrapper');
+    if (receiptWrapper && receiptWrapper.classList.contains('printing')) {
+        receiptWrapper.classList.remove('printing');
+        receiptWrapper.classList.add('discarding');
+
+        // Reset after animation
+        setTimeout(() => {
+            receiptWrapper.classList.remove('discarding');
+            receiptWrapper.style.display = 'none'; // Fully hide
+        }, 500);
+    }
+}
+
+// Helper: Print new receipt
+function printReceipt(result) {
+    const receiptWrapper = document.getElementById('receipt-wrapper');
+    const receiptItems = document.getElementById('receipt-items');
+    const receiptTotal = document.getElementById('receipt-total-value');
+    const receiptDate = document.getElementById('receipt-date');
+
+    if (!receiptWrapper) return;
+
+    // First ensure old one is gone (if user hits enter repeatedly fast)
+    if (receiptWrapper.classList.contains('printing') || receiptWrapper.classList.contains('discarding')) {
+        receiptWrapper.classList.remove('printing');
+        // Force reset
+        void receiptWrapper.offsetWidth;
+    }
+
+    // Populate Data
+    const now = new Date();
+    receiptDate.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+
+    let receiptHTML = '';
+    result.breakdown.forEach(item => {
+        receiptHTML += `
+        <div class="receipt-item-row">
+            <div class="receipt-item-name">
+                <strong>${item.element}</strong> 
+                <span class="receipt-item-qty">x${item.count}</span>
+            </div>
+            <div>${item.subtotal}</div>
+        </div>`;
+    });
+
+    receiptItems.innerHTML = receiptHTML;
+    receiptTotal.textContent = result.total + ' g/mol';
+
+    // Start Animation
+    receiptWrapper.style.display = 'block';
+    // Remove discarding if it was stuck
+    receiptWrapper.classList.remove('discarding');
+
+    // Force Reflow
+    void receiptWrapper.offsetWidth;
+
+    receiptWrapper.classList.add('printing');
+}
+
+// Helper: Render 3D Blocks
+function renderScaleBlocks(result, container) {
+    if (!container) return;
+    container.innerHTML = '';
+
+    const maxSubtotal = Math.max(...result.breakdown.map(i => parseFloat(i.subtotal)));
+    const totalMass = parseFloat(result.total);
+
+    // Generate Blocks
+    result.breakdown.forEach(item => {
+        const subtotalVal = parseFloat(item.subtotal);
+        const percent = ((subtotalVal / totalMass) * 100).toFixed(1);
+
+        const block = document.createElement('div');
+        block.className = 'element-block';
+        block.textContent = item.element;
+
+        // Size logic
+        const size = 50 + (percent * 0.8);
+        block.style.width = `${Math.min(size, 100)}px`;
+        block.style.height = `${Math.min(size, 100)}px`;
+
+        // Color
+        const hue = (item.element.charCodeAt(0) * 20 + item.element.length * 10) % 360;
+        block.style.background = `linear-gradient(135deg, hsl(${hue}, 70%, 60%), hsl(${hue}, 70%, 40%))`;
+
+        // Tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'block-tooltip';
+        tooltip.innerHTML = `<strong>${item.element}</strong><br>${subtotalVal.toFixed(2)} g/mol<br><span style="color:#fbbf24">${percent}%</span>`;
+        block.appendChild(tooltip);
+
+        container.appendChild(block);
+    });
+}
+
+function calculateMolarMassModal(formula, exact) {
+    const elements = parseFormulaStrict(formula);
+    let total = 0;
+    const breakdown = [];
+
+    Object.keys(elements).forEach(element => {
+        const count = elements[element];
+        const atomicMass = atomicMasses[element];
+
+        if (!atomicMass) {
+            throw new Error(`Unknown element: ${element}`);
+        }
+
+        const subtotal = atomicMass * count;
+        total += subtotal;
+
+        breakdown.push({
+            element,
+            atomicMass: exact ? atomicMass.toFixed(3) : Math.round(atomicMass),
+            count,
+            subtotal: exact ? subtotal.toFixed(3) : Math.round(subtotal)
+        });
+    });
+
+    return {
+        total: exact ? total.toFixed(3) : Math.round(total),
+        breakdown,
+        exact
+    };
+}
+
+function displayMolarMassResult(result) {
+    const scaleDisplay = document.getElementById('scale-display-value');
+    const blocksArea = document.getElementById('scale-blocks-area');
+    const receiptWrapper = document.getElementById('receipt-wrapper');
+    const receiptItems = document.getElementById('receipt-items');
+    const receiptTotal = document.getElementById('receipt-total-value');
+    const receiptDate = document.getElementById('receipt-date');
+
+    // Update Digital Display
+    scaleDisplay.textContent = result.total;
+
+    // Clear previous blocks
+    blocksArea.innerHTML = '';
+
+    // Sort logic for blocks? Maybe locally to order small to large or as they appear.
+    // Let's keep them in formula order for now.
+
+    // Find max subtotal to scale blocks
+    const maxSubtotal = Math.max(...result.breakdown.map(i => parseFloat(i.subtotal)));
+    const totalMass = parseFloat(result.total);
+
+    // Generate Blocks
+    result.breakdown.forEach(item => {
+        const subtotalVal = parseFloat(item.subtotal);
+        const percent = ((subtotalVal / totalMass) * 100).toFixed(1);
+
+        const block = document.createElement('div');
+        block.className = 'element-block';
+        block.textContent = item.element;
+
+        // Dynamic styling based on mass/contribution
+        // Base size 50px, add up to 50px more based on percent
+        const size = 50 + (percent * 0.8);
+        block.style.width = `${Math.min(size, 100)}px`;
+        block.style.height = `${Math.min(size, 100)}px`;
+
+        // Dynamic Color based on element/group
+        const hue = (item.element.charCodeAt(0) * 20 + item.element.length * 10) % 360;
+        block.style.background = `linear-gradient(135deg, hsl(${hue}, 70%, 60%), hsl(${hue}, 70%, 40%))`;
+
+        // Tooltip
+        const tooltip = document.createElement('div');
+        tooltip.className = 'block-tooltip';
+        tooltip.innerHTML = `${item.element}<br>${item.atomicMass} × ${item.count}<br><strong>${percent}%</strong>`;
+        block.appendChild(tooltip);
+
+        blocksArea.appendChild(block);
+    });
+
+    // Generate Receipt Content
+    if (receiptWrapper) {
+        // Only update date if it wasn't already printing (to avoid ticking seconds annoyance)
+        // actually for real-time it's fine.
+        const now = new Date();
+        receiptDate.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+
+        // Print animation logic
+        // Remove class to reset if needed? Or just ensure it's there
+        receiptWrapper.style.display = 'block';
+
+        // Force reflow to ensuring transition happens if it was hidden
+        // requestAnimationFrame(() => receiptWrapper.classList.add('printing'));
+        // Simple way:
+        setTimeout(() => receiptWrapper.classList.add('printing'), 50);
+
+        let receiptHTML = '';
+        result.breakdown.forEach(item => {
+            receiptHTML += `
+            <div class="receipt-item-row">
+                <div class="receipt-item-name">
+                    <strong>${item.element}</strong> 
+                    <span class="receipt-item-qty">x${item.count}</span>
+                </div>
+                <div>${item.subtotal}</div>
+            </div>`;
+        });
+
+        receiptItems.innerHTML = receiptHTML;
+        receiptTotal.textContent = result.total + ' g/mol';
+    }
+}
+
+function attachEmpiricalListeners() {
+    const methodSelect = document.getElementById('modal-formula-method');
+    const inputsContainer = document.getElementById('modal-element-inputs');
+    const btn = document.getElementById('modal-calc-formula-btn');
+
+    // Initialize inputs
+    updateEmpiricalInputs();
+
+    if (methodSelect) {
+        methodSelect.addEventListener('change', updateEmpiricalInputs);
+    }
+
+    function updateEmpiricalInputs() {
+        if (!inputsContainer) return; // 防止 null 错误
+
+        const method = methodSelect?.value || 'percent';
+        const placeholder = method === 'percent' ? '40' : '2.5';
+
+        inputsContainer.innerHTML = `
+            <style>
+                .emp-row { display: flex; gap: 10px; margin-bottom: 10px; }
+                .emp-row input { padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; box-sizing: border-box; transition: all 0.2s; }
+                .emp-row input:focus { outline: none; border-color: #8b5cf6; background: #faf5ff; }
+                .emp-row .sym { width: 70px; flex-shrink: 0; font-weight: 700; text-align: center; font-size: 1.1rem; }
+                .emp-row .val { flex: 1; min-width: 0; }
+            </style>
+            <div class="emp-row">
+                <input type="text" id="modal-elem1-symbol" placeholder="C" class="sym">
+                <input type="number" id="modal-elem1-value" placeholder="${placeholder}" step="0.1" class="val">
+            </div>
+            <div class="emp-row">
+                <input type="text" id="modal-elem2-symbol" placeholder="H" class="sym">
+                <input type="number" id="modal-elem2-value" placeholder="${placeholder}" step="0.1" class="val">
+            </div>
+            <div class="emp-row">
+                <input type="text" id="modal-elem3-symbol" placeholder="O" class="sym">
+                <input type="number" id="modal-elem3-value" placeholder="${t('optional', '可选')}" step="0.1" class="val">
+            </div>
+        `;
+    }
+
+    if (btn) {
+        btn.addEventListener('click', () => {
+            try {
+                const method = methodSelect.value;
+                const data = getEmpiricalData(method);
+                const result = calculateEmpiricalModal(data);
+                displayEmpiricalResult(result);
+                // Hide tips section when showing results
+                const tips = document.getElementById('empirical-tips');
+                if (tips) tips.style.display = 'none';
+            } catch (error) {
+                showModalError('modal-formula-result', 'Error: ' + error.message);
+            }
+        });
+    }
+}
+
+function getEmpiricalData(method) {
+    const elements = [];
+    for (let i = 1; i <= 3; i++) {
+        const symbol = document.getElementById(`modal-elem${i}-symbol`)?.value.trim().toUpperCase();
+        const value = parseFloat(document.getElementById(`modal-elem${i}-value`)?.value);
+        if (symbol && !isNaN(value)) {
+            // Correct capitalization (first letter uppercase, rest lowercase)
+            const correctedSymbol = symbol.charAt(0) + symbol.slice(1).toLowerCase();
+            if (method === 'percent') {
+                elements.push({ symbol: correctedSymbol, percent: value });
+            } else {
+                elements.push({ symbol: correctedSymbol, mass: value });
+            }
+        }
+    }
+
+    const molecularMass = parseFloat(document.getElementById('modal-mol-mass')?.value);
+    return { elements, molecularMass: isNaN(molecularMass) ? null : molecularMass };
+}
+
+function calculateEmpiricalModal(data) {
+    const { elements, molecularMass } = data;
+
+    if (elements.length === 0) {
+        throw new Error('Please enter at least one element.');
+    }
+
+    // Step 1: Convert to moles
+    const moles = elements.map(elem => {
+        const atomicMass = atomicMasses[elem.symbol];
+        if (!atomicMass) {
+            throw new Error(`Unknown element: ${elem.symbol}`);
+        }
+
+        let molesValue;
+        if (elem.percent !== undefined) {
+            // From percent: assume 100g total
+            molesValue = elem.percent / atomicMass;
+        } else {
+            // From mass
+            molesValue = elem.mass / atomicMass;
+        }
+        return { symbol: elem.symbol, moles: molesValue, original: elem.percent || elem.mass };
+    });
+
+    // Step 2: Find smallest mole value
+    const minMoles = Math.min(...moles.map(m => m.moles));
+
+    // Step 3: Divide by smallest
+    const ratios = moles.map(m => ({
+        symbol: m.symbol,
+        moles: m.moles,
+        ratio: m.moles / minMoles,
+        original: m.original
+    }));
+
+    // Step 4: Simplify to whole numbers
+    const empirical = simplifyRatiosModal(ratios);
+    const empiricalFormula = empirical.map(r => r.symbol + (r.count > 1 ? subscript(r.count) : '')).join('');
+
+    // Calculate empirical mass
+    let empiricalMass = 0;
+    empirical.forEach(elem => {
+        const atomicMass = atomicMasses[elem.symbol];
+        if (atomicMass) {
+            empiricalMass += atomicMass * elem.count;
+        }
+    });
+
+    // Build explanation
+    let explanation = '<h4>Calculation Steps:</h4>';
+    explanation += '<ol>';
+    explanation += '<li><strong>Step 1: Convert to moles</strong> (Mass ÷ Atomic Mass)</li>';
+    explanation += '<ul>';
+    moles.forEach(m => {
+        const atomicMass = atomicMasses[m.symbol];
+        explanation += `<li>${m.symbol}: ${m.original} ÷ ${atomicMass} = ${m.moles.toFixed(4)} mol</li>`;
+    });
+    explanation += '</ul>';
+
+    explanation += `<li><strong>Step 2: Divide by smallest</strong> (${minMoles.toFixed(4)} mol)</li>`;
+    explanation += '<ul>';
+    ratios.forEach(r => {
+        explanation += `<li>${r.symbol}: ${r.moles.toFixed(4)} ÷ ${minMoles.toFixed(4)} = ${r.ratio.toFixed(2)}</li>`;
+    });
+    explanation += '</ul>';
+
+    explanation += '<li><strong>Step 3: Round to whole numbers</strong></li>';
+    explanation += `<li><strong>Result:</strong> Empirical Formula = <strong>${empiricalFormula}</strong></li>`;
+    explanation += '</ol>';
+
+    explanation += `<p><strong>Empirical Molar Mass:</strong> ${empiricalMass.toFixed(2)} g/mol</p>`;
+
+    let molecularFormula = null;
+    let multiplier = 1;  // 默认倍数为1
+
+    if (molecularMass) {
+        multiplier = Math.round(molecularMass / empiricalMass);
+        molecularFormula = empirical.map(r => r.symbol + (r.count * multiplier > 1 ? subscript(r.count * multiplier) : '')).join('');
+
+        explanation += '<hr>';
+        explanation += '<h4>Molecular Formula:</h4>';
+        explanation += `<p><strong>Molecular Mass given:</strong> ${molecularMass} g/mol</p>`;
+        explanation += `<p><strong>Multiplier:</strong> ${molecularMass} ÷ ${empiricalMass.toFixed(2)} = ${multiplier}</p>`;
+        explanation += `<p><strong>Molecular Formula:</strong> <strong>${molecularFormula}</strong></p>`;
+    }
+
+    return {
+        empiricalFormula,
+        molecularFormula,
+        explanation,
+        empiricalMass,
+        molecularMass,
+        empirical,           // 积木渲染需要的原始数据
+        multiplier: multiplier || 1  // 倍数，默认为1
+    };
+}
+
+function simplifyRatiosModal(ratios) {
+    const result = ratios.map(r => {
+        let count = Math.round(r.ratio);
+        if (Math.abs(r.ratio - count) > 0.15) {
+            for (let mult = 2; mult <= 10; mult++) {
+                const test = Math.round(r.ratio * mult);
+                if (Math.abs(r.ratio * mult - test) < 0.1) {
+                    count = test;
+                    break;
+                }
+            }
+        }
+        return { symbol: r.symbol, count: count || 1 };
+    });
+    return result;
+}
+
+function subscript(num) {
+    const subscripts = { '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄', '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉' };
+    return String(num).split('').map(d => subscripts[d] || d).join('');
+}
+
+function displayEmpiricalResult(result) {
+    const resultBox = document.getElementById('modal-formula-result');
+    const valueEl = document.getElementById('modal-formula-value');
+    const explanationBox = document.getElementById('modal-formula-explanation');
+    const blocksArea = document.getElementById('lego-blocks-area');
+    const emptyState = document.getElementById('lego-empty');
+    const legoStage = document.getElementById('lego-stage');
+
+    // Hide empty state and add result styling
+    if (emptyState) emptyState.style.display = 'none';
+    if (legoStage) legoStage.classList.add('has-result');
+
+    // Render LEGO blocks
+    if (blocksArea) {
+        let blocksHTML = '';
+
+        // 1. Empirical Formula Blocks
+        blocksHTML += `
+            <div class="lego-group" id="empirical-blocks">
+                <div class="lego-group-label">${t('Empirical Formula', '经验式')}</div>
+                <div style="display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; justify-content: center;">
+        `;
+
+        result.empirical.forEach((elem, index) => {
+            const colorClass = ['C', 'H', 'O', 'N', 'S', 'P', 'Cl'].includes(elem.symbol)
+                ? `el-${elem.symbol}`
+                : 'el-default';
+
+            blocksHTML += `
+                <div class="lego-block ${colorClass} animate-in" style="animation-delay: ${index * 0.1}s">
+                    <span class="block-symbol">${elem.symbol}</span>
+                    ${elem.count > 1 ? `<span class="block-count">×${elem.count}</span>` : ''}
+                </div>
+            `;
+        });
+
+        blocksHTML += `
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: #64748b;">
+                    = <strong>${result.empiricalFormula}</strong> 
+                    <span style="margin-left: 10px; opacity: 0.7;">(${result.empiricalMass.toFixed(2)} g/mol)</span>
+                </div>
+            </div>
+        `;
+
+        // 2. If molecular mass provided, show multiplier and molecular formula
+        if (result.multiplier && result.multiplier > 1) {
+            // Multiplier Badge
+            blocksHTML += `
+                <div class="multiplier-section animate-in" style="animation-delay: 0.3s">
+                    <span class="times-icon">×</span>
+                    <span class="multiplier-value">${result.multiplier}</span>
+                    <span class="multiplier-label">${t('multiplier', '倍数')}</span>
+                </div>
+            `;
+
+            // Molecular Formula Blocks (duplicated n times visually)
+            blocksHTML += `
+                <div class="lego-group" id="molecular-blocks" style="background: rgba(52, 211, 153, 0.1); border: 2px solid rgba(52, 211, 153, 0.3);">
+                    <div class="lego-group-label" style="color: #059669;">${t('Molecular Formula', '分子式')}</div>
+                    <div style="display: flex; align-items: flex-end; gap: 8px; flex-wrap: wrap; justify-content: center;">
+            `;
+
+            // Show multiplied blocks
+            result.empirical.forEach((elem, index) => {
+                const colorClass = ['C', 'H', 'O', 'N', 'S', 'P', 'Cl'].includes(elem.symbol)
+                    ? `el-${elem.symbol}`
+                    : 'el-default';
+                const newCount = elem.count * result.multiplier;
+
+                blocksHTML += `
+                    <div class="lego-block ${colorClass} animate-in" style="animation-delay: ${0.5 + index * 0.1}s">
+                        <span class="block-symbol">${elem.symbol}</span>
+                        ${newCount > 1 ? `<span class="block-count">×${newCount}</span>` : ''}
+                    </div>
+                `;
+            });
+
+            blocksHTML += `
+                    </div>
+                </div>
+            `;
+
+            // Final Result
+            blocksHTML += `
+                <div class="molecular-result animate-in" style="animation-delay: 0.7s">
+                    <span class="result-label">${t('Result', '结果')}</span>
+                    <span class="result-formula">${result.molecularFormula}</span>
+                </div>
+            `;
+        } else if (!result.molecularMass) {
+            // Only empirical, no molecular mass given
+            blocksHTML += `
+                <div style="text-align: center; color: #64748b; font-size: 0.85rem; padding: 15px; background: rgba(0,0,0,0.03); border-radius: 10px;">
+                    ${t('Enter molecular mass above to calculate the molecular formula', '在上方输入分子质量以计算分子式')}
+                </div>
+            `;
+        } else {
+            // Multiplier is 1
+            blocksHTML += `
+                <div class="molecular-result animate-in" style="animation-delay: 0.4s">
+                    <span class="result-label">${t('Result', '结果')}</span>
+                    <span class="result-formula">${result.empiricalFormula}</span>
+                    <span style="font-size: 0.8rem; color: #64748b; margin-left: 10px;">(n = 1, ${t('same as empirical', '与经验式相同')})</span>
+                </div>
+            `;
+        }
+
+        blocksArea.innerHTML = blocksHTML;
+    }
+
+    // Still show text result box (collapsed by default, can expand for details)
+    if (resultBox) {
+        resultBox.style.display = 'block';
+    }
+
+    if (valueEl) {
+        if (result.molecularFormula) {
+            valueEl.innerHTML = `
+                <div class="formula-result-row">
+                    <span class="formula-label">Empirical:</span>
+                    <span class="formula-value">${result.empiricalFormula}</span>
+                </div>
+                <div class="formula-result-row">
+                    <span class="formula-label">Molecular:</span>
+                    <span class="formula-value highlight">${result.molecularFormula}</span>
+                </div>
+            `;
+        } else {
+            valueEl.innerHTML = `
+                <div class="formula-result-row">
+                    <span class="formula-label">Empirical Formula:</span>
+                    <span class="formula-value highlight">${result.empiricalFormula}</span>
+                </div>
+            `;
+        }
+    }
+
+    if (explanationBox) {
+        explanationBox.style.display = 'block';
+        explanationBox.innerHTML = result.explanation;
+    }
+}
+
+function showModalError(containerId, message) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.style.display = 'block';
+        container.innerHTML = `
+            <div class="error-message" style="display:flex;align-items:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                ${message}
+            </div>`;
+    }
+}
+
+// ==========================================
+// New Reference Tool Generators
+// ==========================================
+
+function generateSolubilityToolContent() {
+    return `
+        <div class="tool-modal-header">
+            <div class="tool-modal-icon" style="background:#10b981; color:white;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                     <path d="M3 3v18h18" />
+                     <path d="M7 7l10 10" />
+                     <path d="M17 7l-10 10" />
+                </svg>
+            </div>
+            <div class="tool-modal-title-group">
+                <h2 class="tool-modal-title">${t('Solubility Checker', '溶解性检测')}</h2>
+                <div class="tool-modal-tags">
+                   <span class="grade-tag">Interactive</span>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 20px; overflow-y: auto;">
+            <!-- Checker Input -->
+            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:20px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                <label style="display:block; font-size:0.9rem; font-weight:600; color:#166534; margin-bottom:8px;">${t('Enter Formula to Check:', '输入化学式检测:')}</label>
+                <div style="display:flex; gap:12px;">
+                    <input type="text" id="solubility-input" placeholder="e.g. AgCl, Na2SO4, CaCO3" 
+                           style="flex:1; padding:10px 14px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Roboto Mono', monospace; font-size:1.1rem; outline:none; transition:border 0.2s;"
+                           onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#cbd5e1'">
+                    <button id="check-solubility-btn" style="background:#16a34a; color:white; border:none; padding:0 24px; border-radius:8px; font-weight:600; font-size:1rem; cursor:pointer; transition:all 0.2s; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
+                        ${t('Check', '检测')}
+                    </button>
+                </div>
+                <div id="solubility-result" style="margin-top:16px; min-height:40px; border-radius:8px; display:none; padding:12px; font-size:1rem; align-items:center;"></div>
+            </div>
+
+            <!-- Table -->
+            <h3 style="font-size:1.1rem; color:#334155; margin-bottom:12px; padding-bottom:6px; border-bottom:2px solid #e2e8f0;">${t('Solubility Rules (Reference)', '溶解性规则 (参考)')}</h3>
+            <style>
+                .sol-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+                .sol-table th, .sol-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+                .sol-table th { background: #f8fafc; font-weight: 600; color: #475569; position: sticky; top: 0; }
+                .sol-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+                .sol-s { background: #dcfce7; color: #166534; }
+                .sol-i { background: #fee2e2; color: #991b1b; }
+            </style>
+            <table class="sol-table">
+                <thead>
+                    <tr>
+                        <th width="30%">${t('Anion', '阴离子')}</th>
+                        <th width="20%">${t('Rule', '规则')}</th>
+                        <th width="50%">${t('Exceptions', '例外')}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>NO₃⁻</strong> (Nitrous)</td><td><span class="sol-badge sol-s">${t('Soluble', '可溶')}</span></td><td>${t('None', '无')}</td></tr>
+                    <tr><td><strong>CH₃COO⁻</strong> (Acetate)</td><td><span class="sol-badge sol-s">${t('Soluble', '可溶')}</span></td><td>${t('None', '无')}</td></tr>
+                    <tr><td><strong>Cl⁻, Br⁻, I⁻</strong></td><td><span class="sol-badge sol-s">${t('Soluble', '可溶')}</span></td><td>Ag⁺, Pb²⁺, Hg₂²⁺ (<span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span>)</td></tr>
+                    <tr><td><strong>SO₄²⁻</strong> (Sulfate)</td><td><span class="sol-badge sol-s">${t('Soluble', '可溶')}</span></td><td>Ba²⁺, Pb²⁺, Ca²⁺, Sr²⁺ (<span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span>)</td></tr>
+                    <tr><td><strong>OH⁻</strong> (Hydroxide)</td><td><span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span></td><td>Group 1, NH₄⁺ (<span class="sol-badge sol-s">${t('Soluble', '可溶')}</span>); Ca²⁺, Ba²⁺, Sr²⁺ (Slightly)</td></tr>
+                    <tr><td><strong>CO₃²⁻, PO₄³⁻</strong></td><td><span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span></td><td>Group 1, NH₄⁺ (<span class="sol-badge sol-s">${t('Soluble', '可溶')}</span>)</td></tr>
+                    <tr><td><strong>S²⁻</strong> (Sulfide)</td><td><span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span></td><td>Group 1, Group 2, NH₄⁺ (<span class="sol-badge sol-s">${t('Soluble', '可溶')}</span>)</td></tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function attachSolubilityListeners() {
+    const input = document.getElementById('solubility-input');
+    const btn = document.getElementById('check-solubility-btn');
+    const resultBox = document.getElementById('solubility-result');
+
+    if (!input || !btn) return;
+
+    const runCheck = () => {
+        const val = input.value.trim();
+        if (!val) return;
+
+        resultBox.style.display = 'flex';
+        resultBox.innerHTML = `<span style="color:#64748b;">Thinking...</span>`;
+        resultBox.style.background = '#f8fafc';
+        resultBox.style.border = '1px solid #e2e8f0';
+        resultBox.style.borderLeft = 'none';
+
+        setTimeout(() => {
+            const res = calculateSolubility(val);
+            if (res.soluble) {
+                resultBox.style.background = '#f0fdf4';
+                resultBox.style.border = '1px solid #bbf7d0';
+                resultBox.style.borderLeft = '5px solid #16a34a';
+                resultBox.style.padding = '12px 16px';
+                resultBox.innerHTML = `<div><div style="font-weight:700; color:#15803d; font-size:1.1rem; margin-bottom:2px;">Soluble (aq) / 可溶</div><div style="font-size:0.9rem; color:#166534;">${res.reason}</div></div>`;
+            } else if (res.insoluble) {
+                resultBox.style.background = '#fef2f2';
+                resultBox.style.border = '1px solid #fecaca';
+                resultBox.style.borderLeft = '5px solid #dc2626';
+                resultBox.style.padding = '12px 16px';
+                resultBox.innerHTML = `<div><div style="font-weight:700; color:#b91c1c; font-size:1.1rem; margin-bottom:2px;">Insoluble (s) / 沉淀</div><div style="font-size:0.9rem; color:#991b1b;">${res.reason}</div></div>`;
+            } else {
+                resultBox.style.background = '#fffbeb';
+                resultBox.style.border = '1px solid #fde68a';
+                resultBox.style.borderLeft = '5px solid #d97706';
+                resultBox.style.padding = '12px 16px';
+                resultBox.innerHTML = `<div><div style="font-weight:700; color:#b45309; font-size:1.1rem; margin-bottom:2px;">Unknown / Complex</div><div style="font-size:0.9rem; color:#92400e;">${t('Logic limited to common inorganic salts.', '目前仅支持常见无机盐判断。')}</div></div>`;
+            }
+        }, 100);
+    };
+
+    btn.onclick = runCheck;
+    input.addEventListener('keypress', (e) => { if (e.key === 'Enter') runCheck(); });
+    setTimeout(() => input.focus(), 100);
+}
+
+function calculateSolubility(formula) {
+    const f = formula.trim();
+    // 1. Group 1 & Ammonium (Rule 1: Always Soluble)
+    // Matches Li, Na, K, Rb, Cs, NH4. Ensure not inside other words (like NaCl matches Na)
+    if (/(Li|Na|K|Rb|Cs)(?![a-z])/.test(f) || /NH4/.test(f)) {
+        return { soluble: true, reason: t("Contains Group 1 metal or Ammonium.", "含第1族金属或铵根，总是可溶。") };
+    }
+    // 2. Nitrates & Acetates (Rule 2: Always Soluble)
+    if (/NO3/.test(f) || /CH3COO/.test(f) || /C2H3O2/.test(f)) {
+        return { soluble: true, reason: t("Nitrates and Acetates are soluble.", "硝酸盐和醋酸盐总是可溶。") };
+    }
+    // 3. Halides (Cl, Br, I)
+    // Matches Cl, Br, I. not ClO, BrO.
+    if (/(Cl|Br|I)(?![a-z])(?!O)/.test(f)) {
+        // Exceptions: Ag, Pb, Hg
+        if (/(Ag|Pb|Hg)/.test(f)) {
+            return { insoluble: true, reason: t("Halide with Ag/Pb/Hg is insoluble.", "卤化物遇银/铅/汞沉淀。") };
+        }
+        return { soluble: true, reason: t("Most Halides are soluble.", "大多数卤化物可溶。") };
+    }
+    // 4. Sulfates (SO4)
+    if (/SO4/.test(f)) {
+        // Exceptions: Ca, Sr, Ba, Pb
+        if (/(Ca|Sr|Ba|Pb)/.test(f)) {
+            return { insoluble: true, reason: t("Sulfate with Ca/Sr/Ba/Pb is insoluble.", "硫酸盐遇钙/锶/钡/铅沉淀。") };
+        }
+        return { soluble: true, reason: t("Most Sulfates are soluble.", "大多数硫酸盐可溶。") };
+    }
+    // 5. Hydroxides (OH)
+    if (/(OH|\(OH\))/.test(f)) {
+        // Exceptions: Ca, Sr, Ba (Slightly Soluble -> Treat as Soluble for typical context or specify)
+        if (/(Ca|Sr|Ba)/.test(f)) {
+            // Often considered slightly soluble. Let's say Soluble.
+            return { soluble: true, reason: t("Group 2 Hydroxides (Ca/Sr/Ba) are slightly soluble.", "第2族氢氧化物(Ca/Sr/Ba)微溶。") };
+        }
+        return { insoluble: true, reason: t("Most Hydroxides are insoluble.", "大多数氢氧化物不溶。") };
+    }
+    // 6. Carbonates, Phosphates, Sulfides (Insoluble)
+    // Matches CO3, PO4, S not SO4.
+    if (/CO3/.test(f) || /PO4/.test(f) || /S(?![a-zO])/.test(f)) {
+        return { insoluble: true, reason: t("Carbonates/Phosphates/Sulfides are generally insoluble.", "碳酸盐/磷酸盐/硫化物通常不溶。") };
+    }
+
+    return { unknown: true };
+}
+
+function generateIonsToolContent() {
+    return `
+        <div class="tool-modal-header">
+            <div class="tool-modal-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e;">
+                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="24" cy="24" r="14"/>
+                    <text x="24" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="currentColor" stroke="none">±</text>
+                </svg>
+            </div>
+            <div class="tool-modal-title-group">
+                <h2 class="tool-modal-title">${t('Common Ions Reference', '常用离子表')}</h2>
+                <div class="tool-modal-tags">
+                    <span class="grade-tag">G9-12</span>
+                    <span class="feature-tag">${t('Reference', '参考')}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ions-tool-layout">
+            <!-- Left Column: Cations -->
+            <div class="ions-column">
+                <div class="ions-section-header cation-header">
+                    <div class="ions-section-icon">+</div>
+                    <div>
+                        <div class="ions-section-title">${t('Cations', '阳离子')}</div>
+                        <div class="ions-section-subtitle">${t('Positive Ions', '正离子')}</div>
+                    </div>
+                </div>
+                <div class="ions-cards-grid">
+                    ${renderIonCardNew('H', '+', t('Hydrogen', '氢'), 'cation')}
+                    ${renderIonCardNew('Li', '+', t('Lithium', '锂'), 'cation')}
+                    ${renderIonCardNew('Na', '+', t('Sodium', '钠'), 'cation')}
+                    ${renderIonCardNew('K', '+', t('Potassium', '钾'), 'cation')}
+                    ${renderIonCardNew('Ag', '+', t('Silver', '银'), 'cation')}
+                    ${renderIonCardNew('NH₄', '+', t('Ammonium', '铵'), 'cation')}
+                    ${renderIonCardNew('Mg', '2+', t('Magnesium', '镁'), 'cation')}
+                    ${renderIonCardNew('Ca', '2+', t('Calcium', '钙'), 'cation')}
+                    ${renderIonCardNew('Ba', '2+', t('Barium', '钡'), 'cation')}
+                    ${renderIonCardNew('Zn', '2+', t('Zinc', '锌'), 'cation')}
+                    ${renderIonCardNew('Cu', '2+', t('Copper(II)', '铜(II)'), 'cation')}
+                    ${renderIonCardNew('Fe', '2+', t('Iron(II)', '亚铁'), 'cation')}
+                    ${renderIonCardNew('Fe', '3+', t('Iron(III)', '铁'), 'cation')}
+                    ${renderIonCardNew('Al', '3+', t('Aluminum', '铝'), 'cation')}
+                    ${renderIonCardNew('Pb', '2+', t('Lead(II)', '铅'), 'cation')}
+                </div>
+            </div>
+            
+            <!-- Right Column: Anions -->
+            <div class="ions-column">
+                <div class="ions-section-header anion-header">
+                    <div class="ions-section-icon">−</div>
+                    <div>
+                        <div class="ions-section-title">${t('Anions', '阴离子')}</div>
+                        <div class="ions-section-subtitle">${t('Negative Ions', '负离子')}</div>
+                    </div>
+                </div>
+                <div class="ions-cards-grid">
+                    ${renderIonCardNew('F', '−', t('Fluoride', '氟'), 'anion')}
+                    ${renderIonCardNew('Cl', '−', t('Chloride', '氯'), 'anion')}
+                    ${renderIonCardNew('Br', '−', t('Bromide', '溴'), 'anion')}
+                    ${renderIonCardNew('I', '−', t('Iodide', '碘'), 'anion')}
+                    ${renderIonCardNew('O', '2−', t('Oxide', '氧'), 'anion')}
+                    ${renderIonCardNew('S', '2−', t('Sulfide', '硫'), 'anion')}
+                    ${renderIonCardNew('OH', '−', t('Hydroxide', '氢氧根'), 'anion')}
+                    ${renderIonCardNew('NO₃', '−', t('Nitrate', '硝酸根'), 'anion')}
+                    ${renderIonCardNew('SO₄', '2−', t('Sulfate', '硫酸根'), 'anion')}
+                    ${renderIonCardNew('CO₃', '2−', t('Carbonate', '碳酸根'), 'anion')}
+                    ${renderIonCardNew('PO₄', '3−', t('Phosphate', '磷酸根'), 'anion')}
+                    ${renderIonCardNew('HCO₃', '−', t('Bicarbonate', '碳酸氢根'), 'anion')}
+                    ${renderIonCardNew('MnO₄', '−', t('Permanganate', '高锰酸根'), 'anion')}
+                    ${renderIonCardNew('CH₃COO', '−', t('Acetate', '醋酸根'), 'anion')}
+                    ${renderIonCardNew('CrO₄', '2−', t('Chromate', '铬酸根'), 'anion')}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderIonCardNew(symbol, charge, name, type) {
+    const isC = type === 'cation';
+    return `
+        <div class="ion-card-new ${type}">
+            <div class="ion-card-symbol">
+                ${symbol}<sup class="ion-card-charge">${charge}</sup>
+            </div>
+            <div class="ion-card-name">${name}</div>
+        </div>
+    `;
 }

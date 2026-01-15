@@ -8,18 +8,275 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="worksheet-styles.css">
 </head>
 
 <body>
-    <div class="container">
-        <header>
+    <!-- Global Fixed Navigation -->
+    <nav class="global-nav" id="global-nav">
+        <div class="global-nav-pill">
+            <button class="nav-pill-btn active" data-page="table" data-en="Table" data-zh="元素表">Table</button>
+            <button class="nav-pill-btn" data-page="tools" data-en="Tools" data-zh="工具">Tools</button>
+            <button class="nav-pill-btn" data-page="worksheet" data-en="Worksheet" data-zh="练习题">Worksheet</button>
+        </div>
+    </nav>
+
+    <div class="container" id="main-container">
+        <!-- <header>
             <h1>The Periodic Table</h1>
             <p>of Elements</p>
-        </header>
+        </header> -->
         <div class="periodic-table" id="periodic-table">
         </div>
     </div>
+
+    <!-- Chemistry Tools Page (Blank Page 1) -->
+    <div id="blank-page-1" class="blank-page chemistry-tools-page">
+        <div class="blank-page-content" id="page-tools">
+            <div class="chem-tools-container">
+                <h1 class="chem-tools-title" data-en="Chemistry Tools" data-zh="化学工具">化学工具</h1>
+                <p class="chem-tools-subtitle" data-en="Grade 9-12 Chemistry Calculators" data-zh="9-12年级化学计算器">
+                    9-12年级化学计算器</p>
+
+                <div class="chem-tools-grid">
+                    <!-- Equation Balancer (Position 1) -->
+                    <div class="chem-tool-card" data-tool="balancer">
+                        <div class="chem-tool-icon-box balancer-icon">
+                            <span class="chem-tool-number">1</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 3v18M3 12h18M7 7l10 10M17 7L7 17" />
+                            </svg>
+                        </div>
+                        <div class="chem-tool-info">
+                            <h3 class="chem-tool-name" data-en="Equation Balancer" data-zh="方程式配平">方程式配平</h3>
+                            <p class="chem-tool-desc"
+                                data-en="Balance chemical equations with visual feedback and step-by-step solutions."
+                                data-zh="使用可视化反馈和分步解答配平化学方程式。">使用可视化反馈和分步解答配平化学方程式。</p>
+                            <div class="chem-tool-tags">
+                                <span class="grade-tag">Grade 9-12</span>
+                                <span class="feature-tag">Interactive</span>
+                            </div>
+                        </div>
+                        <span class="chem-tool-arrow">→</span>
+                    </div>
+
+                    <!-- Molar Mass Calculator (Position 2) -->
+                    <div class="chem-tool-card" data-tool="molar-mass">
+                        <div class="chem-tool-icon-box molar-icon">
+                            <span class="chem-tool-number">2</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="4" y="4" width="16" height="16" rx="2" />
+                                <path d="M8 12h8M12 8v8" />
+                            </svg>
+                        </div>
+                        <div class="chem-tool-info">
+                            <h3 class="chem-tool-name" data-en="Molar Mass Calculator" data-zh="摩尔质量计算器">摩尔质量计算器</h3>
+                            <p class="chem-tool-desc" data-en="Calculate molar mass with element-by-element breakdown."
+                                data-zh="计算摩尔质量并显示各元素详细分解。">计算摩尔质量并显示各元素详细分解。</p>
+                            <div class="chem-tool-tags">
+                                <span class="grade-tag">Grade 10-11</span>
+                                <span class="feature-tag">Calculation</span>
+                            </div>
+                        </div>
+                        <span class="chem-tool-arrow">→</span>
+                    </div>
+
+                    <!-- Empirical & Molecular Formula (Position 3) -->
+                    <div class="chem-tool-card" data-tool="empirical">
+                        <div class="chem-tool-icon-box empirical-icon">
+                            <span class="chem-tool-number">3</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
+                            </svg>
+                        </div>
+                        <div class="chem-tool-info">
+                            <h3 class="chem-tool-name" data-en="Empirical & Molecular Formula" data-zh="经验式与分子式">经验式与分子式
+                            </h3>
+                            <p class="chem-tool-desc"
+                                data-en="Calculate empirical and molecular formulas from mass data."
+                                data-zh="从质量数据计算经验式和分子式。">从质量数据计算经验式和分子式。</p>
+                            <div class="chem-tool-tags">
+                                <span class="grade-tag">Grade 10-11</span>
+                                <span class="feature-tag">Formula</span>
+                            </div>
+                        </div>
+                        <span class="chem-tool-arrow">→</span>
+                    </div>
+
+                    <!-- Solubility Table (Position 4) -->
+                    <div class="chem-tool-card" data-tool="solubility">
+                        <div class="chem-tool-icon-box"
+                            style="background:linear-gradient(135deg, #10b981, #059669); color:white;">
+                            <span class="chem-tool-number">4</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3v18h18" />
+                                <rect x="7" y="7" width="4" height="4" />
+                                <rect x="13" y="13" width="4" height="4" />
+                            </svg>
+                        </div>
+                        <div class="chem-tool-info">
+                            <h3 class="chem-tool-name" data-en="Solubility Table" data-zh="溶解性表">溶解性表</h3>
+                            <p class="chem-tool-desc" data-en="Reference chart for ionic compound solubility rules."
+                                data-zh="离子化合物溶解性规则参考表。">离子化合物溶解性规则参考表。</p>
+                            <div class="chem-tool-tags">
+                                <span class="grade-tag">Reference</span>
+                                <span class="feature-tag">Grid</span>
+                            </div>
+                        </div>
+                        <span class="chem-tool-arrow">→</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Worksheet Generator -->
+    <div id="blank-page-2" class="blank-page">
+        <div class="worksheet-generator-page">
+            <div class="worksheet-container">
+                <!-- Left Panel: Controls -->
+                <div class="worksheet-controls">
+                    <div class="controls-header">
+                        <h2 data-en="Worksheet Generator" data-zh="练习题生成器">练习题生成器</h2>
+                        <p data-en="Create balanced equation worksheets for your class" data-zh="为您的班级创建化学方程式配平练习题">
+                            为您的班级创建化学方程式配平练习题</p>
+                    </div>
+
+                    <!-- Number of Questions -->
+                    <div class="control-group">
+                        <label data-en="Number of Questions" data-zh="题目数量">题目数量</label>
+                        <div class="button-group" id="question-count-group">
+                            <button class="option-btn" data-value="5">5</button>
+                            <button class="option-btn active" data-value="10">10</button>
+                            <button class="option-btn" data-value="20">20</button>
+                            <button class="option-btn" data-value="30">30</button>
+                            <button class="option-btn" data-value="50">50</button>
+                        </div>
+                    </div>
+
+                    <!-- Reaction Types -->
+                    <div class="control-group">
+                        <label data-en="Reaction Types" data-zh="反应类型">反应类型</label>
+                        <div class="checkbox-group" id="reaction-types-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="synthesis" checked>
+                                <div class="checkbox-text-wrapper">
+                                    <span data-en="Synthesis" data-zh="合成反应">合成反应</span>
+                                    <span class="checkbox-subtitle">A + B → AB</span>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="decomposition" checked>
+                                <div class="checkbox-text-wrapper">
+                                    <span data-en="Decomposition" data-zh="分解反应">分解反应</span>
+                                    <span class="checkbox-subtitle">AB → A + B</span>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="single-replacement">
+                                <div class="checkbox-text-wrapper">
+                                    <span data-en="Single Replacement" data-zh="单取代反应">单取代反应</span>
+                                    <span class="checkbox-subtitle">A + BC → AC + B</span>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="combustion">
+                                <div class="checkbox-text-wrapper">
+                                    <span data-en="Combustion" data-zh="燃烧反应">燃烧反应</span>
+                                    <span class="checkbox-subtitle">Hydrocarbon + O₂</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Difficulty -->
+                    <div class="control-group">
+                        <label data-en="Difficulty" data-zh="难度">难度</label>
+                        <div class="button-group" id="difficulty-group">
+                            <button class="option-btn" data-value="easy" data-en="Easy" data-zh="简单">简单</button>
+                            <button class="option-btn active" data-value="medium" data-en="Medium"
+                                data-zh="中等">中等</button>
+                            <button class="option-btn" data-value="hard" data-en="Hard" data-zh="困难">困难</button>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button class="generate-btn" id="generate-worksheet-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M12 3v1m0 16v1m-9-9h1m16 0h1m-2.64-6.36l-.7.7m-12.02 12.02l-.7.7m0-12.72l.7.7m12.02 12.02l.7.7" />
+                            <circle cx="12" cy="12" r="4" />
+                        </svg>
+                        <span data-en="Generate Worksheet" data-zh="生成练习题">生成练习题</span>
+                    </button>
+                    <div class="trust-text" data-en="Questions are generated from real, commonly taught reactions."
+                        data-zh="题目生成自真实且常见的化学反应。">题目生成自真实且常见的化学反应。</div>
+                </div>
+
+                <!-- Right Panel: Preview -->
+                <div class="worksheet-preview">
+                    <div class="preview-header">
+                        <div class="preview-tabs">
+                            <button class="preview-tab active" data-mode="student" data-en="Print"
+                                data-zh="打印版">打印版</button>
+                            <button class="preview-tab" data-mode="practice" data-en="Practice" data-zh="练习">练习</button>
+                            <button class="preview-tab" data-mode="answer" data-en="Answer Key" data-zh="答案">答案</button>
+                        </div>
+                        <div class="export-buttons">
+                            <button class="export-btn" id="fill-date-btn" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                <span data-en="Today" data-zh="今日">今日</span>
+                            </button>
+                            <button class="export-btn" id="export-pdf-btn" disabled>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                </svg>
+                                PDF
+                            </button>
+                        </div>
+                    </div>
+                    <div class="preview-content" id="worksheet-preview-content">
+                        <div class="preview-placeholder">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <line x1="10" y1="9" x2="8" y2="9"></line>
+                            </svg>
+                            <p data-en="Click 'Generate Worksheet' to create practice problems" data-zh="点击"
+                                生成练习题"按钮创建练习">点击"生成练习题"按钮创建练习</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feature Modal for Chemistry Tools -->
+    <div id="feature-modal" class="modal-overlay">
+        <div class="modal-content" id="feature-modal-content">
+            <div class="modal-top-buttons">
+                <button class="modal-close" id="feature-modal-close">&times;</button>
+            </div>
+            <div class="feature-modal-body" id="feature-modal-body">
+                <!-- Tool content will be injected here -->
+            </div>
+        </div>
+    </div>
+
     <div id="element-modal" class="modal-overlay">
         <div class="modal-content" id="modal-content-primary">
             <div class="modal-top-buttons">
@@ -439,11 +696,28 @@
             <div class="modal-visual-pane">
                 <div id="modal-watermark">H</div>
                 <div id="atom-container"></div>
+                <button id="top-view-btn" class="top-view-btn" title="Top View / Bohr Model">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="6" />
+                        <circle cx="12" cy="12" r="2" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
     <script src="three.min.js"></script>
-    <script src="script.min.js"></script>
+    <script src="script.js"></script>
+    <script src="worksheet-generator.js"></script>
+
+    <!-- Global Floating Language Toggle -->
+    <button class="floating-lang-btn lang-toggle" id="floating-lang-toggle" title="Toggle Language / 切换语言">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+    </button>
 </body>
 
 </html>

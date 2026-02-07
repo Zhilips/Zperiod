@@ -91,6 +91,36 @@ const reactionTemplates = {
         { reactants: ['C4H8', 'O2'], products: ['CO2', 'H2O'], coefficients: [1, 6, 4, 4] },
         { reactants: ['C6H14', 'O2'], products: ['CO2', 'H2O'], coefficients: [2, 19, 12, 14] },
         { reactants: ['C10H22', 'O2'], products: ['CO2', 'H2O'], coefficients: [2, 31, 20, 22] }
+    ],
+    'double-replacement': [
+        // 酸碱中和
+        { reactants: ['HCl', 'NaOH'], products: ['NaCl', 'H2O'], coefficients: [1, 1, 1, 1] },
+        { reactants: ['H2SO4', 'NaOH'], products: ['Na2SO4', 'H2O'], coefficients: [1, 2, 1, 2] },
+        { reactants: ['HNO3', 'KOH'], products: ['KNO3', 'H2O'], coefficients: [1, 1, 1, 1] },
+        { reactants: ['H2SO4', 'KOH'], products: ['K2SO4', 'H2O'], coefficients: [1, 2, 1, 2] },
+        { reactants: ['HCl', 'Ca(OH)2'], products: ['CaCl2', 'H2O'], coefficients: [2, 1, 1, 2] },
+        { reactants: ['H2SO4', 'Ca(OH)2'], products: ['CaSO4', 'H2O'], coefficients: [1, 1, 1, 2] },
+        { reactants: ['HCl', 'Ba(OH)2'], products: ['BaCl2', 'H2O'], coefficients: [2, 1, 1, 2] },
+        { reactants: ['H3PO4', 'NaOH'], products: ['Na3PO4', 'H2O'], coefficients: [1, 3, 1, 3] },
+        { reactants: ['H2CO3', 'NaOH'], products: ['Na2CO3', 'H2O'], coefficients: [1, 2, 1, 2] },
+        // 沉淀反应
+        { reactants: ['AgNO3', 'NaCl'], products: ['AgCl', 'NaNO3'], coefficients: [1, 1, 1, 1] },
+        { reactants: ['BaCl2', 'Na2SO4'], products: ['BaSO4', 'NaCl'], coefficients: [1, 1, 1, 2] },
+        { reactants: ['Pb(NO3)2', 'KI'], products: ['PbI2', 'KNO3'], coefficients: [1, 2, 1, 2] },
+        { reactants: ['CaCl2', 'Na2CO3'], products: ['CaCO3', 'NaCl'], coefficients: [1, 1, 1, 2] },
+        { reactants: ['FeCl3', 'NaOH'], products: ['Fe(OH)3', 'NaCl'], coefficients: [1, 3, 1, 3] },
+        { reactants: ['CuSO4', 'NaOH'], products: ['Cu(OH)2', 'Na2SO4'], coefficients: [1, 2, 1, 1] },
+        { reactants: ['AgNO3', 'K2CrO4'], products: ['Ag2CrO4', 'KNO3'], coefficients: [2, 1, 1, 2] },
+        { reactants: ['MgCl2', 'NaOH'], products: ['Mg(OH)2', 'NaCl'], coefficients: [1, 2, 1, 2] },
+        { reactants: ['ZnSO4', 'NaOH'], products: ['Zn(OH)2', 'Na2SO4'], coefficients: [1, 2, 1, 1] },
+        { reactants: ['AlCl3', 'NaOH'], products: ['Al(OH)3', 'NaCl'], coefficients: [1, 3, 1, 3] },
+        // 气体生成
+        { reactants: ['Na2CO3', 'HCl'], products: ['NaCl', 'H2O', 'CO2'], coefficients: [1, 2, 2, 1, 1] },
+        { reactants: ['CaCO3', 'HCl'], products: ['CaCl2', 'H2O', 'CO2'], coefficients: [1, 2, 1, 1, 1] },
+        { reactants: ['NaHCO3', 'HCl'], products: ['NaCl', 'H2O', 'CO2'], coefficients: [1, 1, 1, 1, 1] },
+        { reactants: ['Na2S', 'HCl'], products: ['NaCl', 'H2S'], coefficients: [1, 2, 2, 1] },
+        { reactants: ['NH4Cl', 'NaOH'], products: ['NaCl', 'H2O', 'NH3'], coefficients: [1, 1, 1, 1, 1] },
+        { reactants: ['(NH4)2SO4', 'NaOH'], products: ['Na2SO4', 'H2O', 'NH3'], coefficients: [1, 2, 1, 2, 2] }
     ]
 };
 
@@ -401,8 +431,9 @@ function renderWorksheet(worksheet, mode) {
     const typesLabel = worksheet.types.map(t => {
         const map = {
             'synthesis': tr('Synthesis', '合成'),
-            'decomposition': tr('Decomp', '分解'), // Shortened for space
+            'decomposition': tr('Decomp', '分解'),
             'single-replacement': tr('Single Rep', '单取代'),
+            'double-replacement': tr('Double Rep', '复分解'),
             'combustion': tr('Combustion', '燃烧')
         };
         return map[t] || t;

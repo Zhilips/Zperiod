@@ -1,3 +1,83 @@
+// ========================================
+// Welcome Modal - Intro Page
+// ========================================
+(function initWelcomeModal() {
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('welcome-modal');
+        const closeBtn = document.getElementById('welcome-close-btn');
+        const aboutBtn = document.getElementById('floating-about-btn');
+        const startBtn = document.getElementById('welcome-start-btn');
+        const dateEl = document.getElementById('current-date-display');
+
+        if (!modal) return;
+
+        // Set current date
+        if (dateEl) {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            dateEl.textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Check if user has visited before
+        const hasVisited = localStorage.getItem('zperiod_welcomed');
+        if (!hasVisited) {
+            modal.classList.add('active');
+            document.body.classList.add('welcome-active');
+            document.body.classList.add('hide-nav');
+        }
+
+        function showWelcome() {
+            modal.classList.add('active');
+            document.body.classList.add('welcome-active');
+            document.body.classList.add('hide-nav');
+        }
+
+        function closeWelcome() {
+            modal.classList.remove('active');
+            document.body.classList.remove('welcome-active');
+            document.body.classList.remove('hide-nav');
+            localStorage.setItem('zperiod_welcomed', 'true');
+            // Dispose hero WebGL renderer to free context
+            if (window._heroCleanup) window._heroCleanup();
+        }
+
+        if (closeBtn) closeBtn.addEventListener('click', closeWelcome);
+        if (startBtn) startBtn.addEventListener('click', closeWelcome);
+        if (aboutBtn) aboutBtn.addEventListener('click', showWelcome);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeWelcome();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeWelcome();
+            }
+        });
+    });
+
+    // Email copy function
+    window.copyEmail = function (text, btn) {
+        navigator.clipboard.writeText(text).then(() => {
+            const copyIcon = btn.querySelector('.icon-copy');
+            const checkIcon = btn.querySelector('.icon-check');
+
+            if (copyIcon) copyIcon.style.display = 'none';
+            if (checkIcon) checkIcon.style.display = 'block';
+
+            btn.style.transform = 'scale(0.98)';
+            setTimeout(() => btn.style.transform = 'scale(1)', 100);
+
+            setTimeout(() => {
+                if (copyIcon) copyIcon.style.display = 'block';
+                if (checkIcon) checkIcon.style.display = 'none';
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    };
+})();
+
 let lockedSlideIndex = null;
 const finallyData = {
     "H": {
@@ -2903,8 +2983,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const mainContainer = document.getElementById('main-container');
         const blankPage1 = document.getElementById('blank-page-1');
         const blankPage2 = document.getElementById('blank-page-2');
+        const ionsPage = document.getElementById('ions-page');
 
-        let currentPage = 'table'; // 'table', 'blank1', 'blank2'
+        let currentPage = 'table'; // 'table', 'ions', 'blank1', 'blank2'
 
         function showTablePage() {
             // 如果当前已经是表页面，不执行任何操作
@@ -2919,6 +3000,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (blankPage2) {
                 blankPage2.classList.remove('active');
             }
+            if (ionsPage) {
+                ionsPage.style.display = 'none';
+            }
 
             // 显示主容器
             if (mainContainer) {
@@ -2926,6 +3010,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             currentPage = 'table';
+        }
+
+        function showIonsPage() {
+            // 如果当前已经是ions页面，不执行任何操作
+            if (currentPage === 'ions') {
+                return;
+            }
+
+            // 隐藏主容器和其他空白页
+            if (mainContainer) {
+                mainContainer.style.display = 'none';
+            }
+            if (blankPage1) {
+                blankPage1.classList.remove('active');
+            }
+            if (blankPage2) {
+                blankPage2.classList.remove('active');
+            }
+
+            // 显示ions页面
+            if (ionsPage) {
+                ionsPage.style.display = 'flex';
+            }
+
+            currentPage = 'ions';
         }
 
         function showBlankPage1() {
@@ -2940,6 +3049,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (blankPage2) {
                 blankPage2.classList.remove('active');
+            }
+            if (ionsPage) {
+                ionsPage.style.display = 'none';
             }
 
             // 显示blank1
@@ -2963,6 +3075,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (blankPage1) {
                 blankPage1.classList.remove('active');
             }
+            if (ionsPage) {
+                ionsPage.style.display = 'none';
+            }
 
             // 显示blank2
             if (blankPage2) {
@@ -2971,6 +3086,3202 @@ document.addEventListener('DOMContentLoaded', () => {
 
             currentPage = 'blank2';
         }
+
+        const ionsData = [
+            // ===== 1. 基础单原子 (Basic Monatomic) =====
+            // +1 阳离子 - H+ Universal Schema Data
+            {
+                id: 'h_plus',
+                symbol: 'H',
+                charge: '+',
+                name: 'Hydrogen',
+                nameZh: 'Hydrogen (H⁺)',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'alkali-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat1',
+                groupName: '+1 Cations',
+                groupNameZh: '+1 阳离子: H, Li, Na, K, Ag',
+                customData: {
+                    level1: {
+                        type: "Cation / Acid",
+                        source: "Acids (HCl, H₂SO₄) - Loss of 1 e⁻",
+                        phase: "Aqueous (aq as H₃O⁺) - Colorless",
+                        valence: "0 (Empty Shell)",
+                        keyCompounds: "HCl (Stomach Acid), H₂SO₄ (Battery Acid)"
+                    },
+                    level2: {
+                        molarMass: "1.008 g/mol",
+                        subatomic: "1 p⁺ | 0 e⁻",
+                        statusBanner: "The Definition of Acidity (pH)",
+                        slotA: {
+                            label: "LITMUS TEST",
+                            result: "Turns Red",
+                            desc: "Turns Blue Paper Red"
+                        },
+                        slotB: {
+                            label: "REACTIVITY",
+                            result: "Fizzes",
+                            desc: "w/ Carbonates"
+                        }
+                    },
+                    level3: {
+                        config: "[1s]⁰ (Empty)",
+                        oxidation: "+1",
+                        ionicRadius: "~0.84 fm (Bare Nucleus)",
+                        hydrationEnthalpy: "-1091 kJ/mol (Very High)",
+                        coordination: "1 (Bonds to Lone Pair)"
+                    },
+                    level4: {
+                        discoveryYear: "1884 (Concept Defined)",
+                        discoveredBy: "Svante Arrhenius",
+                        namedBy: "Greek Hydro (Water) + Genes (Forming)",
+                        stse: "Ocean Acidification (Coral damage); Acid Rain (Forest damage).",
+                        commonUses: "Digestion (Stomach Acid); Car Batteries (Electrolyte).",
+                        hazards: "Corrosive (Chemical burns)."
+                    }
+                }
+            },
+            {
+                id: 'li_plus',
+                symbol: 'Li',
+                charge: '+',
+                name: 'Lithium',
+                nameZh: '锂离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'alkali-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat1',
+                groupName: '+1 Cations',
+                groupNameZh: '+1 阳离子: H, Li, Na, K, Ag',
+                customData: {
+                    level1: {
+                        type: "Alkali Metal Cation",
+                        source: "Group 1 Element - Loss of 1 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "0 (Stable Duplet)",
+                        keyCompounds: "Li-ion (Battery), Li₂CO₃ (Meds)"
+                    },
+                    level2: {
+                        molarMass: "6.94 g/mol",
+                        subatomic: "3 p⁺ | 2 e⁻",
+                        statusBanner: "Isoelectronic with Helium",
+                        slotA: {
+                            label: "FLAME TEST",
+                            result: "Crimson Red",
+                            desc: "(670 nm)"
+                        },
+                        slotB: {
+                            label: "BATTERY FLOW",
+                            result: "Ion Transport",
+                            desc: "In Li-ion Cells"
+                        }
+                    },
+                    level3: {
+                        config: "[1s]² (Stable Duplet)",
+                        oxidation: "+1",
+                        ionicRadius: "76 pm (Smallest alkali)",
+                        hydrationEnthalpy: "-519 kJ/mol (High)",
+                        coordination: "4 (Tetrahedral hydration)"
+                    },
+                    level4: {
+                        discoveryYear: "1817",
+                        discoveredBy: "Johan August Arfwedson",
+                        namedBy: "Greek Lithos (Stone)",
+                        stse: "EV Revolution (Batteries); Geopolitics (\"White Gold\").",
+                        commonUses: "Li-ion Batteries (Phones/Cars); Medicine (Bipolar).",
+                        hazards: "Toxicity (Kidney impact); Corrosive (LiOH)."
+                    }
+                }
+            },
+            {
+                id: 'na_plus',
+                symbol: 'Na',
+                charge: '+',
+                name: 'Sodium',
+                nameZh: '钠离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'alkali-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat1',
+                groupName: '+1 Cations',
+                groupNameZh: '+1 阳离子: H, Li, Na, K, Ag',
+                customData: {
+                    level1: {
+                        type: "Alkali Metal Cation",
+                        source: "Group 1 Element - Loss of 1 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "NaCl (Table Salt), Na₂CO₃ (Soda)"
+                    },
+                    level2: {
+                        molarMass: "22.99 g/mol",
+                        subatomic: "11 p⁺ | 10 e⁻",
+                        statusBanner: "Always Soluble (All-Pass Ion)",
+                        slotA: {
+                            label: "FLAME TEST",
+                            result: "Bright Yellow",
+                            desc: "(589 nm)"
+                        },
+                        slotB: {
+                            label: "SOLUBILITY",
+                            result: "Dissolves",
+                            desc: "Instantly"
+                        }
+                    },
+                    level3: {
+                        config: "[Ne] (Stable Octet)",
+                        oxidation: "+1",
+                        ionicRadius: "102 pm (Shrinks from 186 pm)",
+                        hydrationEnthalpy: "-406 kJ/mol",
+                        coordination: "6 (Octahedral)"
+                    },
+                    level4: {
+                        discoveryYear: "1807",
+                        discoveredBy: "Humphry Davy",
+                        namedBy: "Latin Natrium (Egyptian Soda)",
+                        stse: "Public Health (Hypertension); Road Salt Runoff.",
+                        commonUses: "Nerve Impulses; Street Lights; Food Preservative.",
+                        hazards: "Safe as ion (Essential nutrient)."
+                    }
+                }
+            },
+            {
+                id: 'k_plus',
+                symbol: 'K',
+                charge: '+',
+                name: 'Potassium',
+                nameZh: '钾离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'alkali-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat1',
+                groupName: '+1 Cations',
+                groupNameZh: '+1 阳离子: H, Li, Na, K, Ag',
+                customData: {
+                    level1: {
+                        type: "Alkali Metal Cation",
+                        source: "Group 1 Element - Loss of 1 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "KCl (Fertilizer), KNO₃ (Gunpowder)"
+                    },
+                    level2: {
+                        molarMass: "39.10 g/mol",
+                        subatomic: "19 p⁺ | 18 e⁻",
+                        statusBanner: "Always Soluble (All-Pass Ion)",
+                        slotA: {
+                            label: "FLAME TEST",
+                            result: "Lilac / Violet",
+                            desc: "(766 nm)"
+                        },
+                        slotB: {
+                            label: "GROWTH",
+                            result: "Fertilizer Effect",
+                            desc: "N-P-K Nutrient"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] (Stable Octet)",
+                        oxidation: "+1",
+                        ionicRadius: "138 pm (Larger than Na)",
+                        hydrationEnthalpy: "-322 kJ/mol",
+                        coordination: "6-8"
+                    },
+                    level4: {
+                        discoveryYear: "1807",
+                        discoveredBy: "Humphry Davy",
+                        namedBy: "Arabic al-qali (Potash)",
+                        stse: "Food Security (Fertilizers); Radiation (K-40).",
+                        commonUses: "N-P-K Fertilizers; Soap; Muscle Function.",
+                        hazards: "Hyperkalemia (Cardiac arrest); Safe in diet."
+                    }
+                }
+            },
+            {
+                id: 'ag_plus',
+                symbol: 'Ag',
+                charge: '+',
+                name: 'Silver',
+                nameZh: '银离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'transition-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat1',
+                groupName: '+1 Cations',
+                groupNameZh: '+1 阳离子: H, Li, Na, K, Ag',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Cation",
+                        source: "Group 11 Element - Loss of 1 e⁻",
+                        phase: "Aqueous / Precipitate",
+                        valence: "18 (Pseudo-Noble Gas)",
+                        keyCompounds: "AgNO₃ (Soluble), AgCl (White Ppt)"
+                    },
+                    level2: {
+                        molarMass: "107.87 g/mol",
+                        subatomic: "47 p⁺ | 46 e⁻",
+                        statusBanner: "Insoluble with Halides (Cl/Br/I)",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "White Cloud",
+                            desc: "w/ Cl⁻"
+                        },
+                        slotB: {
+                            label: "PHOTOSENSITIVE",
+                            result: "Darkens",
+                            desc: "in Light"
+                        }
+                    },
+                    level3: {
+                        config: "[Kr] 4d¹⁰ (Full d-shell)",
+                        oxidation: "+1",
+                        ionicRadius: "115 pm (Similar to K⁺)",
+                        hydrationEnthalpy: "-473 kJ/mol",
+                        coordination: "2 (Linear)"
+                    },
+                    level4: {
+                        discoveryYear: "Prehistoric",
+                        discoveredBy: "Unknown",
+                        namedBy: "Latin Argentum",
+                        stse: "Photo-Waste (History); Nanosilver impact.",
+                        commonUses: "Photography (Film); Wound Care; Electronics.",
+                        hazards: "Toxic to aquatic life; Argyria (Blue skin)."
+                    }
+                }
+            },
+
+            // +2 阳离子
+            {
+                id: 'mg_2plus',
+                symbol: 'Mg',
+                charge: '2+',
+                name: 'Magnesium',
+                nameZh: '镁离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'alkaline-earth',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat2',
+                groupName: '+2 Cations',
+                groupNameZh: '+2 阳离子: Mg, Ca, Ba, Zn',
+                customData: {
+                    level1: {
+                        type: "Alkaline Earth Cation",
+                        source: "Group 2 Element - Loss of 2 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "0 (Stable Octet)",
+                        keyCompounds: "MgO, Mg (Flash Powder), MgSO₄ (Epsom)"
+                    },
+                    level2: {
+                        molarMass: "24.31 g/mol",
+                        subatomic: "12 p⁺ | 10 e⁻",
+                        statusBanner: "Insoluble with OH⁻ & CO₃²⁻",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "White Gel",
+                            desc: "w/ Hydroxide"
+                        },
+                        slotB: {
+                            label: "CHLOROPHYLL",
+                            result: "Central Atom",
+                            desc: "Power"
+                        }
+                    },
+                    level3: {
+                        config: "[Ne] (Stable Octet)",
+                        oxidation: "+2",
+                        ionicRadius: "72 pm (High charge density)",
+                        hydrationEnthalpy: "-1921 kJ/mol (Very High)",
+                        coordination: "6 (Octahedral)"
+                    },
+                    level4: {
+                        discoveryYear: "1808",
+                        discoveredBy: "Humphry Davy",
+                        namedBy: "Greek Magnesia (District)",
+                        stse: "Hard Water Scale; Photosynthesis engine.",
+                        commonUses: "Alloys (Car parts); Antacids (Milk of Magnesia).",
+                        hazards: "Safe (Essential nutrient)."
+                    }
+                }
+            },
+            {
+                id: 'ca_2plus',
+                symbol: 'Ca',
+                charge: '2+',
+                name: 'Calcium',
+                nameZh: '钙离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'alkaline-earth',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat2',
+                groupName: '+2 Cations',
+                groupNameZh: '+2 阳离子',
+                customData: {
+                    level1: {
+                        type: "Alkaline Earth Cation",
+                        source: "Group 2 Element - Loss of 2 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "0 (Stable Octet)",
+                        keyCompounds: "CaCO₃ (Limestone), CaCl₂ (Road Salt)"
+                    },
+                    level2: {
+                        molarMass: "40.08 g/mol",
+                        subatomic: "20 p⁺ | 18 e⁻",
+                        statusBanner: "Insoluble with Carbonate (CO₃²⁻)",
+                        slotA: {
+                            label: "FLAME TEST",
+                            result: "Brick Red",
+                            desc: "/ Orange"
+                        },
+                        slotB: {
+                            label: "STRUCTURE",
+                            result: "Mineralization",
+                            desc: "Bones & Shells"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] (Stable Octet)",
+                        oxidation: "+2",
+                        ionicRadius: "100 pm (Shrinks from 197 pm)",
+                        hydrationEnthalpy: "-1577 kJ/mol (High)",
+                        coordination: "6-8"
+                    },
+                    level4: {
+                        discoveryYear: "1808",
+                        discoveredBy: "Humphry Davy",
+                        namedBy: "Latin Calx (Lime)",
+                        stse: "Concrete Industry; Ocean Acidification (CaCO₃).",
+                        commonUses: "Cement; Ice Melting; Bone Health.",
+                        hazards: "Safe (Essential nutrient)."
+                    }
+                }
+            },
+            {
+                id: 'ba_2plus',
+                symbol: 'Ba',
+                charge: '2+',
+                name: 'Barium',
+                nameZh: '钡离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'alkaline-earth',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat2',
+                groupName: '+2 Cations',
+                groupNameZh: '+2 阳离子',
+                customData: {
+                    level1: {
+                        type: "Heavy Alkaline Earth Cation",
+                        source: "Group 2 Element - Loss of 2 e⁻",
+                        phase: "Aqueous / Insoluble Solid",
+                        valence: "0 (Stable Octet)",
+                        keyCompounds: "BaSO₄ (Barium Meal), BaCl₂ (Toxic)"
+                    },
+                    level2: {
+                        molarMass: "137.33 g/mol",
+                        subatomic: "56 p⁺ | 54 e⁻",
+                        statusBanner: "Insoluble with Sulfate (SO₄²⁻)",
+                        slotA: {
+                            label: "FLAME TEST",
+                            result: "Apple Green",
+                            desc: "(524 nm)"
+                        },
+                        slotB: {
+                            label: "IMAGING",
+                            result: "X-Ray Shield",
+                            desc: "(Contrast)"
+                        }
+                    },
+                    level3: {
+                        config: "[Xe] (Stable Octet)",
+                        oxidation: "+2",
+                        ionicRadius: "135 pm (Shrinks from 217 pm)",
+                        hydrationEnthalpy: "-1305 kJ/mol",
+                        coordination: "8-12"
+                    },
+                    level4: {
+                        discoveryYear: "1808",
+                        discoveredBy: "Humphry Davy",
+                        namedBy: "Greek Barys (Heavy)",
+                        stse: "Medical Imaging Safety; Drilling Fluids.",
+                        commonUses: "GI Tract X-rays; Fireworks (Green).",
+                        hazards: "Toxic (Muscle paralysis) if soluble."
+                    }
+                }
+            },
+            {
+                id: 'zn_2plus',
+                symbol: 'Zn',
+                charge: '2+',
+                name: 'Zinc',
+                nameZh: '锌离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'transition-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat2',
+                groupName: '+2 Cations',
+                groupNameZh: '+2 阳离子',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Cation",
+                        source: "Group 12 Element - Loss of 2 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "18 (Pseudo-Noble Gas)",
+                        keyCompounds: "ZnO (Sunscreen), ZnCl₂ (Flux)"
+                    },
+                    level2: {
+                        molarMass: "65.38 g/mol",
+                        subatomic: "30 p⁺ | 28 e⁻",
+                        statusBanner: "Amphoteric (Dissolves in Acid/Base)",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "White Gel",
+                            desc: "(Dissolves)"
+                        },
+                        slotB: {
+                            label: "GALVANIZE",
+                            result: "Steel Protection",
+                            desc: "Anti-Corrosion"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] 3d¹⁰ (Full d-shell)",
+                        oxidation: "+2",
+                        ionicRadius: "74 pm (Shrinks from 134 pm)",
+                        hydrationEnthalpy: "-2046 kJ/mol",
+                        coordination: "4 (Tetrahedral) or 6"
+                    },
+                    level4: {
+                        discoveryYear: "1746",
+                        discoveredBy: "Andreas Marggraf",
+                        namedBy: "German Zink (Prong)",
+                        stse: "Corrosion Control; Immune Support.",
+                        commonUses: "Rust Protection; Sunscreen; Alloys (Brass).",
+                        hazards: "Metal fume fever (if inhaled)."
+                    }
+                }
+            },
+
+            // +3 阳离子
+            {
+                id: 'al_3plus',
+                symbol: 'Al',
+                charge: '3+',
+                name: 'Aluminum',
+                nameZh: '铝离子',
+                type: 'Cation',
+                category: 'Monatomic',
+                colorClass: 'post-transition',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_cat3',
+                groupName: '+3 Cations',
+                groupNameZh: '+3 阳离子: Al',
+                customData: {
+                    level1: {
+                        type: "Post-Transition Cation",
+                        source: "Group 13 Element - Loss of 3 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "0 (Stable Octet)",
+                        keyCompounds: "Al₂O₃ (Sapphire), KAl(SO₄)₂ (Alum)"
+                    },
+                    level2: {
+                        molarMass: "26.98 g/mol",
+                        subatomic: "13 p⁺ | 10 e⁻",
+                        statusBanner: "Amphoteric Ppt (White Gel)",
+                        slotA: {
+                            label: "OXIDATION",
+                            result: "Transparent Shield",
+                            desc: "Al₂O₃ Layer"
+                        },
+                        slotB: {
+                            label: "PRECIPITATE",
+                            result: "White Gel",
+                            desc: "Amphoteric"
+                        }
+                    },
+                    level3: {
+                        config: "[Ne] (Stable Octet)",
+                        oxidation: "+3",
+                        ionicRadius: "54 pm (Tiny & Highly Charged)",
+                        hydrationEnthalpy: "-4665 kJ/mol (Extreme)",
+                        coordination: "6 (Octahedral)"
+                    },
+                    level4: {
+                        discoveryYear: "1825",
+                        discoveredBy: "Hans Christian Oersted",
+                        namedBy: "Latin Alumen (Bitter salt)",
+                        stse: "Recycling Efficiency; Red Mud Waste.",
+                        commonUses: "Aircraft Alloys; Cans; Water Treatment.",
+                        hazards: "Neurotoxicity concerns."
+                    }
+                }
+            },
+
+            // -1 阴离子
+            {
+                id: 'f_minus',
+                symbol: 'F',
+                charge: '-',
+                name: 'Fluoride',
+                nameZh: '氟离子',
+                type: 'Anion',
+                category: 'Monatomic',
+                colorClass: 'halogen',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_an1',
+                groupName: '-1 Anions',
+                groupNameZh: '-1 阴离子: F, Cl, Br, I',
+                customData: {
+                    level1: {
+                        type: "Halogen Anion",
+                        source: "Group 17 Element - Gain of 1 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "NaF (Toothpaste), CaF₂ (Fluorite)"
+                    },
+                    level2: {
+                        molarMass: "19.00 g/mol",
+                        subatomic: "9 p⁺ | 10 e⁻",
+                        statusBanner: "Insoluble with Calcium (Ca²⁺)",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "White Solid",
+                            desc: "w/ Ca²⁺"
+                        },
+                        slotB: {
+                            label: "PROTECTION",
+                            result: "Hardens Enamel",
+                            desc: "Cavity Prevention"
+                        }
+                    },
+                    level3: {
+                        config: "[Ne] (Stable Octet)",
+                        oxidation: "-1",
+                        ionicRadius: "133 pm (Expands from 71 pm)",
+                        hydrationEnthalpy: "-515 kJ/mol",
+                        coordination: "4-8"
+                    },
+                    level4: {
+                        discoveryYear: "1886",
+                        discoveredBy: "Henri Moissan",
+                        namedBy: "Latin Fluere (To flow)",
+                        stse: "Water Fluoridation debate; Teflon pollution.",
+                        commonUses: "Cavity Prevention; Non-stick pans; Etching.",
+                        hazards: "Toxic at high levels (Fluorosis)."
+                    }
+                }
+            },
+            {
+                id: 'cl_minus',
+                symbol: 'Cl',
+                charge: '-',
+                name: 'Chloride',
+                nameZh: '氯离子',
+                type: 'Anion',
+                category: 'Monatomic',
+                colorClass: 'halogen',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_an1',
+                groupName: '-1 Anions',
+                groupNameZh: '-1 阴离子',
+                customData: {
+                    level1: {
+                        type: "Halogen Anion",
+                        source: "Group 17 Element - Gain of 1 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "NaCl (Table Salt), AgCl (White Ppt)"
+                    },
+                    level2: {
+                        molarMass: "35.45 g/mol",
+                        subatomic: "17 p⁺ | 18 e⁻",
+                        statusBanner: "Insoluble with Silver (Ag⁺)",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "White Cloud",
+                            desc: "w/ Ag⁺"
+                        },
+                        slotB: {
+                            label: "SANITATION",
+                            result: "Disinfects Water",
+                            desc: "Pool & Tap"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] (Stable Octet)",
+                        oxidation: "-1",
+                        ionicRadius: "181 pm (Expands from 99 pm)",
+                        hydrationEnthalpy: "-381 kJ/mol",
+                        coordination: "6"
+                    },
+                    level4: {
+                        discoveryYear: "1774",
+                        discoveredBy: "Carl Wilhelm Scheele",
+                        namedBy: "Greek Chloros (Pale Green)",
+                        stse: "Sanitation (Clean Water); Road Salt damage.",
+                        commonUses: "Table Salt; Stomach Acid; PVC Plastics.",
+                        hazards: "Safe as ion (Essential nutrient)."
+                    }
+                }
+            },
+            {
+                id: 'br_minus',
+                symbol: 'Br',
+                charge: '-',
+                name: 'Bromide',
+                nameZh: '溴离子',
+                type: 'Anion',
+                category: 'Monatomic',
+                colorClass: 'halogen',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_an1',
+                groupName: '-1 Anions',
+                groupNameZh: '-1 阴离子',
+                customData: {
+                    level1: {
+                        type: "Halogen Anion",
+                        source: "Group 17 Element - Gain of 1 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "AgBr (Film), NaBr (Sedative)"
+                    },
+                    level2: {
+                        molarMass: "79.90 g/mol",
+                        subatomic: "35 p⁺ | 36 e⁻",
+                        statusBanner: "Insoluble with Silver (Cream Ppt)",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "Cream Solid",
+                            desc: "w/ Ag⁺"
+                        },
+                        slotB: {
+                            label: "FIRE STOP",
+                            result: "Extinguisher",
+                            desc: "Flame Retardant"
+                        }
+                    },
+                    level3: {
+                        config: "[Kr] (Stable Octet)",
+                        oxidation: "-1",
+                        ionicRadius: "196 pm (Expands from 114 pm)",
+                        hydrationEnthalpy: "-347 kJ/mol",
+                        coordination: "6"
+                    },
+                    level4: {
+                        discoveryYear: "1826",
+                        discoveredBy: "Antoine Balard",
+                        namedBy: "Greek Bromos (Stench)",
+                        stse: "Ozone Depletion; Fire Safety (Retardants).",
+                        commonUses: "Photography; Flame Retardants; Hot Tubs.",
+                        hazards: "Chronic toxicity (Bromism)."
+                    }
+                }
+            },
+            {
+                id: 'i_minus',
+                symbol: 'I',
+                charge: '-',
+                name: 'Iodide',
+                nameZh: '碘离子',
+                type: 'Anion',
+                category: 'Monatomic',
+                colorClass: 'halogen',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_an1',
+                groupName: '-1 Anions',
+                groupNameZh: '-1 阴离子',
+                customData: {
+                    level1: {
+                        type: "Halogen Anion",
+                        source: "Group 17 Element - Gain of 1 e⁻",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "KI (Iodized Salt), PbI₂ (Golden Rain)"
+                    },
+                    level2: {
+                        molarMass: "126.90 g/mol",
+                        subatomic: "53 p⁺ | 54 e⁻",
+                        statusBanner: "Insoluble with Pb²⁺ (Yellow)",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "Bright Yellow",
+                            desc: "w/ Lead"
+                        },
+                        slotB: {
+                            label: "THYROID",
+                            result: "Prevents Goiter",
+                            desc: "Iodized Salt"
+                        }
+                    },
+                    level3: {
+                        config: "[Xe] (Stable Octet)",
+                        oxidation: "-1",
+                        ionicRadius: "220 pm (Huge Expansion)",
+                        hydrationEnthalpy: "-305 kJ/mol",
+                        coordination: "6"
+                    },
+                    level4: {
+                        discoveryYear: "1811",
+                        discoveredBy: "Bernard Courtois",
+                        namedBy: "Greek Iodes (Violet)",
+                        stse: "Goiter Prevention; Nuclear Safety (Pills).",
+                        commonUses: "Iodized Salt; Disinfectant; Cloud Seeding.",
+                        hazards: "Low toxicity."
+                    }
+                }
+            },
+
+            // -2 阴离子
+            {
+                id: 'o_2minus',
+                symbol: 'O',
+                charge: '2-',
+                name: 'Oxide',
+                nameZh: '氧离子',
+                type: 'Anion',
+                category: 'Monatomic',
+                colorClass: 'non-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_an2',
+                groupName: '-2 Anions',
+                groupNameZh: '-2 阴离子: O, S',
+                customData: {
+                    level1: {
+                        type: "Chalcogen Anion",
+                        source: "Group 16 Element - Gain of 2 e⁻",
+                        phase: "Solid Oxides (Reacts in water)",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "MgO, Fe₂O₃ (Rust), CaO"
+                    },
+                    level2: {
+                        molarMass: "16.00 g/mol",
+                        subatomic: "8 p⁺ | 10 e⁻",
+                        statusBanner: "Forms Basic Solution (OH⁻)",
+                        slotA: {
+                            label: "BASICITY",
+                            result: "Forms Hydroxide",
+                            desc: "O²⁻ + H₂O → 2OH⁻"
+                        },
+                        slotB: {
+                            label: "OXIDATION",
+                            result: "Rusts Iron",
+                            desc: "Fe₂O₃ (Red-Brown)"
+                        }
+                    },
+                    level3: {
+                        config: "[Ne] (Stable Octet)",
+                        oxidation: "-2",
+                        ionicRadius: "140 pm (Expands from 73 pm)",
+                        hydrationEnthalpy: "High (Reacts)",
+                        coordination: "4-6"
+                    },
+                    level4: {
+                        discoveryYear: "1774",
+                        discoveredBy: "Priestley / Scheele",
+                        namedBy: "Greek Oxys (Acid - mistaken)",
+                        stse: "Corrosion Costs; Climate Change (CO₂).",
+                        commonUses: "Ceramics; Concrete; Ores extraction.",
+                        hazards: "Caustic (Strong base former)."
+                    }
+                }
+            },
+            {
+                id: 's_2minus',
+                symbol: 'S',
+                charge: '2-',
+                name: 'Sulfide',
+                nameZh: '硫离子',
+                type: 'Anion',
+                category: 'Monatomic',
+                colorClass: 'non-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_an2',
+                groupName: '-2 Anions',
+                groupNameZh: '-2 阴离子',
+                customData: {
+                    level1: {
+                        type: "Chalcogen Anion",
+                        source: "Group 16 Element - Gain of 2 e⁻",
+                        phase: "Solid Ores / Aqueous",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "H₂S (Rotten Gas), FeS₂ (Pyrite)"
+                    },
+                    level2: {
+                        molarMass: "32.06 g/mol",
+                        subatomic: "16 p⁺ | 18 e⁻",
+                        statusBanner: "Insoluble Black Ppts (HgS, CuS)",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "Black Solid",
+                            desc: "w/ Metals"
+                        },
+                        slotB: {
+                            label: "ODOR",
+                            result: "Rotten Eggs",
+                            desc: "H₂S Gas"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] (Stable Octet)",
+                        oxidation: "-2",
+                        ionicRadius: "184 pm (Expands from 100 pm)",
+                        hydrationEnthalpy: "High",
+                        coordination: "6"
+                    },
+                    level4: {
+                        discoveryYear: "Prehistoric",
+                        discoveredBy: "Unknown",
+                        namedBy: "Sanskrit Sulvere",
+                        stse: "Acid Mine Drainage; Geothermal Energy.",
+                        commonUses: "Metal Ores (Sphalerite); Paper Industry.",
+                        hazards: "Toxic Gas (H₂S)."
+                    }
+                }
+            },
+
+            // -3 阴离子
+            {
+                id: 'n_3minus',
+                symbol: 'N',
+                charge: '3-',
+                name: 'Nitride',
+                nameZh: '氮离子',
+                type: 'Anion',
+                category: 'Monatomic',
+                colorClass: 'non-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_an3',
+                groupName: '-3 Anions',
+                groupNameZh: '-3 阴离子: N, P',
+                customData: {
+                    level1: {
+                        type: "Pnictogen Anion",
+                        source: "Group 15 Element - Gain of 3 e⁻",
+                        phase: "Solid (Ceramics)",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "NH₃ (Ammonia), GaN (LED)"
+                    },
+                    level2: {
+                        molarMass: "14.01 g/mol",
+                        subatomic: "7 p⁺ | 10 e⁻",
+                        statusBanner: "Hydrolyzes to Ammonia (NH₃)",
+                        slotA: {
+                            label: "HYDROLYSIS",
+                            result: "Releases Ammonia",
+                            desc: "N³⁻ + 3H₂O → NH₃"
+                        },
+                        slotB: {
+                            label: "LED LIGHT",
+                            result: "Blue Glow",
+                            desc: "GaN Technology"
+                        }
+                    },
+                    level3: {
+                        config: "[Ne] (Stable Octet)",
+                        oxidation: "-3",
+                        ionicRadius: "146 pm (Huge Expansion)",
+                        hydrationEnthalpy: "Violently Reacts",
+                        coordination: "4-6"
+                    },
+                    level4: {
+                        discoveryYear: "1772",
+                        discoveredBy: "Daniel Rutherford",
+                        namedBy: "Greek Nitron (Soda)",
+                        stse: "Blue LEDs (Nobel Prize); Airbag Safety.",
+                        commonUses: "Semiconductors; Superhard Coatings.",
+                        hazards: "Reacts violently with water."
+                    }
+                }
+            },
+            {
+                id: 'p_3minus',
+                symbol: 'P',
+                charge: '3-',
+                name: 'Phosphide',
+                nameZh: '磷离子',
+                type: 'Anion',
+                category: 'Monatomic',
+                colorClass: 'non-metal',
+                section: 'basic',
+                sectionName: '1. Basic Monatomic',
+                sectionNameZh: '1. 基础单原子',
+                group: 'basic_an3',
+                groupName: '-3 Anions',
+                groupNameZh: '-3 阴离子',
+                customData: {
+                    level1: {
+                        type: "Pnictogen Anion",
+                        source: "Group 15 Element - Gain of 3 e⁻",
+                        phase: "Solid",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "AlP (Fumigant), InP (Chip)"
+                    },
+                    level2: {
+                        molarMass: "30.97 g/mol",
+                        subatomic: "15 p⁺ | 18 e⁻",
+                        statusBanner: "Releases Toxic Phosphine",
+                        slotA: {
+                            label: "TOXIC GAS",
+                            result: "Phosphine Release",
+                            desc: "PH₃ (Lethal)"
+                        },
+                        slotB: {
+                            label: "ELECTRONIC",
+                            result: "High Speed Chip",
+                            desc: "InP Semiconductor"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] (Stable Octet)",
+                        oxidation: "-3",
+                        ionicRadius: "212 pm (Expands from 110 pm)",
+                        hydrationEnthalpy: "Reacts",
+                        coordination: "4"
+                    },
+                    level4: {
+                        discoveryYear: "1669",
+                        discoveredBy: "Hennig Brand",
+                        namedBy: "Greek Phosphoros (Light)",
+                        stse: "Pest Control; E-waste Recycling.",
+                        commonUses: "Semiconductors; Rodenticides.",
+                        hazards: "Highly Toxic Gas."
+                    }
+                }
+            },
+
+
+            // ===== 2. 核心酸根 (Core Polyatomic) =====
+            // 含碳
+            {
+                id: 'co3_2minus', symbol: 'CO₃', charge: '2-', name: 'Carbonate', nameZh: '碳酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_c', groupName: 'Carbon (C)', groupNameZh: '含碳 (C)',
+                customData: {
+                    level1: {
+                        type: "Oxyanion",
+                        source: "Carbonic Acid (H₂CO₃) - Loss of 2 H⁺",
+                        phase: "Solid (in Salts) - White",
+                        valence: "24 Total (Stable Octets)",
+                        keyCompounds: "CaCO₃ (Limestone), Na₂CO₃ (Soda Ash)"
+                    },
+                    level2: {
+                        molarMass: "60.01 g/mol",
+                        subatomic: "1 C + 3 O | Charge -2",
+                        statusBanner: "Insoluble (except Group 1 & NH₄⁺)",
+                        slotA: {
+                            label: "ACID TEST",
+                            result: "CO₂",
+                            desc: "Fizzes violently"
+                        },
+                        slotB: {
+                            label: "PRECIPITATE",
+                            result: "White Solid",
+                            desc: "w/ Ca²⁺"
+                        }
+                    },
+                    level3: {
+                        config: "Trigonal Planar (sp²)",
+                        oxidation: "C is +4",
+                        ionicRadius: "178 pm",
+                        hydrationEnthalpy: "-1314 kJ/mol",
+                        coordination: "Trigonal Planar (120°)"
+                    },
+                    level4: {
+                        discoveryYear: "Ancient",
+                        discoveredBy: "-",
+                        namedBy: "Latin Carbo (Coal)",
+                        stse: "Ocean Acidification; Carbon Cycle; Cement production.",
+                        commonUses: "Antacids (Tums); Glass manufacturing; Baking.",
+                        hazards: "Safe (Essential blood buffer)."
+                    }
+                }
+            },
+            {
+                id: 'c2o4_2minus', symbol: 'C₂O₄', charge: '2-', name: 'Oxalate', nameZh: '草酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_c', groupName: 'Carbon (C)', groupNameZh: '含碳 (C)',
+                customData: {
+                    level1: {
+                        type: "Organic Anion",
+                        source: "Oxalic Acid - Loss of 2 H⁺",
+                        phase: "Solid (in Salts) - White",
+                        valence: "34 Total",
+                        keyCompounds: "CaC₂O₄ (Kidney Stones), K₂C₂O₄"
+                    },
+                    level2: {
+                        molarMass: "88.02 g/mol",
+                        subatomic: "2 C + 4 O | Charge -2",
+                        statusBanner: "Forms Insoluble Calcium Salt",
+                        slotA: {
+                            label: "CHELATION",
+                            result: "Metal Binding",
+                            desc: "Grabs Metals Tightly"
+                        },
+                        slotB: {
+                            label: "CRYSTALS",
+                            result: "Needles",
+                            desc: "Sharp Needles (Stones)"
+                        }
+                    },
+                    level3: {
+                        config: "Planar (Twisted in solution)",
+                        oxidation: "C is +3",
+                        ionicRadius: "Large planar ion",
+                        hydrationEnthalpy: "High",
+                        coordination: "Two Trigonal Planar units"
+                    },
+                    level4: {
+                        discoveryYear: "1776",
+                        discoveredBy: "Carl Wilhelm Scheele",
+                        namedBy: "Latin Oxalis (Sorrel plant)",
+                        stse: "Health (Kidney stones); Botany (Rhubarb toxicity).",
+                        commonUses: "Rust Removers; Bleaching wood.",
+                        hazards: "Toxic (Binds blood Calcium)."
+                    }
+                }
+            },
+
+            // 含氮
+            {
+                id: 'no3_minus', symbol: 'NO₃', charge: '-', name: 'Nitrate', nameZh: '硝酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_n', groupName: 'Nitrogen (N)', groupNameZh: '含氮 (N)',
+                customData: {
+                    level1: {
+                        type: "Oxyanion",
+                        source: "Nitric Acid (HNO₃) - Loss of 1 H⁺",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "24 Total (Resonance)",
+                        keyCompounds: "KNO₃ (Gunpowder), AgNO₃ (Testing)"
+                    },
+                    level2: {
+                        molarMass: "62.00 g/mol",
+                        subatomic: "1 N + 3 O | Charge -1",
+                        statusBanner: "Always Soluble (All-Pass Ion)",
+                        slotA: {
+                            label: "SOLUBILITY",
+                            result: "All-Pass",
+                            desc: "Never Precipitates"
+                        },
+                        slotB: {
+                            label: "EXPLOSIVE",
+                            result: "Oxidizer",
+                            desc: "Oxidizes Gunpowder"
+                        }
+                    },
+                    level3: {
+                        config: "Trigonal Planar (sp²)",
+                        oxidation: "N is +5",
+                        ionicRadius: "179 pm",
+                        hydrationEnthalpy: "-314 kJ/mol",
+                        coordination: "Trigonal Planar (120°)"
+                    },
+                    level4: {
+                        discoveryYear: "9th Century",
+                        discoveredBy: "Chinese Alchemists",
+                        namedBy: "Nitre (Saltpeter)",
+                        stse: "Eutrophication (Algae); Nitrogen Cycle; Explosives safety.",
+                        commonUses: "Fertilizers; Gunpowder; Meat curing.",
+                        hazards: "Runoff pollutes water; Strong Oxidizer."
+                    }
+                }
+            },
+            {
+                id: 'no2_minus', symbol: 'NO₂', charge: '-', name: 'Nitrite', nameZh: '亚硝酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_n', groupName: 'Nitrogen (N)', groupNameZh: '含氮 (N)',
+                customData: {
+                    level1: {
+                        type: "Oxyanion",
+                        source: "Nitrous Acid (HNO₂) - Loss of 1 H⁺",
+                        phase: "Aqueous (aq) - Pale Yellow",
+                        valence: "18 Total (Lone Pair)",
+                        keyCompounds: "NaNO₂ (Preservative), KNO₂"
+                    },
+                    level2: {
+                        molarMass: "46.01 g/mol",
+                        subatomic: "1 N + 2 O | Charge -1",
+                        statusBanner: "Toxic at high levels",
+                        slotA: {
+                            label: "PRESERVE",
+                            result: "Antimicrobial",
+                            desc: "Keeps Meat Red"
+                        },
+                        slotB: {
+                            label: "BENT SHAPE",
+                            result: "Lone Pair",
+                            desc: "Lone Pair Repulsion"
+                        }
+                    },
+                    level3: {
+                        config: "Bent (sp²)",
+                        oxidation: "N is +3",
+                        ionicRadius: "192 pm",
+                        hydrationEnthalpy: "-410 kJ/mol",
+                        coordination: "Bent (<120°)"
+                    },
+                    level4: {
+                        discoveryYear: "Industrial Era",
+                        discoveredBy: "-",
+                        namedBy: "Greek Nitron",
+                        stse: "Food Safety (Botulism vs Cancer); Blue Baby Syndrome.",
+                        commonUses: "Cured Meat Preservative; Dyes.",
+                        hazards: "Toxic (Interferes with oxygen transport)."
+                    }
+                }
+            },
+
+            // 含硫
+            {
+                id: 'so4_2minus', symbol: 'SO₄', charge: '2-', name: 'Sulfate', nameZh: '硫酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_s', groupName: 'Sulfur (S)', groupNameZh: '含硫 (S)',
+                customData: {
+                    level1: {
+                        type: "Oxyanion",
+                        source: "Sulfuric Acid (H₂SO₄) - Loss of 2 H⁺",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "32 Total",
+                        keyCompounds: "H₂SO₄ (Car Battery), CaSO₄⋅2H₂O (Gypsum)"
+                    },
+                    level2: {
+                        molarMass: "96.06 g/mol",
+                        subatomic: "1 S + 4 O | Charge -2",
+                        statusBanner: "Insoluble with Barium/Lead",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "BaSO₄",
+                            desc: "Thick White w/ Ba²⁺"
+                        },
+                        slotB: {
+                            label: "POWER",
+                            result: "Electrolyte",
+                            desc: "Lead-Acid Battery"
+                        }
+                    },
+                    level3: {
+                        config: "Tetrahedral (sp³)",
+                        oxidation: "S is +6",
+                        ionicRadius: "242 pm",
+                        hydrationEnthalpy: "-1059 kJ/mol",
+                        coordination: "Tetrahedral (109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "8th Century",
+                        discoveredBy: "Jabir ibn Hayyan",
+                        namedBy: "Vitriol (Glassy)",
+                        stse: "Acid Rain (Forest damage); Battery Recycling.",
+                        commonUses: "Car Batteries; Plaster of Paris; Alum.",
+                        hazards: "Acid rain precursor."
+                    }
+                }
+            },
+            {
+                id: 'so3_2minus', symbol: 'SO₃', charge: '2-', name: 'Sulfite', nameZh: '亚硫酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_s', groupName: 'Sulfur (S)', groupNameZh: '含硫 (S)',
+                customData: {
+                    level1: {
+                        type: "Oxyanion",
+                        source: "Sulfurous Acid (H₂SO₃)",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "26 Total (Lone Pair)",
+                        keyCompounds: "Na₂SO₃ (Preservative), MgSO₃"
+                    },
+                    level2: {
+                        molarMass: "80.06 g/mol",
+                        subatomic: "1 S + 3 O | Charge -2",
+                        statusBanner: "Reducing Agent / Bleach",
+                        slotA: {
+                            label: "BLEACHING",
+                            result: "Deodorize",
+                            desc: "Turns Paper White"
+                        },
+                        slotB: {
+                            label: "PUNGENT",
+                            result: "SO₂ Gas",
+                            desc: "Rotten Smell (Acidified)"
+                        }
+                    },
+                    level3: {
+                        config: "Trigonal Pyramidal (sp³)",
+                        oxidation: "S is +4",
+                        ionicRadius: "Large",
+                        hydrationEnthalpy: "-1300 kJ/mol",
+                        coordination: "Trigonal Pyramidal (<109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "Ancient",
+                        discoveredBy: "(Burning Sulfur)",
+                        namedBy: "Sulfur",
+                        stse: "Wine Allergies (Sulfites); Acid Rain source.",
+                        commonUses: "Wine Preservative; Paper Bleaching.",
+                        hazards: "Asthma trigger; Toxic gas release."
+                    }
+                }
+            },
+
+            // 含磷
+            {
+                id: 'po4_3minus', symbol: 'PO₄', charge: '3-', name: 'Phosphate', nameZh: '磷酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_p', groupName: 'Phosphorus (P)', groupNameZh: '含磷 (P)',
+                customData: {
+                    level1: {
+                        type: "Oxyanion",
+                        source: "Phosphoric Acid (H₃PO₄) - Loss of 3 H⁺",
+                        phase: "Solid (Bones) / Aqueous",
+                        valence: "32 Total",
+                        keyCompounds: "Ca₃(PO₄)₂ (Bone), ATP (Energy)"
+                    },
+                    level2: {
+                        molarMass: "94.97 g/mol",
+                        subatomic: "1 P + 4 O | Charge -3",
+                        statusBanner: "Insoluble except Group 1",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "Yellow",
+                            desc: "Yellow w/ Silver (Ag₃PO₄)"
+                        },
+                        slotB: {
+                            label: "LIFE",
+                            result: "Backbone",
+                            desc: "DNA Backbone"
+                        }
+                    },
+                    level3: {
+                        config: "Tetrahedral (sp³)",
+                        oxidation: "P is +5",
+                        ionicRadius: "238 pm",
+                        hydrationEnthalpy: "-2765 kJ/mol",
+                        coordination: "Tetrahedral (109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "1669",
+                        discoveredBy: "Hennig Brand",
+                        namedBy: "Greek Phosphoros (Light)",
+                        stse: "Eutrophication (Algae blooms); Phosphorus Shortage.",
+                        commonUses: "Fertilizers; Cola (Acidifier); Detergents.",
+                        hazards: "Water pollution (Algae)."
+                    }
+                }
+            },
+
+            // 含氯
+            {
+                id: 'clo3_minus', symbol: 'ClO₃', charge: '-', name: 'Chlorate', nameZh: '氯酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'halogen', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_cl', groupName: 'Chlorine (Cl)', groupNameZh: '含氯 (Cl)',
+                customData: {
+                    level1: {
+                        type: "Halogen Oxyanion",
+                        source: "Chloric Acid (HClO₃)",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "26 Total",
+                        keyCompounds: "KClO₃ (Fireworks), NaClO₃"
+                    },
+                    level2: {
+                        molarMass: "83.45 g/mol",
+                        subatomic: "1 Cl + 3 O | Charge -1",
+                        statusBanner: "Strong Oxidizer",
+                        slotA: {
+                            label: "EXPLOSION",
+                            result: "Oxidizer",
+                            desc: "Oxidizer for Color"
+                        },
+                        slotB: {
+                            label: "HERBICIDE",
+                            result: "Defoliant",
+                            desc: "Kills Weeds"
+                        }
+                    },
+                    level3: {
+                        config: "Trigonal Pyramidal (sp³)",
+                        oxidation: "Cl is +5",
+                        ionicRadius: "171 pm",
+                        hydrationEnthalpy: "Low",
+                        coordination: "Trigonal Pyramidal (<109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "1786",
+                        discoveredBy: "Claude Louis Berthollet",
+                        namedBy: "Chlorine",
+                        stse: "Safety (Explosives stability); Agriculture (Weed control).",
+                        commonUses: "Fireworks; Oxygen candles (Submarines).",
+                        hazards: "Fire/Explosion risk with organics."
+                    }
+                }
+            },
+            {
+                id: 'clo_minus', symbol: 'ClO', charge: '-', name: 'Hypochlorite', nameZh: '次氯酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'halogen', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_cl', groupName: 'Chlorine (Cl)', groupNameZh: '含氯 (Cl)',
+                customData: {
+                    level1: {
+                        type: "Halogen Oxyanion",
+                        source: "Bleach (OCl⁻)",
+                        phase: "Aqueous (aq) - Pale Yellow",
+                        valence: "14 Total",
+                        keyCompounds: "NaClO (Bleach/Javex), Ca(ClO)₂"
+                    },
+                    level2: {
+                        molarMass: "51.45 g/mol",
+                        subatomic: "1 Cl + 1 O | Charge -1",
+                        statusBanner: "Bleaching Agent",
+                        slotA: {
+                            label: "WHITENING",
+                            result: "Oxidation",
+                            desc: "Removes Stains"
+                        },
+                        slotB: {
+                            label: "DISINFECT",
+                            result: "Sterilize",
+                            desc: "Kills Germs"
+                        }
+                    },
+                    level3: {
+                        config: "Linear",
+                        oxidation: "Cl is +1",
+                        ionicRadius: "150 pm",
+                        hydrationEnthalpy: "-350 kJ/mol",
+                        coordination: "Linear"
+                    },
+                    level4: {
+                        discoveryYear: "1789",
+                        discoveredBy: "Berthollet (Javel Water)",
+                        namedBy: "Greek Hypo (Under)",
+                        stse: "Public Health (Water Chlorination); Hygiene.",
+                        commonUses: "Household Bleach; Pool Sanitation.",
+                        hazards: "Toxic Gas (Cl₂) if mixed with acid/ammonia."
+                    }
+                }
+            },
+            {
+                id: 'clo4_minus', symbol: 'ClO₄', charge: '-', name: 'Perchlorate', nameZh: '高氯酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'halogen', section: 'core', sectionName: '2. Core Polyatomic', sectionNameZh: '2. 核心酸根', group: 'core_cl', groupName: 'Chlorine (Cl)', groupNameZh: '含氯 (Cl)',
+                customData: {
+                    level1: {
+                        type: "Halogen Oxyanion",
+                        source: "Perchloric Acid",
+                        phase: "Solid (Salts)",
+                        valence: "32 Total",
+                        keyCompounds: "NH₄ClO₄ (Rocket Fuel), KClO₄"
+                    },
+                    level2: {
+                        molarMass: "99.45 g/mol",
+                        subatomic: "1 Cl + 4 O | Charge -1",
+                        statusBanner: "Rocket Fuel Oxidizer",
+                        slotA: {
+                            label: "LAUNCH",
+                            result: "Propellant",
+                            desc: "Solid Booster Fuel"
+                        },
+                        slotB: {
+                            label: "MARS SOIL",
+                            result: "Martian Soil",
+                            desc: "Found on Mars"
+                        }
+                    },
+                    level3: {
+                        config: "Tetrahedral (sp³)",
+                        oxidation: "Cl is +7 (Max)",
+                        ionicRadius: "240 pm",
+                        hydrationEnthalpy: "Low",
+                        coordination: "Tetrahedral (109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "1816",
+                        discoveredBy: "Friedrich von Stadion",
+                        namedBy: "Greek Hyper (Over)",
+                        stse: "Space Exploration; Groundwater pollution; Thyroid health.",
+                        commonUses: "Rocket Propellant; Airbag inflators.",
+                        hazards: "Explosion risk; Thyroid toxin."
+                    }
+                }
+            },
+
+
+            // ===== 3. 过渡金属 (Transition Metals) =====
+            // 铜
+            {
+                id: 'cu_plus', symbol: 'Cu', charge: '+', name: 'Copper(I)', nameZh: '亚铜离子', type: 'Cation', category: 'Monatomic', colorClass: 'transition-metal', section: 'trans', sectionName: '3. Transition Metals', sectionNameZh: '3. 过渡金属', group: 'trans_cu', groupName: 'Copper (Cu)', groupNameZh: '铜 (Cu)',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Cation",
+                        source: "Group 11 Element - Loss of 1 e⁻",
+                        phase: "Aqueous (Unstable) / Solid",
+                        valence: "18 (Pseudo-Noble Gas)",
+                        keyCompounds: "Cu₂O (Red), CuCl (White)"
+                    },
+                    level2: {
+                        molarMass: "63.55 g/mol",
+                        subatomic: "29 p⁺ | 28 e⁻",
+                        statusBanner: "Soft Lewis Acid",
+                        slotA: {
+                            label: "COLORLESS",
+                            result: "Clear",
+                            desc: "Clear in pure Water"
+                        },
+                        slotB: {
+                            label: "DISPROPORTION",
+                            result: "Unstable",
+                            desc: "2Cu⁺ ➔ Cu²⁺ + Cu"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] 3d¹⁰ (Full d-shell)",
+                        oxidation: "+1",
+                        ionicRadius: "77 pm (Large for charge)",
+                        hydrationEnthalpy: "-593 kJ/mol",
+                        coordination: "2 (Linear)"
+                    },
+                    level4: {
+                        discoveryYear: "Prehistoric",
+                        discoveredBy: "Unknown",
+                        namedBy: "Latin Cuprum (from Cyprus)",
+                        stse: "Ancient Metallurgy; Biological Electron Transfer.",
+                        commonUses: "Catalysis; Dyeing Process; Pesticides (Cu₂O).",
+                        hazards: "Toxic to aquatic life."
+                    }
+                }
+            },
+            {
+                id: 'cu_2plus', symbol: 'Cu', charge: '2+', name: 'Copper(II)', nameZh: '铜离子', type: 'Cation', category: 'Monatomic', colorClass: 'transition-metal', section: 'trans', sectionName: '3. Transition Metals', sectionNameZh: '3. 过渡金属', group: 'trans_cu', groupName: 'Copper (Cu)', groupNameZh: '铜 (Cu)',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Cation",
+                        source: "Group 11 Element - Loss of 2 e⁻",
+                        phase: "Aqueous (aq) - Bright Blue",
+                        valence: "17 Total (d⁹)",
+                        keyCompounds: "CuSO₄ (Blue Vitriol), CuCO₃ (Verdigris)"
+                    },
+                    level2: {
+                        molarMass: "63.55 g/mol",
+                        subatomic: "29 p⁺ | 27 e⁻",
+                        statusBanner: "Paramagnetic (Blue Color)",
+                        slotA: {
+                            label: "COLOR",
+                            result: "Bright Blue",
+                            desc: "Bright Cyan/Blue Solution"
+                        },
+                        slotB: {
+                            label: "FLAME TEST",
+                            result: "Blue-Green",
+                            desc: "Blue-Green Flame"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] 3d⁹",
+                        oxidation: "+2 (Most Stable)",
+                        ionicRadius: "73 pm",
+                        hydrationEnthalpy: "-2100 kJ/mol (Extremely High)",
+                        coordination: "6 (Jahn-Teller Octahedral)"
+                    },
+                    level4: {
+                        discoveryYear: "Prehistoric",
+                        discoveredBy: "Unknown",
+                        namedBy: "Latin Cuprum",
+                        stse: "Electronics (PCB Etching); Bordeaux Mixture (Fungicide).",
+                        commonUses: "Electroplating; Pigments; Wood Preservative.",
+                        hazards: "Corrosive; Harmful if swallowed."
+                    }
+                }
+            },
+
+            // 铁
+            {
+                id: 'fe_2plus', symbol: 'Fe', charge: '2+', name: 'Iron(II)', nameZh: '亚铁离子', type: 'Cation', category: 'Monatomic', colorClass: 'transition-metal', section: 'trans', sectionName: '3. Transition Metals', sectionNameZh: '3. 过渡金属', group: 'trans_fe', groupName: 'Iron (Fe)', groupNameZh: '铁 (Fe)',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Cation",
+                        source: "Group 8 Element - Loss of 2 e⁻",
+                        phase: "Aqueous (aq) - Pale Green",
+                        valence: "18 Total (d⁶)",
+                        keyCompounds: "FeSO₄ (Green Vitriol), FeCl₂"
+                    },
+                    level2: {
+                        molarMass: "55.85 g/mol",
+                        subatomic: "26 p⁺ | 24 e⁻",
+                        statusBanner: "Oxygen Carrier in Blood",
+                        slotA: {
+                            label: "HEMOGLOBIN",
+                            result: "O₂ Binding",
+                            desc: "Binds Oxygen in Lungs"
+                        },
+                        slotB: {
+                            label: "PRECIPITATE",
+                            result: "Dirty Green",
+                            desc: "Dirty Green w/ OH⁻"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] 3d⁶",
+                        oxidation: "+2 (Ferrous)",
+                        ionicRadius: "78 pm (High Spin)",
+                        hydrationEnthalpy: "-1920 kJ/mol",
+                        coordination: "6 (Octahedral)"
+                    },
+                    level4: {
+                        discoveryYear: "Prehistoric",
+                        discoveredBy: "Various Cultures",
+                        namedBy: "Latin Ferrum",
+                        stse: "Iron Deficiency Anemia; Biological Redox.",
+                        commonUses: "Nutritional Supplements; Water Treatment.",
+                        hazards: "Acute iron overdose is toxic."
+                    }
+                }
+            },
+            {
+                id: 'fe_3plus', symbol: 'Fe', charge: '3+', name: 'Iron(III)', nameZh: '铁离子', type: 'Cation', category: 'Monatomic', colorClass: 'transition-metal', section: 'trans', sectionName: '3. Transition Metals', sectionNameZh: '3. 过渡金属', group: 'trans_fe', groupName: 'Iron (Fe)', groupNameZh: '铁 (Fe)',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Cation",
+                        source: "Group 8 Element - Loss of 3 e⁻",
+                        phase: "Aqueous (aq) - Yellow/Brown",
+                        valence: "17 Total (d⁵)",
+                        keyCompounds: "FeCl₃ (Etchant), Fe₂O₃ (Rust)"
+                    },
+                    level2: {
+                        molarMass: "55.85 g/mol",
+                        subatomic: "26 p⁺ | 23 e⁻",
+                        statusBanner: "Very High Charge Density",
+                        slotA: {
+                            label: "RUST",
+                            result: "Oxidation",
+                            desc: "Corroded Iron Surface"
+                        },
+                        slotB: {
+                            label: "PRECIPITATE",
+                            result: "Red-Brown",
+                            desc: "Red-Brown Gel w/ OH⁻"
+                        }
+                    },
+                    level3: {
+                        config: "[Ar] 3d⁵ (Half-filled stability)",
+                        oxidation: "+3 (Ferric)",
+                        ionicRadius: "64.5 pm (Very Small)",
+                        hydrationEnthalpy: "-4430 kJ/mol (Extreme)",
+                        coordination: "6 (Octahedral)"
+                    },
+                    level4: {
+                        discoveryYear: "Prehistoric",
+                        discoveredBy: "Various Cultures",
+                        namedBy: "Latin Ferrum",
+                        stse: "Acid Mine Drainage (Orange Rivers); Corrosion.",
+                        commonUses: "Sewage Treatment (Flocculant); Ink Making.",
+                        hazards: "Corrosive; Causes staining."
+                    }
+                }
+            },
+
+            // 铅
+            {
+                id: 'pb_2plus', symbol: 'Pb', charge: '2+', name: 'Lead(II)', nameZh: '铅离子', type: 'Cation', category: 'Monatomic', colorClass: 'post-transition', section: 'trans', sectionName: '3. Transition Metals', sectionNameZh: '3. 过渡金属', group: 'trans_pb', groupName: 'Lead (Pb)', groupNameZh: '铅 (Pb)',
+                customData: {
+                    level1: {
+                        type: "Post-Transition Cation",
+                        source: "Group 14 Element - Loss of 6s² outer pair",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "2 (Stable 6s² pair)",
+                        keyCompounds: "PbI₂ (Gold Ppt), PbSO₄ (Battery Solid)"
+                    },
+                    level2: {
+                        molarMass: "207.2 g/mol",
+                        subatomic: "82 p⁺ | 80 e⁻",
+                        statusBanner: "Heavy Metal Toxin",
+                        slotA: {
+                            label: "PRECIPITATE",
+                            result: "Golden Rain",
+                            desc: "Golden Rain w/ Iodide"
+                        },
+                        slotB: {
+                            label: "STORAGE",
+                            result: "Battery",
+                            desc: "Lead-Acid Accumulator"
+                        }
+                    },
+                    level3: {
+                        config: "[Xe] 4f¹⁴ 5d¹⁰ 6s²",
+                        oxidation: "+2 (Most Stable for Lead)",
+                        ionicRadius: "119 pm (Large)",
+                        hydrationEnthalpy: "-1481 kJ/mol",
+                        coordination: "6-12 (Flexible)"
+                    },
+                    level4: {
+                        discoveryYear: "Ancient (7000 BCE)",
+                        discoveredBy: "Unknown",
+                        namedBy: "Latin Plumbum",
+                        stse: "Flint Water Crisis; Leaded Petrol History.",
+                        commonUses: "Car Batteries; Radiation Shielding.",
+                        hazards: "Neurotoxic (Brain damage); Bioaccumulative."
+                    }
+                }
+            },
+
+            // 含锰
+            {
+                id: 'mno4_minus', symbol: 'MnO₄', charge: '-', name: 'Permanganate', nameZh: '高锰酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'transition-metal', section: 'trans', sectionName: '3. Transition Metals', sectionNameZh: '3. 过渡金属', group: 'trans_mn', groupName: 'Manganese (Mn)', groupNameZh: '含锰 (Mn)',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Oxyanion",
+                        source: "Manganese in +7 state",
+                        phase: "Aqueous (aq) - Deep Purple",
+                        valence: "31 Total (Resonance)",
+                        keyCompounds: "KMnO₄ (Condy's Crystals)"
+                    },
+                    level2: {
+                        molarMass: "118.94 g/mol",
+                        subatomic: "1 Mn + 4 O | -1",
+                        statusBanner: "Ultimate Oxidizing Agent",
+                        slotA: {
+                            label: "DEEP PURPLE",
+                            result: "Intense",
+                            desc: "Intense Color even at 1ppm"
+                        },
+                        slotB: {
+                            label: "OXIDIZER",
+                            result: "Reactive",
+                            desc: "Ignites Glycerin instantly"
+                        }
+                    },
+                    level3: {
+                        config: "Tetrahedral (d⁰ Complex)",
+                        oxidation: "Mn is +7 (Maximum)",
+                        ionicRadius: "240 pm",
+                        hydrationEnthalpy: "High",
+                        coordination: "Tetrahedral (109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "1774 (Element)",
+                        discoveredBy: "Scheele / Gahn",
+                        namedBy: "Latin Magnes (Magnet)",
+                        stse: "Water Purification (Organic removal); Antiseptic.",
+                        commonUses: "Lab Titrations; Disinfectant; Fruit Preservation.",
+                        hazards: "Potent Oxidizer; Stains skin brown (MnO₂)."
+                    }
+                }
+            },
+
+            // 含铬
+            {
+                id: 'cro4_2minus', symbol: 'CrO₄', charge: '2-', name: 'Chromate', nameZh: '铬酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'transition-metal', section: 'trans', sectionName: '3. Transition Metals', sectionNameZh: '3. 过渡金属', group: 'trans_cr', groupName: 'Chromium (Cr)', groupNameZh: '含铬 (Cr)',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Oxyanion",
+                        source: "Chromium in +6 state",
+                        phase: "Aqueous (aq) - Bright Yellow",
+                        valence: "32 Total",
+                        keyCompounds: "K₂CrO₄, PbCrO₄ (Chrome Yellow)"
+                    },
+                    level2: {
+                        molarMass: "116.00 g/mol",
+                        subatomic: "1 Cr + 4 O | -2",
+                        statusBanner: "Carcinogenic / Yellow Pigment",
+                        slotA: {
+                            label: "PIGMENT",
+                            result: "Yellow",
+                            desc: "Classic Chrome Yellow"
+                        },
+                        slotB: {
+                            label: "pH SENSITIVE",
+                            result: "Equilibrium",
+                            desc: "Turns Orange in Acid"
+                        }
+                    },
+                    level3: {
+                        config: "Tetrahedral",
+                        oxidation: "Cr is +6",
+                        ionicRadius: "242 pm",
+                        hydrationEnthalpy: "-1000 kJ/mol",
+                        coordination: "Tetrahedral (109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "1797",
+                        discoveredBy: "Louis Nicolas Vauquelin",
+                        namedBy: "Greek Chroma (Color)",
+                        stse: "Soil Pollution; Chrome Plating Waste.",
+                        commonUses: "Corrosion Inhibitor; Yellow Dye/Ink.",
+                        hazards: "Carcinogenic (Hexavalent Chromium)."
+                    }
+                }
+            },
+            {
+                id: 'cr2o7_2minus', symbol: 'Cr₂O₇', charge: '2-', name: 'Dichromate', nameZh: '重铬酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'transition-metal', section: 'trans', sectionName: '3. Transition Metals', sectionNameZh: '3. 过渡金属', group: 'trans_cr', groupName: 'Chromium (Cr)', groupNameZh: '含铬 (Cr)',
+                customData: {
+                    level1: {
+                        type: "Transition Metal Oxyanion",
+                        source: "Two Chromate units (Acidic)",
+                        phase: "Aqueous (aq) - Bright Orange",
+                        valence: "52 Total",
+                        keyCompounds: "K₂Cr₂O₇, (NH₄)₂Cr₂O₇ (Volcano)"
+                    },
+                    level2: {
+                        molarMass: "216.00 g/mol",
+                        subatomic: "2 Cr + 7 O | -2",
+                        statusBanner: "Powerful Lab Oxidizer",
+                        slotA: {
+                            label: "THERMAL",
+                            result: "Volcano",
+                            desc: "Green Cr₂O₃ \"Ash\""
+                        },
+                        slotB: {
+                            label: "TITRATION",
+                            result: "Redox",
+                            desc: "Classic Orange-to-Green"
+                        }
+                    },
+                    level3: {
+                        config: "Two corners-shared Tetrahedra",
+                        oxidation: "Cr is +6",
+                        ionicRadius: "Large Dimeric Ion",
+                        hydrationEnthalpy: "High",
+                        coordination: "Cr-O-Cr bridge (126°)"
+                    },
+                    level4: {
+                        discoveryYear: "1797",
+                        discoveredBy: "Vauquelin",
+                        namedBy: "Greek Di (Two) + Chroma",
+                        stse: "Breathalyzer Tests (History); Leather Tanning.",
+                        commonUses: "Cleaning Glassware; Photo-engraving.",
+                        hazards: "Highly Toxic; Carcinogenic; Oxidizer."
+                    }
+                }
+            },
+
+
+            // ===== 4. 特殊与有机 (Special & Organic) =====
+            // 特殊双子
+            {
+                id: 'nh4_plus', symbol: 'NH₄', charge: '+', name: 'Ammonium', nameZh: '铵根', type: 'Cation', category: 'Polyatomic', colorClass: 'polyatomic-cation', section: 'special', sectionName: '4. Special & Organic', sectionNameZh: '4. 特殊与有机', group: 'spec_pair', groupName: 'Special Pair', groupNameZh: '特殊双子',
+                customData: {
+                    level1: {
+                        type: "Polyatomic Cation",
+                        source: "Ammonia - Gain of 1 H⁺",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "NH₄NO₃ (Fertilizer), NH₄Cl (Sal Ammoniac)"
+                    },
+                    level2: {
+                        molarMass: "18.04 g/mol",
+                        subatomic: "1 N + 4 H | Charge +1",
+                        statusBanner: "⭐ Always Soluble (All-Pass Ion)",
+                        slotA: {
+                            label: "SMELL",
+                            result: "Releases Ammonia w/ Base",
+                            desc: "NaOH Test"
+                        },
+                        slotB: {
+                            label: "GROWTH",
+                            result: "Nitrogen Source",
+                            desc: "Fertilizer"
+                        }
+                    },
+                    level3: {
+                        config: "Tetrahedral",
+                        oxidation: "N is -3",
+                        ionicRadius: "143 pm (Similar to K⁺)",
+                        hydrationEnthalpy: "-307 kJ/mol",
+                        coordination: "Tetrahedral (109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "Ancient",
+                        discoveredBy: "Various",
+                        namedBy: "From Temple of Ammon",
+                        stse: "Global Food Security (Fertilizers); Nitrogen Cycle.",
+                        commonUses: "Fertilizers; Smelling Salts; Explosives.",
+                        hazards: "Releases toxic ammonia gas."
+                    }
+                }
+            },
+            {
+                id: 'oh_minus', symbol: 'OH', charge: '-', name: 'Hydroxide', nameZh: '氢氧根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'special', sectionName: '4. Special & Organic', sectionNameZh: '4. 特殊与有机', group: 'spec_pair', groupName: 'Special Pair', groupNameZh: '特殊双子',
+                customData: {
+                    level1: {
+                        type: "Polyatomic Anion / Base",
+                        source: "Water / Bases - Loss of H⁺",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "8 (Stable Octet)",
+                        keyCompounds: "NaOH (Lye), Ca(OH)₂ (Lime Water)"
+                    },
+                    level2: {
+                        molarMass: "17.01 g/mol",
+                        subatomic: "1 O + 1 H | Charge -1",
+                        statusBanner: "The Definition of Basicity (pOH)",
+                        slotA: {
+                            label: "LITMUS TEST",
+                            result: "Turns Red Paper Blue",
+                            desc: "pH > 7"
+                        },
+                        slotB: {
+                            label: "SLIPPERY",
+                            result: "Saponifies Skin Oils",
+                            desc: "Soap-like Feel"
+                        }
+                    },
+                    level3: {
+                        config: "Linear",
+                        oxidation: "O is -2",
+                        ionicRadius: "137 pm",
+                        hydrationEnthalpy: "-460 kJ/mol",
+                        coordination: "Linear (180°)"
+                    },
+                    level4: {
+                        discoveryYear: "Ancient (Soap making)",
+                        discoveredBy: "Various",
+                        namedBy: "Greek Hydro + Oxys",
+                        stse: "Soap Production (Saponification); Acid Neutralization.",
+                        commonUses: "Drain Cleaner; Soap; Antacids.",
+                        hazards: "**Corrosive** (Caustic burns); Blindness risk."
+                    }
+                }
+            },
+
+            // 酸式根
+            {
+                id: 'hco3_minus', symbol: 'HCO₃', charge: '-', name: 'Bicarbonate', nameZh: '碳酸氢根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'special', sectionName: '4. Special & Organic', sectionNameZh: '4. 特殊与有机', group: 'spec_acid', groupName: 'Acidic Radicals', groupNameZh: '酸式根',
+                customData: {
+                    level1: {
+                        type: "Amphoteric Oxyanion",
+                        source: "Carbonic Acid - Loss of 1 H⁺",
+                        phase: "Solid (White) / Aqueous",
+                        valence: "24 Total",
+                        keyCompounds: "NaHCO₃ (Baking Soda), KHCO₃"
+                    },
+                    level2: {
+                        molarMass: "61.02 g/mol",
+                        subatomic: "1 C + 3 O + 1 H | Charge -1",
+                        statusBanner: "Amphoteric (Blood Buffer)",
+                        slotA: {
+                            label: "BUFFER",
+                            result: "Resists pH Change",
+                            desc: "Blood pH 7.4"
+                        },
+                        slotB: {
+                            label: "FIZZ",
+                            result: "Releases CO₂ w/ Acid",
+                            desc: "Baking Soda"
+                        }
+                    },
+                    level3: {
+                        config: "Trigonal Planar",
+                        oxidation: "C is +4",
+                        ionicRadius: "156 pm",
+                        hydrationEnthalpy: "-380 kJ/mol",
+                        coordination: "Trigonal Planar (at C)"
+                    },
+                    level4: {
+                        discoveryYear: "1801",
+                        discoveredBy: "Valentin Rose",
+                        namedBy: "Prefix Bi- (Double Carbonate)",
+                        stse: "Blood pH Buffer (Homeostasis); Ocean Carbon Sink.",
+                        commonUses: "Baking (Leavening); Antacids; Fire Extinguishers.",
+                        hazards: "Safe (Essential for life)."
+                    }
+                }
+            },
+            {
+                id: 'hso4_minus', symbol: 'HSO₄', charge: '-', name: 'Bisulfate', nameZh: '硫酸氢根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'special', sectionName: '4. Special & Organic', sectionNameZh: '4. 特殊与有机', group: 'spec_acid', groupName: 'Acidic Radicals', groupNameZh: '酸式根',
+                customData: {
+                    level1: {
+                        type: "Acidic Oxyanion",
+                        source: "Sulfuric Acid - Loss of 1 H⁺",
+                        phase: "Solid (White) / Aqueous",
+                        valence: "32 Total",
+                        keyCompounds: "NaHSO₄ (Toilet Cleaner)"
+                    },
+                    level2: {
+                        molarMass: "97.07 g/mol",
+                        subatomic: "1 S + 4 O + 1 H | Charge -1",
+                        statusBanner: "Strong Acidic Salt",
+                        slotA: {
+                            label: "ACIDIC",
+                            result: "Turns Blue Paper Red",
+                            desc: "pH < 1"
+                        },
+                        slotB: {
+                            label: "CLEANING",
+                            result: "Dissolves Scale",
+                            desc: "Toilet Cleaner"
+                        }
+                    },
+                    level3: {
+                        config: "Tetrahedral",
+                        oxidation: "S is +6",
+                        ionicRadius: "Large",
+                        hydrationEnthalpy: "High",
+                        coordination: "Tetrahedral (109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "Industrial Era",
+                        discoveredBy: "Various",
+                        namedBy: "From Sulfuric Acid",
+                        stse: "Industrial pH control; Cleaning agents safety.",
+                        commonUses: "Toilet Bowl Cleaners; Swimming Pool pH Lowering.",
+                        hazards: "Corrosive (Tissue damage)."
+                    }
+                }
+            },
+            {
+                id: 'h2po4_minus', symbol: 'H₂PO₄', charge: '-', name: 'Dihydrogen phosphate', nameZh: '磷酸二氢根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'special', sectionName: '4. Special & Organic', sectionNameZh: '4. 特殊与有机', group: 'spec_acid', groupName: 'Acidic Radicals', groupNameZh: '酸式根',
+                customData: {
+                    level1: {
+                        type: "Acidic Oxyanion",
+                        source: "Phosphoric Acid - Loss of 1 H⁺",
+                        phase: "Solid / Aqueous",
+                        valence: "32 Total",
+                        keyCompounds: "Ca(H₂PO₄)₂ (Superphosphate)"
+                    },
+                    level2: {
+                        molarMass: "96.99 g/mol",
+                        subatomic: "1 P + 4 O + 2 H | Charge -1",
+                        statusBanner: "Soluble Fertilizer",
+                        slotA: {
+                            label: "ROOTS",
+                            result: "Promotes Root Growth",
+                            desc: "N-P-K Fertilizer"
+                        },
+                        slotB: {
+                            label: "SOLUBILITY",
+                            result: "Soluble w/ Calcium",
+                            desc: "Superphosphate"
+                        }
+                    },
+                    level3: {
+                        config: "Tetrahedral",
+                        oxidation: "P is +5",
+                        ionicRadius: "Large",
+                        hydrationEnthalpy: "High",
+                        coordination: "Tetrahedral (109.5°)"
+                    },
+                    level4: {
+                        discoveryYear: "1840s",
+                        discoveredBy: "Lawes",
+                        namedBy: "From Phosphate",
+                        stse: "Green Revolution (Fertilizers); Eutrophication.",
+                        commonUses: "Superphosphate Fertilizers; Baking Powder; Buffers.",
+                        hazards: "Eye irritant; Water pollution."
+                    }
+                }
+            },
+
+            // 有机/其他
+            {
+                id: 'ch3coo_minus', symbol: 'CH₃COO', charge: '-', name: 'Acetate', nameZh: '醋酸根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'special', sectionName: '4. Special & Organic', sectionNameZh: '4. 特殊与有机', group: 'spec_org', groupName: 'Organic/Other', groupNameZh: '有机/其他',
+                customData: {
+                    level1: {
+                        type: "Organic Anion",
+                        source: "Vinegar (CH₃COOH) - Loss of 1 H⁺",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "24 Total",
+                        keyCompounds: "CH₃COONa (Hot Ice), Vinegar"
+                    },
+                    level2: {
+                        molarMass: "59.04 g/mol",
+                        subatomic: "2 C + 2 O + 3 H | Charge -1",
+                        statusBanner: "⭐ Always Soluble (All-Pass Ion)",
+                        slotA: {
+                            label: "VINEGAR",
+                            result: "Pungent Smell (Acid)",
+                            desc: "CH₃COOH"
+                        },
+                        slotB: {
+                            label: "HOT ICE",
+                            result: "Exothermic Crystallization",
+                            desc: "Sodium Acetate"
+                        }
+                    },
+                    level3: {
+                        config: "Trigonal Planar (Carboxyl)",
+                        oxidation: "C is +3 (Carboxyl)",
+                        ionicRadius: "162 pm",
+                        hydrationEnthalpy: "-400 kJ/mol",
+                        coordination: "Tetrahedral (Methyl) + Planar (Carboxyl)"
+                    },
+                    level4: {
+                        discoveryYear: "Ancient",
+                        discoveredBy: "Various",
+                        namedBy: "Latin Acetum (Vinegar)",
+                        stse: "Fermentation (Biotech); Biodegradable Plastics.",
+                        commonUses: "Vinegar (Food); Hand Warmers (Hot Ice); Textiles.",
+                        hazards: "Concentrated acid is corrosive."
+                    }
+                }
+            },
+            {
+                id: 'cn_minus', symbol: 'CN', charge: '-', name: 'Cyanide', nameZh: '氰根', type: 'Anion', category: 'Polyatomic', colorClass: 'polyatomic-anion', section: 'special', sectionName: '4. Special & Organic', sectionNameZh: '4. 特殊与有机', group: 'spec_org', groupName: 'Organic/Other', groupNameZh: '有机/其他',
+                customData: {
+                    level1: {
+                        type: "Toxic Pseudo-Halogen",
+                        source: "Prussic Acid (HCN) - Loss of 1 H⁺",
+                        phase: "Aqueous (aq) - Colorless",
+                        valence: "10 (Isoelectronic w/ N₂)",
+                        keyCompounds: "NaCN (Gold Mining), KCN (Poison)"
+                    },
+                    level2: {
+                        molarMass: "26.02 g/mol",
+                        subatomic: "1 C + 1 N | Charge -1",
+                        statusBanner: "⚠️ Extreme Toxin",
+                        slotA: {
+                            label: "TOXICITY",
+                            result: "Stops Cell Respiration",
+                            desc: "Blocks Cytochrome"
+                        },
+                        slotB: {
+                            label: "LEACHING",
+                            result: "Dissolves Gold",
+                            desc: "Au(CN)₂⁻ Complex"
+                        }
+                    },
+                    level3: {
+                        config: "Linear",
+                        oxidation: "C is +2",
+                        ionicRadius: "191 pm",
+                        hydrationEnthalpy: "-350 kJ/mol",
+                        coordination: "Linear (Triple Bond)"
+                    },
+                    level4: {
+                        discoveryYear: "1782",
+                        discoveredBy: "Scheele",
+                        namedBy: "Greek Kyanos (Dark Blue)",
+                        stse: "Mining Ethics (Spills); Environmental Contamination.",
+                        commonUses: "Gold Extraction; Electroplating.",
+                        hazards: "**Lethal** (Inhibits Respiration)."
+                    }
+                }
+            }
+        ];
+
+        // Helper to formatting chemical formulas from Unicode to HTML
+        function formatChem(str) {
+            if (!str) return '';
+            const subMap = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9' };
+            const supMap = { '⁺': '+', '⁻': '-', '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9' };
+
+            return str.split('').map(char => {
+                if (subMap[char]) return `<sub>${subMap[char]}</sub>`;
+                if (supMap[char]) return `<sup>${supMap[char]}</sup>`;
+                return char;
+            }).join('');
+        }
+
+        // Helper to format charge string (e.g. "2+") to superscript HTML
+        function formatCharge(str) {
+            if (!str) return '';
+            return `<sup>${str}</sup>`;
+        }
+
+        // Sync element size from periodic table to ions table
+        function syncElementSize() {
+            const tableElement = document.querySelector('#periodic-table .element:not(.empty)');
+            if (!tableElement) return;
+
+            const rect = tableElement.getBoundingClientRect();
+            const size = rect.width; // Since it's square, width = height
+
+            // Set CSS variable on root for use in ions table
+            document.documentElement.style.setProperty('--synced-element-size', size + 'px');
+        }
+
+        // Initial sync and on resize
+        window.addEventListener('load', syncElementSize);
+        window.addEventListener('resize', syncElementSize);
+        // Also sync when switching pages (ensure periodic table is rendered first)
+        setTimeout(syncElementSize, 100);
+
+        function initIonsTable() {
+            const container = document.getElementById('ions-table');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            // Main container styles
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.gap = '3vmin';
+
+            // Padding only for internal spacing, top padding handled by CSS parent
+            container.style.padding = '2vmin';
+
+            // Center the container horizontally
+            container.style.width = '100%';
+            container.style.maxWidth = '90vw';
+            container.style.margin = '0 auto';
+
+            // Reset scrolling/height (handled by parent .ions-table-page now)
+            container.style.height = 'auto';
+            container.style.overflowY = 'visible';
+            container.style.boxSizing = 'border-box';
+
+            // Define Structure Order
+            const sectionOrder = ['basic', 'core', 'trans', 'special'];
+            const groupsBySection = {
+                'basic': ['basic_cat1', 'basic_cat2', 'basic_cat3', 'basic_an1', 'basic_an2', 'basic_an3'],
+                'core': ['core_c', 'core_n', 'core_s', 'core_p', 'core_cl'],
+                'trans': ['trans_cu', 'trans_fe', 'trans_pb', 'trans_mn', 'trans_cr'],
+                'special': ['spec_pair', 'spec_acid', 'spec_org']
+            };
+
+            // Organize Data
+            const sections = {};
+            ionsData.forEach(ion => {
+                if (!sections[ion.section]) {
+                    sections[ion.section] = {
+                        name: ion.sectionName,
+                        nameZh: ion.sectionNameZh,
+                        groups: {}
+                    };
+                }
+                const sec = sections[ion.section];
+
+                if (!sec.groups[ion.group]) {
+                    sec.groups[ion.group] = {
+                        name: ion.groupName,
+                        nameZh: ion.groupNameZh,
+                        ions: []
+                    };
+                }
+                sec.groups[ion.group].ions.push(ion);
+            });
+
+            // Render Sections
+            sectionOrder.forEach(secId => {
+                const secData = sections[secId];
+                if (!secData) return;
+
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'ion-section';
+                sectionDiv.style.marginBottom = '3vmin';
+
+                // Section Header
+                const secHeader = document.createElement('h3');
+                secHeader.textContent = t(secData.name, secData.nameZh);
+                secHeader.style.cssText = `
+                    font-size: 1.8vmin;
+                    font-weight: 800;
+                    color: #222;
+                    margin-bottom: 1.5vmin;
+                    border-bottom: 2px solid #ddd;
+                    padding-bottom: 0.5vmin;
+                `;
+                sectionDiv.appendChild(secHeader);
+
+                // Single container for ALL ions in this section (Flattened)
+                const sectionIonsContainer = document.createElement('div');
+                sectionIonsContainer.style.cssText = `
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 1vmin;
+                    align-content: flex-start;
+                `;
+
+                // Define Group Colors (Distinct colors for each subgroup)
+                const groupColors = {
+                    // 1. Basic Monatomic
+                    'basic_cat1': '#FFCDD2', // Red 100 (+1)
+                    'basic_cat2': '#FFCC80', // Orange 200 (+2)
+                    'basic_cat3': '#FFF59D', // Yellow 200 (+3)
+                    'basic_an1': '#B2EBF2', // Cyan 100 (-1)
+                    'basic_an2': '#BBDEFB', // Blue 100 (-2)
+                    'basic_an3': '#E1BEE7', // Purple 100 (-3)
+
+                    // 2. Core Polyatomic
+                    'core_c': '#CFD8DC', // Blue Grey 100 (Carbon)
+                    'core_n': '#F8BBD0', // Pink 100 (Nitrogen)
+                    'core_s': '#DCEDC8', // Light Green 100 (Sulfur)
+                    'core_p': '#D1C4E9', // Deep Purple 100 (Phosphorus)
+                    'core_cl': '#B9F6CA', // Green Accent 100 (Chlorine)
+
+                    // 3. Transition Metals
+                    'trans_cu': '#FFAB91', // Deep Orange 200 (Copper)
+                    'trans_fe': '#BCAAA4', // Brown 200 (Iron)
+                    'trans_pb': '#EEEEEE', // Grey 200 (Lead)
+                    'trans_mn': '#E1BEE7', // Purple 100 (Manganate)
+                    'trans_cr': '#FFE082', // Amber 200 (Chromate)
+
+                    // 4. Special & Organic
+                    'spec_pair': '#B2DFDB', // Teal 100 (Special Pair)
+                    'spec_acid': '#F0F4C3', // Lime 100 (Acidic)
+                    'spec_org': '#D7CCC8'  // Brown 100 (Organic)
+                };
+
+                // Iterate through groups but render ions into the SAME container
+                const groupList = groupsBySection[secId] || [];
+                groupList.forEach(groupId => {
+                    const groupData = secData.groups[groupId];
+                    if (!groupData) return;
+
+                    groupData.ions.forEach(ion => {
+                        const cell = document.createElement('div');
+                        cell.className = 'element';
+
+                        // apply Group-Specific Color (Overriding class-based colors)
+                        const bgColor = groupColors[groupId] || '#f0f0f0';
+                        cell.style.backgroundColor = bgColor;
+                        cell.style.borderColor = 'rgba(0,0,0,0.1)';
+
+                        // Card Size - Handled by CSS .ions-table-page .element for exact match
+                        cell.style.cssText += `
+                            flex-shrink: 0;
+                            position: relative;
+                            cursor: pointer;
+                        `;
+
+                        // Special Layout Adjustments
+                        let symbolSize = '2.2vmin';
+                        let nameStyle = 'font-size: 0.9vmin;';
+
+                        // Fix: Acetate symbol - reduced for longer formula
+                        if (ion.id === 'ch3coo_minus') {
+                            symbolSize = '1.7vmin'; // Reduced for CH3COO
+                        }
+
+                        // Fix: Dihydrogen phosphate name wrapping
+                        if (ion.id === 'h2po4_minus') {
+                            // Removed -webkit-box to simplify centering, just force normal flow with center alignment
+                            nameStyle += 'white-space: normal; line-height: 1.1; text-align: center; width: 100%; display: flex; align-items: center; justify-content: center; height: 2.2vmin;';
+                        }
+
+                        // Fix: Hydrogen phosphate name wrapping might strictly need it too
+                        if (ion.id === 'hpo4_2minus') {
+                            nameStyle += 'white-space: normal; line-height: 1.1; text-align: center; width: 100%;';
+                        }
+
+                        // Build stacked notation: charge and subscript stacked vertically
+                        const chemHTML = formatChem(ion.symbol);
+                        const chargeHTML = formatCharge(ion.charge);
+
+                        // Match pattern: extract base symbol and LAST subscript
+                        const subMatch = chemHTML.match(/^(.+)<sub>([^<]+)<\/sub>$/);
+                        let symbolContent;
+
+                        if (subMatch) {
+                            // Has subscript - create stacked layout (charge on top, subscript on bottom)
+                            const baseSymbol = subMatch[1];
+                            const subText = subMatch[2];
+                            symbolContent = `
+                                <span class="symbol-base">${baseSymbol}</span><span class="script-stack"><span class="script-sup">${chargeHTML}</span><span class="script-sub">${subText}</span></span>
+                            `;
+                        } else {
+                            // No subscript - just symbol + superscript charge
+                            symbolContent = `${chemHTML}<sup class="ion-charge-sup">${chargeHTML}</sup>`;
+                        }
+
+                        cell.innerHTML = `
+                            <span class="symbol" style="font-size: ${symbolSize};">${symbolContent}</span>
+                            <span class="name" style="${nameStyle}">${ion.name}</span>
+                        `;
+
+                        cell.addEventListener('click', () => openIonModal(ion));
+
+                        // Add hover effect via JS since inline style overrides CSS hover
+                        cell.addEventListener('mouseenter', () => {
+                            cell.style.filter = 'brightness(0.95)';
+                            cell.style.transform = 'scale(1.05)';
+                        });
+                        cell.addEventListener('mouseleave', () => {
+                            cell.style.filter = 'none';
+                            cell.style.transform = 'none';
+                        });
+
+                        sectionIonsContainer.appendChild(cell);
+                    });
+                });
+
+                sectionDiv.appendChild(sectionIonsContainer);
+                container.appendChild(sectionDiv);
+            });
+        }
+
+
+        // Ion slider shares the same global lock state as element slider for sync
+        // Uses: window.isLevelLocked, window.lockedLevelIndex (defined in element slider section)
+
+        function initIonSlider() {
+            const slider = document.getElementById('ion-cards-slider');
+            const dots = document.querySelectorAll('#ion-slider-dots .dot');
+            const slides = slider.querySelectorAll('.card-slide');
+            const lockBtn = document.getElementById('ion-level-lock-btn');
+
+            if (!slider || slides.length < 2) return;
+
+            // Use shared global state for sync with element slider
+            let currentIndex = window.isLevelLocked ? window.lockedLevelIndex : 0;
+            const gap = 20;
+            let isDragging = false;
+            let startX = 0;
+            let startScrollLeft = 0;
+
+            // Lock button setup - clone to avoid duplicate event listeners
+            if (lockBtn) {
+                lockBtn.style.display = 'flex';
+                const newLockBtn = lockBtn.cloneNode(true);
+                lockBtn.parentNode.replaceChild(newLockBtn, lockBtn);
+                newLockBtn.classList.toggle('locked', window.isLevelLocked);
+                newLockBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.isLevelLocked = !window.isLevelLocked;
+                    window.lockedLevelIndex = currentIndex;
+                    newLockBtn.classList.toggle('locked', window.isLevelLocked);
+                    updateDots();
+                });
+            }
+
+            function getSlideWidth() {
+                return slider.clientWidth + gap;
+            }
+
+            function updateDots() {
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
+                    dot.classList.toggle('locked', window.isLevelLocked && i === window.lockedLevelIndex);
+                });
+            }
+
+            function update3DEffect() {
+                const scrollLeft = slider.scrollLeft;
+                const slideWidth = getSlideWidth();
+                if (slider.clientWidth === 0) return;
+
+                slides.forEach((slide, index) => {
+                    const offset = (index * slideWidth - scrollLeft) / slider.clientWidth;
+                    if (Math.abs(offset) < 2) {
+                        const rotY = -25 * offset;
+                        const scale = 1 - 0.12 * Math.abs(offset);
+                        const opacity = 1 - 0.4 * Math.abs(offset);
+                        slide.style.transform = `perspective(800px) rotateY(${rotY}deg) scale(${scale})`;
+                        slide.style.opacity = Math.max(0.3, opacity);
+                        slide.style.zIndex = 10 - Math.abs(Math.round(offset));
+                    } else {
+                        slide.style.opacity = '0';
+                    }
+                });
+            }
+
+            function snapToSlide(index, animated = true) {
+                index = Math.max(0, Math.min(index, slides.length - 1));
+                currentIndex = index;
+                const target = index * getSlideWidth();
+
+                if (animated) {
+                    // Custom smooth animation with easing
+                    const start = slider.scrollLeft;
+                    const distance = target - start;
+                    const duration = 200; // ms - faster snap
+                    let startTime = null;
+
+                    function animate(currentTime) {
+                        if (!startTime) startTime = currentTime;
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+
+                        // Ease out cubic for smooth deceleration
+                        const eased = 1 - Math.pow(1 - progress, 3);
+
+                        slider.scrollLeft = start + distance * eased;
+                        update3DEffect();
+
+                        if (progress < 1) {
+                            requestAnimationFrame(animate);
+                        }
+                    }
+                    requestAnimationFrame(animate);
+                } else {
+                    slider.scrollLeft = target;
+                }
+
+                updateDots();
+            }
+
+            // Touch/Mouse Events
+            function getX(e) {
+                return e.touches ? e.touches[0].clientX : e.pageX;
+            }
+
+            slider.addEventListener('mousedown', startDrag);
+            slider.addEventListener('touchstart', startDrag, { passive: true });
+
+            function startDrag(e) {
+                isDragging = true;
+                startX = getX(e);
+                startScrollLeft = slider.scrollLeft;
+                slider.style.cursor = 'grabbing';
+            }
+
+            document.addEventListener('mousemove', moveDrag);
+            document.addEventListener('touchmove', moveDrag, { passive: true });
+
+            function moveDrag(e) {
+                if (!isDragging) return;
+                const x = getX(e);
+                const diff = startX - x;
+                slider.scrollLeft = startScrollLeft + diff;
+                update3DEffect();
+            }
+
+            document.addEventListener('mouseup', endDrag);
+            document.addEventListener('touchend', endDrag);
+
+            function endDrag() {
+                if (!isDragging) return;
+                isDragging = false;
+                slider.style.cursor = 'grab';
+
+                // Calculate how far we moved from current slide
+                const slideWidth = getSlideWidth();
+                const currentPos = currentIndex * slideWidth;
+                const moved = slider.scrollLeft - currentPos;
+                const threshold = slideWidth * 0.15; // Need to drag 15% to flip
+
+                let targetIndex = currentIndex;
+                if (moved > threshold) {
+                    targetIndex = currentIndex + 1; // Next slide
+                } else if (moved < -threshold) {
+                    targetIndex = currentIndex - 1; // Previous slide
+                }
+                // If didn't pass threshold, snap back to current
+
+                snapToSlide(targetIndex);
+            }
+
+            // Dot clicks
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => snapToSlide(index));
+            });
+
+            // Scroll event for live updates
+            slider.addEventListener('scroll', () => {
+                if (!isDragging) {
+                    update3DEffect();
+                    const realIndex = Math.round(slider.scrollLeft / getSlideWidth());
+                    dots.forEach((dot, i) => dot.classList.toggle('active', i === realIndex));
+                }
+            });
+
+            // Keyboard navigation for Ion modal
+            function ionKeyboardHandler(e) {
+                const ionModal = document.getElementById('ion-modal');
+                if (!ionModal || !ionModal.classList.contains('active')) return;
+
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault();
+                    if (currentIndex < slides.length - 1) {
+                        snapToSlide(currentIndex + 1);
+                    }
+                } else if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    if (currentIndex > 0) {
+                        snapToSlide(currentIndex - 1);
+                    }
+                }
+            }
+            document.addEventListener('keydown', ionKeyboardHandler);
+
+            // Initialize
+            snapToSlide(currentIndex, false);
+            update3DEffect();
+        }
+
+        function openIonModal(ion) {
+            const modal = document.getElementById('ion-modal');
+            if (!modal) return;
+
+            // Reset Level 2 View to Standard (hide H+ grid if it was open)
+            const standardL2 = document.getElementById('ion-l2-standard');
+            const hPlusL2 = document.getElementById('ion-l2-h-plus');
+            if (standardL2) standardL2.style.display = 'block';
+            if (hPlusL2) hPlusL2.style.display = 'none';
+
+            // Build the symbol with stacked notation (sub and sup aligned)
+            // Check if symbol contains subscript characters
+            const hasSubscript = /[₀₁₂₃₄₅₆₇₈₉]/.test(ion.symbol);
+
+            let finalSymbol;
+            if (hasSubscript) {
+                // For ions with subscripts (like Cr₂O₇²⁻), use stacked notation
+                // Extract the last subscript and stack it with charge
+                const subMap = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9' };
+
+                // Find last subscript position
+                let lastSubIdx = -1;
+                let lastSubChars = '';
+                for (let i = ion.symbol.length - 1; i >= 0; i--) {
+                    if (subMap[ion.symbol[i]]) {
+                        lastSubIdx = i;
+                        lastSubChars = subMap[ion.symbol[i]] + lastSubChars;
+                    } else if (lastSubIdx !== -1) {
+                        break;
+                    }
+                }
+
+                if (lastSubIdx !== -1) {
+                    // Get base part (before last subscript sequence)
+                    const basePart = ion.symbol.substring(0, lastSubIdx - lastSubChars.length + 1);
+                    const baseHTML = formatChem(basePart);
+
+                    // Create stacked notation with charge on top, subscript on bottom
+                    finalSymbol = baseHTML + '<span class="chem-notation"><sup>' + ion.charge + '</sup><sub>' + lastSubChars + '</sub></span>';
+                } else {
+                    finalSymbol = formatChem(ion.symbol) + '<sup class="ion-charge">' + ion.charge + '</sup>';
+                }
+            } else {
+                // Simple ions without subscripts
+                finalSymbol = formatChem(ion.symbol) + '<sup class="ion-charge">' + ion.charge + '</sup>';
+            }
+
+            const headlineSymbol = document.getElementById('ion-headline-symbol');
+            headlineSymbol.innerHTML = finalSymbol;
+
+            // Dynamic font size for symbol based on length
+            const symbolLength = ion.symbol.length;
+            if (symbolLength > 5) {
+                headlineSymbol.style.fontSize = '2.8rem';
+                headlineSymbol.style.marginLeft = '-10px'; // Shift left for long symbols
+            } else if (symbolLength > 3) {
+                headlineSymbol.style.fontSize = '3.6rem';
+                headlineSymbol.style.marginLeft = '-5px';
+            } else {
+                headlineSymbol.style.fontSize = '4.5rem';
+                headlineSymbol.style.marginLeft = '0';
+            }
+
+            // Dynamic font size for headline name based on length
+            const headlineName = document.getElementById('ion-headline-name');
+            // Avoid duplicate "ion" suffix if name already ends with "ion" or "Ion"
+            const nameEndsWithIon = ion.name.toLowerCase().endsWith('ion');
+            const fullName = ion.name + (nameEndsWithIon ? '' : ' ion');
+
+            // Check if name is very long (like Dihydrogen Phosphate) - use scrolling effect
+            if (fullName.length > 14) {
+                headlineName.classList.add('scrolling-name');
+                // Duplicate text for seamless loop
+                headlineName.innerHTML = `<span class="scrolling-text"><span>${fullName}</span><span>${fullName}</span></span>`;
+                headlineName.style.fontSize = '1.5rem';
+
+                // Initialize animation after render
+                setTimeout(() => {
+                    const textEl = headlineName.querySelector('.scrolling-text');
+                    if (!textEl) return;
+
+                    const halfWidth = textEl.scrollWidth / 2;
+                    const targetX = -halfWidth;
+                    const speed = halfWidth / 8000; // px/ms (Align with initial 8s duration)
+
+                    let player = textEl.animate([
+                        { transform: 'translateX(0)', offset: 0 },
+                        { transform: 'translateX(0)', offset: 0.05 }, // Short wait (5%)
+                        { transform: `translateX(${targetX}px)`, offset: 0.95 },
+                        { transform: `translateX(${targetX}px)`, offset: 1 }
+                    ], {
+                        duration: 8000,
+                        easing: 'ease-in-out',
+                        fill: 'forwards',
+                        delay: 250 // Reduced delay
+                    });
+
+                    headlineName.onmouseenter = () => {
+                        // Capture state BEFORE cancelling
+                        const style = window.getComputedStyle(textEl);
+                        const matrix = new DOMMatrix(style.transform);
+                        const currentX = matrix.m41;
+
+                        player.cancel();
+
+                        // Calculate remaining distance to target for smooth transition
+                        const dist = Math.abs(targetX - currentX);
+                        const duration = dist / speed;
+
+                        // Resume moving to target linearly
+                        player = textEl.animate([
+                            { transform: `translateX(${currentX}px)` },
+                            { transform: `translateX(${targetX}px)` }
+                        ], {
+                            duration: duration > 0 ? duration : 0,
+                            easing: 'linear'
+                        });
+
+                        player.onfinish = () => {
+                            // Start infinite loop
+                            player = textEl.animate([
+                                { transform: 'translateX(0)' },
+                                { transform: `translateX(${targetX}px)` }
+                            ], {
+                                duration: 8000,
+                                easing: 'linear',
+                                iterations: Infinity
+                            });
+                        };
+                    };
+
+                    headlineName.onmouseleave = () => {
+                        // Capture state BEFORE cancelling
+                        const style = window.getComputedStyle(textEl);
+                        const matrix = new DOMMatrix(style.transform);
+                        const currentX = matrix.m41;
+
+                        player.cancel();
+
+                        // Settle smoothly to target (start of second text) at normal speed
+                        const dist = Math.abs(targetX - currentX);
+                        // Use calculated duration based on constant speed
+                        const duration = dist / speed;
+
+                        player = textEl.animate([
+                            { transform: `translateX(${currentX}px)` },
+                            { transform: `translateX(${targetX}px)` }
+                        ], {
+                            duration: duration > 0 ? duration : 0,
+                            easing: 'linear', // Keep it steady
+                            fill: 'forwards'
+                        });
+                    };
+                }, 50);
+            } else {
+                headlineName.classList.remove('scrolling-name');
+                headlineName.textContent = fullName;
+                headlineName.onmouseenter = null;
+
+                // Adjust font size based on name length
+                if (fullName.length > 10) {
+                    headlineName.style.fontSize = '1.8rem';
+                } else {
+                    headlineName.style.fontSize = '2rem'; // Short names
+                }
+            }
+
+
+
+            // Charge is now part of symbol, so we don't set separate charge text
+
+            // Populate Info Card
+            document.getElementById('ion-type').textContent = ion.type === 'Cation' ? 'Cation' : 'Anion';
+            document.getElementById('ion-category').textContent = ion.category === 'Monatomic' ? 'Monatomic' : 'Polyatomic';
+            document.getElementById('ion-charge-value').textContent = ion.charge;
+
+            // Populate Additional Info
+            const fromEl = document.getElementById('ion-from-element');
+            if (fromEl) fromEl.textContent = ion.fromElement || '-';
+
+            const formText = document.getElementById('ion-formation');
+            if (formText) formText.innerHTML = formatChem(ion.formationEq) || '-';
+
+            // Watermark and Big Symbol (Removed in favor of Coming Soon)
+            // document.getElementById('ion-modal-watermark').textContent = ion.charge;
+            // document.getElementById('ion-big-symbol').innerHTML = formatChem(ion.symbol) + formatCharge(ion.charge);
+
+            function fitText(el) {
+                if (!el) return;
+                el.style.whiteSpace = 'nowrap';
+                el.style.overflow = 'hidden';
+                let size = 1.6; // Start larger (was default 1.1-1.6?) - default styles say usually 1.5rem for values?
+                // Visual check: value text is usually large. Let's assume standard is around 1.3rem. 
+                // Let's read computed style or just start at 1.4rem and shrink.
+
+                // Reset to standard font size first
+                el.style.fontSize = '';
+                // Wait for render? No, synchronous.
+
+                // Let's implement a loop.
+                let currentSize = parseFloat(window.getComputedStyle(el).fontSize);
+                if (!currentSize) currentSize = 24; // fallback 1.5rem
+
+                while (el.scrollWidth > el.clientWidth && currentSize > 12) {
+                    currentSize -= 1;
+                    el.style.fontSize = currentSize + 'px';
+                }
+            }
+
+            // ===== Custom Data Handling (H+, Li+, Na+, K+, Ag+, etc.) =====
+            if (ion.customData) {
+                const cd = ion.customData;
+
+                // Level 1: Essentials - Auto-Fit Text
+                const typeEl = document.getElementById('ion-type');
+                const catEl = document.getElementById('ion-category');
+                const phaseEl = document.getElementById('ion-phase');
+                const chargeEl = document.getElementById('ion-charge-value');
+
+                typeEl.textContent = cd.level1.type;
+                catEl.textContent = cd.level1.source;
+                if (phaseEl) phaseEl.textContent = cd.level1.phase;
+                chargeEl.textContent = cd.level1.valence;
+
+                // Apply fitting
+                setTimeout(() => {
+                    fitText(typeEl);
+                    fitText(catEl);
+                    fitText(phaseEl);
+                    fitText(chargeEl);
+                }, 0);
+
+                // Key Compounds - Refactor to "Common Ions" style pills
+                const formText = document.getElementById('ion-formation');
+                if (formText) {
+                    const roleLabel = formText.parentElement.querySelector('.info-label');
+                    if (roleLabel) roleLabel.textContent = "Key Compounds";
+
+                    // Clear previous content
+                    formText.innerHTML = '';
+                    formText.style.background = 'transparent';
+                    formText.style.padding = '0';
+                    formText.style.display = 'flex';
+                    formText.style.flexDirection = 'column';
+                    formText.style.gap = '8px';
+
+                    // Parse string: "HCl (Stomach Acid), H2SO4 (Battery Acid)"
+                    const compounds = cd.level1.keyCompounds.split(', ');
+                    compounds.forEach(comp => {
+                        // Regex to extract formula and name in parens
+                        const match = comp.match(/^(.+) \((.+)\)$/);
+                        let formula = comp;
+                        let name = '';
+
+                        if (match) {
+                            formula = match[1];
+                            name = match[2];
+                        }
+
+                        const item = document.createElement('div');
+                        item.className = 'ion-item';
+                        // Match common ions style exactly 
+                        item.style.marginBottom = '0';
+                        item.style.width = '100%';
+                        item.style.boxSizing = 'border-box';
+
+                        // Formatted Formula
+                        const fmtFormula = formatChem(formula);
+
+                        item.innerHTML = `
+                            <span class="ion-symbol" style="font-size: 1.2rem;">${fmtFormula}</span>
+                            <span class="ion-name" style="font-size: 0.95rem; opacity: 0.8;">${name}</span>
+                        `;
+                        formText.appendChild(item);
+                    });
+                }
+
+                // Level 2: Identity & Visuals
+                if (standardL2) standardL2.style.display = 'none';
+                if (hPlusL2) {
+                    hPlusL2.style.display = 'flex';
+
+                    // Metrics
+                    if (document.getElementById('h-plus-molar-mass')) document.getElementById('h-plus-molar-mass').textContent = cd.level2.molarMass;
+
+                    // Parse "1 p+ | 0 e-"
+                    const subParts = cd.level2.subatomic.split('|');
+                    if (document.getElementById('h-plus-protons')) document.getElementById('h-plus-protons').textContent = subParts[0] ? subParts[0].trim() : '';
+                    if (document.getElementById('h-plus-electrons')) document.getElementById('h-plus-electrons').textContent = subParts[1] ? subParts[1].trim() : '';
+
+                    // Status Banner
+                    const waterStateLabel = document.querySelector('#ion-l2-h-plus .h-plus-metric-row:last-child .h-plus-metric-label');
+                    if (waterStateLabel) waterStateLabel.textContent = "Status";
+                    if (document.getElementById('h-plus-water-state')) {
+                        const statusEl = document.getElementById('h-plus-water-state');
+                        statusEl.textContent = cd.level2.statusBanner;
+                        statusEl.style.color = '#B45309';
+                        statusEl.style.fontWeight = '700';
+                        // Auto-fit status text to prevent overflow
+                        setTimeout(() => fitText(statusEl), 0);
+                    }
+
+                    // Visuals (Slot A & B)
+                    // Visuals (Slot A & B)
+                    // Chinese translation map for common terms
+                    const zhMap = {
+                        // Results
+                        'Turns Red': '变红 (Turns Red)',
+                        'Fizzes': '起泡 (Fizzes)',
+                        'Crimson': '深红色 (Crimson)',
+                        'Orange-Yellow': '橙黄色 (Orange-Yellow)',
+                        'Violet': '紫色 (Violet)',
+                        'Apple Green': '苹果绿 (Apple Green)',
+                        'White ppt': '白色沉淀 (White ppt)',
+                        'Cream ppt': '乳白色沉淀 (Cream ppt)',
+                        'Yellow ppt': '黄色沉淀 (Yellow ppt)',
+                        'Black ppt': '黑色沉淀 (Black ppt)',
+                        'Blue Solution': '蓝色溶液 (Blue)',
+                        'Green Solution': '绿色溶液 (Green)',
+                        'Yellow Solution': '黄色溶液 (Yellow)',
+                        'Purple Solution': '紫色溶液 (Purple)',
+                        'Colorless': '无色 (Colorless)',
+                        'Soluble': '可溶 (Soluble)',
+                        'Insoluble': '不溶 (Insoluble)',
+                        'Charges': '充电 (Charges)',
+                        'High': '高 (High)',
+                        'Darkens': '变暗 (Darkens)',
+                        'Volcano': '火山反应 (Volcano)',
+                        'Redox': '氧化还原 (Redox)',
+                        // Descriptions
+                        'w/ Carbonates': '与碳酸盐反应',
+                        'Lithium Batteries': '锂电池',
+                        'Table Salt': '食盐',
+                        'Plant Nutrition': '植物营养',
+                        'Bone Health': '骨骼健康',
+                        'Photography': '摄影',
+                        'Galvanizing': '镀锌',
+                        'Blue Vitriol': '蓝矾',
+                        'Chlorophyll': '叶绿素',
+                        'Hemoglobin': '血红蛋白',
+                        'Rust': '生锈',
+                        'Corundum': '刚玉',
+                        'Toxic': '有毒',
+                        'Fertilizer': '肥料',
+                        'pH Universal': 'pH通用',
+                        'Water': '水分子',
+                        'Tooth Protection': '牙齿保护',
+                        'Combustion': '燃烧',
+                        'Silver Test': '银离子测试',
+                        'Pool Sanitation': '泳池消毒',
+                        'Classic Orange-to-Green': '经典橙转绿',
+                        'Strong Oxidizer': '强氧化剂'
+                    };
+
+                    function translateDesc(text) {
+                        return zhMap[text] || text;
+                    }
+
+                    // Helper to update visual card with correct animation
+                    function updateVisualCard(cardId, dataSlot, slot) {
+                        const card = document.getElementById(cardId);
+                        if (!card) return;
+
+                        // Update Title
+                        const titleEl = card.querySelector('.visual-card-title');
+                        if (titleEl) titleEl.textContent = dataSlot.label;
+
+                        // Update Desc with Chinese translation
+                        const descEl = card.querySelector('.visual-card-desc');
+                        const translatedResult = translateDesc(dataSlot.result);
+                        const translatedDesc = translateDesc(dataSlot.desc);
+                        if (descEl) descEl.innerHTML = `<b>${translatedResult}</b><br><span style='font-size:0.8em; opacity:0.8'>${translatedDesc}</span>`;
+
+                        // Remove old visual wrapper (both old and new system)
+                        // Remove ALL animation elements between title and desc - clean slate
+                        const titleEl2 = card.querySelector('.visual-card-title');
+                        const descEl2 = card.querySelector('.visual-card-desc');
+                        if (titleEl2 && descEl2) {
+                            // Remove everything between title and desc
+                            let nextEl = titleEl2.nextElementSibling;
+                            while (nextEl && nextEl !== descEl2) {
+                                const toRemove = nextEl;
+                                nextEl = nextEl.nextElementSibling;
+                                toRemove.remove();
+                            }
+                        }
+
+                        // Use new animation system
+                        if (typeof IonAnimations !== 'undefined' && ion.id) {
+                            const animHTML = IonAnimations.getAnimation(ion.id, slot);
+                            if (animHTML && titleEl) {
+                                const wrapper = document.createElement('div');
+                                wrapper.innerHTML = animHTML;
+                                const animEl = wrapper.firstElementChild;
+                                if (animEl) titleEl.after(animEl);
+                            }
+                        }
+                    }
+
+                    // Update both slots dynamically
+                    updateVisualCard('litmus-visual-card', cd.level2.slotA, 'slotA');
+                    updateVisualCard('reactivity-visual-card', cd.level2.slotB, 'slotB');
+
+                    // Add fitting for slot descriptions
+                    const descA = document.querySelector('#litmus-visual-card .visual-card-desc');
+                    const descB = document.querySelector('#reactivity-visual-card .visual-card-desc');
+                    if (descA) setTimeout(() => fitText(descA), 50);
+                    if (descB) setTimeout(() => fitText(descB), 50);
+                }
+
+                // Level 3: Structure
+                const l3Config = document.getElementById('ion-l3-config');
+                if (l3Config) l3Config.textContent = cd.level3.config;
+
+                // Ionic Radius (swapped from Electronegativity)
+                const l3En = document.getElementById('ion-l3-en');
+                if (l3En) {
+                    const label = l3En.closest('.l3-stat-item').querySelector('.l3-stat-label');
+                    if (label) label.textContent = "Ionic Radius";
+                    l3En.textContent = cd.level3.ionicRadius;
+                    const unit = l3En.nextElementSibling;
+                    if (unit) unit.textContent = "";
+                }
+
+                // Hydration Enthalpy (swapped from Ionization)
+                const l3Ion = document.getElementById('ion-l3-ion');
+                if (l3Ion) {
+                    const label = l3Ion.closest('.l3-stat-item').querySelector('.l3-stat-label');
+                    if (label) label.textContent = "Hydration Enthalpy";
+                    l3Ion.textContent = cd.level3.hydrationEnthalpy;
+                }
+
+                // Oxidation State
+                const l3Ox = document.getElementById('ion-l3-oxidation');
+                if (l3Ox) {
+                    l3Ox.innerHTML = `<div class="ox-pill">${cd.level3.oxidation}</div>`;
+                }
+
+                // Level 4 (Red Card) - History & STSE - Match Element Layout
+                const l4Container = document.getElementById('ion-l4-container');
+                const l4YearLabel = document.getElementById('ion-l4-year-label');
+                const l4Year = document.getElementById('ion-l4-year');
+                const l4Grid = document.getElementById('ion-l4-grid');
+                const l4Uses = document.getElementById('ion-l4-uses');
+                const l4Hazards = document.getElementById('ion-l4-hazards');
+
+                // 1. History Section Top (Year, Discovery, Named By)
+                if (l4YearLabel) l4YearLabel.textContent = "Discovery Year";
+                if (l4Year) {
+                    l4Year.textContent = cd.level4.discoveryYear;
+                    l4Year.style.fontSize = "0.95rem";
+                }
+
+                // Inject "Discovered By" and "Named By" rows if they don't exist yet
+                // Check if we already injected them (to avoid duplicates on re-open)
+                let discoveredRow = l4Container.querySelector('.h-plus-discovered-row');
+
+                if (!discoveredRow && l4Year && l4Year.parentElement) {
+                    // Create Discovered By Row
+                    discoveredRow = document.createElement('div');
+                    discoveredRow.className = 'info-row h-plus-discovered-row';
+                    discoveredRow.style.marginBottom = '8px';
+                    discoveredRow.innerHTML = `
+                        <span class="info-label">Discovered By</span>
+                        <span class="info-value" style="font-size: 0.95rem;">${cd.level4.discoveredBy}</span>
+                    `;
+                    l4Year.parentElement.after(discoveredRow);
+
+                    // Create Named By Row
+                    const namedRow = document.createElement('div');
+                    namedRow.className = 'info-row h-plus-named-row';
+                    namedRow.style.marginBottom = '0';
+                    namedRow.innerHTML = `
+                        <span class="info-label">Named By</span>
+                        <span class="info-value" style="font-size: 0.95rem;">${cd.level4.namedBy}</span>
+                    `;
+                    discoveredRow.after(namedRow);
+
+                    // Create Divider
+                    const divider = document.createElement('div');
+                    divider.className = 'info-divider';
+                    // Allow default CSS margin (24px 0) to apply, or force match element if different context
+                    // Element modal uses .info-divider which has margin: 24px 0;
+                    // Let's remove the override.
+                    divider.style.marginTop = '24px';
+                    divider.style.marginBottom = '24px';
+                    namedRow.after(divider);
+
+                } else if (discoveredRow) {
+                    // Update content if rows exist
+                    discoveredRow.querySelector('.info-value').textContent = cd.level4.discoveredBy;
+                    discoveredRow.querySelector('.info-value').style.fontSize = "0.95rem";
+                    l4Year.style.fontSize = "0.95rem";
+
+                    const namedRow = l4Container.querySelector('.h-plus-named-row');
+                    if (namedRow) {
+                        namedRow.querySelector('.info-value').textContent = cd.level4.namedBy;
+                        namedRow.querySelector('.info-value').style.fontSize = "0.95rem";
+                    }
+                }
+
+                // 2. STSE Section (Top of Grid)
+                if (l4Grid) {
+                    // Clean up old STSE if exists
+                    const oldStse = l4Grid.querySelector('.stse-card');
+                    if (oldStse) oldStse.remove();
+
+                    const stseCard = document.createElement('div');
+                    stseCard.className = 'prop-cell full-width stse-card';
+                    // Element STSE style: Green background
+                    stseCard.style.cssText = "align-items: flex-start; justify-content: flex-start; flex-direction: column; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 10px 14px; height: auto; min-height: fit-content; gap: 6px;";
+
+                    const stseLines = cd.level4.stse.split(';').map(s => s.trim()).filter(s => s);
+                    const stseHtml = stseLines.map(line => `<div>${line}</div>`).join('');
+
+                    stseCard.innerHTML = `
+                        <span class="prop-cell-label" style="color: #047857; margin: 0;">STSE & Environment</span>
+                        <div class="stse-content" style="font-size: 0.9rem; font-weight: 600; line-height: 1.4; color: #064E3B; display: flex; flex-direction: column; gap: 2px;">
+                            ${stseHtml}
+                        </div>`;
+                    l4Grid.prepend(stseCard);
+                }
+
+                // 3. Uses & Hazards
+                if (l4Uses) {
+                    // Use <br> for separation to match element style better than bullet points sometimes
+                    l4Uses.innerHTML = cd.level4.commonUses.replace(/; /g, ' • ');
+                    l4Uses.style.fontSize = "0.95rem";
+                    l4Uses.style.fontWeight = "600";
+                    l4Uses.parentElement.style.alignItems = "flex-start";
+                    l4Uses.parentElement.style.flexDirection = "column";
+                }
+
+                if (l4Hazards) {
+                    l4Hazards.innerHTML = cd.level4.hazards;
+                    l4Hazards.style.fontSize = "0.95rem";
+                    l4Hazards.style.fontWeight = "700";
+                    l4Hazards.style.color = "#991B1B";
+                    l4Hazards.parentElement.style.alignItems = "flex-start";
+                    l4Hazards.parentElement.style.flexDirection = "column";
+                }
+            } else if (ion.category === 'Monatomic') {
+                // ===== Standard Populate Level 2-4 for other Monatomic Ions =====
+                const elemData = finallyData[ion.symbol];
+                const elemInfo = elements.find(e => e.symbol === ion.symbol);
+
+                if (elemData && elemInfo) {
+                    const atomicNum = elemInfo.number;
+
+                    // Parse charge to calculate electrons
+                    let chargeValue = 0;
+                    const chargeStr = ion.charge;
+                    if (chargeStr.includes('+')) {
+                        chargeValue = parseInt(chargeStr.replace('+', '')) || 1;
+                    } else if (chargeStr.includes('-')) {
+                        chargeValue = -(parseInt(chargeStr.replace('-', '')) || 1);
+                    }
+                    const electronCount = atomicNum - chargeValue;
+
+                    // Level 2 (Yellow)
+                    const l2Mass = document.getElementById('ion-l2-mass');
+                    const l2Protons = document.getElementById('ion-l2-protons');
+                    const l2Electrons = document.getElementById('ion-l2-electrons');
+                    const l2Isotopes = document.getElementById('ion-l2-isotopes');
+
+                    if (l2Mass) l2Mass.textContent = elemData.avgAtomicMass || '--';
+                    if (l2Protons) l2Protons.textContent = atomicNum;
+                    if (l2Electrons) l2Electrons.textContent = electronCount;
+
+                    if (l2Isotopes && elemData.isotopes && elemData.isotopes.length > 0) {
+                        l2Isotopes.innerHTML = elemData.isotopes.slice(0, 3).map(iso => `
+                            <div class="ion-item">
+                                <span class="ion-symbol"><sup>${iso.name.split('-')[1]}</sup>${ion.symbol}</span>
+                                <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+                                    <span style="font-weight: 600; font-size: 0.95rem;">${iso.neutron.replace('n', ' n⁰')}</span>
+                                    <span style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.6; font-weight: 700; letter-spacing: 0.5px; ${iso.percent === 'Radioactive' ? 'color: #B91C1C;' : ''}">${iso.percent}</span>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+
+                    // Level 3 (Blue)
+                    const l3Config = document.getElementById('ion-l3-config');
+                    const l3En = document.getElementById('ion-l3-en');
+                    const l3Ion = document.getElementById('ion-l3-ion');
+                    const l3Oxidation = document.getElementById('ion-l3-oxidation');
+
+                    if (l3Config) l3Config.innerHTML = elemData.electronConfig || '--';
+                    if (l3En) l3En.textContent = elemData.electronegativity ?? '--';
+                    if (l3Ion) l3Ion.textContent = elemData.ionization || '--';
+
+                    if (l3Oxidation && elemData.oxidationStates) {
+                        l3Oxidation.innerHTML = elemData.oxidationStates.map((ox, i) =>
+                            `<div class="ox-pill ${i > 0 ? 'faded' : ''}"><label>${i === 0 ? 'Common' : 'Poss.'}</label>${ox}</div>`
+                        ).join('');
+                    }
+
+                    // Level 4 (Red)
+                    const l4Year = document.getElementById('ion-l4-year');
+                    const l4Uses = document.getElementById('ion-l4-uses');
+                    const l4Hazards = document.getElementById('ion-l4-hazards');
+
+                    if (l4Year) l4Year.textContent = elemData.discovery || '--';
+                    if (l4Uses) l4Uses.textContent = elemData.uses || '--';
+                    if (l4Hazards) l4Hazards.textContent = elemData.hazards || '--';
+                }
+            } else {
+                // Reset to default for non-monatomic ions
+                const resetIds = ['ion-l2-mass', 'ion-l2-protons', 'ion-l2-electrons', 'ion-l3-config', 'ion-l3-en', 'ion-l3-ion', 'ion-l4-year', 'ion-l4-uses', 'ion-l4-hazards'];
+                resetIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = '--';
+                });
+                const l2Isotopes = document.getElementById('ion-l2-isotopes');
+                if (l2Isotopes) l2Isotopes.innerHTML = '<div class="ion-item" style="justify-content: center; opacity: 0.5; font-style: italic;"><span>Coming Soon...</span></div>';
+                const l3Oxidation = document.getElementById('ion-l3-oxidation');
+                if (l3Oxidation) l3Oxidation.innerHTML = '<div class="ox-pill faded"><label>Possible</label>--</div>';
+            }
+
+            // Show modal
+            modal.classList.add('active');
+            document.title = `Zperiod - ${ion.name}`;
+
+            // Re-apply fitText after modal is active to ensure clientWidth is correct
+            setTimeout(() => {
+                if (ion.customData) {
+                    fitText(document.getElementById('ion-type'));
+                    fitText(document.getElementById('ion-category'));
+                    fitText(document.getElementById('ion-phase'));
+                    fitText(document.getElementById('ion-charge-value'));
+                    const statusEl = document.getElementById('h-plus-water-state');
+                    if (statusEl) fitText(statusEl);
+
+                    const descA = document.querySelector('#litmus-visual-card .visual-card-desc');
+                    const descB = document.querySelector('#reactivity-visual-card .visual-card-desc');
+                    if (descA) fitText(descA);
+                    if (descB) fitText(descB);
+                }
+            }, 50);
+
+            initIonSlider();
+
+            // Hide nav
+            document.body.classList.add('hide-nav');
+
+            // Close handlers
+            const closeBtn = document.getElementById('ion-modal-close');
+            if (closeBtn) {
+                closeBtn.onclick = () => {
+                    modal.classList.remove('active');
+                    document.body.classList.remove('hide-nav');
+                    document.title = 'Zperiod';
+
+                    // Reset headline layout for element modal? 
+                    // No, this is #ion-modal, distinct from #element-modal. 
+                    // So hiding elements inside it is permanent until re-opened?
+                    // Re-opening calls this function again, which re-hides.
+                    // So it's safe.
+                };
+            }
+
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.classList.remove('hide-nav');
+                    document.title = 'Zperiod';
+                }
+            };
+        }
+
+        // Initialize Ions Table
+        initIonsTable();
+
+        // Re-render ions table on language change
+        window.addEventListener('languageChanged', () => {
+            initIonsTable();
+        });
 
         // 主页面的按钮
         // 主页面的按钮
@@ -3071,6 +6382,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (page === 'table') {
                     showTablePage();
                     updateGlobalNavActive('table');
+                } else if (page === 'ions') {
+                    showIonsPage();
+                    updateGlobalNavActive('ions');
                 } else if (page === 'tools') {
                     showBlankPage1();
                     updateGlobalNavActive('tools');
@@ -3080,6 +6394,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+
+        // Initialize Ions Table
+        initIonsTable();
     }
     const modal = document.getElementById('element-modal');
     const modalClose = document.getElementById('modal-close');
@@ -3118,6 +6435,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let electrons = [];
     let introStartTime = 0;
     let isIntroAnimating = false;
+    let isTopViewMode = false;
     let initialCameraZ = 16;
     let targetCameraZ = 16;
     function init3DScene() {
@@ -3526,128 +6844,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         renderer.render(scene, camera);
     }
-    function cleanup3D() {
+    function cleanup3D(full) {
         if (animationId) cancelAnimationFrame(animationId);
-    }
-
-    // Top View Mode (Bohr-Rutherford Model)
-    let isTopViewMode = false;
-    let originalElectronData = []; // Store original positions and colors
-    let originalCameraZ = 16;
-
-    function toggleTopView() {
-        const btn = document.getElementById('top-view-btn');
-        if (!atomGroup || !camera) return;
-
-        isTopViewMode = !isTopViewMode;
-        btn.classList.toggle('active', isTopViewMode);
-
-        if (isTopViewMode) {
-            // Save original state
-            originalCameraZ = camera.position.z;
-            originalElectronData = electrons.map(el => ({
-                color: el.material ? el.material.color.getHex() : 0x333333,
-                angle: el.userData.angle,
-                y: el.position.y
-            }));
-
-            // Switch to true top-down view (looking straight down Y axis)
-            camera.position.set(0, 25, 0);
-            camera.up.set(0, 0, -1); // Orient camera so Z is "up" in view
-            camera.lookAt(0, 0, 0);
-
-            // First reset ALL rotations to zero
-            atomGroup.rotation.set(0, 0, 0);
-
-            const wobbleGroup = atomGroup.getObjectByName("wobbleGroup");
-            if (wobbleGroup) {
-                wobbleGroup.rotation.set(0, 0, 0);
+        animationId = null;
+        if (full && renderer) {
+            renderer.forceContextLoss();
+            renderer.dispose();
+            if (renderer.domElement && renderer.domElement.parentNode) {
+                renderer.domElement.parentNode.removeChild(renderer.domElement);
             }
-
-            const nucleusGroup = atomGroup.getObjectByName("nucleusGroup");
-            if (nucleusGroup) {
-                nucleusGroup.rotation.set(0, 0, 0);
-            }
-
-            // Now reorganize electrons into Bohr-Rutherford shell positions
-            // Group electrons by their shell index (using radius as key)
-            const shellMap = new Map();
-            electrons.forEach(el => {
-                // Round the radius to avoid floating point issues
-                const radius = Math.round(el.userData.radius * 100) / 100;
-                if (!shellMap.has(radius)) {
-                    shellMap.set(radius, []);
-                }
-                shellMap.get(radius).push(el);
-            });
-
-
-
-            // Evenly distribute electrons within each shell
-            shellMap.forEach((shellElectrons, radius) => {
-                const count = shellElectrons.length;
-                shellElectrons.forEach((el, i) => {
-                    // Evenly space around the circle: 360° / n electrons
-                    const angle = (2 * Math.PI * i) / count;
-                    el.userData.bohrAngle = angle;
-
-                    // Position in XZ plane (Y=0 for flat view)
-                    el.position.x = radius * Math.cos(angle);
-                    el.position.z = radius * Math.sin(angle);
-                    el.position.y = 0;
-
-                    // Make electrons black
-                    if (el.material) {
-                        el.material.color.setHex(0x1a1a1a);
-                    }
-
-                    // Hide trails in Bohr mode
-                    if (el.userData && el.userData.trails) {
-                        el.userData.trails.forEach(trail => {
-                            trail.visible = false;
-                        });
-                    }
-                });
-            });
-
-        } else {
-            // Restore normal 3D view
-            camera.position.set(0, 0, originalCameraZ);
-            camera.up.set(0, 1, 0); // Reset camera up vector
-            camera.lookAt(0, 0, 0);
-
-            // Restore atomGroup rotation
-            atomGroup.rotation.set(0, 0, 0);
-
-            // Restore original electron positions and colors
-            electrons.forEach((el, i) => {
-                const data = originalElectronData[i];
-                if (data) {
-                    // Restore color
-                    if (el.material) {
-                        el.material.color.setHex(data.color);
-                    }
-                    // Restore angle
-                    el.userData.angle = data.angle;
-                    // Restore Y position
-                    el.position.y = data.y;
-
-                    // Show trails again
-                    if (el.userData && el.userData.trails) {
-                        el.userData.trails.forEach(trail => {
-                            trail.visible = true;
-                        });
-                    }
-                }
-            });
+            renderer = null;
+            scene = null;
+            camera = null;
+            atomGroup = null;
+            electrons = [];
         }
     }
 
-    // Set up top view button listener
-    const topViewBtn = document.getElementById('top-view-btn');
-    if (topViewBtn) {
-        topViewBtn.addEventListener('click', toggleTopView);
-    }
     function getElementCategory(element) {
         if (element.number === 1) return "Non-metal";
         const c = element.column;
@@ -4404,6 +7617,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modalContent.setAttribute('data-element-name', `${element.symbol} - ${element.name}`);
         }
         modal.classList.add('active');
+        document.title = `Zperiod - ${element.name}`;
         document.body.classList.add('hide-nav');
         if (isSimplifiedView) {
             const slider = document.querySelector('.cards-slider');
@@ -4450,7 +7664,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (typeof reset3DView === 'function') {
                         reset3DView();
                     }
-                    cleanup3D();
                     animateAtom();
                     requestAnimationFrame(() => {
                         atomContainer.style.opacity = '1';
@@ -4467,10 +7680,8 @@ document.addEventListener('DOMContentLoaded', () => {
     modalClose.addEventListener('click', () => {
         modal.classList.remove('active');
         document.body.classList.remove('hide-nav');
-        cleanup3D();
-        isTopViewMode = false;
-        const topViewBtn = document.getElementById('top-view-btn');
-        if (topViewBtn) topViewBtn.classList.remove('active');
+        document.title = 'Zperiod';
+        cleanup3D(true);
         atomContainer.classList.remove('visible');
         const slider = document.querySelector('.cards-slider');
         const dots = document.querySelectorAll('.slider-dots .dot');
@@ -4494,7 +7705,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modal) {
             modal.classList.remove('active');
             document.body.classList.remove('hide-nav');
-            cleanup3D();
+            document.title = 'Zperiod';
+            cleanup3D(true);
             atomContainer.classList.remove('visible');
             const slider = document.querySelector('.cards-slider');
             const dots = document.querySelectorAll('.slider-dots .dot');
@@ -4783,6 +7995,25 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Keyboard navigation for Element modal
+        function elementKeyboardHandler(e) {
+            const elementModal = document.getElementById('element-modal');
+            if (!elementModal || !elementModal.classList.contains('active')) return;
+
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentIndex < slides.length - 1) {
+                    snapToSlide(currentIndex + 1);
+                }
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentIndex > 0) {
+                    snapToSlide(currentIndex - 1);
+                }
+            }
+        }
+        document.addEventListener('keydown', elementKeyboardHandler);
+
         // Initialize
         snapToSlide(currentIndex, false);
         update3DEffect();
@@ -4810,7 +8041,7 @@ function createLegend(container) {
     legendContainer.id = 'table-legend';
     const categories = [
         { name: "Alkali Metal", class: "alkali-metal" },
-        { name: "Alkaline Earth", class: "alkaline-earth" },
+        { name: "Alkaline Earth", class: "alkaline-earth-metal" },
         { name: "Transition Metal", class: "transition-metal" },
         { name: "Post-Transition", class: "post-transition-metal" },
         { name: "Metalloid", class: "metalloid" },
@@ -4856,39 +8087,6 @@ function createLegend(container) {
         legendContainer.appendChild(item);
     });
     container.appendChild(legendContainer);
-
-    // Add Quick Reference Button for Common Ions
-    const ionsQuickBtn = document.createElement('div');
-    ionsQuickBtn.id = 'ions-quick-btn';
-    ionsQuickBtn.className = 'legend-item ions-quick-access';
-    ionsQuickBtn.innerHTML = `
-        <div class="legend-swatch" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: none;"></div>
-        <span>${t('Ions Table', '离子表')}</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 1.2vmin; height: 1.2vmin; margin-left: auto; opacity: 0.5;">
-            <path d="M9 18l6-6-6-6"/>
-        </svg>
-    `;
-    ionsQuickBtn.style.cssText = `
-        grid-column: 14 / 17;
-        grid-row: 1;
-        position: relative;
-        z-index: 200;
-        pointer-events: auto;
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
-        border: 1px solid rgba(245, 158, 11, 0.3);
-    `;
-    ionsQuickBtn.addEventListener('click', () => {
-        openChemToolModal('ions');
-    });
-    ionsQuickBtn.addEventListener('mouseenter', () => {
-        ionsQuickBtn.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1))';
-        ionsQuickBtn.style.transform = 'translateY(-2px)';
-    });
-    ionsQuickBtn.addEventListener('mouseleave', () => {
-        ionsQuickBtn.style.background = 'linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05))';
-        ionsQuickBtn.style.transform = 'translateY(0)';
-    });
-    container.appendChild(ionsQuickBtn);
 }
 
 // ============================================
@@ -5713,7 +8911,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 
 let chemToolCardsInitialized = false;
-let currentLang = 'zh'; // Default to Chinese
 
 function initChemToolCards() {
     // Prevent multiple initializations
@@ -5730,38 +8927,7 @@ function initChemToolCards() {
         });
     });
 
-    // Initialize language toggle
-    initLanguageToggle();
-
     chemToolCardsInitialized = true;
-}
-
-function initLanguageToggle() {
-    // Select all language toggle buttons
-    const langToggles = document.querySelectorAll('.lang-toggle');
-    langToggles.forEach(toggle => {
-        toggle.addEventListener('click', () => {
-            currentLang = currentLang === 'zh' ? 'en' : 'zh';
-            updateLanguage();
-            // Update all toggle buttons text
-            langToggles.forEach(btn => {
-                btn.textContent = currentLang === 'zh' ? 'EN/中' : '中/EN';
-            });
-        });
-    });
-}
-
-function updateLanguage() {
-    // Update HTML lang attribute
-    document.documentElement.lang = currentLang;
-
-    // Update all elements with data-en and data-zh attributes
-    document.querySelectorAll('[data-en][data-zh]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${currentLang}`);
-    });
-
-    // Dispatch event for components to update
-    window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang: currentLang } }));
 }
 
 function openChemToolModal(toolType) {
@@ -5797,43 +8963,75 @@ function openChemToolModal(toolType) {
     featureModal.classList.add('active');
     document.body.classList.add('hide-nav');
 
-    // Attach event listeners after content is loaded
-    setTimeout(() => {
+    // Attach event listeners after content is rendered
+    requestAnimationFrame(() => {
         attachToolEventListeners(toolType);
-    }, 100);
+    });
 }
 
-// Bilingual text helper
+// Text helper (translation removed - returns English only)
 function t(en, zh) {
-    return currentLang === 'zh' ? zh : en;
+    return en;
 }
 
 function generateBalancerToolContent() {
     return `
         <style>
-            /* ===== 配平工具主容器样式 ===== */
+            /* ===== Apple Style Floating Cards ===== */
             .balancer-main-wrapper {
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 16px;
+                flex: 1;
+                min-height: 0;
+                container-type: inline-size;
+                container-name: balancer;
             }
 
+            /* ===== 悬浮卡片基础样式 ===== */
+            .balancer-float-card {
+                background: rgba(255, 255, 255, 0.72);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.6);
+                box-shadow: 
+                    0 2px 8px rgba(0, 0, 0, 0.04),
+                    0 8px 24px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                transition: all 0.2s ease;
+            }
 
+            .balancer-float-card:hover {
+                box-shadow: 
+                    0 4px 12px rgba(0, 0, 0, 0.06),
+                    0 12px 32px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            }
 
             /* ===== 天平容器样式 ===== */
             .physics-scale-container {
                 perspective: 1000px;
                 width: 100%;
-                height: 260px;
+                min-width: 460px;
+                min-height: 240px;
+                max-height: 420px;
+                flex: 1;
                 position: relative;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                background: #f8fafc;
-                border-radius: 12px;
+                background: rgba(248, 250, 252, 0.6);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border-radius: 16px;
                 overflow: hidden;
-                border: 1.5px solid #e2e8f0;
+                border: 1px solid rgba(255, 255, 255, 0.6);
+                box-shadow:
+                    0 2px 8px rgba(0, 0, 0, 0.04),
+                    0 8px 24px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
             }
 
             /* 天平刻度背景 */
@@ -5950,6 +9148,7 @@ function generateBalancerToolContent() {
                 text-shadow: 0 1px 2px rgba(255,255,255,0.8);
                 letter-spacing: 0.5px;
                 min-height: 20px;
+                z-index: 100;
             }
             
             .physics-pan-label.has-content {
@@ -5964,16 +9163,12 @@ function generateBalancerToolContent() {
                 display: flex;
                 flex-direction: column;
                 gap: 12px;
-                padding: 14px;
-                background: #ffffff;
-                border-radius: 12px;
-                border: 1px solid #e2e8f0;
             }
 
             .balancer-input-row {
                 display: grid;
                 grid-template-columns: 1fr auto 1fr;
-                gap: 10px;
+                gap: 12px;
                 align-items: center;
             }
 
@@ -5981,6 +9176,33 @@ function generateBalancerToolContent() {
                 display: flex;
                 flex-direction: column;
                 gap: 8px;
+                padding: 16px;
+                background: rgba(255, 255, 255, 0.72);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border-radius: 16px;
+                border: 1px solid rgba(255, 255, 255, 0.6);
+                box-shadow:
+                    0 2px 8px rgba(0, 0, 0, 0.04),
+                    0 8px 24px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                transition: all 0.2s ease;
+            }
+
+            .balancer-input-group:hover {
+                box-shadow: 
+                    0 4px 12px rgba(0, 0, 0, 0.06),
+                    0 12px 32px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            }
+
+            .balancer-input-group:focus-within {
+                border-color: rgba(99, 102, 241, 0.4);
+                box-shadow: 
+                    0 0 0 3px rgba(99, 102, 241, 0.12),
+                    0 4px 12px rgba(0, 0, 0, 0.06),
+                    0 12px 32px rgba(0, 0, 0, 0.1),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
             }
 
             .balancer-input-label {
@@ -6010,23 +9232,22 @@ function generateBalancerToolContent() {
 
             .balancer-text-input {
                 width: 100%;
-                padding: 10px 14px;
-                font-size: 0.95rem;
+                padding: 12px 14px;
+                font-size: 1rem;
                 font-weight: 500;
                 font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
                 color: #1e293b;
-                background: #ffffff;
-                border: 1.5px solid #e2e8f0;
-                border-radius: 12px;
+                background: rgba(255, 255, 255, 0.5);
+                border: 1.5px solid rgba(0, 0, 0, 0.08);
+                border-radius: 10px;
                 outline: none;
                 transition: all 0.2s ease;
             }
 
             .balancer-text-input:focus {
-                border-color: #6366f1;
-                box-shadow: 
-                    0 0 0 4px rgba(99, 102, 241, 0.1),
-                    inset 0 2px 4px rgba(0, 0, 0, 0.02);
+                background: rgba(255, 255, 255, 0.8);
+                border-color: rgba(99, 102, 241, 0.4);
+                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
             }
 
             .balancer-text-input::placeholder {
@@ -6038,13 +9259,23 @@ function generateBalancerToolContent() {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 10px;
+                width: 48px;
+                height: 48px;
+                background: rgba(255, 255, 255, 0.72);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.6);
+                box-shadow:
+                    0 2px 8px rgba(0, 0, 0, 0.04),
+                    0 4px 16px rgba(0, 0, 0, 0.06),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
             }
 
             .balancer-arrow-divider svg {
-                width: 32px;
-                height: 32px;
-                color: #94a3b8;
+                width: 24px;
+                height: 24px;
+                color: #64748b;
             }
 
             /* ===== 原子计数显示 ===== */
@@ -6106,27 +9337,33 @@ function generateBalancerToolContent() {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 8px;
-                padding: 10px 16px;
-                border-radius: 12px;
-                font-size: 0.85rem;
+                gap: 10px;
+                padding: 18px 32px;
+                border-radius: 16px;
+                font-size: 1rem;
                 font-weight: 600;
                 transition: all 0.2s ease;
-                background: #f8fafc;
+                background: rgba(248, 250, 252, 0.72);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
                 color: #64748b;
-                border: 1px solid #e2e8f0;
+                border: 2px solid transparent;
+                box-shadow:
+                    0 2px 8px rgba(0, 0, 0, 0.04),
+                    0 4px 16px rgba(0, 0, 0, 0.06),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
             }
 
             .balancer-status-bar.balanced {
-                background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+                background: rgba(209, 250, 229, 0.72);
                 color: #047857;
-                border-color: #6ee7b7;
+                border-color: transparent;
             }
 
             .balancer-status-bar.unbalanced {
-                background: linear-gradient(135deg, #fef3c7, #fde68a);
+                background: rgba(254, 243, 199, 0.72);
                 color: #b45309;
-                border-color: #fcd34d;
+                border-color: transparent;
             }
 
             .balancer-status-bar .status-icon {
@@ -6150,24 +9387,69 @@ function generateBalancerToolContent() {
             .balancer-btn {
                 display: inline-flex;
                 align-items: center;
-                gap: 8px;
-                padding: 10px 18px;
-                font-size: 0.9rem;
+                justify-content: center;
+                gap: 10px;
+                padding: 18px 36px;
+                font-size: 1.05rem;
                 font-weight: 600;
-                border-radius: 12px;
+                border-radius: 16px;
                 border: none;
                 cursor: pointer;
                 transition: all 0.2s ease;
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                flex-shrink: 0;
+                white-space: nowrap;
+            }
+
+            @container balancer (max-width: 700px) {
+                .balancer-btn {
+                    padding: 14px 20px;
+                    font-size: 0.9rem;
+                    gap: 6px;
+                    border-radius: 12px;
+                }
+                .balancer-status-bar {
+                    padding: 14px 20px;
+                    font-size: 0.9rem;
+                    border-radius: 12px;
+                }
+            }
+
+            @container balancer (max-width: 550px) {
+                .balancer-btn {
+                    padding: 10px 12px;
+                    font-size: 0.8rem;
+                    gap: 4px;
+                    border-radius: 10px;
+                }
+                .balancer-btn svg {
+                    display: none;
+                }
+                .balancer-status-bar {
+                    padding: 10px 12px;
+                    font-size: 0.8rem;
+                    border-radius: 10px;
+                }
             }
 
             .balancer-btn-primary {
-                background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+                background: rgba(30, 41, 59, 0.88);
                 color: white;
+                border: 2px solid transparent;
+                box-shadow: 
+                    0 2px 8px rgba(0, 0, 0, 0.12),
+                    0 8px 24px rgba(0, 0, 0, 0.16),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
             }
 
             .balancer-btn-primary:hover {
+                background: rgba(30, 41, 59, 0.95);
                 transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                box-shadow: 
+                    0 4px 12px rgba(0, 0, 0, 0.15),
+                    0 12px 32px rgba(0, 0, 0, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.15);
             }
 
             .balancer-btn-primary:active {
@@ -6175,23 +9457,36 @@ function generateBalancerToolContent() {
             }
 
             .balancer-btn-secondary {
-                background: #f8fafc;
+                background: rgba(255, 255, 255, 0.72);
                 color: #475569;
-                border: 1px solid #e2e8f0;
+                border: 2px solid transparent;
+                box-shadow: 
+                    0 2px 8px rgba(0, 0, 0, 0.04),
+                    0 4px 16px rgba(0, 0, 0, 0.06),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
             }
 
             .balancer-btn-secondary:hover {
-                background: #f1f5f9;
-                border-color: #cbd5e1;
+                background: rgba(255, 255, 255, 0.85);
+                box-shadow: 
+                    0 4px 12px rgba(0, 0, 0, 0.06),
+                    0 8px 24px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
             }
 
             /* ===== 结果显示 ===== */
             .balancer-result-box {
                 display: none;
-                padding: 14px 18px;
-                background: #ecfdf5;
-                border-radius: 12px;
-                border: 1px solid #a7f3d0;
+                padding: 16px 20px;
+                background: rgba(236, 253, 245, 0.72);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                border-radius: 14px;
+                border: 1px solid rgba(167, 243, 208, 0.6);
+                box-shadow: 
+                    0 2px 8px rgba(0, 0, 0, 0.04),
+                    0 8px 24px rgba(0, 0, 0, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
             }
 
             .balancer-result-box.show {
@@ -6285,22 +9580,8 @@ function generateBalancerToolContent() {
                 color: #1e293b;
             }
         </style>
-        
-        <div class="tool-modal-header">
-            <div class="tool-modal-icon balancer-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 3v18M3 12h18M7 7l10 10M17 7L7 17" />
-                </svg>
-            </div>
-            <div class="tool-modal-title-group">
-                <h2 class="tool-modal-title">${t('Equation Balancer', '化学方程式配平')}</h2>
-                <div class="tool-modal-tags">
-                    <span class="grade-tag">G9-G12</span>
-                    <span class="feature-tag">${t('Interactive', '交互式')}</span>
-                </div>
-            </div>
-        </div>
-        
+
+        <div class="tool-padding-label">${t('Equation Balancer', '化学方程式配平')}</div>
         <div class="balancer-main-wrapper">
 
 
@@ -6308,13 +9589,13 @@ function generateBalancerToolContent() {
             <div class="physics-scale-container">
 
                 <!-- 底座 -->
-                <div style="position: absolute; bottom: 15px; display: flex; flex-direction: column; align-items: center; z-index: 0; pointer-events: none;">
-                    <div class="physics-stand-metallic" style="width: 14px; height: 210px; border-radius: 7px 7px 0 0;"></div>
+                <div style="position: absolute; bottom: 4.7%; top: 24%; display: flex; flex-direction: column; align-items: center; z-index: 0; pointer-events: none;">
+                    <div class="physics-stand-metallic" style="width: 14px; flex: 1; border-radius: 7px 7px 0 0;"></div>
                     <div class="physics-base-metallic" style="width: 140px; height: 22px; border-radius: 9999px; margin-top: -4px; border-top: 1px solid #6b7280;"></div>
                 </div>
 
                 <!-- 中心支点 -->
-                <div id="physics-pivot" style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); margin-top: -50px; z-index: 30; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+                <div id="physics-pivot" style="position: absolute; top: 24.4%; left: 50%; transform: translate(-50%, -50%); z-index: 30; display: flex; align-items: center; justify-content: center; pointer-events: none;">
                     <div style="width: 44px; height: 44px; background: linear-gradient(145deg, #f3f4f6, #d1d5db); border-radius: 9999px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; border: 3px solid #e5e7eb; position: relative; z-index: 40;">
                         <div id="physics-needle" class="physics-needle"></div>
                         <div style="width: 16px; height: 16px; background: linear-gradient(145deg, #6b7280, #374151); border-radius: 9999px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); position: absolute; z-index: 50;"></div>
@@ -6322,7 +9603,7 @@ function generateBalancerToolContent() {
                 </div>
 
                 <!-- 旋转横梁 -->
-                <div id="physics-beam-assembly" class="physics-beam-metallic" style="position: absolute; top: 40%; left: 50%; width: 420px; height: 14px; border-radius: 9999px; margin-top: -50px; margin-left: -210px; display: flex; justify-content: space-between; align-items: center; z-index: 20;">
+                <div id="physics-beam-assembly" class="physics-beam-metallic" style="position: absolute; top: 24.4%; left: 50%; width: 420px; height: 14px; border-radius: 9999px; margin-left: -210px; display: flex; justify-content: space-between; align-items: center; z-index: 20; transform-origin: center center;">
                     <div class="physics-beam-ruler"></div>
 
                     <!-- 左悬挂组件 -->
@@ -6357,9 +9638,9 @@ function generateBalancerToolContent() {
                             <span class="label-icon reactant">R</span>
                             ${t('Reactants', '反应物')}
                         </label>
-                        <input type="text" 
-                               id="reactants-input" 
-                               class="balancer-text-input" 
+                        <input type="text"
+                               id="reactants-input"
+                               class="balancer-text-input"
                                placeholder="${t('e.g., Fe + O2', '例如: Fe + O2')}"
                                autocomplete="off"
                                spellcheck="false">
@@ -6376,20 +9657,18 @@ function generateBalancerToolContent() {
                             <span class="label-icon product">P</span>
                             ${t('Products', '生成物')}
                         </label>
-                        <input type="text" 
-                               id="products-input" 
-                               class="balancer-text-input" 
+                        <input type="text"
+                               id="products-input"
+                               class="balancer-text-input"
                                placeholder="${t('e.g., Fe2O3', '例如: Fe2O3')}"
                                autocomplete="off"
                                spellcheck="false">
                     </div>
                 </div>
-
-
             </div>
 
             <!-- 操作按钮 + 状态反馈 -->
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 12px;">
                 <button id="auto-balance-btn" class="balancer-btn balancer-btn-primary">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 3v1m0 16v1m-9-9h1m16 0h1m-2.64-6.36l-.7.7m-12.02 12.02l-.7.7m0-12.72l.7.7m12.02 12.02l.7.7"/>
@@ -6400,22 +9679,9 @@ function generateBalancerToolContent() {
                 <button id="clear-balancer-btn" class="balancer-btn balancer-btn-secondary">
                     ${t('Clear', '清除')}
                 </button>
-                <div class="balancer-status-bar" id="balance-feedback" style="flex: 1; min-width: 150px;">
+                <div class="balancer-status-bar" id="balance-feedback" style="flex: 1; min-width: 0;">
                     ${t('Enter equation', '输入方程式')}
                 </div>
-            </div>
-
-            <!-- 配平结果 -->
-            <div class="balancer-result-box" id="balanced-result">
-                <div class="balancer-result-label">${t('Balanced Equation', '配平后的方程式')}</div>
-                <div class="balancer-result-equation" id="balanced-equation-text"></div>
-            </div>
-
-            <!-- 示例提示 -->
-            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: #64748b; flex-wrap: wrap;">
-                <span style="font-weight: 600;">${t('Examples:', '示例:')}</span>
-                <code style="background: #f1f5f9; padding: 3px 8px; border-radius: 8px; font-family: monospace; color: #1e293b;">Fe + O2 → Fe2O3</code>
-                <code style="background: #f1f5f9; padding: 3px 8px; border-radius: 8px; font-family: monospace; color: #1e293b;">H2 + O2 → H2O</code>
             </div>
         </div>
 
@@ -6431,96 +9697,75 @@ function setMolarFormula(formula) {
     if (input) {
         input.value = formula;
         input.dispatchEvent(new Event('input'));
-        // Optionally trigger print too? Maybe not, let user press Enter.
         input.focus();
     }
 }
 
 function generateMolarMassToolContent() {
     return `
-        <div class="tool-modal-header">
-            <div class="tool-modal-icon molar-icon">
-                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <rect x="8" y="12" width="32" height="24" rx="3"/>
-                    <text x="24" y="29" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor" stroke="none">M</text>
-                    <line x1="8" y1="36" x2="40" y2="36"/>
-                </svg>
-            </div>
-            <div class="tool-modal-title-group">
-                <h2 class="tool-modal-title">${t('Molar Mass Calculator', '摩尔质量计算器')}</h2>
-                <div class="tool-modal-tags">
-                    <span class="grade-tag">G9-G10</span>
-                    <span class="feature-tag">g/mol</span>
-                </div>
-            </div>
-        </div>
-        
+
+        <div class="tool-padding-label">${t('Molar Mass Calculator', '摩尔质量计算器')}</div>
         <div class="molar-tool-layout">
             <!-- Left Column: Input & Info -->
             <div class="molar-input-panel">
-                <div class="tool-input-section">
-                    <label for="modal-formula-input" style="font-size: 0.85rem; margin-bottom: 8px;">${t('Chemical Formula', '化学式')}</label>
-                    <input type="text" id="modal-formula-input" 
-                           placeholder="e.g. H2O" 
-                           class="realtime-input" 
-                           autocomplete="off" 
+                <div class="tool-input-section molar-input-card">
+                    <label for="modal-formula-input" class="molar-input-label">
+                        <span class="molar-label-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/>
+                            </svg>
+                        </span>
+                        ${t('Chemical Formula', '化学式')}
+                    </label>
+                    <input type="text" id="modal-formula-input"
+                           placeholder="e.g. H2O, CuSO4.5H2O"
+                           class="realtime-input"
+                           autocomplete="off"
                            spellcheck="false">
 
-                    <!-- Helper Bar (Compact) -->
-                    <div class="formula-helper-bar" style="display:flex; align-items:center; gap:6px; margin-top:4px; margin-bottom:4px;">
-                        <!-- Subscript Toggle -->
-                        <button id="helper-sub-btn" type="button" class="helper-btn" style="flex:1; height:32px; padding:0 8px; font-size:0.8rem; border:1px solid #e2e8f0; border-radius:6px; background:#fff; color:#475569; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.1s;">
-                            <span style="background:#f1f5f9; padding:2px 6px; border-radius:4px; font-weight:600; line-height:1;">S₀</span> 
-                            <span id="sub-status-text" style="font-size:0.75rem; white-space:nowrap;">${t('Normal Inputs', '普通输入')}</span>
-                        </button>
-                        
-                        <!-- Dot Button -->
-                        <button id="helper-dot-btn" type="button" class="helper-btn" style="width:40px; height:32px; font-size:1.2rem; line-height:0; border:1px solid #e2e8f0; border-radius:6px; background:#fff; color:#475569; cursor:pointer; display:flex; align-items:center; justify-content:center; padding-bottom:3px;" title="${t('Insert Dot', '插入点')}">
-                            •
-                        </button>
-                    </div>
-                    
-                    <div class="enter-hint">
-                        <span>Press</span> <kbd class="kbd-key">Enter ↵</kbd> <span>to print ticket</span>
+                    <!-- Live Formula Preview -->
+                    <div class="formula-live-preview" id="formula-live-preview">
+                        <span class="preview-label">${t('Formula:', '化学式:')}</span>
+                        <span class="preview-formula" id="preview-formula-display">—</span>
                     </div>
 
-                    <!-- Options Row -->
-                    <div style="display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;">
-                        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; cursor: pointer;">
-                            <input type="checkbox" id="modal-exact-toggle" style="width: 14px; height: 14px; accent-color: #6366f1;">
+                    <!-- Formula Suggestion (always visible container) -->
+                    <div class="formula-suggestion" id="formula-suggestion">
+                        <span class="suggestion-icon">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                        </span>
+                        <span class="suggestion-text" id="suggestion-text">${t('Enter a formula above', '在上方输入化学式')}</span>
+                    </div>
+
+                    <!-- Options Row: Exact Decimals + Enter Hint -->
+                    <div class="molar-options-row">
+                        <label class="molar-exact-label">
+                            <input type="checkbox" id="modal-exact-toggle">
                             ${t('Exact Decimals', '精确小数')}
                         </label>
-                        <label style="display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #64748b; cursor: pointer;">
-                            <input type="checkbox" id="modal-learning-toggle" style="width: 14px; height: 14px; accent-color: #6366f1;">
-                            ${t('Learning Mode', '学习模式')}
-                        </label>
-                    </div>
-                    
-                    <!-- Show Calculation Button (only visible in learning mode) -->
-                    <div id="calc-steps-container" class="calc-steps-container" style="display: none; margin-top: 10px;">
-                        <button id="show-calc-btn" class="show-calc-btn">
-                            <svg style="width:14px;height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                            ${t('Show Calculation', '查看计算过程')}
-                        </button>
-                        <div id="calc-steps-content" class="calc-steps-content" style="display: none;"></div>
+                        <div class="enter-hint" style="margin: 0;">
+                            <span>Press</span> <kbd class="kbd-key">Enter ↵</kbd> <span>to print ticket</span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="tool-tips-section" style="flex-grow: 1;">
-                    <h4>${t('How to use', '使用说明')}</h4>
-                    <p>${t('1. Type a formula. The scale shows mass in real-time.', '1. 输入化学式，电子秤实时显示质量。')}</p>
-                    <p>${t('2. Press ENTER to print the weight ticket.', '2. 按回车键打印详细质量小票。')}</p>
-                    
-                    <div class="example-box" style="margin-top: 20px;">
-                        <strong>${t('Try:', '试一试:')}</strong>
-                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
-                            <span class="formula-chip" onclick="setMolarFormula('C6H12O6')">C6H12O6</span>
-                            <span class="formula-chip" onclick="setMolarFormula('CuSO4(H2O)5')">CuSO4(H2O)5</span>
-                            <span class="formula-chip" onclick="setMolarFormula('KMnO4')">KMnO4</span>
-                        </div>
+                <div class="tool-tips-section molar-tips-apple">
+                    <div class="molar-tips-header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                        ${t('Quick Tips', '使用提示')}
+                    </div>
+                    <div class="tips-item">
+                        <span>${t('Type formula with normal numbers', '输入化学式，数字用普通数字')}</span>
+                    </div>
+                    <div class="tips-item">
+                        <span>${t('Auto-converts to subscript display', '自动转换为下标显示')}</span>
+                    </div>
+                    <div class="tips-item">
+                        <span>${t('Hydrates: use dot or space', '结晶水：用 . 或空格')}</span>
                     </div>
                 </div>
             </div>
@@ -6540,15 +9785,11 @@ function generateMolarMassToolContent() {
                         </div>
                     </div>
                     
-                    <!-- Front Panel with Slot -->
-                    <div class="scale-front-panel">
-                        <div class="receipt-slot"></div>
-                    </div>
-
-                    <!-- Receipt Container (inside wrapper for same coordinate system) -->
+                    <!-- 小票容器 - 在秤后面 z-index较低 -->
                     <div class="receipt-anim-container">
                         <div id="receipt-wrapper" class="receipt-wrapper">
                             <div class="receipt-header">Weight Ticket</div>
+                            <div class="receipt-barcode">|||||||||||||||||||||||</div>
                             <div class="receipt-date" id="receipt-date"></div>
                             <div id="receipt-items"></div>
                             <div class="receipt-total-row">
@@ -6556,10 +9797,14 @@ function generateMolarMassToolContent() {
                                 <span id="receipt-total-value"></span>
                             </div>
                             <div class="receipt-footer">
-                                <div style="font-size: 2rem; margin: 10px 0;">barcode</div>
-                                Chemistry Tools v2.0
+                                Thank you!
                             </div>
                         </div>
+                    </div>
+                    
+                    <!-- Front Panel with Slot - 在小票前面遮挡 -->
+                    <div class="scale-front-panel">
+                        <div class="receipt-slot"></div>
                     </div>
                 </div>
             </div>
@@ -6570,26 +9815,12 @@ function generateMolarMassToolContent() {
         <div id="modal-mass-breakdown" style="display:none;"></div>
         <button id="modal-calculate-mass-btn" style="display:none;"></button>
     `;
-
-
 }
 
 function generateBlankToolContent() {
     return `
-        <div class="tool-modal-header">
-            <div class="tool-modal-icon blank-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="4" y="4" width="16" height="16" rx="2" />
-                </svg>
-            </div>
-            <div class="tool-modal-title-group">
-                <h2 class="tool-modal-title">${t('Blank Page', '空白页')}</h2>
-                <div class="tool-modal-tags">
-                    <span class="feature-tag">${t('Dev', '开发中')}</span>
-                </div>
-            </div>
-        </div>
-        
+
+        <div class="tool-padding-label">${t('Blank Page', '空白页')}</div>
         <div class="tool-modal-content">
             <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #94a3b8; text-align: center;">
                 <svg style="width: 64px; height: 64px; margin-bottom: 20px; opacity: 0.2;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -6605,309 +9836,821 @@ function generateBlankToolContent() {
 function generateEmpiricalToolContent() {
     return `
         <style>
-            /* ===== 经验式积木布局 ===== */
-            .lego-tool-layout {
+            /* ===== Apple-Style Empirical Formula Calculator ===== */
+            /* Typography: Inter Variable / SF Pro inspired */
+            
+            .emp-calc-wrapper {
+                --glass-bg: rgba(255, 255, 255, 0.72);
+                --glass-border: rgba(255, 255, 255, 0.6);
+                --glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                --text-primary: #1d1d1f;
+                --text-secondary: #86868b;
+                --text-tertiary: #aeaeb2;
+                --accent-purple: #af52de;
+                --accent-green: #30d158;
+                --surface-elevated: rgba(255, 255, 255, 0.9);
+                
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+                
+                display: flex;
+                flex-direction: column;
+                min-height: 100%;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            
+            /* ===== Two Column Layout ===== */
+            .emp-grid {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 24px;
-                align-items: stretch;
+                grid-template-columns: 300px 1fr;
+                grid-template-rows: 1fr;
+                gap: 30px;
+                flex: 1 0 auto;
+                min-height: 0;
             }
-
-            .lego-input-panel {
-                display: flex;
-                flex-direction: column;
-                gap: 14px;
-                background: #fff;
-                padding: 20px;
-                border-radius: 14px;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            }
-
-            .lego-stage {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                background: linear-gradient(180deg, #f8fafc, #f1f5f9);
-                border-radius: 14px;
-                padding: 24px;
-                min-height: 200px;
-                border: 2px dashed #d1d5db;
-                transition: all 0.3s;
-            }
-
-            .lego-stage.has-result {
-                border-style: solid;
-                border-color: #a78bfa;
-                background: linear-gradient(180deg, #faf5ff, #f5f3ff);
-            }
-
-            @media (max-width: 600px) {
-                .lego-tool-layout {
+            
+            @media (max-width: 720px) {
+                .emp-grid {
                     grid-template-columns: 1fr;
+                    grid-template-rows: auto auto;
+                    height: auto;
                 }
             }
-
-            /* ===== 积木块样式 ===== */
-            .lego-blocks-container {
+            
+            /* ===== Left Column: Controls ===== */
+            .emp-controls {
                 display: flex;
                 flex-direction: column;
-                align-items: center;
-                gap: 30px;
-                width: 100%;
+                align-self: start;
+            }
+            
+            .emp-glass-card {
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                padding: 16px;
+                box-shadow: var(--glass-shadow);
             }
 
-            .lego-group {
-                display: flex;
-                align-items: flex-end;
-                justify-content: center;
-                gap: 6px;
-                flex-wrap: wrap;
-                padding: 12px;
-                background: rgba(255,255,255,0.6);
-                border-radius: 12px;
-                min-height: 50px;
-                transition: all 0.3s ease;
-            }
-
-            .lego-group-label {
-                width: 100%;
-                text-align: center;
-                font-size: 0.65rem;
+            .emp-section-label {
+                font-size: 11px;
                 font-weight: 600;
-                color: #94a3b8;
+                color: var(--text-secondary);
                 text-transform: uppercase;
-                letter-spacing: 0.5px;
+                letter-spacing: 0.06em;
+                margin-bottom: 10px;
+            }
+            
+            /* Element Inputs */
+            .emp-input-stack {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+            
+            .emp-input-row {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .emp-el-input {
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+                background: linear-gradient(145deg, #9ca3af, #d1d5db);
+                border: none;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 15px;
+                font-weight: 800;
+                color: #fff;
+                text-align: center;
+                text-transform: uppercase;
+                flex-shrink: 0;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            }
+            
+            .emp-el-input:focus {
+                outline: none;
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+            }
+            
+            .emp-el-input::placeholder {
+                color: rgba(255,255,255,0.7);
+                font-weight: 600;
+            }
+            
+            .emp-el-input.has-value { background: linear-gradient(145deg, #6366f1, #8b5cf6); }
+            .emp-el-input.el-C { background: linear-gradient(145deg, #374151, #4b5563); }
+            .emp-el-input.el-H { background: linear-gradient(145deg, #3b82f6, #60a5fa); }
+            .emp-el-input.el-O { background: linear-gradient(145deg, #ef4444, #f87171); }
+            .emp-el-input.el-N { background: linear-gradient(145deg, #8b5cf6, #a78bfa); }
+            .emp-el-input.el-S { background: linear-gradient(145deg, #eab308, #facc15); color: #1a1a1a; }
+            .emp-el-input.el-P { background: linear-gradient(145deg, #f97316, #fb923c); }
+            .emp-el-input.el-Cl { background: linear-gradient(145deg, #10b981, #34d399); }
+            .emp-el-input.el-Na { background: linear-gradient(145deg, #6366f1, #818cf8); }
+            .emp-el-input.el-K { background: linear-gradient(145deg, #ec4899, #f472b6); }
+            .emp-el-input.el-Ca { background: linear-gradient(145deg, #84cc16, #a3e635); }
+            .emp-el-input.el-Fe { background: linear-gradient(145deg, #b45309, #d97706); }
+            .emp-el-input.el-Mg { background: linear-gradient(145deg, #14b8a6, #2dd4bf); }
+            
+            .emp-value-wrapper {
+                flex: 1;
+                position: relative;
+                display: flex;
+                align-items: center;
+                min-width: 0;
+            }
+            
+            .emp-input-field {
+                width: 100%;
+                height: 42px;
+                background: rgba(255,255,255,0.9);
+                border: 1px solid rgba(0,0,0,0.08);
+                border-radius: 10px;
+                padding: 0 26px 0 12px;
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--text-primary);
+                transition: all 0.2s ease;
+                font-variant-numeric: tabular-nums;
+            }
+            
+            .emp-input-field:focus {
+                outline: none;
+                border-color: var(--accent-purple);
+                box-shadow: 0 0 0 3px rgba(175, 82, 222, 0.15);
+                background: #fff;
+            }
+            
+            .emp-input-field::placeholder {
+                color: var(--text-tertiary);
+                font-weight: 400;
+            }
+            
+            .emp-unit {
+                position: absolute;
+                right: 10px;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-tertiary);
+                pointer-events: none;
+            }
+            
+            /* Divider */
+            .emp-divider {
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent);
+                margin: 10px 0;
+            }
+            
+            /* Molecular Mass */
+            .emp-mol-mass-label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
                 margin-bottom: 6px;
             }
-
-            .lego-block {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                min-width: 55px;
-                min-height: 55px;
-                padding: 10px 14px;
-                border-radius: 12px;
-                font-weight: 700;
-                font-size: 1.1rem;
-                color: white;
-                box-shadow: 
-                    inset 0 -4px 0 rgba(0,0,0,0.2),
-                    inset 0 2px 0 rgba(255,255,255,0.3),
-                    0 4px 8px rgba(0,0,0,0.15);
-                transition: all 0.2s ease;
-                cursor: default;
+            
+            .emp-mol-mass-label span {
+                font-size: 11px;
+                font-weight: 600;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
             }
-
-            .lego-block:hover {
-                transform: translateY(-2px) scale(1.05);
-            }
-
-            .lego-block .block-symbol {
-                font-size: 1.3rem;
-                font-weight: 800;
-                line-height: 1;
-            }
-
-            .lego-block .block-count {
-                font-size: 0.75rem;
-                opacity: 0.9;
-                margin-top: 3px;
-            }
-
-            /* 积木颜色 */
-            .lego-block.el-C { background: linear-gradient(135deg, #374151, #1f2937); }
-            .lego-block.el-H { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
-            .lego-block.el-O { background: linear-gradient(135deg, #f87171, #ef4444); }
-            .lego-block.el-N { background: linear-gradient(135deg, #a78bfa, #8b5cf6); }
-            .lego-block.el-S { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
-            .lego-block.el-P { background: linear-gradient(135deg, #fb923c, #f97316); }
-            .lego-block.el-Cl { background: linear-gradient(135deg, #34d399, #10b981); }
-            .lego-block.el-default { background: linear-gradient(135deg, #94a3b8, #64748b); }
-
-            /* ===== 倍数显示 ===== */
-            .multiplier-section {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                padding: 8px 16px;
-                background: linear-gradient(135deg, #fef3c7, #fde68a);
-                border-radius: 12px;
-                font-weight: 700;
-                color: #92400e;
-            }
-
-            .multiplier-section .times-icon {
-                font-size: 1rem;
-            }
-
-            .multiplier-section .multiplier-value {
-                font-size: 1.3rem;
-                font-weight: 800;
-            }
-
-            .multiplier-section .multiplier-label {
-                font-size: 0.7rem;
-                opacity: 0.8;
-            }
-
-            /* ===== 结果分子式 ===== */
-            .molecular-result {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px;
-                padding: 12px 20px;
-                background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-                border-radius: 12px;
-                border: 2px solid #34d399;
-            }
-
-            .molecular-result .result-label {
-                font-size: 0.65rem;
-                font-weight: 700;
-                color: #047857;
+            
+            .emp-optional-pill {
+                font-size: 9px;
+                font-weight: 600;
+                padding: 2px 6px;
+                background: rgba(0,0,0,0.04);
+                color: var(--text-tertiary);
+                border-radius: 4px;
                 text-transform: uppercase;
             }
-
-            .molecular-result .result-formula {
-                font-size: 1.3rem;
-                font-weight: 800;
-                color: #065f46;
-                font-family: 'SF Mono', monospace;
+            
+            .emp-mol-input {
+                width: 100%;
+                height: 42px;
+                background: rgba(255,255,255,0.9);
+                border: 1px solid rgba(0,0,0,0.08);
+                border-radius: 10px;
+                padding: 0 12px;
+                font-size: 15px;
+                font-weight: 600;
+                color: var(--text-primary);
+                transition: all 0.2s ease;
             }
-
-            /* ===== 空状态 ===== */
-            .lego-empty-state {
+            
+            .emp-mol-input:focus {
+                outline: none;
+                border-color: var(--accent-purple);
+                box-shadow: 0 0 0 3px rgba(175, 82, 222, 0.15);
+                background: #fff;
+            }
+            
+            /* CTA Button */
+            .emp-calc-btn {
+                width: 100%;
+                height: 44px;
+                margin-top: 6px;
+                background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+                color: #fff;
+                border: none;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            }
+            
+            .emp-calc-btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 18px rgba(139, 92, 246, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+            }
+            
+            .emp-calc-btn:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
+            }
+            
+            .emp-calc-btn svg {
+                width: 16px;
+                height: 16px;
+            }
+            
+            /* Action Buttons Row */
+            .emp-quick-actions {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 6px;
+                margin-top: 6px;
+            }
+            
+            .emp-icon-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s ease;
+            }
+            
+            .emp-icon-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .emp-icon-btn.add {
+                background: rgba(139, 92, 246, 0.1);
+                color: var(--accent-purple);
+            }
+            
+            .emp-icon-btn.add:hover {
+                background: rgba(139, 92, 246, 0.2);
+                transform: scale(1.1);
+            }
+            
+            .emp-icon-btn.add:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                transform: none;
+            }
+            
+            .emp-icon-btn.remove {
+                background: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+            }
+            
+            .emp-icon-btn.remove:hover {
+                background: rgba(239, 68, 68, 0.2);
+                transform: scale(1.1);
+            }
+            
+            .emp-icon-btn.remove:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                transform: none;
+            }
+            
+            .emp-icon-btn.random {
+                background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+                color: #16a34a;
+                box-shadow: 0 2px 6px rgba(34, 197, 94, 0.15);
+            }
+            
+            .emp-icon-btn.random:hover {
+                transform: scale(1.1) rotate(15deg);
+                box-shadow: 0 3px 10px rgba(34, 197, 94, 0.25);
+            }
+            
+            /* ===== Right Column: Results Hero ===== */
+            .emp-results {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+            }
+            
+            .emp-results-glass {
+                background: var(--glass-bg);
+                backdrop-filter: blur(24px) saturate(180%);
+                -webkit-backdrop-filter: blur(24px) saturate(180%);
+                border: 1px solid var(--glass-border);
+                border-radius: 18px;
+                padding: 24px;
+                box-shadow: var(--glass-shadow);
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                color: #94a3b8;
                 text-align: center;
-                padding: 15px;
+                flex: 1;
+                overflow: hidden;
             }
-
-            .lego-empty-state p {
-                font-size: 0.8rem;
-                max-width: 180px;
-                line-height: 1.4;
+            
+            /* Result Animation */
+            .emp-result-display.visible .emp-atom-chip {
+                animation: atomPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+                opacity: 0;
             }
-
-            /* ===== 积木动画 ===== */
-            @keyframes blockAppear {
-                from {
+            
+            .emp-result-display.visible .emp-atom-chip:nth-child(1) { animation-delay: 0.1s; }
+            .emp-result-display.visible .emp-atom-chip:nth-child(2) { animation-delay: 0.2s; }
+            .emp-result-display.visible .emp-atom-chip:nth-child(3) { animation-delay: 0.3s; }
+            .emp-result-display.visible .emp-atom-chip:nth-child(4) { animation-delay: 0.4s; }
+            .emp-result-display.visible .emp-atom-chip:nth-child(5) { animation-delay: 0.5s; }
+            .emp-result-display.visible .emp-atom-chip:nth-child(6) { animation-delay: 0.6s; }
+            
+            @keyframes atomPop {
+                0% {
                     opacity: 0;
-                    transform: translateY(20px) scale(0.8);
+                    transform: scale(0) rotate(-20deg);
                 }
-                to {
+                70% {
+                    transform: scale(1.15) rotate(5deg);
+                }
+                100% {
+                    opacity: 1;
+                    transform: scale(1) rotate(0);
+                }
+            }
+            
+            .emp-result-display.visible .emp-hero-formula {
+                animation: heroReveal 0.5s ease forwards;
+            }
+            
+            @keyframes heroReveal {
+                0% {
+                    opacity: 0;
+                    transform: translateY(10px) scale(0.9);
+                }
+                100% {
                     opacity: 1;
                     transform: translateY(0) scale(1);
                 }
             }
-
-            .lego-block.animate-in {
-                animation: blockAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            
+            /* Empty State */
+            .emp-empty-state {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
             }
-
-            @keyframes multiplierPop {
-                0% { transform: scale(0); }
-                50% { transform: scale(1.2); }
-                100% { transform: scale(1); }
+            
+            .emp-floating-atoms {
+                position: relative;
+                width: 150px;
+                height: 90px;
+                margin-bottom: 24px;
             }
-
-            .multiplier-section.animate-in {
-                animation: multiplierPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            
+            .emp-atom {
+                position: absolute;
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 15px;
+                color: #fff;
+                box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+                animation: atomFloat 3.5s ease-in-out infinite;
             }
-
-            /* ===== 响应式 ===== */
-            @media (max-width: 800px) {
-                .lego-tool-layout {
-                    grid-template-columns: 1fr;
-                }
-                .lego-stage {
-                    min-height: 300px;
-                }
+            
+            .emp-atom.a1 { background: linear-gradient(145deg, #374151, #4b5563); left: 0; top: 16px; animation-delay: 0s; }
+            .emp-atom.a2 { background: linear-gradient(145deg, #3b82f6, #60a5fa); left: 55px; top: 0; animation-delay: 0.25s; }
+            .emp-atom.a3 { background: linear-gradient(145deg, #ef4444, #f87171); left: 110px; top: 20px; animation-delay: 0.5s; }
+            .emp-atom.a4 { background: linear-gradient(145deg, #22c55e, #4ade80); left: 55px; top: 48px; animation-delay: 0.75s; }
+            
+            @keyframes atomFloat {
+                0%, 100% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-5px) scale(1.02); }
+            }
+            
+            .emp-empty-text {
+                color: var(--text-tertiary);
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 1.5;
+            }
+            
+            /* Results Display */
+            .emp-result-display {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                gap: 20px;
+            }
+            
+            .emp-result-display.visible {
+                display: flex;
+            }
+            
+            /* Empirical (Secondary) */
+            .emp-empirical-result {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+            
+            .emp-result-subtitle {
+                font-size: 10px;
+                font-weight: 600;
+                color: var(--text-tertiary);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+            
+            .emp-empirical-pill {
+                display: inline-flex;
+                align-items: center;
+                height: 28px;
+                padding: 0 14px;
+                background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+                border: 1px solid #ddd6fe;
+                border-radius: 14px;
+                font-size: 15px;
+                font-weight: 700;
+                color: #7c3aed;
+                font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+                letter-spacing: 0.01em;
+            }
+            
+            /* Molecular (Hero) */
+            .emp-molecular-result {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .emp-hero-formula {
+                font-size: 3.2rem;
+                font-weight: 800;
+                color: var(--text-primary);
+                font-family: 'Inter', -apple-system, sans-serif;
+                letter-spacing: -0.03em;
+                line-height: 1.1;
+            }
+            
+            .emp-hero-formula sub {
+                font-size: 0.55em;
+                vertical-align: baseline;
+                position: relative;
+                top: 0.25em;
+                font-weight: 700;
+                color: var(--accent-purple);
+            }
+            
+            .emp-hero-mass {
+                font-size: 13px;
+                font-weight: 500;
+                color: var(--text-secondary);
+            }
+            
+            /* Element Visualization */
+            .emp-atoms-visual {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 8px;
+                padding: 14px 20px;
+                background: rgba(0,0,0,0.02);
+                border-radius: 14px;
+            }
+            
+            .emp-atom-chip {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+            }
+            
+            .emp-atom-circle {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 17px;
+                font-weight: 700;
+                color: #fff;
+                box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            }
+            
+            .emp-atom-circle.el-C { background: linear-gradient(145deg, #374151, #4b5563); }
+            .emp-atom-circle.el-H { background: linear-gradient(145deg, #3b82f6, #60a5fa); }
+            .emp-atom-circle.el-O { background: linear-gradient(145deg, #ef4444, #f87171); }
+            .emp-atom-circle.el-N { background: linear-gradient(145deg, #8b5cf6, #a78bfa); }
+            .emp-atom-circle.el-S { background: linear-gradient(145deg, #eab308, #facc15); color: #1a1a1a; }
+            .emp-atom-circle.el-P { background: linear-gradient(145deg, #f97316, #fb923c); }
+            .emp-atom-circle.el-Cl { background: linear-gradient(145deg, #10b981, #34d399); }
+            .emp-atom-circle.el-Br { background: linear-gradient(145deg, #a3231f, #dc2626); }
+            .emp-atom-circle.el-F { background: linear-gradient(145deg, #06b6d4, #22d3ee); }
+            .emp-atom-circle.el-I { background: linear-gradient(145deg, #7c3aed, #a855f7); }
+            .emp-atom-circle.el-Fe { background: linear-gradient(145deg, #b45309, #d97706); }
+            .emp-atom-circle.el-Cu { background: linear-gradient(145deg, #0891b2, #06b6d4); }
+            .emp-atom-circle.el-Zn { background: linear-gradient(145deg, #64748b, #94a3b8); }
+            .emp-atom-circle.el-Ca { background: linear-gradient(145deg, #84cc16, #a3e635); }
+            .emp-atom-circle.el-Na { background: linear-gradient(145deg, #6366f1, #818cf8); }
+            .emp-atom-circle.el-K { background: linear-gradient(145deg, #ec4899, #f472b6); }
+            .emp-atom-circle.el-Mg { background: linear-gradient(145deg, #14b8a6, #2dd4bf); }
+            .emp-atom-circle.el-default { background: linear-gradient(145deg, #6b7280, #9ca3af); }
+            
+            .emp-atom-count {
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+            
+            /* Steps Toggle - Now horizontal bar at bottom */
+            .emp-steps-wrapper {
+                margin-top: 12px;
+                width: 100%;
+            }
+            
+            .emp-steps-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                width: 100%;
+                padding: 10px 14px;
+                background: rgba(139, 92, 246, 0.06);
+                border: 1px solid rgba(139, 92, 246, 0.15);
+                border-radius: 10px;
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--accent-purple);
+                cursor: pointer;
+                transition: all 0.15s ease;
+            }
+            
+            .emp-steps-toggle:hover {
+                background: rgba(139, 92, 246, 0.1);
+                border-color: rgba(139, 92, 246, 0.25);
+            }
+            
+            .emp-steps-toggle svg {
+                width: 14px;
+                height: 14px;
+                transition: transform 0.2s ease;
+            }
+            
+            .emp-steps-toggle.open svg {
+                transform: rotate(180deg);
+            }
+            
+            /* Steps Content - Full width section below, fits content */
+            .emp-steps-bar {
+                margin-top: 0;
+                flex-shrink: 0;
+            }
+            
+            .emp-steps-content {
+                display: none;
+                width: 100%;
+                margin-top: 20px;
+                margin-bottom: 60px;
+                padding: 16px 40px;
+                background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+                border: 1px solid rgba(139, 92, 246, 0.12);
+                border-radius: 16px;
+                text-align: left;
+                font-size: 14px;
+                color: var(--text-secondary);
+                line-height: 1.75;
+                box-sizing: border-box;
+            }
+            
+            .emp-steps-content.visible {
+                display: block;
+                animation: stepsFade 0.3s ease;
+            }
+            
+            @keyframes stepsFade {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .emp-steps-content h4 {
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--accent-purple);
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin: 0 0 20px 0;
+                padding-bottom: 12px;
+                border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+            }
+            
+            .emp-steps-content ol,
+            .emp-steps-content ul {
+                margin: 0 0 16px 0;
+                padding-left: 20px;
+            }
+            
+            .emp-steps-content > ol {
+                margin-bottom: 0;
+            }
+            
+            .emp-steps-content li {
+                margin-bottom: 8px;
+                font-size: 14px;
+            }
+            
+            .emp-steps-content li ul {
+                margin-top: 6px;
+                margin-bottom: 12px;
+            }
+            
+            .emp-steps-content li ul li {
+                margin-bottom: 4px;
+                font-size: 13px;
+                color: var(--text-tertiary);
+            }
+            
+            .emp-steps-content strong {
+                color: var(--text-primary);
+                font-weight: 600;
+            }
+            
+            .emp-steps-content hr {
+                border: none;
+                height: 1px;
+                background: rgba(139, 92, 246, 0.15);
+                margin: 20px 0;
+            }
+            
+            .emp-steps-content p {
+                margin: 6px 0;
+                font-size: 14px;
+            }
+            
+            /* Molecular Formula Section */
+            .emp-steps-content h4:not(:first-child) {
+                margin-top: 24px;
+                padding-top: 20px;
+                border-top: 1px solid rgba(139, 92, 246, 0.1);
+                border-bottom: none;
+                padding-bottom: 0;
             }
         </style>
 
-        <div class="tool-modal-header">
-            <div class="tool-modal-icon empirical-icon">
-                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <rect x="4" y="20" width="12" height="12" rx="2"/>
-                    <rect x="18" y="20" width="12" height="12" rx="2"/>
-                    <rect x="32" y="20" width="12" height="12" rx="2"/>
-                    <circle cx="10" cy="17" r="2" fill="currentColor"/>
-                    <circle cx="24" cy="17" r="2" fill="currentColor"/>
-                    <circle cx="38" cy="17" r="2" fill="currentColor"/>
-                </svg>
-            </div>
-            <div class="tool-modal-title-group">
-                <h2 class="tool-modal-title">${t('Empirical & Molecular Formula', '经验式与分子式')}</h2>
-                <div class="tool-modal-tags">
-                    <span class="grade-tag">G10-G11</span>
-                    <span class="feature-tag">${t('LEGO Mode', '积木模式')}</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="lego-tool-layout">
-            <!-- 输入区 -->
-            <div class="lego-input-panel">
-                <div style="font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
-                    ${t('Enter Elements (%)', '输入元素百分比')}
-                </div>
-                <div id="modal-element-inputs" class="element-inputs-grid"></div>
-                
-                <div style="border-top: 1px dashed #e2e8f0; padding-top: 16px; margin-top: 8px;">
-                    <div style="font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 6px;">
-                        ${t('Molecular Mass (optional)', '分子质量 (可选)')}
+        <div class="tool-padding-label">Empirical & Molecular Formula</div>
+        <div class="emp-calc-wrapper">
+
+            <!-- Two Column Grid -->
+            <div class="emp-grid">
+                <!-- Left: Controls -->
+                <div class="emp-controls">
+                    <div class="emp-glass-card">
+                        <div class="emp-section-label">Element Composition</div>
+                        
+                        <div class="emp-input-stack" id="modal-element-inputs">
+                            <!-- JS will populate -->
+                        </div>
+                        
+                        <div class="emp-quick-actions">
+                            <button class="emp-icon-btn remove" id="emp-remove-element-btn" title="Remove Element">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                            </button>
+                            <button class="emp-icon-btn add" id="emp-add-element-btn" title="Add Element">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                            </button>
+                            <button class="emp-icon-btn random" id="emp-random-fill-btn" title="Random Compound">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12a9 9 0 11-9-9c2.52 0 4.85.83 6.72 2.24"/>
+                                    <path d="M21 3v6h-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="emp-divider"></div>
+                        
+                        <div class="emp-mol-mass-label">
+                            <span>Molecular Mass</span>
+                            <span class="emp-optional-pill">Optional</span>
+                        </div>
+                        <input type="number" id="modal-mol-mass" class="emp-mol-input" placeholder="e.g. 180" step="0.1">
+                        
+                        <button id="modal-calc-formula-btn" class="emp-calc-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                            Calculate
+                        </button>
+                        
+                        <input type="hidden" id="modal-formula-method" value="percent">
                     </div>
-                    <input type="number" id="modal-mol-mass" placeholder="${t('e.g., 180', '例如: 180')}" step="0.1" class="tool-input" style="width: 100%;">
                 </div>
                 
-                <button id="modal-calc-formula-btn" class="tool-button primary-btn" style="margin-top: 12px; padding: 14px 24px; font-size: 1.05rem; width: 100%;">
-                    <svg style="width:18px;height:18px;margin-right:6px;vertical-align:text-bottom;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                    </svg> ${t('Build Formula', '合成公式')}
-                </button>
-                
-                <input type="hidden" id="modal-formula-method" value="percent">
+                <!-- Right: Results Hero -->
+                <div class="emp-results">
+                    <div class="emp-results-glass" id="lego-stage">
+                        <!-- Empty State -->
+                        <div class="emp-empty-state" id="lego-empty">
+                            <div class="emp-floating-atoms">
+                                <div class="emp-atom a1">C</div>
+                                <div class="emp-atom a2">H</div>
+                                <div class="emp-atom a3">O</div>
+                                <div class="emp-atom a4">N</div>
+                            </div>
+                            <p class="emp-empty-text">Enter element percentages<br>and click Calculate</p>
+                        </div>
+                        
+                        <!-- Results (hidden initially) -->
+                        <div class="emp-result-display" id="lego-blocks-area">
+                            <!-- Empirical (Secondary) -->
+                            <div class="emp-empirical-result">
+                                <span class="emp-result-subtitle">Empirical Formula</span>
+                                <div class="emp-empirical-pill" id="empirical-formula-display">CH₂</div>
+                            </div>
+                            
+                            <!-- Molecular (Hero) -->
+                            <div class="emp-molecular-result" id="molecular-result-card">
+                                <span class="emp-result-subtitle">Molecular Formula</span>
+                                <div class="emp-hero-formula" id="molecular-formula-display">C₆H₁₂</div>
+                                <span class="emp-hero-mass" id="result-mass-display"></span>
+                            </div>
+                            
+                            <!-- Atom Visualization -->
+                            <div class="emp-atoms-visual" id="lego-blocks-visual"></div>
+                            
+                            <!-- Steps Toggle -->
+                            <div class="emp-steps-wrapper">
+                                <button class="emp-steps-toggle" id="calc-details-toggle">
+                                    <span>Show calculation steps</span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 12 15 18 9"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <!-- 积木展示区 -->
-            <div class="lego-stage" id="lego-stage">
-                <div id="lego-blocks-area" class="lego-blocks-container">
-                    <div class="lego-empty-state" id="lego-empty">
-                        <div style="opacity: 0.3; margin-bottom: 12px;">
-                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M4 4h16v16H4z" />
-                                <path d="M4 8h16" />
-                                <path d="M4 12h16" />
-                                <path d="M4 16h16" />
-                                <path d="M8 4v16" />
-                                <path d="M12 4v16" />
-                                <path d="M16 4v16" />
-                            </svg>
-                        </div>
-                        <p style="color: #9ca3af; font-size: 0.9rem; line-height: 1.5;">${t('Enter element percentages<br>and click Build', '输入元素百分比<br>点击合成查看结果')}</p>
-                    </div>
-                </div>
+            <!-- Steps Bar - Full Width Below Grid -->
+            <div class="emp-steps-bar">
+                <div class="emp-steps-content" id="calc-details-content"></div>
             </div>
         </div>
         
         <div id="empirical-tips" style="display:none;"></div>
-        <div id="modal-formula-result" class="tool-result-box" style="display:none;">
-            <div class="result-label">${t('Calculation Details:', '计算详情:')}</div>
-            <div class="result-value" id="modal-formula-value"></div>
-        </div>
-        
-        <div id="modal-formula-explanation" class="tool-explanation-box" style="display:none;"></div>
+        <div id="modal-formula-result" style="display:none;"></div>
+        <div id="modal-formula-explanation" style="display:none;"></div>
     `;
 }
 
@@ -6929,6 +10672,9 @@ function attachToolEventListeners(toolType) {
         case 'solubility':
             attachSolubilityListeners();
             break;
+        case 'ions':
+            setupIonClickHandlers();
+            break;
     }
 }
 
@@ -6940,8 +10686,8 @@ function attachBalancerListeners() {
     const feedback = document.getElementById('balance-feedback');
     const leftAtomCount = document.getElementById('left-atom-count');
     const rightAtomCount = document.getElementById('right-atom-count');
-    const balancedResult = document.getElementById('balanced-result');
-    const balancedText = document.getElementById('balanced-equation-text');
+    const balancedResult = null;
+    const balancedText = null;
 
     // New physics scale elements
     const physicsBeam = document.getElementById('physics-beam-assembly');
@@ -6972,11 +10718,12 @@ function attachBalancerListeners() {
     let animationRunning = false;
 
 
-    // Parse formula into atom counts
+    // Parse formula into atom counts (supports both space and + as separators)
     function parseFormula(formula) {
         if (!formula.trim()) return {};
         const atoms = {};
-        const compounds = formula.split('+').map(s => s.trim());
+        // Split by space or + and filter empty strings
+        const compounds = formula.split(/[\s+]+/).map(s => s.trim()).filter(s => s);
 
         compounds.forEach(compound => {
             // Extract coefficient
@@ -7075,14 +10822,20 @@ function attachBalancerListeners() {
         }
     }
 
+    // Normalize formula display: convert spaces to + separators
+    function normalizeFormulaDisplay(formula) {
+        if (!formula) return '';
+        return formula.split(/[\s+]+/).filter(s => s.trim()).join(' + ');
+    }
+
     // Update pan labels on the scale
     function updatePanLabels(reactants, products) {
         if (physicsPanLabelLeft) {
-            physicsPanLabelLeft.textContent = reactants || '';
+            physicsPanLabelLeft.textContent = normalizeFormulaDisplay(reactants) || '';
             physicsPanLabelLeft.classList.toggle('has-content', !!reactants);
         }
         if (physicsPanLabelRight) {
-            physicsPanLabelRight.textContent = products || '';
+            physicsPanLabelRight.textContent = normalizeFormulaDisplay(products) || '';
             physicsPanLabelRight.classList.toggle('has-content', !!products);
         }
     }
@@ -7097,11 +10850,16 @@ function attachBalancerListeners() {
         // Update pan labels on scale
         updatePanLabels(reactantsFormula, productsFormula);
 
-        // Auto-split if full equation entered
-        if (reactantsFormula.includes('→') || reactantsFormula.includes('->')) {
-            const parts = reactantsFormula.replace(/->/g, '→').split('→');
+        // Auto-split if full equation entered (supports →, ->, =)
+        if (reactantsFormula.includes('→') || reactantsFormula.includes('->') || reactantsFormula.includes('=')) {
+            // Normalize all separators to →
+            const normalized = reactantsFormula.replace(/->/g, '→').replace(/=/g, '→');
+            const parts = normalized.split('→');
             if (reactantsInput) reactantsInput.value = parts[0].trim();
-            if (parts[1] && productsInput) productsInput.value = parts[1].trim();
+            if (parts[1] && productsInput) {
+                productsInput.value = parts[1].trim();
+                productsInput.focus(); // 自动跳转到右侧
+            }
             return updateScale();
         }
 
@@ -7148,6 +10906,17 @@ function attachBalancerListeners() {
         if (feedback) {
             feedback.classList.remove('balanced', 'unbalanced');
 
+            // Restore Auto Balance button icon when user edits
+            if (autoBalanceBtn) {
+                const svg = autoBalanceBtn.querySelector('svg');
+                if (svg) svg.style.display = '';
+            }
+
+            // Reset copy state
+            feedback.style.cursor = '';
+            feedback.title = '';
+            feedback._balancedText = null;
+
             if (!reactantsFormula && !productsFormula) {
                 feedback.innerHTML = `${t('Enter a chemical equation to check the balance', '输入化学方程式来检查平衡状态')}`;
             } else if (!productsFormula) {
@@ -7189,26 +10958,37 @@ function attachBalancerListeners() {
             const equation = `${reactantsFormula} → ${productsFormula}`;
             const result = balanceEquationModal(equation);
 
-            // Update inputs with balanced equation
-            const balancedParts = result.balanced.split('→').map(s => s.trim());
+            // Animate scale to balanced position (don't modify user inputs)
+            physicsState.targetAngle = 0;
+            physicsState.velocity = 2;
+            startAnimation();
 
-            if (reactantsInput) reactantsInput.value = balancedParts[0];
-            if (productsInput) productsInput.value = balancedParts[1];
-
-            updateScale();
-
-            // Show balanced result with animation
-            if (balancedResult) {
-                balancedResult.classList.add('show');
+            // Show balanced result in status bar (clickable to copy)
+            if (feedback) {
+                feedback.classList.remove('unbalanced');
+                feedback.classList.add('balanced');
+                feedback.innerHTML = `<span>${formatChemicalEquation(result.balanced)}</span>`;
+                feedback.style.cursor = 'pointer';
+                feedback.title = 'Click to copy';
+                feedback._balancedText = result.balanced;
             }
-            if (balancedText) {
-                balancedText.innerHTML = formatChemicalEquation(result.balanced);
+
+            // Hide Auto Balance button icon to save space
+            if (autoBalanceBtn) {
+                const svg = autoBalanceBtn.querySelector('svg');
+                if (svg) svg.style.display = 'none';
             }
         } catch (error) {
             if (feedback) {
                 feedback.classList.remove('balanced');
                 feedback.classList.add('unbalanced');
-                feedback.innerHTML = `<span class="status-icon">✕</span>${t('Could not auto-balance this equation', '无法自动配平此方程式')}`;
+                // Show specific error message if available
+                const errorMsg = error.message || '';
+                if (errorMsg.includes('Element')) {
+                    feedback.innerHTML = `<span class="status-icon">✕</span>${errorMsg}`;
+                } else {
+                    feedback.innerHTML = `<span class="status-icon">✕</span>${t('Could not auto-balance this equation', '无法自动配平此方程式')}`;
+                }
             }
         }
     }
@@ -7217,7 +10997,6 @@ function attachBalancerListeners() {
     function clearInputs() {
         if (reactantsInput) reactantsInput.value = '';
         if (productsInput) productsInput.value = '';
-        if (balancedResult) balancedResult.classList.remove('show');
 
         // Reset physics
         physicsState.targetAngle = 0;
@@ -7240,14 +11019,36 @@ function attachBalancerListeners() {
         clearBtn.addEventListener('click', clearInputs);
     }
 
-    // Enter key support
-    [reactantsInput, productsInput].forEach(input => {
-        if (input) {
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') autoBalance();
-            });
-        }
-    });
+    // Click status bar to copy balanced equation
+    if (feedback) {
+        feedback.addEventListener('click', () => {
+            if (feedback._balancedText) {
+                navigator.clipboard.writeText(feedback._balancedText).then(() => {
+                    const prev = feedback.innerHTML;
+                    feedback.innerHTML = `<span>${t('Copied!', '已复制!')}</span>`;
+                    setTimeout(() => { feedback.innerHTML = prev; }, 1000);
+                });
+            }
+        });
+    }
+
+    // Enter key support: 左侧按Enter跳转右侧，右侧按Enter触发配平
+    if (reactantsInput) {
+        reactantsInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (productsInput) productsInput.focus();
+            }
+        });
+    }
+    if (productsInput) {
+        productsInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                autoBalance();
+            }
+        });
+    }
 
     // Start initial animation with impulse
     startAnimation(true);
@@ -7265,6 +11066,307 @@ function formatChemicalEquation(eq) {
     });
 }
 
+// =============================================================================
+// GAUSSIAN ELIMINATION EQUATION BALANCER
+// Implements matrix-based chemical equation balancing using RREF
+// =============================================================================
+
+/**
+ * Parse a chemical formula into element counts
+ * Handles parentheses, nested groups, and coefficients
+ * Examples: "H2O" -> {H:2, O:1}, "Ca(OH)2" -> {Ca:1, O:2, H:2}, "Al2(SO4)3" -> {Al:2, S:3, O:12}
+ */
+function parseChemicalFormula(formula) {
+    // Remove any leading coefficient
+    formula = formula.replace(/^\d+/, '').trim();
+
+    const atoms = {};
+
+    function parse(str, multiplier = 1) {
+        let i = 0;
+        while (i < str.length) {
+            if (str[i] === '(' || str[i] === '[') {
+                // Find matching closing bracket
+                const openBracket = str[i];
+                const closeBracket = openBracket === '(' ? ')' : ']';
+                let depth = 1;
+                let j = i + 1;
+                while (j < str.length && depth > 0) {
+                    if (str[j] === openBracket) depth++;
+                    if (str[j] === closeBracket) depth--;
+                    j++;
+                }
+                const inner = str.substring(i + 1, j - 1);
+
+                // Get multiplier after closing bracket
+                let numStr = '';
+                while (j < str.length && /\d/.test(str[j])) {
+                    numStr += str[j];
+                    j++;
+                }
+                const innerMult = numStr ? parseInt(numStr) : 1;
+
+                parse(inner, multiplier * innerMult);
+                i = j;
+            } else if (/[A-Z]/.test(str[i])) {
+                // Element symbol
+                let element = str[i];
+                i++;
+                while (i < str.length && /[a-z]/.test(str[i])) {
+                    element += str[i];
+                    i++;
+                }
+
+                // Get count after element
+                let numStr = '';
+                while (i < str.length && /\d/.test(str[i])) {
+                    numStr += str[i];
+                    i++;
+                }
+                const count = numStr ? parseInt(numStr) : 1;
+
+                atoms[element] = (atoms[element] || 0) + count * multiplier;
+            } else {
+                i++;
+            }
+        }
+    }
+
+    parse(formula);
+    return atoms;
+}
+
+/**
+ * Calculate GCD of two numbers
+ */
+function gcd(a, b) {
+    a = Math.abs(Math.round(a));
+    b = Math.abs(Math.round(b));
+    while (b) {
+        [a, b] = [b, a % b];
+    }
+    return a;
+}
+
+/**
+ * Calculate LCM of two numbers
+ */
+function lcm(a, b) {
+    return Math.abs(a * b) / gcd(a, b);
+}
+
+/**
+ * Calculate LCM of an array of numbers
+ */
+function lcmArray(arr) {
+    return arr.reduce((a, b) => lcm(a, b), 1);
+}
+
+/**
+ * Calculate GCD of an array of numbers
+ */
+function gcdArray(arr) {
+    return arr.reduce((a, b) => gcd(a, b));
+}
+
+/**
+ * Gaussian Elimination to solve the system (find null space)
+ * Returns coefficients for balancing, or null if no solution
+ */
+function gaussianElimination(matrix, numCompounds) {
+    const rows = matrix.length;
+    const cols = matrix[0].length;
+
+    // Create a copy of the matrix with floating point
+    const m = matrix.map(row => row.map(v => v));
+
+    let pivotRow = 0;
+    const pivotCols = [];
+
+    // Forward elimination
+    for (let col = 0; col < cols && pivotRow < rows; col++) {
+        // Find the maximum element in this column for numerical stability
+        let maxRow = pivotRow;
+        let maxVal = Math.abs(m[pivotRow][col]);
+        for (let row = pivotRow + 1; row < rows; row++) {
+            if (Math.abs(m[row][col]) > maxVal) {
+                maxVal = Math.abs(m[row][col]);
+                maxRow = row;
+            }
+        }
+
+        if (maxVal < 1e-10) continue; // Skip this column (no pivot)
+
+        // Swap rows
+        [m[pivotRow], m[maxRow]] = [m[maxRow], m[pivotRow]];
+
+        pivotCols.push(col);
+
+        // Scale pivot row
+        const pivot = m[pivotRow][col];
+        for (let j = 0; j < cols; j++) {
+            m[pivotRow][j] /= pivot;
+        }
+
+        // Eliminate other rows
+        for (let row = 0; row < rows; row++) {
+            if (row !== pivotRow && Math.abs(m[row][col]) > 1e-10) {
+                const factor = m[row][col];
+                for (let j = 0; j < cols; j++) {
+                    m[row][j] -= factor * m[pivotRow][j];
+                }
+            }
+        }
+
+        pivotRow++;
+    }
+
+    // Find free variables (columns without pivots)
+    const freeVars = [];
+    for (let col = 0; col < cols; col++) {
+        if (!pivotCols.includes(col)) {
+            freeVars.push(col);
+        }
+    }
+
+    if (freeVars.length === 0) {
+        return null; // No solution (system is overdetermined)
+    }
+
+    // Use the last free variable as the parameter (set to 1)
+    const freeVar = freeVars[freeVars.length - 1];
+    const solution = new Array(cols).fill(0);
+    solution[freeVar] = 1;
+
+    // Back substitute to find other values
+    for (let i = pivotCols.length - 1; i >= 0; i--) {
+        const pivotCol = pivotCols[i];
+        let sum = 0;
+        for (let j = pivotCol + 1; j < cols; j++) {
+            sum += m[i][j] * solution[j];
+        }
+        solution[pivotCol] = -sum;
+    }
+
+    return solution;
+}
+
+/**
+ * Convert floating point solution to minimal integer coefficients
+ */
+function toIntegerCoefficients(solution) {
+    // Filter out very small values (numerical errors)
+    const cleaned = solution.map(v => Math.abs(v) < 1e-10 ? 0 : v);
+
+    // Find denominators (convert to fractions)
+    const denominators = [];
+    for (const val of cleaned) {
+        if (val !== 0) {
+            // Find denominator by checking common fractions
+            for (let d = 1; d <= 1000; d++) {
+                if (Math.abs(val * d - Math.round(val * d)) < 1e-9) {
+                    denominators.push(d);
+                    break;
+                }
+            }
+        }
+    }
+
+    if (denominators.length === 0) return null;
+
+    // Multiply by LCM of denominators
+    const multiplier = lcmArray(denominators);
+    let intSolution = cleaned.map(v => Math.round(v * multiplier));
+
+    // Make all positive (if all negative, flip signs)
+    const allNegative = intSolution.every(v => v <= 0);
+    const allPositive = intSolution.every(v => v >= 0);
+
+    if (allNegative) {
+        intSolution = intSolution.map(v => -v);
+    } else if (!allPositive) {
+        // Mixed signs - try to make positive
+        intSolution = intSolution.map(v => Math.abs(v));
+    }
+
+    // Reduce by GCD
+    const nonZero = intSolution.filter(v => v !== 0);
+    if (nonZero.length === 0) return null;
+
+    const g = gcdArray(nonZero);
+    intSolution = intSolution.map(v => v / g);
+
+    // Validate: all should be positive integers
+    if (intSolution.some(v => v <= 0)) {
+        return null;
+    }
+
+    return intSolution;
+}
+
+/**
+ * Main equation balancing function using Gaussian Elimination
+ */
+function balanceEquationGaussian(reactants, products) {
+    // Parse all compounds
+    const allCompounds = [...reactants, ...products];
+    const numReactants = reactants.length;
+    const numProducts = products.length;
+    const numCompounds = allCompounds.length;
+
+    // Parse each compound to get atom counts
+    const compoundAtoms = allCompounds.map(c => parseChemicalFormula(c));
+
+    // Get all unique elements
+    const elements = new Set();
+    compoundAtoms.forEach(atoms => {
+        Object.keys(atoms).forEach(el => elements.add(el));
+    });
+    const elementList = Array.from(elements);
+
+    // Build the matrix
+    // Rows = elements, Columns = compounds
+    // Reactants get positive coefficients, products get negative
+    const matrix = [];
+    for (const element of elementList) {
+        const row = [];
+        for (let i = 0; i < numCompounds; i++) {
+            const count = compoundAtoms[i][element] || 0;
+            // Products have negative sign (moving to right side of equation)
+            row.push(i < numReactants ? count : -count);
+        }
+        matrix.push(row);
+    }
+
+    // Solve using Gaussian elimination
+    const solution = gaussianElimination(matrix, numCompounds);
+
+    if (!solution) return null;
+
+    // Convert to integer coefficients
+    const coefficients = toIntegerCoefficients(solution);
+
+    if (!coefficients) return null;
+
+    // Verify the solution
+    for (const element of elementList) {
+        let leftSum = 0, rightSum = 0;
+        for (let i = 0; i < numReactants; i++) {
+            leftSum += (compoundAtoms[i][element] || 0) * coefficients[i];
+        }
+        for (let i = numReactants; i < numCompounds; i++) {
+            rightSum += (compoundAtoms[i][element] || 0) * coefficients[i];
+        }
+        if (Math.abs(leftSum - rightSum) > 0.001) {
+            return null; // Verification failed
+        }
+    }
+
+    return {
+        reactants: coefficients.slice(0, numReactants),
+        products: coefficients.slice(numReactants)
+    };
+}
 
 function balanceEquationModal(equation) {
     const parts = equation.split('→').map(s => s.trim());
@@ -7272,8 +11374,44 @@ function balanceEquationModal(equation) {
         throw new Error('Equation must contain → (arrow)');
     }
 
-    const reactants = parts[0].split('+').map(s => s.trim());
-    const products = parts[1].split('+').map(s => s.trim());
+    // Normalize input: split by space or + and rejoin with +
+    const normalizeCompounds = (str) => {
+        return str.split(/[\s+]+/).filter(s => s.trim()).map(s => s.trim());
+    };
+
+    const reactants = normalizeCompounds(parts[0]).map(s => s.replace(/^\d+/, '').trim()).filter(s => s);
+    const products = normalizeCompounds(parts[1]).map(s => s.replace(/^\d+/, '').trim()).filter(s => s);
+
+    if (reactants.length === 0 || products.length === 0) {
+        throw new Error('Missing reactants or products');
+    }
+
+    // ===== Pre-flight Check: Element Consistency Validation =====
+    const getElements = (compounds) => {
+        const elements = new Set();
+        compounds.forEach(compound => {
+            const atoms = parseChemicalFormula(compound);
+            Object.keys(atoms).forEach(el => elements.add(el));
+        });
+        return elements;
+    };
+
+    const reactantElements = getElements(reactants);
+    const productElements = getElements(products);
+
+    // Check for elements in products that don't exist in reactants
+    const extraInProducts = [...productElements].filter(el => !reactantElements.has(el));
+    if (extraInProducts.length > 0) {
+        const invalidEl = extraInProducts[0];
+        throw new Error(`Element '${invalidEl}' in products is not found in reactants`);
+    }
+
+    // Check for elements in reactants that don't exist in products
+    const extraInReactants = [...reactantElements].filter(el => !productElements.has(el));
+    if (extraInReactants.length > 0) {
+        const invalidEl = extraInReactants[0];
+        throw new Error(`Element '${invalidEl}' in reactants is not found in products`);
+    }
 
     // Build explanation steps
     const steps = [];
@@ -7281,39 +11419,34 @@ function balanceEquationModal(equation) {
     steps.push('<ol>');
     steps.push('<li><strong>Identify elements:</strong> List all elements on both sides</li>');
     steps.push('<li><strong>Count atoms:</strong> Count atoms of each element</li>');
-    steps.push('<li><strong>Balance one at a time:</strong> Start with metals, then non-metals, end with O and H</li>');
-    steps.push('<li><strong>Adjust coefficients:</strong> Only change numbers in front of formulas</li>');
-    steps.push('<li><strong>Verify:</strong> Check that atoms are equal on both sides</li>');
+    steps.push('<li><strong>Build matrix:</strong> Create element × compound matrix</li>');
+    steps.push('<li><strong>Gaussian elimination:</strong> Solve the linear system</li>');
+    steps.push('<li><strong>Normalize:</strong> Convert to smallest integer coefficients</li>');
     steps.push('</ol>');
     steps.push('<div class="warning-box"><strong>Important:</strong> Never change subscripts, only coefficients!</div>');
 
-    // Common equation patterns
+    // Try to balance using Gaussian elimination
+    const result = balanceEquationGaussian(reactants, products);
+
     let balancedEq = equation;
     let check = '';
 
-    // Fe + O2 → Fe2O3
-    if (equation.includes('Fe') && equation.includes('O2') && equation.includes('Fe2O3')) {
-        balancedEq = '4Fe + 3O₂ → 2Fe₂O₃';
+    if (result) {
+        // Build balanced equation string
+        const balancedReactants = reactants.map((r, i) => {
+            const coef = result.reactants[i];
+            return coef === 1 ? r : coef + r;
+        }).join(' + ');
+
+        const balancedProducts = products.map((p, i) => {
+            const coef = result.products[i];
+            return coef === 1 ? p : coef + p;
+        }).join(' + ');
+
+        balancedEq = balancedReactants + ' → ' + balancedProducts;
         check = generateAtomCheckModal(balancedEq);
-    }
-    // H2 + O2 → H2O
-    else if (equation.match(/H2?\s*\+\s*O2/i) && equation.includes('H2O')) {
-        balancedEq = '2H₂ + O₂ → 2H₂O';
-        check = generateAtomCheckModal(balancedEq);
-    }
-    // CH4 + O2 → CO2 + H2O
-    else if (equation.includes('CH4') && equation.includes('O2') && equation.includes('CO2')) {
-        balancedEq = 'CH₄ + 2O₂ → CO₂ + 2H₂O';
-        check = generateAtomCheckModal(balancedEq);
-    }
-    // Na + Cl2 → NaCl
-    else if (equation.includes('Na') && equation.includes('Cl2') && equation.includes('NaCl')) {
-        balancedEq = '2Na + Cl₂ → 2NaCl';
-        check = generateAtomCheckModal(balancedEq);
-    }
-    // Generic case
-    else {
-        check = '<p class="note-text">Enter a common equation pattern to see atom count verification.</p>';
+    } else {
+        check = '<p class="note-text">Unable to balance this equation. Please check the formulas.</p>';
     }
 
     // Create a plain text version for updating inputs (without Unicode subscripts)
@@ -7403,236 +11536,106 @@ function displayBalanceResult(result) {
 
 function attachMolarMassListeners() {
     const input = document.getElementById('modal-formula-input');
-    const toggle = document.getElementById('modal-exact-toggle');
+    const previewDisplay = document.getElementById('preview-formula-display');
+    const suggestionBox = document.getElementById('formula-suggestion');
+    const suggestionText = document.getElementById('suggestion-text');
+    const exactToggle = document.getElementById('modal-exact-toggle');
 
-    // --- Helper Bar Logic ---
-    const subBtn = document.getElementById('helper-sub-btn');
-    const dotBtn = document.getElementById('helper-dot-btn');
-    const subStatus = document.getElementById('sub-status-text');
-    let subMode = false;
-
-    if (subBtn) {
-        subBtn.onclick = () => {
-            subMode = !subMode;
-            if (subMode) {
-                subBtn.style.background = '#eff6ff';
-                subBtn.style.borderColor = '#6366f1';
-                subBtn.style.color = '#4f46e5';
-                if (subStatus) subStatus.textContent = t('Subscript Mode', '下标模式');
-            } else {
-                subBtn.style.background = '#fff';
-                subBtn.style.borderColor = '#e2e8f0';
-                subBtn.style.color = '#475569';
-                if (subStatus) subStatus.textContent = t('Normal Inputs', '普通输入');
-            }
-            input.focus();
-        };
-    }
-    if (dotBtn) {
-        dotBtn.onclick = () => {
-            const start = input.selectionStart; const text = input.value;
-            input.value = text.substring(0, start) + '•' + text.substring(input.selectionEnd);
-            input.selectionStart = input.selectionEnd = start + 1;
-            input.dispatchEvent(new Event('input')); input.focus();
-        };
-    }
-    if (input) {
-        input.addEventListener('keydown', (e) => {
-            if (subMode && /^[0-9]$/.test(e.key)) {
-                e.preventDefault();
-                const subMap = ['₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉'];
-                const char = subMap[parseInt(e.key)];
-                const start = input.selectionStart; const text = input.value;
-                input.value = text.substring(0, start) + char + text.substring(input.selectionEnd);
-                input.selectionStart = input.selectionEnd = start + 1;
-                input.dispatchEvent(new Event('input'));
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === '.') {
-                e.preventDefault();
-                const start = input.selectionStart; const text = input.value;
-                input.value = text.substring(0, start) + '•' + text.substring(input.selectionEnd);
-                input.selectionStart = input.selectionEnd = start + 1;
-                input.dispatchEvent(new Event('input'));
-            }
-        });
-    }
-
-    // Core calculation function - Returns result or null
-    const getResult = () => {
-        const formula = input.value.trim();
-        if (!formula) return null;
+    const runCalculation = (formulaOverride) => {
+        const formula = formulaOverride || input.value.trim();
+        const isExact = exactToggle ? exactToggle.checked : false;
+        if (!formula) { updateRealtimeScale(null); return; }
         try {
-            return calculateMolarMassModal(formula, toggle.checked);
+            const result = calculateMolarMassModal(formula, isExact);
+            updateRealtimeScale(result);
         } catch (e) {
-            return null; // Silent fail for invalid formula
+            console.error('Molar mass calculation error:', e);
+            updateRealtimeScale(null);
         }
     };
 
-    // Update the visual scale (blocks & screen) ONLY
-    const updateRealtimeScale = () => {
-        const result = getResult();
+    const updateRealtimeScale = (result) => {
         const scaleDisplay = document.getElementById('scale-display-value');
         const blocksArea = document.getElementById('scale-blocks-area');
-
-        // Always discard receipt on input change
+        const platform = document.querySelector('.scale-platform-top');
         discardReceipt();
-
         if (result) {
-            scaleDisplay.textContent = result.total;
-            renderScaleBlocks(result, blocksArea);
+            if (scaleDisplay) scaleDisplay.textContent = result.total;
+            if (platform) platform.classList.add('has-weight');
+            if (typeof displayMolarMassResult === 'function') displayMolarMassResult(result);
         } else {
-            scaleDisplay.textContent = "0.00";
-            blocksArea.innerHTML = '';
+            if (scaleDisplay) scaleDisplay.textContent = "0.00";
+            if (blocksArea) blocksArea.innerHTML = '';
+            if (platform) platform.classList.remove('has-weight');
         }
     };
 
-    // Trigger Print Animation
-    const triggerPrint = () => {
-        const result = getResult();
-        if (result) {
-            printReceipt(result);
-        }
-    };
+    if (exactToggle) {
+        exactToggle.addEventListener('change', () => {
+            const val = input.value;
+            const parsed = smartParseFormula(val);
+            if (!parsed.hasError && parsed.cleanFormula) {
+                runCalculation(parsed.cleanFormula);
+            }
+        });
+    }
 
     if (input) {
-        input.addEventListener('input', updateRealtimeScale);
+        input.addEventListener('input', (e) => {
+            const val = input.value;
+            console.log('[DEBUG] input value:', val);
+            const parsed = smartParseFormula(val);
+            console.log('[DEBUG] parsed result:', parsed);
+
+            // Update live preview
+            if (previewDisplay) {
+                if (!val.trim()) {
+                    previewDisplay.innerHTML = '—';
+                } else {
+                    previewDisplay.innerHTML = parsed.displayHtml;
+                }
+            }
+
+            // Show/hide suggestion content (box stays visible)
+            if (suggestionBox && suggestionText) {
+                if (parsed.hasError) {
+                    suggestionText.innerHTML = `<span style="color: #ef4444;">${t('Invalid: lowercase letters are not valid element symbols', '错误：小写字母开头不是有效元素')}</span>`;
+                    suggestionBox.classList.add('has-message');
+                    suggestionBox.classList.add('has-error');
+                } else if (parsed.suspicious) {
+                    suggestionText.innerHTML = t('Did you mean ', '你可能想输入 ') + `<strong>${parsed.suspicious}</strong>?`;
+                    suggestionBox.classList.add('has-message');
+                    suggestionBox.classList.remove('has-error');
+                } else {
+                    suggestionText.textContent = val.trim() ? t('Looks good', '格式正确') : t('Enter a formula above', '在上方输入化学式');
+                    suggestionBox.classList.remove('has-message');
+                    suggestionBox.classList.remove('has-error');
+                }
+            }
+
+            // Only run calculation if no errors
+            if (!parsed.hasError && parsed.cleanFormula) {
+                console.log('[DEBUG] running calculation with:', parsed.cleanFormula);
+                runCalculation(parsed.cleanFormula);
+            } else {
+                console.log('[DEBUG] skipping calculation, hasError:', parsed.hasError, 'cleanFormula:', parsed.cleanFormula);
+                updateRealtimeScale(null);
+            }
+        });
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                triggerPrint();
-                input.blur(); // Optional: remove focus to show "done" state? Or keep focus.
+                const parsed = smartParseFormula(input.value);
+                if (!parsed.hasError && parsed.cleanFormula) {
+                    const result = calculateMolarMassModal(parsed.cleanFormula, exactToggle ? exactToggle.checked : false);
+                    if (result) printReceipt(result);
+                }
             }
         });
-    }
-
-    if (toggle) {
-        toggle.addEventListener('change', () => {
-            updateRealtimeScale();
-        });
-    }
-
-    /* --- 新增：学习模式逻辑 --- */
-    const learningToggle = document.getElementById('modal-learning-toggle');
-    const calcContainer = document.getElementById('calc-steps-container');
-    const showCalcBtn = document.getElementById('show-calc-btn');
-    const calcContent = document.getElementById('calc-steps-content');
-
-    // Toggle Learning Mode
-    if (learningToggle) {
-        learningToggle.addEventListener('change', () => {
-            const isLearning = learningToggle.checked;
-            if (calcContainer) {
-                calcContainer.style.display = isLearning ? 'block' : 'none';
-            }
-            // Reset content visibility when toggling mode
-            if (calcContent) calcContent.style.display = 'none';
-        });
-    }
-
-    // Show Calculation Steps
-    if (showCalcBtn) {
-        showCalcBtn.addEventListener('click', () => {
-            if (calcContent.style.display === 'block') {
-                calcContent.style.display = 'none';
-                return;
-            }
-
-            const result = getResult();
-            if (!result) return;
-
-            // Generate Calculation Steps HTML
-            let html = '';
-
-            // Header
-            html += `<div style="font-weight:700; margin-bottom:10px; font-size:1.1em; color:#4f46e5;">${input.value}</div>`;
-
-            result.breakdown.forEach(item => {
-                const subtotal = item.subtotal;
-                const mass = item.atomicMass;
-                const count = item.count;
-
-                html += `
-                <div class="calc-step-row">
-                    <div>
-                        <span style="font-weight:600; width: 25px; display:inline-block;">${item.element}</span>
-                        <span class="calc-step-formula">${mass} × ${count}</span>
-                    </div>
-                    <span style="font-weight:500;">= ${subtotal}</span>
-                </div>`;
-            });
-
-            html += `
-            <div class="calc-step-row">
-                <span>Total</span>
-                <span style="color:#059669; font-size:1.05em;">${result.total} g/mol</span>
-            </div>`;
-
-            calcContent.innerHTML = html;
-            calcContent.style.display = 'block';
-        });
-    }
-
-}
-
-// Helper: Discard current receipt
-function discardReceipt() {
-    const receiptWrapper = document.getElementById('receipt-wrapper');
-    if (receiptWrapper && receiptWrapper.classList.contains('printing')) {
-        receiptWrapper.classList.remove('printing');
-        receiptWrapper.classList.add('discarding');
-
-        // Reset after animation
-        setTimeout(() => {
-            receiptWrapper.classList.remove('discarding');
-            receiptWrapper.style.display = 'none'; // Fully hide
-        }, 500);
+        input.dispatchEvent(new Event('input'));
     }
 }
 
-// Helper: Print new receipt
-function printReceipt(result) {
-    const receiptWrapper = document.getElementById('receipt-wrapper');
-    const receiptItems = document.getElementById('receipt-items');
-    const receiptTotal = document.getElementById('receipt-total-value');
-    const receiptDate = document.getElementById('receipt-date');
-
-    if (!receiptWrapper) return;
-
-    // First ensure old one is gone (if user hits enter repeatedly fast)
-    if (receiptWrapper.classList.contains('printing') || receiptWrapper.classList.contains('discarding')) {
-        receiptWrapper.classList.remove('printing');
-        // Force reset
-        void receiptWrapper.offsetWidth;
-    }
-
-    // Populate Data
-    const now = new Date();
-    receiptDate.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
-
-    let receiptHTML = '';
-    result.breakdown.forEach(item => {
-        receiptHTML += `
-        <div class="receipt-item-row">
-            <div class="receipt-item-name">
-                <strong>${item.element}</strong> 
-                <span class="receipt-item-qty">x${item.count}</span>
-            </div>
-            <div>${item.subtotal}</div>
-        </div>`;
-    });
-
-    receiptItems.innerHTML = receiptHTML;
-    receiptTotal.textContent = result.total + ' g/mol';
-
-    // Start Animation
-    receiptWrapper.style.display = 'block';
-    // Remove discarding if it was stuck
-    receiptWrapper.classList.remove('discarding');
-
-    // Force Reflow
-    void receiptWrapper.offsetWidth;
-
-    receiptWrapper.classList.add('printing');
-}
+// discardReceipt, printReceipt - see definitions at end of file (line ~10920)
 
 // Helper: Render 3D Blocks
 function renderScaleBlocks(result, container) {
@@ -7643,13 +11646,14 @@ function renderScaleBlocks(result, container) {
     const totalMass = parseFloat(result.total);
 
     // Generate Blocks
-    result.breakdown.forEach(item => {
+    result.breakdown.forEach((item, index) => {
         const subtotalVal = parseFloat(item.subtotal);
         const percent = ((subtotalVal / totalMass) * 100).toFixed(1);
 
         const block = document.createElement('div');
         block.className = 'element-block';
         block.textContent = item.element;
+        block.style.animationDelay = `${index * 60}ms`;
 
         // Size logic
         const size = 50 + (percent * 0.8);
@@ -7701,154 +11705,359 @@ function calculateMolarMassModal(formula, exact) {
     };
 }
 
-function displayMolarMassResult(result) {
-    const scaleDisplay = document.getElementById('scale-display-value');
-    const blocksArea = document.getElementById('scale-blocks-area');
-    const receiptWrapper = document.getElementById('receipt-wrapper');
-    const receiptItems = document.getElementById('receipt-items');
-    const receiptTotal = document.getElementById('receipt-total-value');
-    const receiptDate = document.getElementById('receipt-date');
+// displayMolarMassResult - see definition at end of file (line ~10861)
 
-    // Update Digital Display
-    scaleDisplay.textContent = result.total;
+// ===== Empirical Tool: Preset Compounds =====
+const EMPIRICAL_PRESETS = [
+    // 2个元素
+    { name: 'Methane (甲烷)', elements: [{ s: 'C', v: 75.0 }, { s: 'H', v: 25.0 }], molMass: 16 },
+    { name: 'Water (水)', elements: [{ s: 'H', v: 11.2 }, { s: 'O', v: 88.8 }], molMass: 18 },
+    { name: 'Ammonia (氨)', elements: [{ s: 'N', v: 82.4 }, { s: 'H', v: 17.6 }], molMass: 17 },
+    { name: 'Benzene (苯)', elements: [{ s: 'C', v: 92.3 }, { s: 'H', v: 7.7 }], molMass: 78 },
+    { name: 'Carbon Dioxide (二氧化碳)', elements: [{ s: 'C', v: 27.3 }, { s: 'O', v: 72.7 }], molMass: 44 },
+    // 3个元素
+    { name: 'Glucose (葡萄糖)', elements: [{ s: 'C', v: 40.0 }, { s: 'H', v: 6.7 }, { s: 'O', v: 53.3 }], molMass: 180 },
+    { name: 'Aspirin (阿司匹林)', elements: [{ s: 'C', v: 60.0 }, { s: 'H', v: 4.5 }, { s: 'O', v: 35.5 }], molMass: 180 },
+    { name: 'Ethanol (乙醇)', elements: [{ s: 'C', v: 52.2 }, { s: 'H', v: 13.0 }, { s: 'O', v: 34.8 }], molMass: 46 },
+    { name: 'Acetic Acid (乙酸)', elements: [{ s: 'C', v: 40.0 }, { s: 'H', v: 6.7 }, { s: 'O', v: 53.3 }], molMass: 60 },
+    { name: 'Vitamin C (维生素C)', elements: [{ s: 'C', v: 40.9 }, { s: 'H', v: 4.6 }, { s: 'O', v: 54.5 }], molMass: 176 },
+    // 4个元素
+    { name: 'Caffeine (咖啡因)', elements: [{ s: 'C', v: 49.5 }, { s: 'H', v: 5.2 }, { s: 'N', v: 28.9 }, { s: 'O', v: 16.5 }], molMass: 194 },
+    { name: 'Urea (尿素)', elements: [{ s: 'C', v: 20.0 }, { s: 'H', v: 6.7 }, { s: 'N', v: 46.7 }, { s: 'O', v: 26.7 }], molMass: 60 },
+    { name: 'Glycine (甘氨酸)', elements: [{ s: 'C', v: 32.0 }, { s: 'H', v: 6.7 }, { s: 'N', v: 18.7 }, { s: 'O', v: 42.6 }], molMass: 75 },
+    { name: 'Alanine (丙氨酸)', elements: [{ s: 'C', v: 40.4 }, { s: 'H', v: 7.9 }, { s: 'N', v: 15.7 }, { s: 'O', v: 36.0 }], molMass: 89 },
+    // 5个元素
+    { name: 'Cysteine (半胱氨酸)', elements: [{ s: 'C', v: 29.8 }, { s: 'H', v: 5.8 }, { s: 'N', v: 11.6 }, { s: 'O', v: 26.4 }, { s: 'S', v: 26.4 }], molMass: 121 },
+    { name: 'Methionine (蛋氨酸)', elements: [{ s: 'C', v: 40.3 }, { s: 'H', v: 7.4 }, { s: 'N', v: 9.4 }, { s: 'O', v: 21.5 }, { s: 'S', v: 21.5 }], molMass: 149 },
+    { name: 'Thiamine (维生素B1)', elements: [{ s: 'C', v: 42.7 }, { s: 'H', v: 5.4 }, { s: 'N', v: 16.6 }, { s: 'O', v: 4.7 }, { s: 'S', v: 9.5 }], molMass: 337 }
+];
 
-    // Clear previous blocks
-    blocksArea.innerHTML = '';
-
-    // Sort logic for blocks? Maybe locally to order small to large or as they appear.
-    // Let's keep them in formula order for now.
-
-    // Find max subtotal to scale blocks
-    const maxSubtotal = Math.max(...result.breakdown.map(i => parseFloat(i.subtotal)));
-    const totalMass = parseFloat(result.total);
-
-    // Generate Blocks
-    result.breakdown.forEach(item => {
-        const subtotalVal = parseFloat(item.subtotal);
-        const percent = ((subtotalVal / totalMass) * 100).toFixed(1);
-
-        const block = document.createElement('div');
-        block.className = 'element-block';
-        block.textContent = item.element;
-
-        // Dynamic styling based on mass/contribution
-        // Base size 50px, add up to 50px more based on percent
-        const size = 50 + (percent * 0.8);
-        block.style.width = `${Math.min(size, 100)}px`;
-        block.style.height = `${Math.min(size, 100)}px`;
-
-        // Dynamic Color based on element/group
-        const hue = (item.element.charCodeAt(0) * 20 + item.element.length * 10) % 360;
-        block.style.background = `linear-gradient(135deg, hsl(${hue}, 70%, 60%), hsl(${hue}, 70%, 40%))`;
-
-        // Tooltip
-        const tooltip = document.createElement('div');
-        tooltip.className = 'block-tooltip';
-        tooltip.innerHTML = `${item.element}<br>${item.atomicMass} × ${item.count}<br><strong>${percent}%</strong>`;
-        block.appendChild(tooltip);
-
-        blocksArea.appendChild(block);
-    });
-
-    // Generate Receipt Content
-    if (receiptWrapper) {
-        // Only update date if it wasn't already printing (to avoid ticking seconds annoyance)
-        // actually for real-time it's fine.
-        const now = new Date();
-        receiptDate.textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
-
-        // Print animation logic
-        // Remove class to reset if needed? Or just ensure it's there
-        receiptWrapper.style.display = 'block';
-
-        // Force reflow to ensuring transition happens if it was hidden
-        // requestAnimationFrame(() => receiptWrapper.classList.add('printing'));
-        // Simple way:
-        setTimeout(() => receiptWrapper.classList.add('printing'), 50);
-
-        let receiptHTML = '';
-        result.breakdown.forEach(item => {
-            receiptHTML += `
-            <div class="receipt-item-row">
-                <div class="receipt-item-name">
-                    <strong>${item.element}</strong> 
-                    <span class="receipt-item-qty">x${item.count}</span>
-                </div>
-                <div>${item.subtotal}</div>
-            </div>`;
-        });
-
-        receiptItems.innerHTML = receiptHTML;
-        receiptTotal.textContent = result.total + ' g/mol';
-    }
-}
+let empiricalElementCount = 3; // Track number of element rows
 
 function attachEmpiricalListeners() {
     const methodSelect = document.getElementById('modal-formula-method');
     const inputsContainer = document.getElementById('modal-element-inputs');
     const btn = document.getElementById('modal-calc-formula-btn');
+    const detailsToggle = document.getElementById('calc-details-toggle');
+    const detailsContent = document.getElementById('calc-details-content');
+    const addElementBtn = document.getElementById('emp-add-element-btn');
+    const randomFillBtn = document.getElementById('emp-random-fill-btn');
 
-    // Initialize inputs
-    updateEmpiricalInputs();
+    // Initialize with default 3 element rows
+    empiricalElementCount = 3;
+    renderEmpiricalInputs(); // 初始不填充，显示?
+    updateElementButtons();
 
     if (methodSelect) {
-        methodSelect.addEventListener('change', updateEmpiricalInputs);
+        methodSelect.addEventListener('change', () => renderEmpiricalInputs());
     }
 
-    function updateEmpiricalInputs() {
-        if (!inputsContainer) return; // 防止 null 错误
+    // Add Element Button - 无限制
+    if (addElementBtn) {
+        addElementBtn.addEventListener('click', () => {
+            empiricalElementCount++;
+            renderEmpiricalInputs();
+            updateElementButtons();
+        });
+    }
 
-        const method = methodSelect?.value || 'percent';
-        const placeholder = method === 'percent' ? '40' : '2.5';
+    // Remove Element Button
+    const removeElementBtn = document.getElementById('emp-remove-element-btn');
+    if (removeElementBtn) {
+        removeElementBtn.addEventListener('click', () => {
+            if (empiricalElementCount > 2) {
+                empiricalElementCount--;
+                renderEmpiricalInputs();
+                updateElementButtons();
+            }
+        });
+    }
 
-        inputsContainer.innerHTML = `
-            <style>
-                .emp-row { display: flex; gap: 10px; margin-bottom: 10px; }
-                .emp-row input { padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 1rem; box-sizing: border-box; transition: all 0.2s; }
-                .emp-row input:focus { outline: none; border-color: #8b5cf6; background: #faf5ff; }
-                .emp-row .sym { width: 70px; flex-shrink: 0; font-weight: 700; text-align: center; font-size: 1.1rem; }
-                .emp-row .val { flex: 1; min-width: 0; }
-            </style>
-            <div class="emp-row">
-                <input type="text" id="modal-elem1-symbol" placeholder="C" class="sym">
-                <input type="number" id="modal-elem1-value" placeholder="${placeholder}" step="0.1" class="val">
-            </div>
-            <div class="emp-row">
-                <input type="text" id="modal-elem2-symbol" placeholder="H" class="sym">
-                <input type="number" id="modal-elem2-value" placeholder="${placeholder}" step="0.1" class="val">
-            </div>
-            <div class="emp-row">
-                <input type="text" id="modal-elem3-symbol" placeholder="O" class="sym">
-                <input type="number" id="modal-elem3-value" placeholder="${t('optional', '可选')}" step="0.1" class="val">
-            </div>
-        `;
+    // Random Fill Button - 严格匹配当前元素数量
+    if (randomFillBtn) {
+        randomFillBtn.addEventListener('click', () => {
+            // 严格筛选与当前元素数量完全匹配的预设
+            const validPresets = EMPIRICAL_PRESETS.filter(p => p.elements.length === empiricalElementCount);
+            if (validPresets.length > 0) {
+                const preset = validPresets[Math.floor(Math.random() * validPresets.length)];
+                fillEmpiricalPreset(preset);
+            } else {
+                // 如果没有完全匹配的预设，显示提示
+                alert('没有找到包含 ' + empiricalElementCount + ' 个元素的预设化合物');
+            }
+        });
+    }
+
+    // Toggle calculation details - 展开/收起步骤
+    if (detailsToggle && detailsContent) {
+        detailsToggle.addEventListener('click', () => {
+            const isExpanded = detailsContent.classList.contains('visible');
+
+            // 展开前锁定 grid 高度，防止被压缩
+            const grid = document.querySelector('.emp-grid');
+            if (!isExpanded && grid) {
+                grid.style.height = grid.offsetHeight + 'px';
+                grid.style.flex = 'none';
+            }
+            if (isExpanded && grid) {
+                grid.style.height = '';
+                grid.style.flex = '';
+            }
+
+            detailsContent.classList.toggle('visible', !isExpanded);
+            detailsToggle.classList.toggle('open', !isExpanded);
+            const btnText = detailsToggle.querySelector('span');
+            if (btnText) {
+                btnText.textContent = isExpanded ? 'Show calculation steps' : 'Hide calculation steps';
+            }
+            // 展开时滚动到步骤区域并显示完整
+            if (!isExpanded) {
+                setTimeout(() => {
+                    const modalBody = document.querySelector('.feature-modal-body');
+                    if (modalBody) {
+                        modalBody.scrollTo({ top: modalBody.scrollHeight, behavior: 'smooth' });
+                    }
+                }, 150);
+            }
+        });
     }
 
     if (btn) {
         btn.addEventListener('click', () => {
             try {
-                const method = methodSelect.value;
+                const method = methodSelect?.value || 'percent';
                 const data = getEmpiricalData(method);
                 const result = calculateEmpiricalModal(data);
-                displayEmpiricalResult(result);
-                // Hide tips section when showing results
+                displayEmpiricalResultNew(result);
                 const tips = document.getElementById('empirical-tips');
                 if (tips) tips.style.display = 'none';
             } catch (error) {
-                showModalError('modal-formula-result', 'Error: ' + error.message);
+                showEmpiricalError(error.message);
             }
         });
     }
 }
 
+// 更新按钮状态
+function updateElementButtons() {
+    const addBtn = document.getElementById('emp-add-element-btn');
+    const removeBtn = document.getElementById('emp-remove-element-btn');
+
+    if (addBtn) {
+        addBtn.disabled = false; // 永不禁用
+    }
+    if (removeBtn) {
+        removeBtn.disabled = empiricalElementCount <= 2;
+    }
+}
+
+// Render element input rows
+function renderEmpiricalInputs(presetSymbols = null) {
+    const inputsContainer = document.getElementById('modal-element-inputs');
+    if (!inputsContainer) return;
+
+    const method = document.getElementById('modal-formula-method')?.value || 'percent';
+    const placeholder = method === 'percent' ? '40.0' : '2.5';
+
+    let html = '';
+    for (let i = 0; i < empiricalElementCount; i++) {
+        // 如果有预设符号则使用，否则为空
+        const symbol = presetSymbols ? (presetSymbols[i] || '') : '';
+        const colorClass = symbol ? `el-${symbol}` : '';
+        const isOptional = i >= 2;
+
+        html += `
+            <div class="emp-input-row">
+                <input type="text" 
+                    id="modal-elem${i + 1}-symbol" 
+                    class="emp-el-input ${colorClass}" 
+                    placeholder="?" 
+                    maxlength="2" 
+                    value="${symbol}"
+                    data-row="${i + 1}">
+                <div class="emp-value-wrapper">
+                    <input type="number" 
+                        id="modal-elem${i + 1}-value" 
+                        class="emp-input-field" 
+                        placeholder="${isOptional ? 'optional' : placeholder}" 
+                        step="0.1">
+                    <span class="emp-unit">%</span>
+                </div>
+            </div>
+        `;
+    }
+    inputsContainer.innerHTML = html;
+
+    // Add symbol input listeners for color updates
+    for (let i = 1; i <= empiricalElementCount; i++) {
+        const symbolInput = document.getElementById(`modal-elem${i}-symbol`);
+        if (symbolInput) {
+            symbolInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim().toUpperCase();
+                e.target.value = val;
+                // Update color based on element - list of supported elements
+                const coloredElements = ['C', 'H', 'O', 'N', 'S', 'P', 'Cl', 'Na', 'K', 'Ca', 'Fe', 'Mg'];
+                const colorClass = coloredElements.includes(val) ? `el-${val}` : (val ? 'has-value' : '');
+                e.target.className = `emp-el-input ${colorClass}`;
+            });
+        }
+    }
+}
+
+// Fill preset compound data - 不改变当前元素数量
+function fillEmpiricalPreset(preset) {
+    // 保持当前元素数量不变
+    // Re-render inputs with preset symbols (只填充前 empiricalElementCount 个)
+    const symbols = preset.elements.slice(0, empiricalElementCount).map(e => e.s);
+    // 补全空符号
+    while (symbols.length < empiricalElementCount) {
+        symbols.push('');
+    }
+    renderEmpiricalInputs(symbols);
+
+    // Fill values (只填充前 empiricalElementCount 个)
+    preset.elements.slice(0, empiricalElementCount).forEach((elem, i) => {
+        const valueInput = document.getElementById(`modal-elem${i + 1}-value`);
+        if (valueInput) {
+            valueInput.value = elem.v;
+        }
+    });
+
+    // Fill molecular mass
+    const molMassInput = document.getElementById('modal-mol-mass');
+    if (molMassInput && preset.molMass) {
+        molMassInput.value = preset.molMass;
+    }
+}
+
+function showEmpiricalError(message) {
+    const emptyState = document.getElementById('lego-empty');
+    const resultContent = document.getElementById('lego-blocks-area');
+    const detailsContent = document.getElementById('calc-details-content');
+
+    // Hide steps
+    if (detailsContent) {
+        detailsContent.classList.remove('visible');
+    }
+
+    if (emptyState) {
+        emptyState.innerHTML = `
+            <div style="color: #ef4444; font-size: 14px; padding: 20px; text-align: center;">
+                <svg style="width: 40px; height: 40px; margin-bottom: 12px; opacity: 0.7;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <div style="font-weight: 600; margin-bottom: 8px;">${message}</div>
+                <div style="font-size: 12px; color: #86868b;">Check your input and try again</div>
+            </div>
+        `;
+        emptyState.style.display = 'flex';
+    }
+    if (resultContent) {
+        resultContent.classList.remove('visible');
+    }
+}
+
+function displayEmpiricalResultNew(result) {
+    const emptyState = document.getElementById('lego-empty');
+    const resultContent = document.getElementById('lego-blocks-area');
+    const legoStage = document.getElementById('lego-stage');
+    const empiricalDisplay = document.getElementById('empirical-formula-display');
+    const molecularCard = document.getElementById('molecular-result-card');
+    const molecularDisplay = document.getElementById('molecular-formula-display');
+    const massDisplay = document.getElementById('result-mass-display');
+    const blocksVisual = document.getElementById('lego-blocks-visual');
+    const detailsContent = document.getElementById('calc-details-content');
+
+    // Hide empty state, show result
+    if (emptyState) emptyState.style.display = 'none';
+    if (resultContent) resultContent.classList.add('visible');
+
+    // Update empirical formula (secondary, in pill)
+    if (empiricalDisplay) {
+        empiricalDisplay.textContent = result.empiricalFormula;
+    }
+
+    // Update molecular formula (hero display)
+    if (molecularCard && molecularDisplay) {
+        if (result.molecularFormula && result.multiplier > 1) {
+            molecularCard.style.display = 'flex';
+            // Convert to proper HTML subscripts for hero display
+            molecularDisplay.innerHTML = formatFormulaHTML(result.molecularFormula);
+            if (massDisplay) {
+                massDisplay.textContent = result.molecularMass ? `${result.molecularMass} g/mol` : '';
+            }
+        } else {
+            // Show empirical as main if no molecular
+            molecularCard.style.display = 'flex';
+            molecularDisplay.innerHTML = formatFormulaHTML(result.empiricalFormula);
+            if (massDisplay) {
+                massDisplay.textContent = `${result.empiricalMass.toFixed(2)} g/mol`;
+            }
+        }
+    }
+
+    // Render atom chips
+    if (blocksVisual) {
+        const displayElements = result.molecularFormula && result.multiplier > 1
+            ? result.empirical.map(e => ({ ...e, count: e.count * result.multiplier }))
+            : result.empirical;
+
+        // All supported element colors
+        const coloredElements = ['C', 'H', 'O', 'N', 'S', 'P', 'Cl', 'Br', 'F', 'I', 'Fe', 'Cu', 'Zn', 'Ca', 'Na', 'K', 'Mg'];
+
+        let atomsHTML = '';
+        displayElements.forEach((elem) => {
+            const colorClass = coloredElements.includes(elem.symbol)
+                ? `el-${elem.symbol}`
+                : 'el-default';
+
+            atomsHTML += `
+                <div class="emp-atom-chip">
+                    <div class="emp-atom-circle ${colorClass}">${elem.symbol}</div>
+                    <span class="emp-atom-count">×${elem.count}</span>
+                </div>
+            `;
+        });
+        blocksVisual.innerHTML = atomsHTML;
+    }
+
+    // Update calculation details
+    if (detailsContent) {
+        detailsContent.innerHTML = result.explanation;
+    }
+}
+
+// Helper: Convert formula with subscripts to HTML
+function formatFormulaHTML(formula) {
+    if (!formula) return '';
+    // Replace subscript unicode with <sub> tags
+    return formula.replace(/[₀₁₂₃₄₅₆₇₈₉]+/g, (match) => {
+        const nums = match.split('').map(c => {
+            const subscripts = '₀₁₂₃₄₅₆₇₈₉';
+            return subscripts.indexOf(c);
+        }).join('');
+        return `<sub>${nums}</sub>`;
+    });
+}
+
 function getEmpiricalData(method) {
     const elements = [];
-    for (let i = 1; i <= 3; i++) {
-        const symbol = document.getElementById(`modal-elem${i}-symbol`)?.value.trim().toUpperCase();
-        const value = parseFloat(document.getElementById(`modal-elem${i}-value`)?.value);
-        if (symbol && !isNaN(value)) {
+
+    // Dynamic element count - check up to 6 rows
+    for (let i = 1; i <= 6; i++) {
+        const symbolInput = document.getElementById(`modal-elem${i}-symbol`);
+        const valueInput = document.getElementById(`modal-elem${i}-value`);
+
+        if (!symbolInput || !valueInput) continue;
+
+        let symbol = symbolInput?.value?.trim() || '';
+        const value = parseFloat(valueInput?.value);
+
+        if (symbol && !isNaN(value) && value > 0) {
             // Correct capitalization (first letter uppercase, rest lowercase)
-            const correctedSymbol = symbol.charAt(0) + symbol.slice(1).toLowerCase();
+            const correctedSymbol = symbol.charAt(0).toUpperCase() + symbol.slice(1).toLowerCase();
             if (method === 'percent') {
                 elements.push({ symbol: correctedSymbol, percent: value });
             } else {
@@ -7960,20 +12169,31 @@ function calculateEmpiricalModal(data) {
 }
 
 function simplifyRatiosModal(ratios) {
-    const result = ratios.map(r => {
-        let count = Math.round(r.ratio);
-        if (Math.abs(r.ratio - count) > 0.15) {
-            for (let mult = 2; mult <= 10; mult++) {
-                const test = Math.round(r.ratio * mult);
-                if (Math.abs(r.ratio * mult - test) < 0.1) {
-                    count = test;
-                    break;
-                }
-            }
+    // 先检查是否所有比例都接近整数
+    const allClose = ratios.every(r => Math.abs(r.ratio - Math.round(r.ratio)) < 0.1);
+
+    if (allClose) {
+        // 所有比例都接近整数，直接四舍五入
+        return ratios.map(r => ({ symbol: r.symbol, count: Math.round(r.ratio) || 1 }));
+    }
+
+    // 有小数比例，需要找到一个公共倍数使所有比例都变成整数
+    // 尝试倍数 2, 3, 4, ..., 10
+    for (let mult = 2; mult <= 10; mult++) {
+        const scaled = ratios.map(r => r.ratio * mult);
+        const allInteger = scaled.every(v => Math.abs(v - Math.round(v)) < 0.1);
+
+        if (allInteger) {
+            // 找到合适的倍数，对所有元素应用
+            return ratios.map(r => ({
+                symbol: r.symbol,
+                count: Math.round(r.ratio * mult) || 1
+            }));
         }
-        return { symbol: r.symbol, count: count || 1 };
-    });
-    return result;
+    }
+
+    // 没找到合适的倍数，使用最接近的整数
+    return ratios.map(r => ({ symbol: r.symbol, count: Math.round(r.ratio) || 1 }));
 }
 
 function subscript(num) {
@@ -8147,64 +12367,424 @@ function showModalError(containerId, message) {
 
 function generateSolubilityToolContent() {
     return `
-        <div class="tool-modal-header">
-            <div class="tool-modal-icon" style="background:#10b981; color:white;">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                     <path d="M3 3v18h18" />
-                     <path d="M7 7l10 10" />
-                     <path d="M17 7l-10 10" />
-                </svg>
-            </div>
-            <div class="tool-modal-title-group">
-                <h2 class="tool-modal-title">${t('Solubility Checker', '溶解性检测')}</h2>
-                <div class="tool-modal-tags">
-                   <span class="grade-tag">Interactive</span>
-                </div>
-            </div>
-        </div>
-        <div style="padding: 20px; overflow-y: auto;">
-            <!-- Checker Input -->
-            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:20px; margin-bottom:24px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                <label style="display:block; font-size:0.9rem; font-weight:600; color:#166534; margin-bottom:8px;">${t('Enter Formula to Check:', '输入化学式检测:')}</label>
-                <div style="display:flex; gap:12px;">
-                    <input type="text" id="solubility-input" placeholder="e.g. AgCl, Na2SO4, CaCO3" 
-                           style="flex:1; padding:10px 14px; border:1px solid #cbd5e1; border-radius:8px; font-family:'Roboto Mono', monospace; font-size:1.1rem; outline:none; transition:border 0.2s;"
-                           onfocus="this.style.borderColor='#22c55e'" onblur="this.style.borderColor='#cbd5e1'">
-                    <button id="check-solubility-btn" style="background:#16a34a; color:white; border:none; padding:0 24px; border-radius:8px; font-weight:600; font-size:1rem; cursor:pointer; transition:all 0.2s; box-shadow:0 2px 4px rgba(22,163,74,0.3);">
-                        ${t('Check', '检测')}
-                    </button>
-                </div>
-                <div id="solubility-result" style="margin-top:16px; min-height:40px; border-radius:8px; display:none; padding:12px; font-size:1rem; align-items:center;"></div>
-            </div>
+        <style>
+            /* ===== Solubility Table - Apple Style Layout ===== */
+            .sol-calc-wrapper {
+                --glass-bg: rgba(255, 255, 255, 0.72);
+                --glass-border: rgba(255, 255, 255, 0.6);
+                --glass-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                --text-primary: #1d1d1f;
+                --text-secondary: #86868b;
+                --accent-green: #10b981;
+                
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                width: 100%;
+                min-height: 0;
+            }
 
-            <!-- Table -->
-            <h3 style="font-size:1.1rem; color:#334155; margin-bottom:12px; padding-bottom:6px; border-bottom:2px solid #e2e8f0;">${t('Solubility Rules (Reference)', '溶解性规则 (参考)')}</h3>
-            <style>
-                .sol-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
-                .sol-table th, .sol-table td { padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: left; }
-                .sol-table th { background: #f8fafc; font-weight: 600; color: #475569; position: sticky; top: 0; }
-                .sol-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-                .sol-s { background: #dcfce7; color: #166534; }
-                .sol-i { background: #fee2e2; color: #991b1b; }
-            </style>
-            <table class="sol-table">
-                <thead>
-                    <tr>
-                        <th width="30%">${t('Anion', '阴离子')}</th>
-                        <th width="20%">${t('Rule', '规则')}</th>
-                        <th width="50%">${t('Exceptions', '例外')}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td><strong>NO₃⁻</strong> (Nitrous)</td><td><span class="sol-badge sol-s">${t('Soluble', '可溶')}</span></td><td>${t('None', '无')}</td></tr>
-                    <tr><td><strong>CH₃COO⁻</strong> (Acetate)</td><td><span class="sol-badge sol-s">${t('Soluble', '可溶')}</span></td><td>${t('None', '无')}</td></tr>
-                    <tr><td><strong>Cl⁻, Br⁻, I⁻</strong></td><td><span class="sol-badge sol-s">${t('Soluble', '可溶')}</span></td><td>Ag⁺, Pb²⁺, Hg₂²⁺ (<span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span>)</td></tr>
-                    <tr><td><strong>SO₄²⁻</strong> (Sulfate)</td><td><span class="sol-badge sol-s">${t('Soluble', '可溶')}</span></td><td>Ba²⁺, Pb²⁺, Ca²⁺, Sr²⁺ (<span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span>)</td></tr>
-                    <tr><td><strong>OH⁻</strong> (Hydroxide)</td><td><span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span></td><td>Group 1, NH₄⁺ (<span class="sol-badge sol-s">${t('Soluble', '可溶')}</span>); Ca²⁺, Ba²⁺, Sr²⁺ (Slightly)</td></tr>
-                    <tr><td><strong>CO₃²⁻, PO₄³⁻</strong></td><td><span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span></td><td>Group 1, NH₄⁺ (<span class="sol-badge sol-s">${t('Soluble', '可溶')}</span>)</td></tr>
-                    <tr><td><strong>S²⁻</strong> (Sulfide)</td><td><span class="sol-badge sol-i">${t('Insoluble', '不溶')}</span></td><td>Group 1, Group 2, NH₄⁺ (<span class="sol-badge sol-s">${t('Soluble', '可溶')}</span>)</td></tr>
-                </tbody>
-            </table>
+            /* ===== Two Column Grid ===== */
+            .sol-grid {
+                display: grid;
+                grid-template-columns: 300px 1fr;
+                gap: 24px;
+                margin: 0;
+                flex: 1 1 auto;
+                min-height: 0;
+            }
+
+            /* ===== Left Column: Input Controls ===== */
+            .sol-controls {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                align-self: start;
+            }
+
+            .sol-glass-card {
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                padding: 20px;
+                box-shadow: var(--glass-shadow);
+            }
+
+            .sol-section-label {
+                font-size: clamp(10px, 1.6vh, 13px);
+                font-weight: 600;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: 12px;
+            }
+
+            .sol-input-stack {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .sol-input-field {
+                width: 100%;
+                height: 48px;
+                padding: 0 16px;
+                background: rgba(255, 255, 255, 0.9);
+                border: 1.5px solid rgba(0, 0, 0, 0.08);
+                border-radius: 12px;
+                font-family: 'SF Mono', 'Roboto Mono', monospace;
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: var(--text-primary);
+                outline: none;
+                transition: all 0.2s ease;
+                box-sizing: border-box;
+            }
+
+            .sol-input-field:focus {
+                border-color: var(--accent-green);
+                box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+                background: #fff;
+            }
+
+            .sol-input-field::placeholder {
+                color: #aeaeb2;
+                font-weight: 400;
+            }
+
+            .sol-check-btn {
+                width: 100%;
+                height: 48px;
+                background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+                border: none;
+                border-radius: 12px;
+                color: white;
+                font-size: 0.95rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+            }
+
+            .sol-check-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+            }
+
+            .sol-check-btn:active {
+                transform: translateY(0);
+            }
+
+            /* Result Card */
+            .sol-result-card {
+                border-radius: 16px;
+                padding: 20px;
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .sol-result-card.active {
+                display: flex;
+            }
+
+            .sol-result-card.soluble {
+                background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(16, 185, 129, 0.25) 100%);
+                border: 1.5px solid rgba(52, 211, 153, 0.4);
+            }
+
+            .sol-result-card.insoluble {
+                background: linear-gradient(135deg, rgba(248, 113, 113, 0.15) 0%, rgba(220, 38, 38, 0.2) 100%);
+                border: 1.5px solid rgba(248, 113, 113, 0.4);
+            }
+
+            .sol-result-card.unknown {
+                background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(217, 119, 6, 0.2) 100%);
+                border: 1.5px solid rgba(251, 191, 36, 0.4);
+            }
+
+            .sol-result-title {
+                font-size: clamp(1rem, 2.5vh, 1.4rem);
+                font-weight: 700;
+                margin-bottom: 4px;
+            }
+
+            .sol-result-card.soluble .sol-result-title { color: #047857; }
+            .sol-result-card.insoluble .sol-result-title { color: #b91c1c; }
+            .sol-result-card.unknown .sol-result-title { color: #b45309; }
+
+            .sol-result-subtitle {
+                font-size: clamp(0.78rem, 2vh, 1rem);
+                opacity: 0.85;
+            }
+
+            .sol-result-card.soluble .sol-result-subtitle { color: #065f46; }
+            .sol-result-card.insoluble .sol-result-subtitle { color: #991b1b; }
+            .sol-result-card.unknown .sol-result-subtitle { color: #92400e; }
+
+            /* Thinking state */
+            .sol-thinking {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: #6b7280;
+                font-size: clamp(0.78rem, 2vh, 1rem);
+            }
+
+            .sol-thinking-dots {
+                display: flex;
+                gap: 4px;
+            }
+
+            .sol-thinking-dots span {
+                width: 5px;
+                height: 5px;
+                background: #9ca3af;
+                border-radius: 50%;
+                animation: sol-bounce 1.4s ease-in-out infinite;
+            }
+
+            .sol-thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+            .sol-thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+            @keyframes sol-bounce {
+                0%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-5px); }
+            }
+
+            /* ===== Right Column: Reference Table ===== */
+            .sol-table-panel {
+                background: var(--glass-bg);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                padding: 24px;
+                box-shadow: var(--glass-shadow);
+                overflow: auto;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            .sol-table-title {
+                font-size: clamp(11px, 2vh, 15px);
+                font-weight: 600;
+                color: var(--text-secondary);
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: 0;
+                padding-bottom: clamp(8px, 2vh, 14px);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            }
+
+            .sol-glass-table {
+                width: 100%;
+                border-collapse: separate;
+                border-spacing: 0;
+                font-size: clamp(0.85rem, 2.4vh, 1.1rem);
+            }
+
+            .sol-glass-table th {
+                padding: clamp(8px, 2.2vh, 16px) 16px;
+                text-align: left;
+                font-weight: 600;
+                color: #374151;
+                font-size: clamp(0.7rem, 1.8vh, 0.9rem);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                background: rgba(0, 0, 0, 0.02);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            }
+
+            .sol-glass-table th:first-child { border-radius: 10px 0 0 0; }
+            .sol-glass-table th:last-child { border-radius: 0 10px 0 0; }
+
+            .sol-glass-table td {
+                padding: clamp(8px, 2.2vh, 16px) 16px;
+                color: #374151;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+                vertical-align: middle;
+            }
+
+            .sol-glass-table tbody tr {
+                transition: background 0.15s ease;
+            }
+
+            .sol-glass-table tbody tr:hover {
+                background: rgba(0, 0, 0, 0.02);
+            }
+
+            .sol-glass-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .sol-anion-name {
+                font-family: 'SF Mono', 'Roboto Mono', monospace;
+                font-weight: 600;
+                color: #1a1a1a;
+                font-size: clamp(0.9rem, 2.4vh, 1.15rem);
+                display: inline-flex;
+                align-items: baseline;
+            }
+
+            /* Ion formula with aligned sub/superscripts */
+            .sol-ion {
+                display: inline-flex;
+                align-items: baseline;
+            }
+
+            .sol-ion-base {
+                font-family: 'SF Mono', 'Roboto Mono', monospace;
+                font-weight: 600;
+            }
+
+            .sol-ion-scripts {
+                display: inline-flex;
+                flex-direction: column;
+                align-items: flex-start;
+                font-size: 0.7em;
+                line-height: 1;
+                vertical-align: middle;
+                margin-left: 1px;
+                transform: translateY(-8px);
+            }
+
+            .sol-ion-scripts .sup {
+                transform: translateY(0px);
+            }
+
+            .sol-ion-scripts .sub {
+                transform: translateY(0px);
+            }
+
+            /* Higher superscript for single-script ions */
+            .sol-sup-high {
+                vertical-align: super;
+                font-size: 0.75em;
+                position: relative;
+                top: -0.4em;
+            }
+
+            .sol-anion-label {
+                font-size: clamp(0.78rem, 2vh, 0.95rem);
+                color: #6b7280;
+                margin-left: 8px;
+                font-weight: 400;
+            }
+
+            /* Pill badges */
+            .sol-pill {
+                display: inline-flex;
+                align-items: center;
+                padding: clamp(3px, 1vh, 6px) 12px;
+                border-radius: 6px;
+                font-size: clamp(0.7rem, 1.7vh, 0.85rem);
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.3px;
+            }
+
+            .sol-pill-soluble {
+                background: rgba(52, 211, 153, 0.2);
+                color: #047857;
+            }
+
+            .sol-pill-insoluble {
+                background: rgba(248, 113, 113, 0.2);
+                color: #b91c1c;
+            }
+
+            .sol-exception-text {
+                font-size: clamp(0.85rem, 2.2vh, 1.05rem);
+                color: #4b5563;
+                line-height: 1.6;
+            }
+
+            .sol-exception-text .sol-pill {
+                padding: clamp(2px, 0.6vh, 4px) 8px;
+                font-size: clamp(0.65rem, 1.6vh, 0.78rem);
+                margin-left: 6px;
+                vertical-align: middle;
+            }
+        </style>
+
+        <div class="tool-padding-label">Solubility Table</div>
+        <div class="sol-calc-wrapper">
+
+            <!-- Two Column Grid -->
+            <div class="sol-grid">
+                <!-- Left: Input Controls -->
+                <div class="sol-controls">
+                    <div class="sol-glass-card">
+                        <div class="sol-section-label">Enter Chemical Formula</div>
+                        <div class="sol-input-stack">
+                            <input type="text" id="solubility-input" class="sol-input-field" placeholder="e.g. NaCl, AgNO3" autocomplete="off">
+                            <button id="check-solubility-btn" class="sol-check-btn">Check Solubility</button>
+                        </div>
+                    </div>
+
+                    <div id="solubility-result" class="sol-result-card">
+                        <div class="sol-result-title"></div>
+                        <div class="sol-result-subtitle"></div>
+                    </div>
+                </div>
+
+                <!-- Right: Reference Table -->
+                <div class="sol-table-panel">
+                    <div class="sol-table-title">Solubility Rules Reference</div>
+                    <table class="sol-glass-table">
+                        <tbody>
+                            <tr>
+                                <td><span class="sol-anion-name"><span class="sol-ion"><span class="sol-ion-base">NO</span><span class="sol-ion-scripts"><span class="sup">−</span><span class="sub">3</span></span></span></span><span class="sol-anion-label">Nitrate</span></td>
+                                <td><span class="sol-pill sol-pill-soluble">Soluble</span></td>
+                                <td class="sol-exception-text">None — always soluble</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sol-anion-name">CH<sub>3</sub>COO<sup class="sol-sup-high">−</sup></span><span class="sol-anion-label">Acetate</span></td>
+                                <td><span class="sol-pill sol-pill-soluble">Soluble</span></td>
+                                <td class="sol-exception-text">None — always soluble</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sol-anion-name">Cl<sup class="sol-sup-high">−</sup>, Br<sup class="sol-sup-high">−</sup>, I<sup class="sol-sup-high">−</sup></span><span class="sol-anion-label">Halides</span></td>
+                                <td><span class="sol-pill sol-pill-soluble">Soluble</span></td>
+                                <td class="sol-exception-text">Ag<sup>+</sup>, Pb<sup>2+</sup>, <span class="sol-ion"><span class="sol-ion-base">Hg</span><span class="sol-ion-scripts"><span class="sup">2+</span><span class="sub">2</span></span></span> <span class="sol-pill sol-pill-insoluble">Insol.</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="sol-anion-name"><span class="sol-ion"><span class="sol-ion-base">SO</span><span class="sol-ion-scripts"><span class="sup">2−</span><span class="sub">4</span></span></span></span><span class="sol-anion-label">Sulfate</span></td>
+                                <td><span class="sol-pill sol-pill-soluble">Soluble</span></td>
+                                <td class="sol-exception-text">Ba<sup>2+</sup>, Pb<sup>2+</sup>, Ca<sup>2+</sup>, Sr<sup>2+</sup> <span class="sol-pill sol-pill-insoluble">Insol.</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="sol-anion-name">OH<sup class="sol-sup-high">−</sup></span><span class="sol-anion-label">Hydroxide</span></td>
+                                <td><span class="sol-pill sol-pill-insoluble">Insol.</span></td>
+                                <td class="sol-exception-text">Group 1, <span class="sol-ion"><span class="sol-ion-base">NH</span><span class="sol-ion-scripts"><span class="sup">+</span><span class="sub">4</span></span></span> <span class="sol-pill sol-pill-soluble">Sol.</span> Ca<sup>2+</sup>, Ba<sup>2+</sup>, Sr<sup>2+</sup> slightly</td>
+                            </tr>
+                            <tr>
+                                <td><span class="sol-anion-name"><span class="sol-ion"><span class="sol-ion-base">CO</span><span class="sol-ion-scripts"><span class="sup">2−</span><span class="sub">3</span></span></span></span><span class="sol-anion-label">Carbonate</span></td>
+                                <td><span class="sol-pill sol-pill-insoluble">Insol.</span></td>
+                                <td class="sol-exception-text">Group 1, <span class="sol-ion"><span class="sol-ion-base">NH</span><span class="sol-ion-scripts"><span class="sup">+</sup><span class="sub">4</span></span></span> <span class="sol-pill sol-pill-soluble">Soluble</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="sol-anion-name"><span class="sol-ion"><span class="sol-ion-base">PO</span><span class="sol-ion-scripts"><span class="sup">3−</span><span class="sub">4</span></span></span></span><span class="sol-anion-label">Phosphate</span></td>
+                                <td><span class="sol-pill sol-pill-insoluble">Insol.</span></td>
+                                <td class="sol-exception-text">Group 1, <span class="sol-ion"><span class="sol-ion-base">NH</span><span class="sol-ion-scripts"><span class="sup">+</span><span class="sub">4</span></span></span> <span class="sol-pill sol-pill-soluble">Soluble</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="sol-anion-name">S<sup class="sol-sup-high">2−</sup></span><span class="sol-anion-label">Sulfide</span></td>
+                                <td><span class="sol-pill sol-pill-insoluble">Insol.</span></td>
+                                <td class="sol-exception-text">Group 1, Group 2, <span class="sol-ion"><span class="sol-ion-base">NH</span><span class="sol-ion-scripts"><span class="sup">+</span><span class="sub">4</span></span></span> <span class="sol-pill sol-pill-soluble">Sol.</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     `;
 }
@@ -8212,42 +12792,50 @@ function generateSolubilityToolContent() {
 function attachSolubilityListeners() {
     const input = document.getElementById('solubility-input');
     const btn = document.getElementById('check-solubility-btn');
-    const resultBox = document.getElementById('solubility-result');
+    const resultCard = document.getElementById('solubility-result');
 
-    if (!input || !btn) return;
+    if (!input || !btn || !resultCard) return;
 
     const runCheck = () => {
         const val = input.value.trim();
         if (!val) return;
 
-        resultBox.style.display = 'flex';
-        resultBox.innerHTML = `<span style="color:#64748b;">Thinking...</span>`;
-        resultBox.style.background = '#f8fafc';
-        resultBox.style.border = '1px solid #e2e8f0';
-        resultBox.style.borderLeft = 'none';
+        // Reset classes
+        resultCard.className = 'sol-result-card active';
+        resultCard.innerHTML = `
+            <div class="sol-thinking">
+                <div class="sol-thinking-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                Analyzing...
+            </div>
+        `;
 
         setTimeout(() => {
             const res = calculateSolubility(val);
+            const titleEl = document.createElement('div');
+            titleEl.className = 'sol-result-title';
+            const subtitleEl = document.createElement('div');
+            subtitleEl.className = 'sol-result-subtitle';
+
             if (res.soluble) {
-                resultBox.style.background = '#f0fdf4';
-                resultBox.style.border = '1px solid #bbf7d0';
-                resultBox.style.borderLeft = '5px solid #16a34a';
-                resultBox.style.padding = '12px 16px';
-                resultBox.innerHTML = `<div><div style="font-weight:700; color:#15803d; font-size:1.1rem; margin-bottom:2px;">Soluble (aq) / 可溶</div><div style="font-size:0.9rem; color:#166534;">${res.reason}</div></div>`;
+                resultCard.className = 'sol-result-card active soluble';
+                titleEl.textContent = 'Soluble (aq) / 可溶';
+                subtitleEl.textContent = res.reason;
             } else if (res.insoluble) {
-                resultBox.style.background = '#fef2f2';
-                resultBox.style.border = '1px solid #fecaca';
-                resultBox.style.borderLeft = '5px solid #dc2626';
-                resultBox.style.padding = '12px 16px';
-                resultBox.innerHTML = `<div><div style="font-weight:700; color:#b91c1c; font-size:1.1rem; margin-bottom:2px;">Insoluble (s) / 沉淀</div><div style="font-size:0.9rem; color:#991b1b;">${res.reason}</div></div>`;
+                resultCard.className = 'sol-result-card active insoluble';
+                titleEl.textContent = 'Insoluble (s) / 沉淀';
+                subtitleEl.textContent = res.reason;
             } else {
-                resultBox.style.background = '#fffbeb';
-                resultBox.style.border = '1px solid #fde68a';
-                resultBox.style.borderLeft = '5px solid #d97706';
-                resultBox.style.padding = '12px 16px';
-                resultBox.innerHTML = `<div><div style="font-weight:700; color:#b45309; font-size:1.1rem; margin-bottom:2px;">Unknown / Complex</div><div style="font-size:0.9rem; color:#92400e;">${t('Logic limited to common inorganic salts.', '目前仅支持常见无机盐判断。')}</div></div>`;
+                resultCard.className = 'sol-result-card active unknown';
+                titleEl.textContent = 'Unknown / Complex';
+                subtitleEl.textContent = t('Logic limited to common inorganic salts.', '目前仅支持常见无机盐判断。');
             }
-        }, 100);
+
+            resultCard.innerHTML = '';
+            resultCard.appendChild(titleEl);
+            resultCard.appendChild(subtitleEl);
+        }, 300);
     };
 
     btn.onclick = runCheck;
@@ -8302,91 +12890,672 @@ function calculateSolubility(formula) {
 }
 
 function generateIonsToolContent() {
+    // Ion data - structure similar to elements
+    const ions = [
+        // Monatomic Cations (Row 1-3)
+        { id: 'h_plus', symbol: 'H', charge: '+', name: 'Hydrogen', nameZh: '氢', type: 'cation', category: 'monatomic', row: 1, col: 1 },
+        { id: 'li_plus', symbol: 'Li', charge: '+', name: 'Lithium', nameZh: '锂', type: 'cation', category: 'monatomic', row: 1, col: 2 },
+        { id: 'na_plus', symbol: 'Na', charge: '+', name: 'Sodium', nameZh: '钠', type: 'cation', category: 'monatomic', row: 1, col: 3 },
+        { id: 'k_plus', symbol: 'K', charge: '+', name: 'Potassium', nameZh: '钾', type: 'cation', category: 'monatomic', row: 1, col: 4 },
+        { id: 'ag_plus', symbol: 'Ag', charge: '+', name: 'Silver', nameZh: '银', type: 'cation', category: 'monatomic', row: 1, col: 5 },
+        { id: 'nh4_plus', symbol: 'NH₄', charge: '+', name: 'Ammonium', nameZh: '铵', type: 'cation', category: 'polyatomic', row: 1, col: 6 },
+        { id: 'mg_2plus', symbol: 'Mg', charge: '2+', name: 'Magnesium', nameZh: '镁', type: 'cation', category: 'monatomic', row: 2, col: 1 },
+        { id: 'ca_2plus', symbol: 'Ca', charge: '2+', name: 'Calcium', nameZh: '钙', type: 'cation', category: 'monatomic', row: 2, col: 2 },
+        { id: 'ba_2plus', symbol: 'Ba', charge: '2+', name: 'Barium', nameZh: '钡', type: 'cation', category: 'monatomic', row: 2, col: 3 },
+        { id: 'zn_2plus', symbol: 'Zn', charge: '2+', name: 'Zinc', nameZh: '锌', type: 'cation', category: 'monatomic', row: 2, col: 4 },
+        { id: 'cu_2plus', symbol: 'Cu', charge: '2+', name: 'Copper(II)', nameZh: '铜(II)', type: 'cation', category: 'monatomic', row: 2, col: 5 },
+        { id: 'fe_2plus', symbol: 'Fe', charge: '2+', name: 'Iron(II)', nameZh: '亚铁', type: 'cation', category: 'monatomic', row: 2, col: 6 },
+        { id: 'fe_3plus', symbol: 'Fe', charge: '3+', name: 'Iron(III)', nameZh: '铁(III)', type: 'cation', category: 'monatomic', row: 3, col: 1 },
+        { id: 'al_3plus', symbol: 'Al', charge: '3+', name: 'Aluminum', nameZh: '铝', type: 'cation', category: 'monatomic', row: 3, col: 2 },
+        { id: 'pb_2plus', symbol: 'Pb', charge: '2+', name: 'Lead(II)', nameZh: '铅(II)', type: 'cation', category: 'monatomic', row: 3, col: 3 },
+        { id: 'cu_plus', symbol: 'Cu', charge: '+', name: 'Copper(I)', nameZh: '铜(I)', type: 'cation', category: 'monatomic', row: 3, col: 4 },
+        { id: 'hg_2plus', symbol: 'Hg', charge: '2+', name: 'Mercury(II)', nameZh: '汞(II)', type: 'cation', category: 'monatomic', row: 3, col: 5 },
+        { id: 'sn_2plus', symbol: 'Sn', charge: '2+', name: 'Tin(II)', nameZh: '锡(II)', type: 'cation', category: 'monatomic', row: 3, col: 6 },
+
+        // Monatomic Anions (Row 5-6)
+        { id: 'f_minus', symbol: 'F', charge: '−', name: 'Fluoride', nameZh: '氟', type: 'anion', category: 'monatomic', row: 5, col: 1 },
+        { id: 'cl_minus', symbol: 'Cl', charge: '−', name: 'Chloride', nameZh: '氯', type: 'anion', category: 'monatomic', row: 5, col: 2 },
+        { id: 'br_minus', symbol: 'Br', charge: '−', name: 'Bromide', nameZh: '溴', type: 'anion', category: 'monatomic', row: 5, col: 3 },
+        { id: 'i_minus', symbol: 'I', charge: '−', name: 'Iodide', nameZh: '碘', type: 'anion', category: 'monatomic', row: 5, col: 4 },
+        { id: 'o_2minus', symbol: 'O', charge: '2−', name: 'Oxide', nameZh: '氧', type: 'anion', category: 'monatomic', row: 5, col: 5 },
+        { id: 's_2minus', symbol: 'S', charge: '2−', name: 'Sulfide', nameZh: '硫', type: 'anion', category: 'monatomic', row: 5, col: 6 },
+
+        // Polyatomic Anions (Row 7-9)
+        { id: 'oh_minus', symbol: 'OH', charge: '−', name: 'Hydroxide', nameZh: '氢氧根', type: 'anion', category: 'polyatomic', row: 7, col: 1 },
+        { id: 'no3_minus', symbol: 'NO₃', charge: '−', name: 'Nitrate', nameZh: '硝酸根', type: 'anion', category: 'polyatomic', row: 7, col: 2 },
+        { id: 'no2_minus', symbol: 'NO₂', charge: '−', name: 'Nitrite', nameZh: '亚硝酸根', type: 'anion', category: 'polyatomic', row: 7, col: 3 },
+        { id: 'hco3_minus', symbol: 'HCO₃', charge: '−', name: 'Bicarbonate', nameZh: '碳酸氢根', type: 'anion', category: 'polyatomic', row: 7, col: 4 },
+        { id: 'clo_minus', symbol: 'ClO', charge: '−', name: 'Hypochlorite', nameZh: '次氯酸根', type: 'anion', category: 'polyatomic', row: 7, col: 5 },
+        { id: 'ch3coo_minus', symbol: 'CH₃COO', charge: '−', name: 'Acetate', nameZh: '醋酸根', type: 'anion', category: 'polyatomic', row: 7, col: 6 },
+        { id: 'so4_2minus', symbol: 'SO₄', charge: '2−', name: 'Sulfate', nameZh: '硫酸根', type: 'anion', category: 'polyatomic', row: 8, col: 1 },
+        { id: 'so3_2minus', symbol: 'SO₃', charge: '2−', name: 'Sulfite', nameZh: '亚硫酸根', type: 'anion', category: 'polyatomic', row: 8, col: 2 },
+        { id: 'co3_2minus', symbol: 'CO₃', charge: '2−', name: 'Carbonate', nameZh: '碳酸根', type: 'anion', category: 'polyatomic', row: 8, col: 3 },
+        { id: 'cro4_2minus', symbol: 'CrO₄', charge: '2−', name: 'Chromate', nameZh: '铬酸根', type: 'anion', category: 'polyatomic', row: 8, col: 4 },
+        { id: 'c2o4_2minus', symbol: 'C₂O₄', charge: '2−', name: 'Oxalate', nameZh: '草酸根', type: 'anion', category: 'polyatomic', row: 8, col: 5 },
+        { id: 'sio3_2minus', symbol: 'SiO₃', charge: '2−', name: 'Silicate', nameZh: '硅酸根', type: 'anion', category: 'polyatomic', row: 8, col: 6 },
+        { id: 'po4_3minus', symbol: 'PO₄', charge: '3−', name: 'Phosphate', nameZh: '磷酸根', type: 'anion', category: 'polyatomic', row: 9, col: 1 },
+        { id: 'mno4_minus', symbol: 'MnO₄', charge: '−', name: 'Permanganate', nameZh: '高锰酸根', type: 'anion', category: 'polyatomic', row: 9, col: 2 },
+        { id: 'hso4_minus', symbol: 'HSO₄', charge: '−', name: 'Hydrogen sulfate', nameZh: '硫酸氢根', type: 'anion', category: 'polyatomic', row: 9, col: 3 },
+        { id: 'h2po4_minus', symbol: 'H₂PO₄', charge: '−', name: 'Dihydrogen phosphate', nameZh: '磷酸二氢根', type: 'anion', category: 'polyatomic', row: 9, col: 4 },
+        { id: 'hpo4_2minus', symbol: 'HPO₄', charge: '2−', name: 'Hydrogen phosphate', nameZh: '磷酸氢根', type: 'anion', category: 'polyatomic', row: 9, col: 5 },
+        { id: 'cr2o7_2minus', symbol: 'Cr₂O₇', charge: '2−', name: 'Dichromate', nameZh: '重铬酸根', type: 'anion', category: 'polyatomic', row: 9, col: 6 },
+    ];
+
+    // Store ions globally for detail modal access
+    window.ionsData = ions;
+
+    // Build the ion grid HTML
+    let gridHTML = '';
+
+    // Row labels
+    const rowLabels = {
+        1: { en: '+1 Cations', zh: '+1价阳离子' },
+        2: { en: '+2 Cations', zh: '+2价阳离子' },
+        3: { en: '+3/Other', zh: '+3/其他' },
+        5: { en: '−1/−2 Anions', zh: '−1/−2价阴离子' },
+        7: { en: 'Polyatomic −1', zh: '多原子−1价' },
+        8: { en: 'Polyatomic −2', zh: '多原子−2价' },
+        9: { en: 'Polyatomic −3/Other', zh: '其他多原子' },
+    };
+
+    // Create grid cells
+    for (let row = 1; row <= 9; row++) {
+        // Skip row 4 (gap between cations and anions) and row 6
+        if (row === 4 || row === 6) {
+            // Add spacer row
+            gridHTML += `<div class="ion-grid-spacer" style="grid-row: ${row}; grid-column: 1 / 7;"></div>`;
+            continue;
+        }
+
+        for (let col = 1; col <= 6; col++) {
+            const ion = ions.find(i => i.row === row && i.col === col);
+            if (ion) {
+                const typeClass = ion.type === 'cation' ? 'ion-cation' : 'ion-anion';
+                const catClass = ion.category === 'polyatomic' ? 'ion-polyatomic' : 'ion-monatomic';
+                gridHTML += `
+                    <div class="ion-element ${typeClass} ${catClass}" 
+                         data-ion-id="${ion.id}"
+                         style="grid-row: ${row}; grid-column: ${col};">
+                        <span class="ion-charge">${ion.charge}</span>
+                        <span class="ion-symbol">${ion.symbol}</span>
+                        <span class="ion-name">${t(ion.name, ion.nameZh)}</span>
+                    </div>
+                `;
+            }
+        }
+    }
+
     return `
-        <div class="tool-modal-header">
-            <div class="tool-modal-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e;">
-                <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <circle cx="24" cy="24" r="14"/>
-                    <text x="24" y="30" text-anchor="middle" font-size="16" font-weight="bold" fill="currentColor" stroke="none">±</text>
-                </svg>
-            </div>
-            <div class="tool-modal-title-group">
-                <h2 class="tool-modal-title">${t('Common Ions Reference', '常用离子表')}</h2>
-                <div class="tool-modal-tags">
-                    <span class="grade-tag">G9-12</span>
-                    <span class="feature-tag">${t('Reference', '参考')}</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="ions-tool-layout">
-            <!-- Left Column: Cations -->
-            <div class="ions-column">
-                <div class="ions-section-header cation-header">
-                    <div class="ions-section-icon">+</div>
-                    <div>
-                        <div class="ions-section-title">${t('Cations', '阳离子')}</div>
-                        <div class="ions-section-subtitle">${t('Positive Ions', '正离子')}</div>
+        <div class="ions-table-container">
+            <div class="ions-table-header">
+                <h2 class="ions-table-title">${t('Common Ions', '常用离子表')}</h2>
+                <div class="ions-table-legend">
+                    <div class="ions-legend-item cation-legend">
+                        <span class="ions-legend-swatch ion-cation"></span>
+                        <span>${t('Cations (+)', '阳离子 (+)')}</span>
+                    </div>
+                    <div class="ions-legend-item anion-legend">
+                        <span class="ions-legend-swatch ion-anion"></span>
+                        <span>${t('Anions (−)', '阴离子 (−)')}</span>
                     </div>
                 </div>
-                <div class="ions-cards-grid">
-                    ${renderIonCardNew('H', '+', t('Hydrogen', '氢'), 'cation')}
-                    ${renderIonCardNew('Li', '+', t('Lithium', '锂'), 'cation')}
-                    ${renderIonCardNew('Na', '+', t('Sodium', '钠'), 'cation')}
-                    ${renderIonCardNew('K', '+', t('Potassium', '钾'), 'cation')}
-                    ${renderIonCardNew('Ag', '+', t('Silver', '银'), 'cation')}
-                    ${renderIonCardNew('NH₄', '+', t('Ammonium', '铵'), 'cation')}
-                    ${renderIonCardNew('Mg', '2+', t('Magnesium', '镁'), 'cation')}
-                    ${renderIonCardNew('Ca', '2+', t('Calcium', '钙'), 'cation')}
-                    ${renderIonCardNew('Ba', '2+', t('Barium', '钡'), 'cation')}
-                    ${renderIonCardNew('Zn', '2+', t('Zinc', '锌'), 'cation')}
-                    ${renderIonCardNew('Cu', '2+', t('Copper(II)', '铜(II)'), 'cation')}
-                    ${renderIonCardNew('Fe', '2+', t('Iron(II)', '亚铁'), 'cation')}
-                    ${renderIonCardNew('Fe', '3+', t('Iron(III)', '铁'), 'cation')}
-                    ${renderIonCardNew('Al', '3+', t('Aluminum', '铝'), 'cation')}
-                    ${renderIonCardNew('Pb', '2+', t('Lead(II)', '铅'), 'cation')}
-                </div>
             </div>
-            
-            <!-- Right Column: Anions -->
-            <div class="ions-column">
-                <div class="ions-section-header anion-header">
-                    <div class="ions-section-icon">−</div>
-                    <div>
-                        <div class="ions-section-title">${t('Anions', '阴离子')}</div>
-                        <div class="ions-section-subtitle">${t('Negative Ions', '负离子')}</div>
-                    </div>
-                </div>
-                <div class="ions-cards-grid">
-                    ${renderIonCardNew('F', '−', t('Fluoride', '氟'), 'anion')}
-                    ${renderIonCardNew('Cl', '−', t('Chloride', '氯'), 'anion')}
-                    ${renderIonCardNew('Br', '−', t('Bromide', '溴'), 'anion')}
-                    ${renderIonCardNew('I', '−', t('Iodide', '碘'), 'anion')}
-                    ${renderIonCardNew('O', '2−', t('Oxide', '氧'), 'anion')}
-                    ${renderIonCardNew('S', '2−', t('Sulfide', '硫'), 'anion')}
-                    ${renderIonCardNew('OH', '−', t('Hydroxide', '氢氧根'), 'anion')}
-                    ${renderIonCardNew('NO₃', '−', t('Nitrate', '硝酸根'), 'anion')}
-                    ${renderIonCardNew('SO₄', '2−', t('Sulfate', '硫酸根'), 'anion')}
-                    ${renderIonCardNew('CO₃', '2−', t('Carbonate', '碳酸根'), 'anion')}
-                    ${renderIonCardNew('PO₄', '3−', t('Phosphate', '磷酸根'), 'anion')}
-                    ${renderIonCardNew('HCO₃', '−', t('Bicarbonate', '碳酸氢根'), 'anion')}
-                    ${renderIonCardNew('MnO₄', '−', t('Permanganate', '高锰酸根'), 'anion')}
-                    ${renderIonCardNew('CH₃COO', '−', t('Acetate', '醋酸根'), 'anion')}
-                    ${renderIonCardNew('CrO₄', '2−', t('Chromate', '铬酸根'), 'anion')}
-                </div>
+            <div class="ions-table-grid">
+                ${gridHTML}
             </div>
+            <p class="ions-table-hint">${t('Click any ion to view details', '点击任意离子查看详情')}</p>
         </div>
     `;
 }
 
-function renderIonCardNew(symbol, charge, name, type) {
-    const isC = type === 'cation';
-    return `
-        <div class="ion-card-new ${type}">
-            <div class="ion-card-symbol">
-                ${symbol}<sup class="ion-card-charge">${charge}</sup>
+// Ion detail modal handler
+function showIonDetailModal(ionId) {
+    const ion = window.ionsData?.find(i => i.id === ionId);
+    if (!ion) return;
+
+    // Create ion detail modal overlay
+    let ionModal = document.getElementById('ion-detail-modal');
+    if (!ionModal) {
+        ionModal = document.createElement('div');
+        ionModal.id = 'ion-detail-modal';
+        ionModal.className = 'ion-detail-overlay';
+        document.body.appendChild(ionModal);
+    }
+
+    const typeLabel = ion.type === 'cation' ? t('Cation', '阳离子') : t('Anion', '阴离子');
+    const categoryLabel = ion.category === 'polyatomic' ? t('Polyatomic', '多原子') : t('Monatomic', '单原子');
+    const typeClass = ion.type === 'cation' ? 'ion-detail-cation' : 'ion-detail-anion';
+
+    ionModal.innerHTML = `
+        <div class="ion-detail-content ${typeClass}">
+            <button class="ion-detail-close" onclick="closeIonDetailModal()">×</button>
+            <div class="ion-detail-header">
+                <div class="ion-detail-charge">${ion.charge}</div>
+                <div class="ion-detail-symbol">${ion.symbol}</div>
+                <div class="ion-detail-name">${t(ion.name, ion.nameZh)}</div>
             </div>
-            <div class="ion-card-name">${name}</div>
+            <div class="ion-detail-info">
+                <div class="ion-detail-row">
+                    <span class="ion-detail-label">${t('Type', '类型')}</span>
+                    <span class="ion-detail-value">${typeLabel}</span>
+                </div>
+                <div class="ion-detail-row">
+                    <span class="ion-detail-label">${t('Category', '分类')}</span>
+                    <span class="ion-detail-value">${categoryLabel}</span>
+                </div>
+                <div class="ion-detail-row">
+                    <span class="ion-detail-label">${t('Charge', '电荷')}</span>
+                    <span class="ion-detail-value">${ion.charge}</span>
+                </div>
+            </div>
+            <p class="ion-detail-hint">${t('More information coming soon...', '更多信息即将推出...')}</p>
         </div>
     `;
+
+    ionModal.style.display = 'flex';
+
+    // Close on overlay click
+    ionModal.onclick = (e) => {
+        if (e.target === ionModal) closeIonDetailModal();
+    };
 }
+
+function closeIonDetailModal() {
+    const ionModal = document.getElementById('ion-detail-modal');
+    if (ionModal) {
+        ionModal.style.display = 'none';
+    }
+}
+
+// Setup ion click handlers after modal content is rendered
+function setupIonClickHandlers() {
+    document.querySelectorAll('.ion-element').forEach(el => {
+        el.addEventListener('click', () => {
+            const ionId = el.dataset.ionId;
+            if (ionId) showIonDetailModal(ionId);
+        });
+    });
+}
+function smartParseFormula(input) {
+    if (!input) return { displayHtml: '—', cleanFormula: '', isValid: false, suspicious: null, hasError: false };
+
+    // 1. 预处理：去除多余空格，统一分隔符
+    let processed = input.trim()
+        .replace(/\s+/g, '') // 去除所有空格
+        .replace(/[\*\+\。\·]+/g, '.') // 统一水合物分隔符
+        .replace(/\.+/g, '.'); // 去除重复点
+
+    // 2. 检测可疑输入模式
+    let suspicious = null;
+
+    // H22O → 可能是 2H2O 或 H2O2
+    const suspiciousMatch = processed.match(/([A-Za-z])(\d)(\d)([A-Za-z])/);
+    if (suspiciousMatch) {
+        const [, el1, d1, d2, el2] = suspiciousMatch;
+        const alt1 = `${d1}${el1}${d2}${el2}`; // 2H2O
+        const alt2 = `${el1}${d1}${el2}${d2}`; // H2O2
+        suspicious = `${alt1} ${t('or', '或')} ${alt2}`;
+    }
+
+    // 3. 严格大小写解析（不自动修正）
+    // 规则：
+    // - 大写字母开头可选跟一个小写字母 = 有效元素符号
+    // - 全小写如 "no" 会被标记为错误
+    // - "NO" = N + O (两个元素)
+    // - "No" = No (锘)
+
+    // 4. 分词处理 - 严格按照大小写规则
+    const tokens = [];
+    let hasError = false;
+    let i = 0;
+    while (i < processed.length) {
+        const char = processed[i];
+
+        if (/[A-Z]/.test(char)) {
+            // 大写字母 - 有效元素开头
+            let element = char;
+            i++;
+            // 检查是否有小写字母跟随
+            if (i < processed.length && /[a-z]/.test(processed[i])) {
+                element += processed[i];
+                i++;
+            }
+            tokens.push({ type: 'element', value: element, valid: true });
+        } else if (/[a-z]/.test(char)) {
+            // 小写字母开头 - 无效元素！
+            hasError = true;
+            tokens.push({ type: 'error', value: char, valid: false });
+            i++;
+        } else if (/[0-9]/.test(char)) {
+            // 数字
+            let num = '';
+            while (i < processed.length && /[0-9]/.test(processed[i])) {
+                num += processed[i];
+                i++;
+            }
+            tokens.push({ type: 'number', value: num, valid: true });
+        } else if ('()[].'.includes(char)) {
+            tokens.push({ type: 'symbol', value: char, valid: true });
+            i++;
+        } else {
+            // 其他字符跳过
+            i++;
+        }
+    }
+
+    let displayHtml = '';
+    let cleanFormula = '';
+    let prevWasLetter = false;
+
+    for (let idx = 0; idx < tokens.length; idx++) {
+        const token = tokens[idx];
+        const val = token.value;
+
+        if (token.type === 'number') {
+            // 数字转下标
+            const subs = val.split('').map(d => '₀₁₂₃₄₅₆₇₈₉'[parseInt(d)]).join('');
+
+            // 判断是系数还是下标
+            const prevToken = idx > 0 ? tokens[idx - 1] : null;
+            const prevIsLetter = prevToken && (prevToken.type === 'element' || prevToken.type === 'error');
+            const prevIsParen = prevToken && prevToken.type === 'symbol' && prevToken.value === ')';
+
+            if (prevIsLetter || prevIsParen) {
+                displayHtml += `<sub>${subs}</sub>`;
+            } else {
+                // 系数（在开头或点后面）
+                displayHtml += `<span style="margin-right: 2px;">${val}</span>`;
+            }
+            cleanFormula += val;
+            prevWasLetter = false;
+        } else if (token.type === 'symbol') {
+            if (val === '.') {
+                displayHtml += '<span style="margin: 0 2px;">·</span>';
+                cleanFormula += '.';
+                prevWasLetter = false;
+            } else if (val === '(' || val === '[') {
+                displayHtml += val;
+                cleanFormula += '(';
+                prevWasLetter = false;
+            } else if (val === ')' || val === ']') {
+                displayHtml += val;
+                cleanFormula += ')';
+                prevWasLetter = true;
+            }
+        } else if (token.type === 'element') {
+            // 有效元素
+            displayHtml += val;
+            cleanFormula += val;
+            prevWasLetter = true;
+        } else if (token.type === 'error') {
+            // 无效元素 - 用红色显示
+            displayHtml += `<span style="color: #ef4444; text-decoration: underline wavy;">${val}</span>`;
+            // 不加入 cleanFormula，这样解析时会跳过
+            prevWasLetter = false;
+        }
+    }
+
+    return { displayHtml, cleanFormula, isValid: cleanFormula.length > 0 && !hasError, suspicious, hasError };
+}
+
+function displayMolarMassResult(result) {
+    const blocksArea = document.getElementById('scale-blocks-area');
+    if (blocksArea) {
+        blocksArea.innerHTML = '';
+        const totalMass = parseFloat(result.total);
+        result.breakdown.forEach(item => {
+            const subtotalVal = parseFloat(item.subtotal);
+            const percent = totalMass > 0 ? ((subtotalVal / totalMass) * 100).toFixed(1) : 0;
+            const block = document.createElement('div');
+            block.className = 'element-block';
+            block.textContent = item.element;
+            const size = 50 + (percent * 0.8);
+            block.style.width = `${Math.min(size, 100)}px`;
+            block.style.height = `${Math.min(size, 100)}px`;
+            const hue = (item.element.charCodeAt(0) * 20 + item.element.length * 10) % 360;
+            block.style.background = `linear-gradient(135deg, hsl(${hue}, 70%, 60%), hsl(${hue}, 70%, 40%))`;
+            // 添加 tooltip 显示占比
+            const tooltip = document.createElement('div');
+            tooltip.className = 'block-tooltip';
+            tooltip.innerHTML = `<strong>${item.element}</strong><br>${percent}%`;
+            block.appendChild(tooltip);
+            blocksArea.appendChild(block);
+        });
+    }
+}
+
+function discardReceipt() {
+    const wrapper = document.getElementById('receipt-wrapper');
+    if (wrapper) {
+        wrapper.classList.remove('printing');
+        wrapper.classList.add('discarding');
+        // 动画结束后瞬间回到上方
+        setTimeout(() => {
+            wrapper.classList.add('reset-position');
+            wrapper.classList.remove('discarding');
+            // 强制 reflow 后移除 reset-position
+            void wrapper.offsetWidth;
+            wrapper.classList.remove('reset-position');
+        }, 450);
+    }
+}
+
+function printReceipt(result) {
+    const wrapper = document.getElementById('receipt-wrapper');
+    const items = document.getElementById('receipt-items');
+    const total = document.getElementById('receipt-total-value');
+    const date = document.getElementById('receipt-date');
+    if (wrapper && items) {
+        // 完全重置状态，确保从上方开始
+        wrapper.classList.remove('discarding', 'printing', 'reset-position');
+        // 禁用动画，强制回到初始位置（上方）
+        wrapper.style.transition = 'none';
+        wrapper.style.transform = 'translateY(-300px)';
+        wrapper.style.opacity = '0';
+        // 强制 reflow
+        void wrapper.offsetWidth;
+        // 恢复动画
+        wrapper.style.transition = '';
+        wrapper.style.transform = '';
+        wrapper.style.opacity = '';
+        // 显示当前时间
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        date.textContent = timeStr;
+        // 开始打印动画（从上往下）
+        requestAnimationFrame(() => {
+            wrapper.classList.add('printing');
+        });
+        let html = '';
+        result.breakdown.forEach(item => {
+            html += `<div class="receipt-item-row"><div class="receipt-item-name"><strong>${item.element}</strong> x${item.count}</div><div>${item.subtotal}</div></div>`;
+        });
+        items.innerHTML = html;
+        total.textContent = result.total + ' g/mol';
+    }
+}
+
+// ========== Hero 3D Atom for About Page ==========
+(function initHeroAtom() {
+    const heroContainer = document.getElementById('hero-atom-container');
+    if (!heroContainer) return;
+
+    let heroScene, heroCamera, heroRenderer, heroAtomGroup, heroAnimationId;
+    let heroElectrons = [];
+
+    function initHero3D() {
+        try {
+            heroScene = new THREE.Scene();
+            // Use fixed size matching CSS
+            const width = 480;
+            const height = 480;
+            heroCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+            heroCamera.position.z = 18;
+
+            heroRenderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true,
+                powerPreference: "low-power"
+            });
+            heroRenderer.setSize(width, height);
+            heroRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            heroContainer.appendChild(heroRenderer.domElement);
+
+            const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
+            heroScene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.4);
+            directionalLight.position.set(10, 10, 10);
+            heroScene.add(directionalLight);
+
+            heroAtomGroup = new THREE.Group();
+            heroScene.add(heroAtomGroup);
+
+            // Build Na atom (atomic number 11) - exactly like updateAtomStructure
+            buildHeroAtom(11);
+
+            // Start animation
+            animateHero();
+        } catch (e) {
+            console.log('Hero 3D not available');
+        }
+    }
+
+    function buildHeroAtom(atomicNumber) {
+        const nucleusGroup = new THREE.Group();
+        nucleusGroup.name = "nucleusGroup";
+        heroAtomGroup.add(nucleusGroup);
+        const wobbleGroup = new THREE.Group();
+        wobbleGroup.name = "wobbleGroup";
+        heroAtomGroup.add(wobbleGroup);
+
+        // Na has 12 neutrons (23 - 11)
+        const neutronCount = 12;
+        const particleRadius = 0.6;
+
+        const protonGeo = new THREE.SphereGeometry(particleRadius, 32, 32);
+        const protonMat = new THREE.MeshStandardMaterial({
+            color: 0xFF2222,
+            roughness: 0.25,
+            metalness: 0.4,
+            emissive: 0xFF0000,
+            emissiveIntensity: 1.5
+        });
+        const neutronGeo = new THREE.SphereGeometry(particleRadius, 32, 32);
+        const neutronMat = new THREE.MeshStandardMaterial({
+            color: 0x999999,
+            roughness: 0.15,
+            metalness: 0.5,
+            emissive: 0x333333,
+            emissiveIntensity: 0.6
+        });
+
+        const particles = [];
+        for (let i = 0; i < atomicNumber; i++) particles.push({ type: 'proton' });
+        for (let i = 0; i < neutronCount; i++) particles.push({ type: 'neutron' });
+
+        // Shuffle
+        for (let i = particles.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [particles[i], particles[j]] = [particles[j], particles[i]];
+        }
+
+        const phi = Math.PI * (3 - Math.sqrt(5));
+        const n = particles.length;
+        const clusterScale = Math.pow(n, 1 / 3) * particleRadius * 0.8;
+
+        particles.forEach((p, i) => {
+            const k = i + 0.5;
+            const y = 1 - (k / n) * 2;
+            const theta = phi * k;
+            const r = Math.sqrt(1 - y * y);
+            const x = Math.cos(theta) * r;
+            const z = Math.sin(theta) * r;
+            p.pos = new THREE.Vector3(x * clusterScale, y * clusterScale, z * clusterScale);
+            // Add random offset like original
+            p.pos.x += (Math.random() - 0.5) * 0.15;
+            p.pos.y += (Math.random() - 0.5) * 0.15;
+            p.pos.z += (Math.random() - 0.5) * 0.15;
+        });
+
+        // Physics iterations for nucleus compaction
+        const repulsionDist = particleRadius * 1.5;
+        const kRepulse = 0.2;
+        const kCenter = 0.1;
+        const vForce = new THREE.Vector3();
+        const vDiff = new THREE.Vector3();
+        const vTemp = new THREE.Vector3();
+        for (let iter = 0; iter < 5; iter++) {
+            particles.forEach((p1, idx1) => {
+                vForce.set(0, 0, 0);
+                vTemp.copy(p1.pos).multiplyScalar(-kCenter);
+                vForce.add(vTemp);
+                particles.forEach((p2, idx2) => {
+                    if (idx1 === idx2) return;
+                    vDiff.subVectors(p1.pos, p2.pos);
+                    const dist = vDiff.length();
+                    if (dist < repulsionDist && dist > 0.01) {
+                        vDiff.normalize().multiplyScalar((repulsionDist - dist) * kRepulse);
+                        vForce.add(vDiff);
+                    }
+                });
+                p1.pos.add(vForce);
+            });
+        }
+
+        const centerLight = new THREE.PointLight(0xFF0000, 2.0, 15);
+        nucleusGroup.add(centerLight);
+
+        particles.forEach(p => {
+            const mesh = new THREE.Mesh(
+                p.type === 'proton' ? protonGeo : neutronGeo,
+                p.type === 'proton' ? protonMat : neutronMat
+            );
+            mesh.position.copy(p.pos);
+            nucleusGroup.add(mesh);
+        });
+
+        // Electrons with exact same logic as updateAtomStructure
+        const shells = [2, 8, 8, 18, 18, 32, 32];
+        let electronsLeft = atomicNumber;
+        for (let s = 0; s < shells.length; s++) {
+            if (electronsLeft <= 0) break;
+            const capacity = shells[s];
+            const count = Math.min(electronsLeft, capacity);
+            electronsLeft -= count;
+            const radius = 4.5 + (s * 2.5);
+
+            const orbitGeo = new THREE.TorusGeometry(radius, 0.04, 64, 100);
+            const orbitMat = new THREE.MeshBasicMaterial({ color: 0x8D7F71, transparent: true, opacity: 0.3 });
+            const orbit = new THREE.Mesh(orbitGeo, orbitMat);
+            orbit.rotation.x = Math.PI / 2;
+            wobbleGroup.add(orbit);
+
+            const elGeo = new THREE.SphereGeometry(0.3, 32, 32);
+            const elMat = new THREE.MeshStandardMaterial({ color: 0x0000FF, roughness: 0.4, metalness: 0.6 });
+
+            // Trail geometries
+            const trailGeos = [];
+            const TRAIL_LENGTH = 10;
+            for (let t = 0; t < TRAIL_LENGTH; t++) {
+                trailGeos.push(new THREE.SphereGeometry(0.2 - (t * 0.015), 8, 8));
+            }
+
+            for (let e = 0; e < count; e++) {
+                const elMesh = new THREE.Mesh(elGeo, elMat);
+                const angleOffset = (e / count) * Math.PI * 2;
+                elMesh.userData = {
+                    radius: radius,
+                    angle: angleOffset,
+                    speed: 0.02 - (s * 0.002),
+                    trails: []
+                };
+                elMesh.position.x = radius * Math.cos(angleOffset);
+                elMesh.position.z = radius * Math.sin(angleOffset);
+
+                // Create trails
+                for (let t = 0; t < TRAIL_LENGTH; t++) {
+                    const tGeo = trailGeos[t];
+                    const tMat = new THREE.MeshBasicMaterial({
+                        color: 0x0000FF,
+                        transparent: true,
+                        opacity: 0.3 - (t * 0.03)
+                    });
+                    const tMesh = new THREE.Mesh(tGeo, tMat);
+                    tMesh.position.copy(elMesh.position);
+                    wobbleGroup.add(tMesh);
+                    elMesh.userData.trails.push(tMesh);
+                }
+
+                wobbleGroup.add(elMesh);
+                heroElectrons.push(elMesh);
+            }
+        }
+
+        // Pop animation
+        heroAtomGroup.userData.popStartTime = Date.now();
+        heroAtomGroup.scale.set(0.1, 0.1, 0.1);
+    }
+
+    function animateHero() {
+        heroAnimationId = requestAnimationFrame(animateHero);
+
+        const time = Date.now() * 0.001;
+
+        // Pop animation
+        if (heroAtomGroup && heroAtomGroup.userData.popStartTime) {
+            const popElapsed = (Date.now() - heroAtomGroup.userData.popStartTime) * 0.001;
+            const popDur = 0.5;
+            if (popElapsed < popDur) {
+                const t = popElapsed / popDur;
+                const ease = 1 - Math.pow(1 - t, 3);
+                const s = 0.1 + (1 - 0.1) * ease;
+                heroAtomGroup.scale.set(s, s, s);
+            } else {
+                heroAtomGroup.scale.set(1, 1, 1);
+                heroAtomGroup.userData.popStartTime = null;
+            }
+        }
+
+        // Slow auto-rotation
+        heroAtomGroup.rotation.y += 0.002;
+
+        // Wobble group animation
+        const wobbleGroup = heroAtomGroup.getObjectByName("wobbleGroup");
+        if (wobbleGroup) {
+            wobbleGroup.rotation.y += 0.002;
+            wobbleGroup.rotation.z = Math.sin(time * 0.5) * 0.2;
+            wobbleGroup.rotation.x = Math.cos(time * 0.3) * 0.1;
+        }
+
+        // Nucleus rotation
+        const nucleusGroup = heroAtomGroup.getObjectByName("nucleusGroup");
+        if (nucleusGroup) {
+            nucleusGroup.rotation.y -= 0.005;
+            nucleusGroup.rotation.x = Math.sin(time * 0.2) * 0.1;
+        }
+
+        // Animate electrons with trails
+        heroElectrons.forEach(el => {
+            el.userData.angle += el.userData.speed;
+            const r = el.userData.radius;
+            el.position.x = r * Math.cos(el.userData.angle);
+            el.position.z = r * Math.sin(el.userData.angle);
+
+            // Update trails
+            const trails = el.userData.trails;
+            if (trails && trails.length > 0) {
+                for (let i = trails.length - 1; i > 0; i--) {
+                    trails[i].position.copy(trails[i - 1].position);
+                }
+                trails[0].position.copy(el.position);
+            }
+        });
+
+        heroRenderer.render(heroScene, heroCamera);
+    }
+
+    // Expose cleanup for welcome screen close
+    window._heroCleanup = function () {
+        if (heroAnimationId) cancelAnimationFrame(heroAnimationId);
+        heroAnimationId = null;
+        if (heroRenderer) {
+            heroRenderer.forceContextLoss();
+            heroRenderer.dispose();
+            if (heroRenderer.domElement && heroRenderer.domElement.parentNode) {
+                heroRenderer.domElement.parentNode.removeChild(heroRenderer.domElement);
+            }
+            heroRenderer = null;
+        }
+        heroScene = null;
+        heroCamera = null;
+        heroAtomGroup = null;
+        heroElectrons = [];
+    };
+
+    // Initialize when DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHero3D);
+    } else {
+        initHero3D();
+    }
+})();

@@ -4,21 +4,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Periodic Table</title>
+    <title>Zperiod</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Zperiod is an interactive periodic table designed for Grade 9-12 chemistry students. Master chemistry visually with 3D atom models, ion engine, and exam-ready tools.">
+    <meta name="keywords"
+        content="periodic table, chemistry, elements, ions, interactive, education, science, atoms, molecules, molar mass, equation balancer">
+    <meta name="author" content="Philip">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph (Facebook, LinkedIn) -->
+    <meta property="og:title" content="Zperiod">
+    <meta property="og:description"
+        content="Master chemistry visually with 3D atom models, ion engine, and exam-ready tools. Designed for Grade 9-12 students.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="logo.svg">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Zperiod">
+    <meta name="twitter:description"
+        content="Master chemistry visually with 3D atom models, ion engine, and exam-ready tools.">
+    <meta name="twitter:image" content="logo.svg">
+
+    <!-- Theme Color (for mobile browsers) -->
+    <meta name="theme-color" content="#4f7dfc">
+
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=4">
     <link rel="stylesheet" href="worksheet-styles.css">
+    <link rel="stylesheet" href="ion-animations.css">
 </head>
 
 <body>
+    <!-- Welcome Intro Modal -->
+    <div id="welcome-modal" class="modal-overlay">
+        <div class="modal-content welcome-redesign">
+            <div class="modal-top-buttons">
+                <button class="modal-close" id="welcome-close-btn">&times;</button>
+            </div>
+            <div class="about-container">
+                <!-- Left: Product Preview - Apple Style Minimal -->
+                <div class="about-left">
+                    <div class="about-content-wrapper">
+                        <span class="welcome-eyebrow">Introducing</span>
+                        <h1 class="welcome-title">Zperiod</h1>
+                        <h2 class="welcome-subtitle">Master Chemistry.<br><span>Visually & Instantly.</span></h2>
+
+                        <p class="welcome-description">
+                            The interactive periodic table designed for Grade 9-12 students.
+                            Stop memorizing — start visualizing.
+                        </p>
+
+                        <div class="welcome-features">
+                            <span class="feature-pill">Interactive Atoms</span>
+                            <span class="feature-pill">Ion Engine</span>
+                            <span class="feature-pill">Exam Ready</span>
+                        </div>
+
+                        <button id="welcome-start-btn" class="welcome-cta">
+                            Get Started
+                        </button>
+
+                        <p class="welcome-footer">v1.0 · Built with precision</p>
+                    </div>
+                </div>
+
+                <!-- Right: Author Profile -->
+                <div class="about-right">
+                    <div class="author-card">
+                        <div class="logos-connector">
+                            <div class="logo-circle z-logo">
+                                <img src="logo.svg" alt="Zperiod">
+                            </div>
+                            <div class="connector-line"></div>
+                            <div class="logo-circle school-logo">
+                                <img src="image.png" alt="Aurora High School">
+                            </div>
+                        </div>
+
+                        <div class="author-details">
+                            <h2>Philip Zhao</h2>
+                            <span class="author-role">Creator & Full Stack Developer</span>
+
+                            <div class="author-meta">
+                                <div class="meta-row">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                                        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                                    </svg>
+                                    <span>Aurora High School · Grade 11 (2027)</span>
+                                </div>
+                                <div class="meta-row">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    <span>Toronto, Canada</span>
+                                </div>
+                                <div class="meta-divider"></div>
+
+                                <div class="email-group">
+                                    <button class="email-row" onclick="copyEmail('440016162@gapps.yrdsb.ca', this)">
+                                        <div class="email-icon">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                                </path>
+                                                <polyline points="22,6 12,13 2,6"></polyline>
+                                            </svg>
+                                        </div>
+                                        <span class="email-text">440016162@gapps.yrdsb.ca</span>
+                                        <div class="copy-feedback">
+                                            <svg class="icon-copy" width="12" height="12" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                </path>
+                                            </svg>
+                                            <svg class="icon-check" width="12" height="12" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                style="display:none;">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                        </div>
+                                    </button>
+                                    <button class="email-row" onclick="copyEmail('zhilips123123@gmail.com', this)">
+                                        <div class="email-icon">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="4"></circle>
+                                                <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
+                                            </svg>
+                                        </div>
+                                        <span class="email-text">zhilips123123@gmail.com</span>
+                                        <div class="copy-feedback">
+                                            <svg class="icon-copy" width="12" height="12" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2">
+                                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1">
+                                                </path>
+                                            </svg>
+                                            <svg class="icon-check" width="12" height="12" viewBox="0 0 24 24"
+                                                fill="none" stroke="currentColor" stroke-width="2"
+                                                style="display:none;">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Global Fixed Navigation -->
     <nav class="global-nav" id="global-nav">
+        <!-- 左侧：品牌区 -->
+        <div class="nav-brand-section">
+            <a href="#" class="nav-logo-link" onclick="showTablePage(); return false;">
+                <img src="logo.svg" alt="Zperiod" class="nav-logo">
+            </a>
+            <a href="#" class="nav-brand" onclick="showTablePage(); return false;">Zperiod</a>
+        </div>
+
+        <!-- 中间：导航链接 -->
         <div class="global-nav-pill">
-            <button class="nav-pill-btn active" data-page="table" data-en="Table" data-zh="元素表">Table</button>
-            <button class="nav-pill-btn" data-page="tools" data-en="Tools" data-zh="工具">Tools</button>
-            <button class="nav-pill-btn" data-page="worksheet" data-en="Worksheet" data-zh="练习题">Worksheet</button>
+            <button class="nav-pill-btn active" data-page="table">Table</button>
+            <button class="nav-pill-btn" data-page="ions">Ions</button>
+            <button class="nav-pill-btn" data-page="tools">Tools</button>
+            <button class="nav-pill-btn" data-page="worksheet">Worksheet</button>
         </div>
     </nav>
 
@@ -31,13 +196,21 @@
         </div>
     </div>
 
+    <!-- Ions Table Page -->
+    <div id="ions-page" class="blank-page ions-table-page" style="display: none;">
+        <div class="container ions-container">
+            <div class="periodic-table ions-table" id="ions-table">
+                <!-- Ion cards will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
     <!-- Chemistry Tools Page (Blank Page 1) -->
     <div id="blank-page-1" class="blank-page chemistry-tools-page">
         <div class="blank-page-content" id="page-tools">
             <div class="chem-tools-container">
-                <h1 class="chem-tools-title" data-en="Chemistry Tools" data-zh="化学工具">化学工具</h1>
-                <p class="chem-tools-subtitle" data-en="Grade 9-12 Chemistry Calculators" data-zh="9-12年级化学计算器">
-                    9-12年级化学计算器</p>
+                <h1 class="chem-tools-title">Chemistry Tools</h1>
+                <p class="chem-tools-subtitle">Grade 9-12 Chemistry Calculators</p>
 
                 <div class="chem-tools-grid">
                     <!-- Equation Balancer (Position 1) -->
@@ -49,10 +222,9 @@
                             </svg>
                         </div>
                         <div class="chem-tool-info">
-                            <h3 class="chem-tool-name" data-en="Equation Balancer" data-zh="方程式配平">方程式配平</h3>
-                            <p class="chem-tool-desc"
-                                data-en="Balance chemical equations with visual feedback and step-by-step solutions."
-                                data-zh="使用可视化反馈和分步解答配平化学方程式。">使用可视化反馈和分步解答配平化学方程式。</p>
+                            <h3 class="chem-tool-name">Equation Balancer</h3>
+                            <p class="chem-tool-desc">Balance chemical equations with visual feedback and step-by-step
+                                solutions.</p>
                             <div class="chem-tool-tags">
                                 <span class="grade-tag">Grade 9-12</span>
                                 <span class="feature-tag">Interactive</span>
@@ -71,9 +243,8 @@
                             </svg>
                         </div>
                         <div class="chem-tool-info">
-                            <h3 class="chem-tool-name" data-en="Molar Mass Calculator" data-zh="摩尔质量计算器">摩尔质量计算器</h3>
-                            <p class="chem-tool-desc" data-en="Calculate molar mass with element-by-element breakdown."
-                                data-zh="计算摩尔质量并显示各元素详细分解。">计算摩尔质量并显示各元素详细分解。</p>
+                            <h3 class="chem-tool-name">Molar Mass Calculator</h3>
+                            <p class="chem-tool-desc">Calculate molar mass with element-by-element breakdown.</p>
                             <div class="chem-tool-tags">
                                 <span class="grade-tag">Grade 10-11</span>
                                 <span class="feature-tag">Calculation</span>
@@ -91,11 +262,8 @@
                             </svg>
                         </div>
                         <div class="chem-tool-info">
-                            <h3 class="chem-tool-name" data-en="Empirical & Molecular Formula" data-zh="经验式与分子式">经验式与分子式
-                            </h3>
-                            <p class="chem-tool-desc"
-                                data-en="Calculate empirical and molecular formulas from mass data."
-                                data-zh="从质量数据计算经验式和分子式。">从质量数据计算经验式和分子式。</p>
+                            <h3 class="chem-tool-name">Empirical & Molecular Formula</h3>
+                            <p class="chem-tool-desc">Calculate empirical and molecular formulas from mass data.</p>
                             <div class="chem-tool-tags">
                                 <span class="grade-tag">Grade 10-11</span>
                                 <span class="feature-tag">Formula</span>
@@ -116,9 +284,8 @@
                             </svg>
                         </div>
                         <div class="chem-tool-info">
-                            <h3 class="chem-tool-name" data-en="Solubility Table" data-zh="溶解性表">溶解性表</h3>
-                            <p class="chem-tool-desc" data-en="Reference chart for ionic compound solubility rules."
-                                data-zh="离子化合物溶解性规则参考表。">离子化合物溶解性规则参考表。</p>
+                            <h3 class="chem-tool-name">Solubility Table</h3>
+                            <p class="chem-tool-desc">Reference chart for ionic compound solubility rules.</p>
                             <div class="chem-tool-tags">
                                 <span class="grade-tag">Reference</span>
                                 <span class="feature-tag">Grid</span>
@@ -138,14 +305,13 @@
                 <!-- Left Panel: Controls -->
                 <div class="worksheet-controls">
                     <div class="controls-header">
-                        <h2 data-en="Worksheet Generator" data-zh="练习题生成器">练习题生成器</h2>
-                        <p data-en="Create balanced equation worksheets for your class" data-zh="为您的班级创建化学方程式配平练习题">
-                            为您的班级创建化学方程式配平练习题</p>
+                        <h2>Worksheet Generator</h2>
+                        <p>Create balanced equation worksheets for your class</p>
                     </div>
 
                     <!-- Number of Questions -->
                     <div class="control-group">
-                        <label data-en="Number of Questions" data-zh="题目数量">题目数量</label>
+                        <label>Number of Questions</label>
                         <div class="button-group" id="question-count-group">
                             <button class="option-btn" data-value="5">5</button>
                             <button class="option-btn active" data-value="10">10</button>
@@ -157,33 +323,40 @@
 
                     <!-- Reaction Types -->
                     <div class="control-group">
-                        <label data-en="Reaction Types" data-zh="反应类型">反应类型</label>
+                        <label>Reaction Types</label>
                         <div class="checkbox-group" id="reaction-types-group">
                             <label class="checkbox-option">
                                 <input type="checkbox" value="synthesis" checked>
                                 <div class="checkbox-text-wrapper">
-                                    <span data-en="Synthesis" data-zh="合成反应">合成反应</span>
+                                    <span>Synthesis</span>
                                     <span class="checkbox-subtitle">A + B → AB</span>
                                 </div>
                             </label>
                             <label class="checkbox-option">
                                 <input type="checkbox" value="decomposition" checked>
                                 <div class="checkbox-text-wrapper">
-                                    <span data-en="Decomposition" data-zh="分解反应">分解反应</span>
+                                    <span>Decomposition</span>
                                     <span class="checkbox-subtitle">AB → A + B</span>
                                 </div>
                             </label>
                             <label class="checkbox-option">
                                 <input type="checkbox" value="single-replacement">
                                 <div class="checkbox-text-wrapper">
-                                    <span data-en="Single Replacement" data-zh="单取代反应">单取代反应</span>
+                                    <span>Single Replacement</span>
                                     <span class="checkbox-subtitle">A + BC → AC + B</span>
+                                </div>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" value="double-replacement">
+                                <div class="checkbox-text-wrapper">
+                                    <span>Double Replacement</span>
+                                    <span class="checkbox-subtitle">AB + CD → AD + CB</span>
                                 </div>
                             </label>
                             <label class="checkbox-option">
                                 <input type="checkbox" value="combustion">
                                 <div class="checkbox-text-wrapper">
-                                    <span data-en="Combustion" data-zh="燃烧反应">燃烧反应</span>
+                                    <span>Combustion</span>
                                     <span class="checkbox-subtitle">Hydrocarbon + O₂</span>
                                 </div>
                             </label>
@@ -192,12 +365,11 @@
 
                     <!-- Difficulty -->
                     <div class="control-group">
-                        <label data-en="Difficulty" data-zh="难度">难度</label>
+                        <label>Difficulty</label>
                         <div class="button-group" id="difficulty-group">
-                            <button class="option-btn" data-value="easy" data-en="Easy" data-zh="简单">简单</button>
-                            <button class="option-btn active" data-value="medium" data-en="Medium"
-                                data-zh="中等">中等</button>
-                            <button class="option-btn" data-value="hard" data-en="Hard" data-zh="困难">困难</button>
+                            <button class="option-btn" data-value="easy">Easy</button>
+                            <button class="option-btn active" data-value="medium">Medium</button>
+                            <button class="option-btn" data-value="hard">Hard</button>
                         </div>
                     </div>
 
@@ -209,20 +381,18 @@
                                 d="M12 3v1m0 16v1m-9-9h1m16 0h1m-2.64-6.36l-.7.7m-12.02 12.02l-.7.7m0-12.72l.7.7m12.02 12.02l.7.7" />
                             <circle cx="12" cy="12" r="4" />
                         </svg>
-                        <span data-en="Generate Worksheet" data-zh="生成练习题">生成练习题</span>
+                        <span>Generate Worksheet</span>
                     </button>
-                    <div class="trust-text" data-en="Questions are generated from real, commonly taught reactions."
-                        data-zh="题目生成自真实且常见的化学反应。">题目生成自真实且常见的化学反应。</div>
+                    <div class="trust-text">Questions are generated from real, commonly taught reactions.</div>
                 </div>
 
                 <!-- Right Panel: Preview -->
                 <div class="worksheet-preview">
                     <div class="preview-header">
                         <div class="preview-tabs">
-                            <button class="preview-tab active" data-mode="student" data-en="Print"
-                                data-zh="打印版">打印版</button>
-                            <button class="preview-tab" data-mode="practice" data-en="Practice" data-zh="练习">练习</button>
-                            <button class="preview-tab" data-mode="answer" data-en="Answer Key" data-zh="答案">答案</button>
+                            <button class="preview-tab active" data-mode="student">Print</button>
+                            <button class="preview-tab" data-mode="practice">Practice</button>
+                            <button class="preview-tab" data-mode="answer">Answer Key</button>
                         </div>
                         <div class="export-buttons">
                             <button class="export-btn" id="fill-date-btn" disabled>
@@ -233,7 +403,7 @@
                                     <line x1="8" y1="2" x2="8" y2="6"></line>
                                     <line x1="3" y1="10" x2="21" y2="10"></line>
                                 </svg>
-                                <span data-en="Today" data-zh="今日">今日</span>
+                                <span>Today</span>
                             </button>
                             <button class="export-btn" id="export-pdf-btn" disabled>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -257,14 +427,14 @@
                                 <line x1="16" y1="17" x2="8" y2="17"></line>
                                 <line x1="10" y1="9" x2="8" y2="9"></line>
                             </svg>
-                            <p data-en="Click 'Generate Worksheet' to create practice problems" data-zh="点击"
-                                生成练习题"按钮创建练习">点击"生成练习题"按钮创建练习</p>
+                            <p>Click 'Generate Worksheet' to create practice problems</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Feature Modal for Chemistry Tools -->
     <div id="feature-modal" class="modal-overlay">
         <div class="modal-content" id="feature-modal-content">
@@ -476,7 +646,7 @@
                                         <div class="info-divider"></div>
                                         <div class="prop-grid-section" style="grid-template-columns: 1fr; gap: 10px;">
                                             <div class="prop-cell full-width"
-                                                style="align-items: flex-start; flex-direction: column;">
+                                                style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); align-items: flex-start; flex-direction: column;">
                                                 <span class="prop-cell-label" style="color: #059669;">STSE
                                                     Context</span>
                                                 <div
@@ -696,28 +866,258 @@
             <div class="modal-visual-pane">
                 <div id="modal-watermark">H</div>
                 <div id="atom-container"></div>
-                <button id="top-view-btn" class="top-view-btn" title="Top View / Bohr Model">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10" />
-                        <circle cx="12" cy="12" r="6" />
-                        <circle cx="12" cy="12" r="2" />
-                    </svg>
-                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ion Detail Modal - Same structure as Element Modal -->
+    <div id="ion-modal" class="modal-overlay">
+        <div class="modal-content ion-modal-content">
+            <div class="modal-top-buttons">
+                <button class="modal-close" id="ion-modal-close">&times;</button>
+            </div>
+            <div class="modal-info-pane">
+                <div class="level-header">
+                    <div class="headline-content">
+                        <div class="headline-left-group">
+                            <div class="headline-numbers">
+                                <!-- Charge removed - shown as part of symbol -->
+                            </div>
+                            <div class="headline-symbol" id="ion-headline-symbol">Na</div>
+                        </div>
+                        <div class="headline-name" id="ion-headline-name">Sodium ion</div>
+                    </div>
+                </div>
+                <div class="simplified-element-box" style="display: flex;">
+                    <div class="cards-slider-wrapper">
+                        <div class="cards-slider" id="ion-cards-slider" style="transform: translateX(0);">
+                            <!-- Level 1 (Green) -->
+                            <div class="card-slide">
+                                <div class="green-rectangle">
+                                    <div class="card-info-container">
+                                        <div class="info-row">
+                                            <span class="info-label">Type</span>
+                                            <span class="info-value" id="ion-type">Cation</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">Source</span>
+                                            <span class="info-value" id="ion-category">Monatomic</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">Phase @ STP</span>
+                                            <span class="info-value" id="ion-phase">--</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">Valence Electrons</span>
+                                            <span class="info-value" id="ion-charge-value">+1</span>
+                                        </div>
+                                        <div class="info-divider"></div>
+                                        <div class="ions-section">
+                                            <div class="info-label mb-2">Role</div>
+                                            <div class="ion-formation-text" id="ion-formation">
+                                                --
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Level 2 (Yellow) -->
+                            <div class="card-slide">
+                                <div class="yellow-rectangle">
+                                    <div class="card-info-container" id="ion-l2-standard">
+                                        <div class="info-row">
+                                            <span class="info-label">Avg. Atomic Mass</span>
+                                            <span class="info-value" id="ion-l2-mass">--</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">Protons (p<sup>+</sup>)</span>
+                                            <span class="info-value" id="ion-l2-protons">--</span>
+                                        </div>
+                                        <div class="info-row">
+                                            <span class="info-label">Electrons (e<sup>-</sup>)</span>
+                                            <span class="info-value" id="ion-l2-electrons">--</span>
+                                        </div>
+                                        <div class="info-divider"></div>
+                                        <div class="ions-section">
+                                            <div class="info-label mb-2">Natural Isotopes</div>
+                                            <div id="ion-l2-isotopes">
+                                                <div class="ion-item"
+                                                    style="justify-content: center; opacity: 0.5; font-style: italic;">
+                                                    <span>Coming Soon...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- H+ Special Layout (Hidden by default) -->
+                                    <div class="h-plus-l2-container" id="ion-l2-h-plus" style="display: none;">
+                                        <!-- Identity Metrics Section -->
+                                        <div class="h-plus-metrics-section">
+                                            <div class="h-plus-metric-row">
+                                                <span class="h-plus-metric-label">Molar Mass</span>
+                                                <span class="h-plus-metric-value" id="h-plus-molar-mass">1.007
+                                                    g/mol</span>
+                                            </div>
+                                            <div class="h-plus-metric-row">
+                                                <span class="h-plus-metric-label">Protons (p<sup>+</sup>)</span>
+                                                <span class="h-plus-metric-value" id="h-plus-protons">1</span>
+                                            </div>
+                                            <div class="h-plus-metric-row highlight-row">
+                                                <span class="h-plus-metric-label">Electrons (e<sup>-</sup>)</span>
+                                                <span class="h-plus-metric-value highlight-value"
+                                                    id="h-plus-electrons">0</span>
+                                            </div>
+                                            <div class="h-plus-metric-row">
+                                                <span class="h-plus-metric-label">State in Water</span>
+                                                <span class="h-plus-metric-value small-text"
+                                                    id="h-plus-water-state">Bonds instantly to form H₃O⁺</span>
+                                            </div>
+                                        </div>
+                                        <!-- Interactive Visuals Section -->
+                                        <div class="h-plus-visuals-section">
+                                            <div class="h-plus-visual-card" id="litmus-visual-card">
+                                                <span class="visual-card-title">Indicator Test</span>
+                                                <div class="litmus-wrapper">
+                                                    <div class="litmus-strip"><span class="litmus-text">Hover</span>
+                                                    </div>
+                                                </div>
+                                                <span class="visual-card-desc" id="h-plus-litmus">Blue Litmus turns
+                                                    Red</span>
+                                            </div>
+                                            <div class="h-plus-visual-card" id="reactivity-visual-card">
+                                                <span class="visual-card-title">Reactivity</span>
+                                                <div class="bubble-container">
+                                                    <div class="bubble"></div>
+                                                    <div class="bubble"></div>
+                                                    <div class="bubble"></div>
+                                                    <div class="stone"></div>
+                                                </div>
+                                                <span class="visual-card-desc" id="h-plus-reactivity">Add Carbonate: CO₂
+                                                    bubbles</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Level 3 (Blue) -->
+                            <div class="card-slide">
+                                <div class="blue-rectangle">
+                                    <div class="card-info-container" style="overflow-y: hidden;">
+                                        <div class="glass-panel">
+                                            <div class="glass-panel-title">Electronic Identity</div>
+                                            <div class="hero-config-container">
+                                                <div
+                                                    style="display: flex; flex-direction: column; flex: 1; width: 100%; align-items: flex-start;">
+                                                    <span class="l3-stat-label"
+                                                        style="font-size: 0.7rem;">Configuration</span>
+                                                    <span class="config-hero" id="ion-l3-config">--</span>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; flex-direction: column;">
+                                                <span class="l3-stat-label">Oxidation States</span>
+                                                <div class="oxidation-container" id="ion-l3-oxidation">
+                                                    <div class="ox-pill faded"><label>Possible</label>--</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="glass-panel" style="margin-bottom: 0; flex-grow: 1;">
+                                            <div class="glass-panel-title">Physical Metrics</div>
+                                            <div class="l3-stat-grid">
+                                                <div class="l3-stat-item">
+                                                    <span class="l3-stat-label">Electronegativity</span>
+                                                    <div><span class="l3-stat-value" id="ion-l3-en">--</span> <span
+                                                            class="l3-stat-unit">Pauling</span></div>
+                                                </div>
+                                                <div class="l3-stat-item">
+                                                    <span class="l3-stat-label">1st Ionization</span>
+                                                    <div><span class="l3-stat-value" id="ion-l3-ion">--</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Level 4 (Red) -->
+                            <div class="card-slide">
+                                <div class="red-rectangle">
+                                    <div class="card-info-container" id="ion-l4-container">
+                                        <div class="info-label mb-2" style="text-align: left; opacity: 0.8;">History
+                                        </div>
+                                        <div class="info-row" style="margin-bottom: 6px;">
+                                            <span class="info-label" id="ion-l4-year-label">Discovery Year</span>
+                                            <span class="info-value" id="ion-l4-year"
+                                                style="font-size: 1.0rem;">--</span>
+                                        </div>
+                                        <div class="prop-grid-section" id="ion-l4-grid"
+                                            style="grid-template-columns: 1fr; gap: 8px;">
+                                            <div class="prop-cell full-width"
+                                                style="align-items: flex-start; flex-direction: column;">
+                                                <span class="prop-cell-label">Common Uses</span>
+                                                <div id="ion-l4-uses" style="font-size: 0.95rem; font-weight: 600;">--
+                                                </div>
+                                            </div>
+                                            <div class="prop-cell full-width"
+                                                style="background: rgba(220, 38, 38, 0.1); border-color: rgba(220, 38, 38, 0.2); align-items: flex-start; flex-direction: column;">
+                                                <span class="prop-cell-label" style="color: #DC2626;">Hazards</span>
+                                                <div id="ion-l4-hazards"
+                                                    style="font-size: 0.95rem; color: #991B1B; font-weight: 700;">--
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Controls (outside wrapper, same level as wrapper) -->
+                    <div class="slider-controls">
+                        <div class="slider-dots" id="ion-slider-dots">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                        <button class="level-lock-btn" id="ion-level-lock-btn" title="Lock this level">
+                            <svg class="lock-icon-unlocked" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
+                            </svg>
+                            <svg class="lock-icon-locked" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-visual-pane ion-visual-pane">
+                <div class="ion-visual-placeholder">
+                    <div class="coming-soon-badge">COMING SOON</div>
+                    <div class="ion-visual-hint">3D Ion Models & Interactivity are under development.</div>
+                </div>
             </div>
         </div>
     </div>
     <script src="three.min.js"></script>
+    <script src="ion-animations.js"></script>
     <script src="script.js"></script>
     <script src="worksheet-generator.js"></script>
 
-    <!-- Global Floating Language Toggle -->
-    <button class="floating-lang-btn lang-toggle" id="floating-lang-toggle" title="Toggle Language / 切换语言">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <!-- Global Floating About Button -->
+    <button class="floating-about-btn" id="floating-about-btn" title="About Zperiod">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="10"></circle>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
         </svg>
     </button>
+
+    <!-- Copyright Notice -->
+    <div class="copyright-notice">
+        © 2026 Philip. All rights reserved.
+    </div>
 </body>
 
 </html>

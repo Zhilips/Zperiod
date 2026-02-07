@@ -7,22 +7,10 @@
 [![Made with JavaScript](https://img.shields.io/badge/Made%20with-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
-[![Status](https://img.shields.io/badge/Status-Beta-orange?style=flat-square)](https://zperiod.app)
 
 *Master Chemistry. Visually & Instantly.*
 
 </div>
-
----
-
-## ⚠️ Beta Notice
-
-> **This project is currently in Beta.**
-> 
-> - Some features may be incomplete or experimental
-> - You may encounter bugs or unexpected behavior
-> - Feedback and bug reports are welcome!
-> - The codebase is actively being developed and improved
 
 ---
 
@@ -63,16 +51,18 @@
 
 ## 🚀 Quick Start
 
-### Option 1: Visit Online
-**https://zperiod.app**
-
-### Option 2: Run Locally
+### Option 1: Direct Access
 Simply open `index.html` in your browser - no installation required!
 
-### Option 3: Clone Repository
+### Option 2: Local Development
 ```bash
-git clone https://github.com/Zhilips/Zperiod.git
-cd Zperiod
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/zperiod.git
+
+# Navigate to project directory
+cd zperiod
+
+# Open in browser
 open index.html
 ```
 
@@ -82,16 +72,16 @@ open index.html
 
 ```
 zperiod/
-├── README.md           # This file
-├── index.html          # Main HTML file
-├── style.css           # Core styles (11000+ lines)
-├── script.js           # Main JavaScript logic
-├── three.min.js        # Three.js for 3D rendering
-├── ion-animations.css  # Ion-specific animations
-├── ion-animations.js   # Ion animation logic
+├── index.html           # Main HTML file
+├── style.css            # Core styles (210+ KB of custom CSS)
+├── script.js            # Main JavaScript logic
+├── three.min.js         # Three.js for 3D rendering
+├── ion-animations.css   # Ion-specific animations
+├── ion-animations.js    # Ion animation logic
 ├── worksheet-generator.js
 ├── worksheet-styles.css
-└── logo.svg            # Project logo
+├── logo.svg             # Project logo
+└── README.md            # You are here!
 ```
 
 ---
@@ -103,6 +93,7 @@ Zperiod follows modern design principles:
 - **Minimal & Clean** - Inspired by Apple's design language
 - **Glassmorphism** - Subtle frosted glass effects
 - **Responsive** - Works on all screen sizes
+- **Dark/Light Friendly** - Neutral color palette
 - **Micro-animations** - Smooth, delightful interactions
 
 ---
@@ -116,16 +107,24 @@ Zperiod follows modern design principles:
 
 ---
 
-## 🐛 Known Issues & Limitations
+## 📸 Screenshots
 
-As this is a Beta release, please be aware of:
+<details>
+<summary>Click to expand screenshots</summary>
 
-- Some ion data may be incomplete
-- Mobile responsiveness is still being optimized
-- PDF export may vary across browsers
-- Performance on older devices may be limited
+### Periodic Table View
+*The main interactive periodic table with category legends*
 
-If you find a bug, please open an issue on GitHub!
+### Element Detail Modal
+*Comprehensive element information with 3D atom model*
+
+### Ion Engine
+*Explore monatomic and polyatomic ions*
+
+### Chemistry Tools
+*Equation balancer, molar mass calculator, and more*
+
+</details>
 
 ---
 
@@ -147,10 +146,8 @@ This project is created for educational purposes. Unauthorized copying, modifica
 
 <div align="center">
 
-**Built with ❤️ by Philip**
+**Built with ❤️ and lots of ☕**
 
 *Stop memorizing — start visualizing.*
-
-**[Visit Zperiod →](https://zperiod.app)**
 
 </div>

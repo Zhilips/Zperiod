@@ -6316,6 +6316,30 @@ header .action-buttons {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* GitHub Link */
+.nav-github-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: #444;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.nav-github-link:hover {
+    color: #000;
+    background: rgba(0, 0, 0, 0.06);
+    transform: scale(1.1);
+}
+
+.nav-github-link svg {
+    width: 22px;
+    height: 22px;
+}
+
 /* Navigation Hiding Logic */
 body.hide-nav .global-nav {
     transform: translate(-50%, -150%) !important;

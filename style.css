@@ -38,7 +38,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2vmin;
+    padding: 0;
 }
 
 .container {
@@ -1343,10 +1343,9 @@ body {
 /* Page Container - Fixed, no scrolling */
 .ions-table-page {
     z-index: 50;
-    overflow: hidden !important;
-    /* No scrolling - fixed layout */
-    padding-top: 170px !important;
-    /* Enough space for nav to not cover first section title */
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding-top: 100px !important;
     padding-bottom: 20px;
     align-items: flex-start;
 }
@@ -1354,7 +1353,6 @@ body {
 /* Container for the grid */
 .ions-container {
     width: 90vw;
-    height: 85vh;
     max-width: 1400px;
     display: flex;
     justify-content: center;
@@ -1626,12 +1624,10 @@ body {
 /* Ions Grid - Matches Periodic Table Grid */
 .ions-table-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(9, 1fr);
+    grid-template-columns: repeat(9, 1fr);
     gap: 4px;
     flex: 1;
     padding: 8px;
-    overflow-y: auto;
 }
 
 /* Spacer rows */
@@ -1653,7 +1649,7 @@ body {
     position: relative;
     user-select: none;
     border: 1px solid var(--border-color);
-    min-height: 60px;
+    min-height: 50px;
 }
 
 .ion-element:hover {
@@ -2249,14 +2245,16 @@ header .action-buttons {
     grid-template-columns: repeat(18, 1fr);
     grid-template-rows: repeat(10, 1fr);
     gap: 0.8vmin;
-    transition: opacity 0.3s ease;
-    width: 100%;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    flex: 1 0 0px;
     height: 100%;
-    max-width: 90vw;
     max-height: calc(100vh - 14vmin);
     aspect-ratio: 18 / 10;
-    justify-content: center;
-    margin: 0 auto;
+    transform-origin: top left;
+    min-width: 860px;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0 20px;
 }
 
 .element {
@@ -6017,8 +6015,8 @@ header .action-buttons {
 /* Global Floating About Button */
 .floating-about-btn {
     position: fixed;
-    bottom: 24px;
-    left: 24px;
+    bottom: 44px;
+    left: 56px;
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -6203,9 +6201,15 @@ header .action-buttons {
 #main-container {
     margin-top: 0;
     height: 100vh;
-    padding-bottom: 20px;
+    padding: 90px 0 20px 0;
     width: 100%;
-    padding-top: 90px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: none;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
 }
 
 /* Fix Worksheet Page Padding */
@@ -6237,6 +6241,254 @@ header .action-buttons {
         0 4px 24px rgba(0, 0, 0, 0.06),
         0 1px 2px rgba(0, 0, 0, 0.04);
     padding: 0 20px;
+    transition: height 0.3s ease, padding 0.3s ease, top 0.3s ease, border-radius 0.3s ease;
+}
+
+/* =========================================
+   窗口变矮时 - 缩小导航栏和元素内容
+   ========================================= */
+@media (max-height: 700px) {
+    .global-nav {
+        height: 44px;
+        top: 8px;
+        padding: 0 14px;
+        border-radius: 22px;
+    }
+
+    .nav-logo {
+        width: 24px;
+        height: 24px;
+    }
+
+    .nav-brand {
+        font-size: 1rem;
+    }
+
+    .nav-pill-btn {
+        padding: 5px 12px;
+        font-size: 0.78rem;
+    }
+
+    .global-nav-pill {
+        padding: 3px;
+        gap: 2px;
+        border-radius: 18px;
+    }
+
+    .suggestion-input {
+        font-size: 0.75rem;
+    }
+
+    .suggestion-send-btn {
+        width: 26px;
+        height: 26px;
+        min-width: 26px;
+    }
+
+    .suggestion-send-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .nav-github-link svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .suggestion-box {
+        padding: 3px 3px 3px 10px;
+        border-radius: 18px;
+        min-width: 110px;
+    }
+
+    .nav-right-section {
+        gap: 8px;
+    }
+
+    #main-container {
+        padding-top: 60px;
+    }
+
+    /* 元素格子：隐藏名称，放大符号 */
+    .element .name {
+        display: none !important;
+    }
+
+    .element .number {
+        font-size: 0.8vmin;
+        top: 0.3vmin;
+        left: 0.4vmin;
+    }
+
+    .element .symbol {
+        font-size: 2.8vmin;
+    }
+
+    .element {
+        border-radius: 8px;
+    }
+
+    /* Ion 页面 */
+    .ions-table-page {
+        padding-top: 70px !important;
+    }
+
+    .ion-element .name {
+        display: none !important;
+    }
+}
+
+@media (max-height: 500px) {
+    .global-nav {
+        height: 34px;
+        top: 4px;
+        padding: 0 10px;
+        border-radius: 17px;
+    }
+
+    .nav-logo {
+        width: 18px;
+        height: 18px;
+    }
+
+    .nav-brand {
+        display: none;
+    }
+
+    .nav-pill-btn {
+        padding: 3px 8px;
+        font-size: 0.68rem;
+        border-radius: 12px;
+    }
+
+    .global-nav-pill {
+        padding: 2px;
+        gap: 1px;
+        border-radius: 14px;
+    }
+
+    .suggestion-input {
+        font-size: 0.68rem;
+        min-width: 50px;
+    }
+
+    .suggestion-send-btn {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+    }
+
+    .suggestion-send-btn svg {
+        width: 9px;
+        height: 9px;
+    }
+
+    .nav-github-link svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .suggestion-box {
+        padding: 2px 2px 2px 8px;
+        min-width: 80px;
+        width: 80px;
+        border-radius: 14px;
+    }
+
+    .nav-right-section {
+        gap: 6px;
+    }
+
+    .nav-brand-section {
+        gap: 4px;
+    }
+
+    #main-container {
+        padding-top: 45px;
+    }
+
+    .element .name {
+        display: none !important;
+    }
+
+    .element .number {
+        font-size: 0.6vmin;
+    }
+
+    .element .symbol {
+        font-size: 3vmin;
+    }
+
+    .element {
+        border-radius: 6px;
+    }
+
+    .ions-table-page {
+        padding-top: 55px !important;
+    }
+
+    .ion-element .name {
+        display: none !important;
+    }
+
+    .ion-element {
+        min-height: 35px;
+    }
+}
+
+/* =========================================
+   窗口变窄时 - 只缩小导航栏（不隐藏元素全称）
+   ========================================= */
+@media (max-width: 900px) {
+    body {
+        padding: 0;
+    }
+
+    .nav-brand {
+        display: none;
+    }
+
+    .nav-pill-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    .suggestion-box {
+        min-width: 80px;
+        width: 80px;
+    }
+}
+
+@media (max-width: 650px) {
+    .global-nav {
+        height: 40px;
+        padding: 0 10px;
+        border-radius: 20px;
+    }
+
+    .nav-logo {
+        width: 22px;
+        height: 22px;
+    }
+
+    .nav-pill-btn {
+        padding: 4px 8px;
+        font-size: 0.68rem;
+    }
+
+    .global-nav-pill {
+        padding: 2px;
+        gap: 1px;
+    }
+
+    .suggestion-box {
+        display: none;
+    }
+
+    .nav-github-link svg {
+        width: 18px;
+        height: 18px;
+    }
 }
 
 /* 左侧品牌区 */
@@ -6316,28 +6568,131 @@ header .action-buttons {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* GitHub Link */
+/* =========================================
+   右侧区域：建议输入框 + GitHub
+   ========================================= */
+.nav-right-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* GitHub Icon Link */
 .nav-github-link {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    color: #444;
-    transition: all 0.2s ease;
+    color: #1d1d1f;
+    opacity: 0.5;
+    transition: all 0.25s ease;
     flex-shrink: 0;
 }
 
 .nav-github-link:hover {
-    color: #000;
-    background: rgba(0, 0, 0, 0.06);
+    opacity: 1;
     transform: scale(1.1);
 }
 
-.nav-github-link svg {
-    width: 22px;
-    height: 22px;
+/* Suggestion Box Container */
+.suggestion-box {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 22px;
+    padding: 4px 4px 4px 16px;
+    gap: 6px;
+    transition: width 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+        background 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    border: 1px solid transparent;
+    position: relative;
+    width: 140px;
+    min-width: 140px;
+    overflow: hidden;
+}
+
+.suggestion-box:focus-within {
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Suggestion Input */
+.suggestion-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #1d1d1f;
+    width: 100%;
+    min-width: 80px;
+    padding: 6px 0;
+    letter-spacing: -0.01em;
+}
+
+.suggestion-input::placeholder {
+    color: rgba(0, 0, 0, 0.22);
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: 0;
+}
+
+/* Send Button */
+.suggestion-send-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #1d1d1f;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    opacity: 0;
+    transform: scale(0.5);
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.suggestion-send-btn.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.suggestion-send-btn.sent {
+    background: #16a34a;
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: none;
+}
+
+.suggestion-send-btn:hover {
+    background: #333;
+    transform: scale(1.1);
+}
+
+.suggestion-send-btn:active {
+    transform: scale(0.9);
+}
+
+.suggestion-send-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.suggestion-send-btn .icon-send,
+.suggestion-send-btn .icon-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Navigation Hiding Logic */
@@ -11315,8 +11670,8 @@ body.hide-nav .floating-about-btn {
    ======================================== */
 .copyright-notice {
     position: fixed;
-    bottom: 20px;
-    left: 82px;
+    bottom: 16px;
+    left: 56px;
     font-size: 11px;
     font-weight: 500;
     color: var(--text-secondary);

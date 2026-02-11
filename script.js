@@ -78,6 +78,152 @@
     };
 })();
 
+// ========================================
+// Suggestion Input - UI Interaction
+// ========================================
+(function initSuggestionBox() {
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('suggestion-input');
+        const sendBtn = document.getElementById('suggestion-send-btn');
+        const box = document.getElementById('suggestion-box');
+        if (!input || !sendBtn || !box) return;
+
+        const BASE_WIDTH = 140;
+        const PADDING_EXTRA = 60; // padding for send button + breathing room
+        const sendIconHTML = sendBtn.innerHTML; // save original send icon
+
+        const checkIconHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+
+        // Measure text width helper
+        function measureText(text) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.font = '500 13.6px Inter, sans-serif';
+            return ctx.measureText(text).width;
+        }
+
+        // Calculate max available width (from box to near center pill)
+        function getMaxWidth() {
+            const nav = document.getElementById('global-nav');
+            const pill = document.querySelector('.global-nav-pill');
+            if (!nav || !pill || !box) return 600;
+            const pillRect = pill.getBoundingClientRect();
+            const boxRight = nav.getBoundingClientRect().right - 60; // GitHub icon space
+            const available = boxRight - pillRect.right - 30; // 30px gap from pill
+            return Math.max(BASE_WIDTH, Math.min(available, 800));
+        }
+
+        // Update box width based on text content
+        function updateWidth() {
+            const hasText = input.value.trim().length > 0;
+            sendBtn.classList.toggle('visible', hasText);
+
+            const textWidth = measureText(input.value);
+            const neededWidth = textWidth + PADDING_EXTRA;
+            const maxW = getMaxWidth();
+            const targetWidth = Math.max(BASE_WIDTH, Math.min(neededWidth, maxW));
+
+            box.style.width = targetWidth + 'px';
+        }
+
+        input.addEventListener('input', updateWidth);
+
+        // Collapse on blur if empty
+        input.addEventListener('blur', () => {
+            setTimeout(() => {
+                if (!input.value.trim()) {
+                    box.style.width = BASE_WIDTH + 'px';
+                    sendBtn.classList.remove('visible');
+                }
+            }, 200);
+        });
+
+        // Send button click
+        sendBtn.addEventListener('click', () => {
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Send to Discord webhook
+            fetch('https://discord.com/api/webhooks/1470782870527414455/0c9YPJ-nWeAQ3FDyO7xou9TivkdrPWGmtISAS4MRyY9RKldhtsqekHfbPuhuYIMyVduU', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content: `📬 **New Suggestion from Zperiod**\n> ${text}\n\n_Sent at ${new Date().toLocaleString()}_`
+                })
+            }).catch(() => { }); // silent fail
+
+            // Clear input and collapse
+            input.value = '';
+            box.style.width = BASE_WIDTH + 'px';
+            sendBtn.classList.remove('visible');
+
+            // Show green checkmark on button
+            sendBtn.innerHTML = checkIconHTML;
+            sendBtn.classList.add('sent');
+
+            setTimeout(() => {
+                sendBtn.innerHTML = sendIconHTML;
+                sendBtn.classList.remove('sent');
+            }, 800);
+        });
+
+        // Enter key to send
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && input.value.trim()) {
+                sendBtn.click();
+            }
+        });
+    });
+})();
+
+// ========================================
+// Periodic Table Auto-Scale on Short Viewport
+// ========================================
+(function initPeriodicTableScale() {
+    document.addEventListener('DOMContentLoaded', () => {
+        const table = document.getElementById('periodic-table');
+        const container = document.getElementById('main-container');
+        if (!table || !container) return;
+
+        function scaleTable() {
+            // Only scale when the periodic table page is visible
+            if (container.style.display === 'none') return;
+
+            // Reset scale to measure natural size
+            table.style.transform = 'none';
+
+            const vh = window.innerHeight;
+            const navHeight = vh <= 500 ? 45 : vh <= 700 ? 60 : 80;
+            const bottomPad = 15;
+            const availableH = window.innerHeight - navHeight - bottomPad;
+            const availableW = container.clientWidth;
+
+            // Natural table dimensions based on aspect ratio 18:10
+            const tableW = Math.min(availableW, window.innerWidth * 0.9);
+            const tableNaturalH = tableW * (10 / 18);
+
+            if (tableNaturalH > availableH && availableH > 0) {
+                const scale = availableH / tableNaturalH;
+                table.style.transform = `scale(${Math.min(scale, 1)})`;
+            } else {
+                table.style.transform = 'none';
+            }
+        }
+
+        // Debounced resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(scaleTable, 50);
+        });
+
+        // Initial scale
+        scaleTable();
+        // Recheck after fonts/images loaded
+        window.addEventListener('load', scaleTable);
+    });
+})();
+
 let lockedSlideIndex = null;
 const finallyData = {
     "H": {

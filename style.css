@@ -751,26 +751,7 @@ body {
 
 /* Feature modal uses same size as element modal */
 #feature-modal-content {
-  background: var(--modal-bg-glass);
-  width: calc(100vw - 100px);
-  min-width: 800px;
-  height: calc(100vh - 160px);
-  max-width: 1300px;
-  border-radius: 40px;
-  box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.15);
-  display: flex;
   flex-direction: column;
-  overflow: hidden;
-  position: absolute;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%) scale(0.96);
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-#feature-modal.active #feature-modal-content {
-  transform: translateX(-50%) scale(1);
 }
 
 .feature-detail-header {

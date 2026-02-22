@@ -6871,7 +6871,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const hasSubscript = /[₀₁₂₃₄₅₆₇₈₉]/.test(ion.symbol);
 
       let finalSymbol;
-      if (hasSubscript) {
+      if (ion.id === "ch3coo_minus") {
+        // Special case for Acetate ion
+        finalSymbol = 'CH<sub>3</sub>COO<sup class="ion-charge">-</sup>';
+      } else if (hasSubscript) {
         // For ions with subscripts (like Cr₂O₇²⁻), use stacked notation
         // Extract the last subscript and stack it with charge
         const subMap = {
@@ -6935,12 +6938,12 @@ document.addEventListener("DOMContentLoaded", () => {
       headlineSymbol.innerHTML = finalSymbol;
 
       // Dynamic font size for symbol based on length
-      const symbolLength = ion.symbol.length;
+      const symbolLength = ion.id === "ch3coo_minus" ? 8 : ion.symbol.length;
       if (symbolLength > 5) {
-        headlineSymbol.style.fontSize = "2.8rem";
+        headlineSymbol.style.fontSize = "2.2rem";
         headlineSymbol.style.marginLeft = "-10px"; // Shift left for long symbols
       } else if (symbolLength > 3) {
-        headlineSymbol.style.fontSize = "3.6rem";
+        headlineSymbol.style.fontSize = "3.2rem";
         headlineSymbol.style.marginLeft = "-5px";
       } else {
         headlineSymbol.style.fontSize = "4.5rem";

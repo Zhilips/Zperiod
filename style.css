@@ -4182,6 +4182,7 @@ header .action-buttons {
   min-width: 0;
   gap: 10px;
   flex-shrink: 0;
+  container-type: inline-size;
 }
 
 .info-label {
@@ -4212,10 +4213,11 @@ header .action-buttons {
 }
 
 .info-value.long-text {
-  white-space: nowrap !important;
-  font-size: 0.9rem !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal !important;
+  font-size: clamp(0.85rem, 5cqw, 1.3rem) !important;
+  line-height: 1.2;
+  overflow: visible;
+  word-break: break-word;
 }
 
 .red-rectangle .info-row {

@@ -672,3 +672,56 @@
     width: 16px;
     height: 16px;
 }
+
+/* =========================================
+   Responsive Design (Shrinking Window)
+   ========================================= */
+@media (max-width: 840px) {
+    .worksheet-generator-page {
+        padding: 15px;
+        display: block;
+        overflow-y: auto;
+    }
+
+    .worksheet-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        height: auto;
+    }
+
+    .worksheet-controls {
+        height: auto;
+    }
+
+    .worksheet-preview {
+        height: auto;
+        min-height: min-content;
+        overflow: visible;
+    }
+
+    .preview-content {
+        overflow-y: visible;
+        flex: none;
+        padding: 15px;
+    }
+
+    .preview-placeholder {
+        min-height: 300px;
+    }
+
+    .preview-header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .header-top {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .header-fields {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

@@ -72,16 +72,32 @@ open index.html
 
 ```
 zperiod/
-├── index.html           # Main HTML file
-├── style.css            # Core styles (210+ KB of custom CSS)
-├── script.js            # Main JavaScript logic
-├── three.min.js         # Three.js for 3D rendering
-├── ion-animations.css   # Ion-specific animations
-├── ion-animations.js    # Ion animation logic
-├── worksheet-generator.js
-├── worksheet-styles.css
-├── logo.svg             # Project logo
-└── README.md            # You are here!
+├── index.html              # Main HTML file
+├── script.js               # Main JavaScript logic
+├── three.min.js            # Three.js for 3D rendering
+├── logo.svg                # Project logo
+├── css/
+│   ├── base.css            # Design tokens, layout, navigation
+│   ├── grid.css            # Periodic table grid
+│   ├── modal.css           # Element detail modals
+│   ├── tools.css           # Chemistry tools styles
+│   ├── ions.css            # Ion engine styles
+│   ├── ion-animations.css  # Ion-specific animations
+│   ├── mobile-landing.css  # Mobile landing page
+│   └── worksheet-styles.css
+├── js/
+│   ├── ion-animations.js   # Ion animation logic
+│   ├── worksheet-generator.js
+│   ├── data/
+│   │   ├── elementsData.js # Element database
+│   │   └── ionsData.js     # Ion database
+│   └── modules/
+│       ├── chemistryTools.js
+│       ├── ionsController.js
+│       ├── threeRenderer.js
+│       └── uiController.js
+├── images/                 # Preview screenshots
+└── README.md
 ```
 
 ---
@@ -149,5 +165,7 @@ This project is created for educational purposes. Unauthorized copying, modifica
 **Built with ❤️ and lots of ☕**
 
 *Stop memorizing — start visualizing.*
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/Zperiod)
 
 </div>

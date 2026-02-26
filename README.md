@@ -131,14 +131,22 @@ Zperiod follows modern design principles:
 ### Periodic Table View
 *The main interactive periodic table with category legends*
 
+![Periodic Table](images/preview-table.png)
+
 ### Element Detail Modal
 *Comprehensive element information with 3D atom model*
 
-### Ion Engine
-*Explore monatomic and polyatomic ions*
+![Element Modal](images/preview-modal.png)
 
-### Chemistry Tools
-*Equation balancer, molar mass calculator, and more*
+### Equation Balancer
+*Balance chemical equations with real-time scale visualization*
+
+![Equation Balancer](images/preview-tools.png)
+
+### Worksheet Generator
+*Generate print-ready balanced equation worksheets*
+
+![Worksheet Generator](images/preview-worksheet.png)
 
 </details>
 

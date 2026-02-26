@@ -304,7 +304,7 @@
     height: 46px;
     background: var(--orb-color, #3b82f6);
     border-radius: 50%;
-    box-shadow: 
+    box-shadow:
         0 0 0 5px rgba(255,255,255,0.3),
         0 0 30px var(--orb-glow, rgba(59, 130, 246, 0.5)),
         inset 0 -8px 16px rgba(0,0,0,0.2),
@@ -338,13 +338,13 @@
 }
 
 @keyframes orbPulse {
-    0%, 100% { 
-        transform: scale(1); 
-        box-shadow: 0 0 0 4px rgba(255,255,255,0.3), 0 0 25px var(--orb-glow, rgba(59, 130, 246, 0.5)), inset 0 -8px 16px rgba(0,0,0,0.2), inset 0 8px 16px rgba(255,255,255,0.3); 
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 4px rgba(255,255,255,0.3), 0 0 25px var(--orb-glow, rgba(59, 130, 246, 0.5)), inset 0 -8px 16px rgba(0,0,0,0.2), inset 0 8px 16px rgba(255,255,255,0.3);
     }
-    50% { 
-        transform: scale(1.12); 
-        box-shadow: 0 0 0 6px rgba(255,255,255,0.4), 0 0 40px var(--orb-glow, rgba(59, 130, 246, 0.7)), inset 0 -8px 16px rgba(0,0,0,0.15), inset 0 8px 16px rgba(255,255,255,0.4); 
+    50% {
+        transform: scale(1.12);
+        box-shadow: 0 0 0 6px rgba(255,255,255,0.4), 0 0 40px var(--orb-glow, rgba(59, 130, 246, 0.7)), inset 0 -8px 16px rgba(0,0,0,0.15), inset 0 8px 16px rgba(255,255,255,0.4);
     }
 }
 
@@ -408,7 +408,7 @@
     border-radius: 50%;
     position: relative;
     z-index: 3;
-    box-shadow: 
+    box-shadow:
         0 0 20px var(--pulse-glow, rgba(239, 68, 68, 0.6)),
         inset 0 -4px 8px rgba(0,0,0,0.2),
         inset 0 4px 8px rgba(255,255,255,0.3);
@@ -574,7 +574,7 @@
     height: 18px;
     background: linear-gradient(135deg, #7dd3fc, #0ea5e9, #0284c7);
     transform: rotate(45deg);
-    box-shadow: 
+    box-shadow:
         0 0 15px rgba(14, 165, 233, 0.6),
         inset 0 0 8px rgba(255,255,255,0.4);
     animation: crystalSpin 4s linear infinite;
@@ -864,7 +864,7 @@
     background: linear-gradient(180deg, #f5f5f4, #e7e5e4, #d6d3d1);
     border-radius: 9px;
     position: relative;
-    box-shadow: 
+    box-shadow:
         inset 0 2px 4px rgba(255,255,255,0.8),
         inset 0 -2px 4px rgba(0,0,0,0.1),
         0 3px 6px rgba(0,0,0,0.15);
@@ -886,7 +886,7 @@
     background: linear-gradient(180deg, #f5f5f4, #e7e5e4);
     border-radius: 50%;
     top: -2px;
-    box-shadow: 
+    box-shadow:
         inset 0 2px 4px rgba(255,255,255,0.6),
         0 2px 4px rgba(0,0,0,0.1);
 }
@@ -1173,7 +1173,7 @@
     background: linear-gradient(180deg, #ffffff 0%, #f5f5f4 50%, #e7e5e4 100%);
     border-radius: 10px 10px 6px 6px;
     position: relative;
-    box-shadow: 
+    box-shadow:
         0 3px 10px rgba(0,0,0,0.2),
         inset 0 2px 4px rgba(255,255,255,1),
         inset 0 -3px 6px rgba(0,0,0,0.08);

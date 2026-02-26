@@ -178,27 +178,6 @@ function initWorksheetGenerator() {
         exportPdfBtn.addEventListener('click', exportToPDF);
     }
 
-    // Listen for language changes
-    window.addEventListener('languageChanged', (e) => {
-        // Update current worksheet and preview if they exist
-        if (currentWorksheet) {
-            // Update date format in the worksheet object IF it has been set to today's date
-            // We only update if worksheet.date is NOT empty
-            if (currentWorksheet.date) {
-                const today = new Date();
-                const todayZh = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
-                const todayEn = today.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-
-                // If the date is currently set to "Today" (either format), switch it to the new language format
-                if (currentWorksheet.date === todayZh || currentWorksheet.date === todayEn) {
-                    currentWorksheet.date = e.detail.lang === 'zh' ? todayZh : todayEn;
-                    worksheetDate = currentWorksheet.date;
-                }
-            }
-
-            renderWorksheet(currentWorksheet, currentViewMode);
-        }
-    });
 }
 
 // Fill today's date (Toggle)
@@ -333,8 +312,8 @@ function generateWorksheet() {
         const take = Math.min(quotaPerType, typeCandidates.length, primaryCount - selectedSoFar);
 
         // Add unique checks could be complex, but for now just slice
-        // Since we reshuffle primaryPool every gen, just taking from filter matches works IF we remove them? 
-        // Simpler: Just filter primaryPool, shuffle, and pick 
+        // Since we reshuffle primaryPool every gen, just taking from filter matches works IF we remove them?
+        // Simpler: Just filter primaryPool, shuffle, and pick
         // But we want uniform distribution.
 
         // Let's just pick 'take' items from typeCandidates
@@ -678,19 +657,19 @@ function exportToPDF() {
     <title>&nbsp;</title>
     <style>
         /* Force remove browser headers/footers */
-        @page { 
-            margin: 0; 
+        @page {
+            margin: 0;
             size: A4 portrait;
         }
-        
+
         * { box-sizing: border-box; }
-        html, body { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
-            line-height: applied; 
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: applied;
         }
 
         /* Table Hack for Repeating Margins */
@@ -701,7 +680,7 @@ function exportToPDF() {
         }
         .print-thead td { height: 25mm; } /* Top Margin */
         .print-tfoot td { height: 25mm; } /* Bottom Margin */
-        
+
         /* Content Padding */
         .print-content {
             padding: 0 20mm; /* Left/Right defined here */
@@ -711,7 +690,7 @@ function exportToPDF() {
         /* Header Elements */
         .pdf-header { margin-bottom: 25px; }
         .main-title {
-            font-size: 20pt; 
+            font-size: 20pt;
             font-weight: 700;
             margin-bottom: 16px;
             color: #000;
@@ -729,10 +708,10 @@ function exportToPDF() {
             white-space: nowrap;
         }
         .field-label { margin-right: 8px; font-weight: 500; }
-        .field-line { 
-            border-bottom: 1px solid #000; 
-            min-width: 180px; 
-            display: inline-block; 
+        .field-line {
+            border-bottom: 1px solid #000;
+            min-width: 180px;
+            display: inline-block;
         }
 
         /* Instructions */
@@ -749,29 +728,29 @@ function exportToPDF() {
         }
         .question-row {
             display: flex;
-            align-items: baseline; 
-            page-break-inside: avoid; 
+            align-items: baseline;
+            page-break-inside: avoid;
             break-inside: avoid;
-            padding: 5px 0; 
+            padding: 5px 0;
             min-height: 1.5em; /* Reduced line height base */
         }
         .q-num { width: 32px; font-size: 11pt; flex-shrink: 0; }
-        .q-eq { 
-            font-family: 'Courier New', Courier, 'Consolas', monospace; 
+        .q-eq {
+            font-family: 'Courier New', Courier, 'Consolas', monospace;
             font-size: 11pt; /* Smaller 11pt */
             letter-spacing: 0; /* No extra tracking */
         }
-        
+
         /* Chemistry Styling */
         .chem-segment { display: inline-block; }
         .coef-blank {
-            display: inline-block; min-width: 3ch; 
-            border-bottom: 1.5px solid #000; margin-right: 4px; color: transparent; 
+            display: inline-block; min-width: 3ch;
+            border-bottom: 1.5px solid #000; margin-right: 4px; color: transparent;
         }
         .coef-val { font-weight: 700; margin-right: 2px; }
         .coef-filled { color: #000; font-weight: bold; margin-right: 2px; }
         .sub { font-size: 0.7em; vertical-align: sub; }
-        .op { margin: 0 6px; } 
+        .op { margin: 0 6px; }
 
         /* Footer content */
         .doc-footer {

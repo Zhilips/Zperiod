@@ -1,0 +1,316 @@
+/* =========================================
+   grid.css — Periodic Table grid & element styles
+   ========================================= */
+
+.periodic-table {
+  display: grid;
+  grid-template-columns: repeat(18, 1fr);
+  grid-template-rows: repeat(7, auto) minmax(0, 1fr) repeat(2, auto);
+  gap: calc(var(--tvmin, 1vmin) * 0.8);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  width: 100%;
+  height: 100%;
+  max-height: calc(100vh - 110px);
+  transform-origin: center center;
+  min-width: 860px;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.element {
+  background-color: var(--element-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: calc(var(--tvmin, 1vmin) * 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), border-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 15%;
+  position: relative;
+  user-select: none;
+  border: 1px solid var(--border-color);
+  aspect-ratio: 1;
+  /* Force square shape */
+
+  /* Container Query for perfect proportional text sizing */
+  container-type: inline-size;
+}
+
+.element:hover {
+  background-color: var(--element-hover);
+  transform: translateY(-4px) scale(1.1);
+  z-index: 100;
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+#table-legend {
+  grid-column: 3 / 13;
+  grid-row: 1 / 4;
+  display: grid;
+  /* Auto-reflow: 5×2 → 4×3 → 3×4 as container shrinks */
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 5px;
+  padding: 0;
+  pointer-events: none;
+  z-index: 150;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 800px;
+  align-items: stretch;
+  justify-items: stretch;
+  align-self: center;
+  justify-self: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  font-size: clamp(11.5px, 1.2vw, 14px);
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.75);
+  border: none;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  padding: 3px 8px;
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    transform 0.25s cubic-bezier(0.23, 1, 0.32, 1),
+    background 0.25s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  z-index: 200;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.legend-item:hover {
+  transform: translateY(-2px);
+  z-index: 210;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.legend-item.active {
+  background: #000;
+  color: #fff;
+  border-color: transparent;
+  transform: scale(1.02);
+  box-shadow:
+    inset 0 0 0 1px #000,
+    0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.legend-item.active .legend-swatch {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Quick Access Button for Ions Table */
+.legend-item.ions-quick-access {
+  background: linear-gradient(135deg,
+      rgba(245, 158, 11, 0.1),
+      rgba(217, 119, 6, 0.05));
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.legend-item.ions-quick-access:hover {
+  background: linear-gradient(135deg,
+      rgba(245, 158, 11, 0.2),
+      rgba(217, 119, 6, 0.15));
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.legend-swatch.alkali-metal {
+  background-color: #ffcccc;
+}
+
+.legend-swatch.alkaline-earth-metal {
+  background-color: #ffe5cc;
+}
+
+.legend-swatch.transition-metal {
+  background-color: #fff2cc;
+}
+
+.legend-swatch.post-transition-metal {
+  background-color: #d9e2f3;
+}
+
+.legend-swatch.metalloid {
+  background-color: #d1e7dd;
+}
+
+.legend-swatch.non-metal {
+  background-color: #e2f0d9;
+}
+
+.legend-swatch.halogen {
+  background-color: #ffffcc;
+}
+
+.legend-swatch.noble-gas {
+  background-color: #e0ccff;
+}
+
+.legend-swatch.lanthanide {
+  background-color: #fce4d6;
+}
+
+.legend-swatch.actinide {
+  background-color: #fddddd;
+}
+
+.element.alkali-metal {
+  background-color: #ffcccc;
+  color: #5d2e2e;
+}
+
+.element.alkaline-earth,
+.element.alkaline-earth-metal {
+  background-color: #ffe5cc;
+  color: #5d402e;
+}
+
+.element.transition-metal {
+  background-color: #fff2cc;
+  color: #5d522e;
+}
+
+.element.post-transition-metal {
+  background-color: #d9e2f3;
+  color: #2e3a5d;
+}
+
+.element.metalloid {
+  background-color: #d1e7dd;
+  color: #2e5d4b;
+}
+
+.element.non-metal,
+.element.reactive-nonmetal,
+.element.polyatomic-nonmetal,
+.element.diatomic-nonmetal {
+  background-color: #e2f0d9;
+  color: #3a5d2e;
+}
+
+.element.halogen {
+  background-color: #ffffcc;
+  color: #5d5d2e;
+}
+
+.element.noble-gas {
+  background-color: #e0ccff;
+  color: #4b2e5d;
+}
+
+.element.lanthanide {
+  background-color: #fce4d6;
+  color: #5d3a2e;
+}
+
+.element.actinide {
+  background-color: #fddddd;
+  color: #5d2e2e;
+}
+
+.element.unknown,
+.element.undefined {
+  background-color: #f2f2f2;
+}
+
+.element:hover {
+  filter: brightness(0.95);
+  transform: scale(1.05);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#periodic-table.highlighting .element:not(.highlighted) {
+  opacity: 0.5;
+  filter: grayscale(0.2);
+  transform: scale(0.98);
+  transition:
+    opacity 0.3s ease,
+    filter 0.3s ease,
+    transform 0.3s ease;
+}
+
+#periodic-table.highlighting .element.highlighted {
+  transform: scale(1.05);
+  z-index: 100;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.element .number {
+  font-size: calc(var(--tvmin, 1vmin) * 1);
+  /* Fallback */
+  font-size: 14cqi;
+  /* 14% of cell width */
+  position: absolute;
+  top: calc(var(--tvmin, 1vmin) * 0.5);
+  left: calc(var(--tvmin, 1vmin) * 0.6);
+  opacity: 0.5;
+  font-weight: 600;
+}
+
+.element .symbol {
+  font-size: calc(var(--tvmin, 1vmin) * 2.2);
+  /* Fallback */
+  font-size: 32cqi;
+  /* 32% of cell width */
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.element .name {
+  font-size: calc(var(--tvmin, 1vmin) * 0.9);
+  /* Fallback */
+  font-size: 12.5cqi;
+  /* 12.5% of cell width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 95%;
+  opacity: 0.7;
+  font-weight: 500;
+  margin-top: 0.2vmin;
+}
+
+.empty {
+  pointer-events: none;
+}
+
+.lanthanide,
+.actinide {
+  background-color: #ebe5dc;
+}

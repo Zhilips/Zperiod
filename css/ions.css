@@ -1,0 +1,4830 @@
+/* =========================================
+   ions.css — Ions table page, ion cards, ion detail modal, ion animations
+   ========================================= */
+
+/* ============================================
+   NEW IONS PAGE STYLES
+   ============================================ */
+
+/* Page Container - Fixed, no scrolling */
+.ions-table-page {
+  z-index: 50;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-top: 0;
+  padding-bottom: 20px;
+  align-items: flex-start;
+}
+
+/* Container for the grid */
+.ions-container {
+  width: 100%;
+  max-width: 1400px;
+  display: block;
+  overflow-x: hidden;
+  overflow-y: visible;
+  box-sizing: border-box;
+  padding: 90px 20px 0;
+}
+
+/* Polyatomic Colors */
+.element.polyatomic-cation {
+  background-color: #ffd9a3;
+  /* Warm Orange/Yellow */
+  color: #6b4312;
+  border-color: rgba(107, 67, 18, 0.1);
+}
+
+.element.polyatomic-anion {
+  background-color: #cceeff;
+  /* Light Blue */
+  color: #1a4d6e;
+  border-color: rgba(26, 77, 110, 0.1);
+}
+
+/* Ion Modal Specifics */
+.ion-visual-pane {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  background: #fafaf9;
+  /* Match element visual pane */
+}
+
+.ion-visual-placeholder {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 80%;
+  text-align: center;
+}
+
+.coming-soon-badge {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  padding: 8px 24px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  color: var(--text-primary);
+  border-radius: 50px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.ion-visual-hint {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+/* Modal Headline adjustments */
+.headline-charge {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  opacity: 0.7;
+  margin-top: 4px;
+}
+
+/* Ion Info Card Style */
+.ion-info-card {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ion-formation-text {
+  font-family: "Inter", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+/* Ion Symbol - Stacked Sub/Sup Notation */
+.ions-table-page .element .symbol {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ions-table-page .element .symbol .symbol-base {
+  display: inline;
+}
+
+/* Stack container for charge (top) and subscript (bottom) */
+.ions-table-page .element .symbol .script-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  line-height: 1;
+  margin-left: 2px;
+  /* More space from main symbol */
+  gap: 1px;
+  /* Small gap between sup and sub */
+}
+
+/* ALL ion card sub/sup - proportional size using cqi (matches table scaling) */
+.ions-table-page .element .symbol .script-sup,
+.ions-table-page .element .symbol .script-sub,
+.ions-table-page .element .symbol .symbol-base sub,
+.ions-table-page .element .symbol sub,
+.ions-table-page .element .symbol sup,
+.ion-charge-sup {
+  font-size: 18cqi;
+  font-weight: 600;
+  color: inherit;
+}
+
+/* Middle subscripts (like ₂ in Cr₂O₇) - inside symbol-base */
+.ions-table-page .element .symbol .symbol-base sub {
+  vertical-align: baseline;
+  position: relative;
+  top: 0.4em;
+}
+
+/* Direct subscripts (like ₃ in CH₃COO) - not in symbol-base */
+.ions-table-page .element .symbol>sub {
+  vertical-align: baseline;
+  position: relative;
+  top: 0.4em;
+}
+
+/* Stacked scripts positioning */
+.ions-table-page .element .symbol .script-sup,
+.ions-table-page .element .symbol .script-sub {
+  display: block;
+  line-height: 1;
+}
+
+/* Script-sub matches symbol-base sub position */
+.ions-table-page .element .symbol .script-sub {
+  position: relative;
+  top: 0;
+}
+
+/* Fallback for simple ions (without subscript) - like H+, Na+, Cl- */
+.ion-charge-sup {
+  vertical-align: top;
+  position: relative;
+  top: -0.5em;
+  margin-left: 2px;
+}
+
+/* Legacy corner style (kept for compatibility) */
+.ion-charge-corner {
+  position: absolute;
+  top: 0.4vmin;
+  right: 0.4vmin;
+  font-size: 1.1vmin;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+/* Ensure ions table overrides grid from periodic table class */
+#ions-table.periodic-table {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  min-width: 0 !important;
+  /* Override .periodic-table's min-width: 860px */
+  max-height: none !important;
+  /* Override .periodic-table's max-height */
+  aspect-ratio: auto !important;
+  /* Override .periodic-table's aspect-ratio */
+  height: auto !important;
+  flex: none !important;
+  /* Override .periodic-table's flex: 1 0 0px */
+  width: 100% !important;
+}
+
+/* ============================================
+   IONS TABLE - PERIODIC TABLE STYLE
+   ============================================ */
+
+/* Quick Access Button */
+.ions-quick-access {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  border-radius: 10px;
+  padding: 6px 12px;
+  transition: all 0.2s ease;
+}
+
+.ions-quick-access:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.ions-quick-access .legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ions-quick-access span {
+  font-weight: 500;
+  font-size: clamp(11.5px, 1.2vw, 14px);
+  color: #92400e;
+}
+
+/* Ions Table Container */
+.ions-table-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  overflow: hidden;
+}
+
+/* Header */
+.ions-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 8px 16px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 16px;
+}
+
+.ions-table-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.ions-table-legend {
+  display: flex;
+  gap: 16px;
+}
+
+.ions-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.ions-legend-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.ions-legend-swatch.ion-cation {
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+}
+
+.ions-legend-swatch.ion-anion {
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
+}
+
+/* Ions Grid - Matches Periodic Table Grid */
+.ions-table-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 4px;
+  flex: 1;
+  padding: 8px;
+}
+
+/* Spacer rows */
+.ion-grid-spacer {
+  height: 8px;
+}
+
+/* Ion Element Card - Matches .element exactly */
+.ion-element {
+  background-color: var(--element-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border-radius: 10px;
+  position: relative;
+  user-select: none;
+  border: 1px solid var(--border-color);
+  min-height: 50px;
+}
+
+.ion-element:hover {
+  background-color: var(--element-hover);
+  transform: translateY(-4px) scale(1.08);
+  z-index: 100;
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Cation styling */
+.ion-element.ion-cation {
+  background-color: #fef3c7;
+  border-color: #fde68a;
+}
+
+.ion-element.ion-cation:hover {
+  background-color: #fde68a;
+}
+
+/* Anion styling */
+.ion-element.ion-anion {
+  background-color: #dbeafe;
+  border-color: #bfdbfe;
+}
+
+.ion-element.ion-anion:hover {
+  background-color: #bfdbfe;
+}
+
+/* Polyatomic styling - slightly different shade */
+.ion-element.ion-polyatomic.ion-cation {
+  background-color: #fef9c3;
+  border-color: #fef08a;
+}
+
+.ion-element.ion-polyatomic.ion-anion {
+  background-color: #e0f2fe;
+  border-color: #bae6fd;
+}
+
+/* Charge - like .number in periodic table */
+.ion-element .ion-charge {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.ion-element.ion-cation .ion-charge {
+  color: #92400e;
+}
+
+.ion-element.ion-anion .ion-charge {
+  color: #1e40af;
+}
+
+/* Symbol - like .symbol in periodic table */
+.ion-element .ion-symbol {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.ion-element.ion-cation .ion-symbol {
+  color: #78350f;
+}
+
+.ion-element.ion-anion .ion-symbol {
+  color: #1e3a8a;
+}
+
+/* Name - like .name in periodic table */
+.ion-element .ion-name {
+  font-size: 0.5rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Hint text */
+.ions-table-hint {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin: 12px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+/* ============================================
+   ION DETAIL MODAL - Like Element Modal
+   ============================================ */
+
+.ion-detail-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(4px);
+}
+
+.ion-detail-content {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  min-width: 320px;
+  max-width: 400px;
+  position: relative;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: ionModalFadeIn 0.3s ease;
+}
+
+@keyframes ionModalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.ion-detail-content.ion-detail-cation {
+  border-top: 4px solid #f59e0b;
+}
+
+.ion-detail-content.ion-detail-anion {
+  border-top: 4px solid #3b82f6;
+}
+
+.ion-detail-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.ion-detail-close:hover {
+  color: #ef4444;
+}
+
+.ion-detail-header {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(249, 250, 251, 0.8));
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.ion-detail-cation .ion-detail-header {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+}
+
+.ion-detail-anion .ion-detail-header {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+}
+
+.ion-detail-charge {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.ion-detail-cation .ion-detail-charge {
+  color: #92400e;
+}
+
+.ion-detail-anion .ion-detail-charge {
+  color: #1e40af;
+}
+
+.ion-detail-symbol {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.ion-detail-cation .ion-detail-symbol {
+  color: #78350f;
+}
+
+.ion-detail-anion .ion-detail-symbol {
+  color: #1e3a8a;
+}
+
+.ion-detail-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ion-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ion-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--background-color);
+  border-radius: 8px;
+}
+
+.ion-detail-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.ion-detail-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ion-detail-hint {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Breakdown Table Styles */
+.breakdown-table,
+.check-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.breakdown-table th,
+.check-table th {
+  text-align: left;
+  padding: 14px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border-color);
+  background: var(--element-bg);
+}
+
+.breakdown-table td,
+.check-table td {
+  padding: 14px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.breakdown-table .element-cell,
+.check-table .element-cell {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.breakdown-table .total-row td {
+  background: var(--element-bg);
+  border-top: 2px solid var(--border-color);
+  font-weight: 700;
+}
+
+.check-table .match-yes {
+  color: #059669;
+  font-weight: 700;
+}
+
+.check-table .match-no {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.balance-status {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+}
+
+.balance-status.balanced {
+  background: rgba(5, 150, 105, 0.1);
+  border: 1px solid rgba(5, 150, 105, 0.3);
+  color: #047857;
+}
+
+.balance-status.unbalanced {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #b91c1c;
+}
+
+/* Percent Bars Visualization */
+.percent-bars-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.percent-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-label {
+  width: 30px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.bar-value {
+  width: 70px;
+  text-align: right;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.formula-display {
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: "Courier New", monospace;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.note-text {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 8px;
+}
+
+/* Element Inputs Grid */
+.element-inputs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.element-inputs-grid .element-input-row {
+  display: grid;
+  grid-template-columns: 140px 80px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.small-input {
+  max-width: 80px;
+  text-transform: uppercase;
+}
+
+/* Formula Result Display */
+.formula-result-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 8px 0;
+}
+
+.formula-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.formula-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+}
+
+.formula-value.highlight {
+  color: var(--text-highlight);
+  font-size: 2rem;
+}
+
+/* Error Message */
+.error-message {
+  background: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #b91c1c;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-align: center;
+}
+
+
+
+/* Ions page padding is handled by .ions-table-page rule */
+
+/* Fix Polyatomic Hover Colors */
+.element.polyatomic-cation:hover {
+  background-color: #ffd18a !important;
+  /* Slightly darker/richer than #ffd9a3 */
+  color: #52310b !important;
+}
+
+.element.polyatomic-anion:hover {
+  background-color: #b3e0ff !important;
+  /* Slightly darker than #cceeff */
+  color: #123852 !important;
+}
+
+/* ==========================================
+   Ion Modal Card Height Fix
+   ========================================== */
+
+/* Ion modal: make modal-info-pane a flex container so simplified-element-box fills the space */
+.ion-modal-content .modal-info-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+/* Ion modal: level-header should not shrink */
+.ion-modal-content .level-header {
+  flex-shrink: 0;
+}
+
+/* Ion modal: simplified-element-box should grow to fill remaining space */
+.ion-modal-content .simplified-element-box {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}
+
+/* =========================================
+   H+ Ion Level 2 Redesign (Premium Animations)
+   ========================================= */
+
+/* Main Grid Container */
+.h-plus-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+  height: 100%;
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* Individual Visual Card */
+.visual-card {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.visual-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+/* Card Label */
+.card-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+  margin-top: 10px;
+  text-align: center;
+  z-index: 2;
+}
+
+.card-title-sm {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #888;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+  position: absolute;
+  top: 10px;
+  left: 12px;
+}
+
+/* --- 1. Glowing Beaker (Lab Identity) --- */
+.beaker-wrapper {
+  width: 60px;
+  height: 70px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.beaker {
+  width: 40px;
+  height: 55px;
+  border: 3px solid #333;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.beaker::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -8px;
+  width: 12px;
+  height: 3px;
+  background: #333;
+  transform: rotate(-30deg);
+  /* Spout */
+}
+
+.liquid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(to bottom, #ef4444, #991b1b);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+  animation: liquidPulse 2s infinite ease-in-out;
+}
+
+.liquid::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+@keyframes liquidPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+    height: 60%;
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.9);
+    height: 62%;
+  }
+}
+
+/* --- 2. Litmus Test (Color Swap) --- */
+.litmus-wrapper {
+  cursor: pointer;
+}
+
+.litmus-strip {
+  width: 60px;
+  height: 24px;
+  background: #4cabeb;
+  /* Blue */
+  border-radius: 2px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: background-color 0.8s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visual-card:hover .litmus-strip {
+  background: #ef4444;
+  /* Red */
+}
+
+.litmus-text {
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 700;
+}
+
+/* --- 3. Reactivity (Rising Bubbles) --- */
+.bubble-container {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  border-bottom: 3px solid #ccc;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.stone {
+  width: 40px;
+  height: 16px;
+  background: #aaa;
+  border-radius: 50% 50% 4px 4px;
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+}
+
+.bubble {
+  width: 8px;
+  height: 8px;
+  background: rgba(59, 130, 246, 0.5);
+  /* CO2 bubbles */
+  border: 1px solid rgba(59, 130, 246, 0.8);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  opacity: 0;
+}
+
+/* Trigger animation on card hover */
+.visual-card:hover .bubble:nth-child(1) {
+  animation: rise 1.5s infinite;
+  animation-delay: 0s;
+  left: 20px;
+}
+
+.visual-card:hover .bubble:nth-child(2) {
+  animation: rise 1.8s infinite;
+  animation-delay: 0.3s;
+  left: 35px;
+}
+
+.visual-card:hover .bubble:nth-child(3) {
+  animation: rise 1.2s infinite;
+  animation-delay: 0.6s;
+  left: 28px;
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-50px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* --- 4. pH Gauge (Wobble) --- */
+.gauge-wrapper {
+  width: 80px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gauge-bg {
+  width: 80px;
+  height: 80px;
+  background: conic-gradient(from 270deg,
+      #ef4444 0deg,
+      #eab308 90deg,
+      #22c55e 180deg);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
+  /* Top half */
+  transform: rotate(0deg);
+}
+
+/* Mask to make it an arc */
+.gauge-bg::after {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 70%;
+  height: 70%;
+  background: rgba(255, 255, 255, 0.8);
+  /* Match card bg */
+  border-radius: 50%;
+}
+
+.gauge-needle {
+  width: 2px;
+  height: 35px;
+  background: #333;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform-origin: bottom center;
+  transform: rotate(-85deg);
+  /* Far left (Red zone) */
+  z-index: 5;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gauge-hub {
+  width: 8px;
+  height: 8px;
+  background: #333;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -4px;
+  left: calc(50% - 4px);
+  z-index: 6;
+}
+
+/* Wobble Effect */
+.visual-card:hover .gauge-needle {
+  animation: gaugeWobble 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes gaugeWobble {
+  from {
+    transform: rotate(-88deg);
+  }
+
+  to {
+    transform: rotate(-82deg);
+  }
+}
+
+/* =========================================
+   H+ Ion Level 2 - Enhanced Layout & Animations
+   ========================================= */
+
+/* Main Container - Match card-info-container style */
+/* Main Container - Match card-info-container style */
+.h-plus-l2-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  /* Stretch to fill parent */
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 16px;
+  /* Increased gap */
+  color: #111827;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto,
+    sans-serif;
+}
+
+/* Identity Metrics Section - Compact rows */
+/* Identity Metrics Section - Redesigned Minimalist Glass */
+.h-plus-metrics-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Opened up space */
+  background: rgba(255, 255, 255, 0.5);
+  /* Semi-transparent base */
+  backdrop-filter: blur(12px);
+  /* Premium blur effect */
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  padding: 20px 24px;
+  /* More breathing room */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  margin-bottom: 4px;
+  /* Space from visuals */
+}
+
+.h-plus-metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  border-bottom: none;
+  /* Removed dividers for clean look */
+}
+
+/* Highlight Row (Electrons) */
+.h-plus-metric-row.highlight-row {
+  background: rgba(239, 68, 68, 0.08);
+  /* Subtle red tint */
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin: 4px -12px;
+  /* Pull to edges of padding */
+  border: 1px solid rgba(239, 68, 68, 0.1);
+}
+
+.h-plus-metric-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.h-plus-metric-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: right;
+  letter-spacing: -0.01em;
+  color: #1e293b;
+}
+
+.h-plus-metric-value.highlight-value {
+  color: #dc2626;
+  font-size: 1.2rem;
+}
+
+.h-plus-metric-value.small-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  max-width: 65%;
+  text-align: right;
+  white-space: nowrap;
+  /* Prevent wrap per user request */
+  opacity: 0.9;
+}
+
+/* Visuals Section Container */
+.h-plus-visuals-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  flex: 1;
+  /* Fill remaining vertical space */
+  min-height: 0;
+  /* Allow grid to shrink if needed, but flex:1 pushes it */
+}
+
+/* Visual Card - Minimalist Glassmorphism */
+.h-plus-visual-card {
+  background: rgba(255, 255, 255, 0.5);
+  /* Semi-transparent base */
+  backdrop-filter: blur(12px);
+  /* Premium blur effect */
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  height: 100%;
+  /* Fill the grid cell fully */
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.h-plus-visual-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Minimalist Title */
+.visual-card-title {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  /* Muted text */
+  pointer-events: none;
+}
+
+/* Description Text - Bottom */
+.visual-card-desc {
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #334155;
+  transition: all 0.3s ease;
+}
+
+.h-plus-visual-card:hover .visual-card-desc {
+  color: #0f172a;
+  transform: translateY(-2px);
+}
+
+/* ========== LITMUS ANIMATION (Redesign) ========== */
+.h-plus-visual-card .litmus-wrapper {
+  margin-top: 8px;
+  /* Offset for title */
+}
+
+/* The Strip itself */
+.h-plus-visual-card .litmus-strip {
+  width: 60px;
+  height: 18px;
+  background: #60a5fa;
+  /* Blue litmus base */
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(59, 130, 246, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+/* Text inside strip */
+.h-plus-visual-card .litmus-text {
+  font-size: 0.6rem;
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 2;
+  opacity: 0.9;
+}
+
+/* Red Color Overlay for Animation */
+.h-plus-visual-card .litmus-strip::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0%;
+  /* Start empty */
+  background: #ef4444;
+  /* Red acidic color */
+  transition: width 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1;
+}
+
+/* Hover Action */
+.h-plus-visual-card:hover .litmus-strip::before {
+  width: 100%;
+  /* Fill to red */
+}
+
+.h-plus-visual-card:hover .litmus-strip {
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+  /* Red glow */
+  transform: scale(1.05);
+}
+
+/* ========== REACTIVITY ANIMATION (Redesign) ========== */
+.h-plus-visual-card .bubble-container {
+  width: 48px;
+  height: 56px;
+  /* Beakerish shape */
+  margin-top: 12px;
+  position: relative;
+  /* Glass Beaker Look */
+  background: rgba(226, 232, 240, 0.4);
+  border: 1.5px solid rgba(203, 213, 225, 0.6);
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  overflow: hidden;
+  /* Contain bubbles */
+}
+
+/* Solid Stone at bottom */
+.h-plus-visual-card .stone {
+  width: 24px;
+  height: 8px;
+  background: #94a3b8;
+  border-radius: 4px 4px 2px 2px;
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Bubbles */
+.h-plus-visual-card .bubble {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 12px;
+  /* Start near stone */
+  left: 50%;
+  opacity: 0;
+  z-index: 5;
+}
+
+@keyframes bubble-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.5);
+  }
+
+  20% {
+    opacity: 0.8;
+    transform: translate(-50%, -4px) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx, -50%), -35px) scale(0.9);
+    /* Variable drift */
+  }
+}
+
+.h-plus-visual-card:hover .bubble:nth-child(1) {
+  --dx: -80%;
+  /* Drift left */
+  animation: bubble-float 1.2s infinite;
+}
+
+.h-plus-visual-card:hover .bubble:nth-child(2) {
+  --dx: -50%;
+  /* Go straight */
+  animation: bubble-float 1.5s infinite 0.2s;
+  width: 4px;
+  height: 4px;
+}
+
+.h-plus-visual-card:hover .bubble:nth-child(3) {
+  --dx: -20%;
+  /* Drift right */
+  animation: bubble-float 1s infinite 0.4s;
+  width: 5px;
+  height: 5px;
+}
+
+/* =========================================
+   New Ion Animations (Li, Na, K, Ag)
+   ========================================= */
+
+/* --- Flame Tests --- */
+.flame-wrapper {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  padding-bottom: 5px;
+}
+
+.flame {
+  width: 30px;
+  height: 45px;
+  border-radius: 50% 50% 20% 20%;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  border-bottom-left-radius: 20%;
+  border-bottom-right-radius: 20%;
+  transform-origin: center bottom;
+  animation: flicker 1s infinite alternate ease-in-out;
+  filter: blur(8px);
+  opacity: 0.9;
+}
+
+@keyframes flicker {
+  0% {
+    transform: scale(1) skewX(-2deg);
+    opacity: 0.9;
+  }
+
+  50% {
+    transform: scale(1.05) skewX(2deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.95) skewX(-1deg);
+    opacity: 0.85;
+  }
+}
+
+.flame-crimson {
+  background: radial-gradient(circle at 50% 80%, #fca5a5, #dc2626);
+  box-shadow: 0 0 20px rgba(220, 38, 38, 0.6);
+}
+
+.flame-orange {
+  background: radial-gradient(circle at 50% 80%, #fdba74, #ea580c);
+  box-shadow: 0 0 20px rgba(234, 88, 12, 0.6);
+}
+
+.flame-lilac {
+  background: radial-gradient(circle at 50% 80%, #e9d5ff, #9333ea);
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.6);
+}
+
+/* --- Battery Flow (Li) --- */
+.battery-wrapper {
+  width: 60px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.battery-icon {
+  width: 40px;
+  height: 24px;
+  border: 2px solid #374151;
+  border-radius: 4px;
+  position: relative;
+  padding: 2px;
+}
+
+.battery-icon::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 6px;
+  width: 3px;
+  height: 8px;
+  background: #374151;
+  border-radius: 0 2px 2px 0;
+}
+
+.batt-charge {
+  height: 100%;
+  width: 100%;
+  background: #10b981;
+  border-radius: 2px;
+  animation: charge-pulse 2s infinite;
+}
+
+.ion-flow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.ion-flow::before {
+  content: "•";
+  color: #ffd700;
+  font-size: 20px;
+  position: absolute;
+  top: -10px;
+  left: 0;
+  animation: flow-across 1.5s linear infinite;
+}
+
+@keyframes charge-pulse {
+  0% {
+    width: 20%;
+    opacity: 0.5;
+  }
+
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes flow-across {
+  0% {
+    left: 0;
+    opacity: 1;
+  }
+
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* --- Solubility (Na) --- */
+.solubility-wrapper {
+  width: 60px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.water-beaker {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-top: none;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 0 0 8px 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.salt-cube {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border: 1px solid #ddd;
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: dissolve 2s infinite forwards;
+}
+
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.particles::before,
+.particles::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  bottom: 10px;
+  left: 50%;
+  opacity: 0;
+  animation: particle-spread 2s infinite;
+}
+
+.particles::after {
+  animation-delay: 0.5s;
+}
+
+@keyframes dissolve {
+  0% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+
+  80% {
+    transform: translateX(-50%) scale(0.2);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes particle-spread {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--x, 10px), -20px);
+    opacity: 0;
+  }
+}
+
+.particles::before {
+  --x: 10px;
+}
+
+.particles::after {
+  --x: -10px;
+}
+
+/* --- Growth / Leaf (K) --- */
+.growth-wrapper {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.plant-stem {
+  width: 4px;
+  background: #10b981;
+  height: 0;
+  position: relative;
+  border-radius: 4px;
+  animation: stem-grow 2s infinite ease-out;
+}
+
+.plant-leaf {
+  width: 15px;
+  height: 15px;
+  background: #10b981;
+  border-radius: 0 50% 0 50%;
+  position: absolute;
+  top: 0;
+  right: -10px;
+  transform: rotate(-10deg) scale(0);
+  transform-origin: bottom left;
+  animation: leaf-grow 2s infinite ease-out;
+}
+
+@keyframes stem-grow {
+  0% {
+    height: 0;
+  }
+
+  50% {
+    height: 40px;
+  }
+
+  100% {
+    height: 40px;
+  }
+}
+
+@keyframes leaf-grow {
+
+  0%,
+  40% {
+    transform: rotate(-10deg) scale(0);
+  }
+
+  80% {
+    transform: rotate(-20deg) scale(1);
+  }
+
+  100% {
+    transform: rotate(-20deg) scale(1);
+  }
+}
+
+/* --- Halide / Precipitate (Ag) --- */
+.halide-wrapper {
+  width: 40px;
+  height: 60px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.test-tube {
+  width: 20px;
+  height: 50px;
+  border: 2px solid rgba(100, 116, 139, 0.3);
+  border-radius: 0 0 10px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.ppt-cloud {
+  width: 100%;
+  height: 60%;
+  background: white;
+  filter: blur(4px);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  animation: precipitate 2s infinite;
+}
+
+@keyframes precipitate {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  40% {
+    opacity: 0.8;
+    transform: translateY(10px);
+  }
+
+  80% {
+    opacity: 1;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(20px);
+  }
+}
+
+/* --- Photosensitive (Ag) --- */
+.photo-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.film-strip {
+  width: 40px;
+  height: 30px;
+  background: #e5e7eb;
+  border: 2px solid #9ca3af;
+  position: relative;
+  transition: background 0.3s;
+  animation: darken-film 3s infinite;
+}
+
+.film-strip::before,
+.film-strip::after {
+  content: "";
+  position: absolute;
+  height: 4px;
+  width: 100%;
+  border-top: 2px dashed #9ca3af;
+  left: 0;
+}
+
+.film-strip::before {
+  top: 2px;
+}
+
+.film-strip::after {
+  bottom: 2px;
+  border-bottom: 2px dashed #9ca3af;
+  border-top: none;
+}
+
+.sun-ray {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 20px;
+  height: 20px;
+  background: #facc15;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #facc15;
+  animation: sun-shine 3s infinite;
+}
+
+@keyframes darken-film {
+  0% {
+    background: #e5e7eb;
+  }
+
+  /* Light grey */
+  50% {
+    background: #9ca3af;
+  }
+
+  100% {
+    background: #1f2937;
+  }
+
+  /* Dark charcoal */
+}
+
+@keyframes sun-shine {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* --- New Ion Animations (Mg to P) --- */
+
+/* Structure/Bone (Ca) */
+.bone-wrapper {
+  width: 60px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bone-shape {
+  width: 40px;
+  height: 12px;
+  background: #e2e8f0;
+  position: relative;
+  border-radius: 4px;
+}
+
+.bone-shape::before,
+.bone-shape::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #e2e8f0;
+  border-radius: 50%;
+  top: -1px;
+}
+
+.bone-shape::before {
+  left: -6px;
+  box-shadow: 0 10px 0 #e2e8f0;
+}
+
+/* Bottom left lob mimics box shadow? No, just create shape */
+.bone-lobes-left {
+  position: absolute;
+  left: -8px;
+  top: -4px;
+  width: 14px;
+  height: 20px;
+}
+
+.bone-lobes-left::before,
+.bone-lobes-left::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 50%;
+  left: 0;
+}
+
+.bone-lobes-left::before {
+  top: 0;
+}
+
+.bone-lobes-left::after {
+  bottom: -8px;
+}
+
+.bone-lobes-right {
+  position: absolute;
+  right: -8px;
+  top: -4px;
+  width: 14px;
+  height: 20px;
+}
+
+.bone-lobes-right::before,
+.bone-lobes-right::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 50%;
+  right: 0;
+}
+
+.bone-lobes-right::before {
+  top: 0;
+}
+
+.bone-lobes-right::after {
+  bottom: -8px;
+}
+
+.mineral-sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 4px white;
+  opacity: 0;
+  animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+
+  0%,
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* X-Ray (Ba) */
+.xray-wrapper {
+  width: 50px;
+  height: 60px;
+  background: #1f2937;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid #555;
+}
+
+.rib-cage {
+  position: absolute;
+  top: 10px;
+  left: 5px;
+  right: 5px;
+  height: 40px;
+  border-left: 2px solid #aaa;
+  border-right: 2px solid #aaa;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.rib {
+  width: 100%;
+  height: 2px;
+  background: #aaa;
+  border-radius: 2px;
+}
+
+.xray-scan {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  background: linear-gradient(to bottom,
+      transparent,
+      rgba(34, 197, 94, 0.4),
+      transparent);
+  animation: xray-scan 3s infinite;
+}
+
+@keyframes xray-scan {
+  0% {
+    top: -30%;
+  }
+
+  100% {
+    top: 130%;
+  }
+}
+
+/* Galvanize / Shield (Zn) */
+.shield-wrapper {
+  width: 50px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.metal-plate {
+  width: 40px;
+  height: 40px;
+  background: #94a3b8;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.rust-spot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #b91c1c;
+  border-radius: 50%;
+  filter: blur(2px);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  animation: rust-heal 3s infinite;
+}
+
+.zn-coating {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(203, 213, 225, 0.6);
+  opacity: 0;
+  animation: coating-appear 3s infinite;
+}
+
+@keyframes rust-heal {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.5;
+  }
+
+  90% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes coating-appear {
+  0% {
+    opacity: 0;
+  }
+
+  40% {
+    opacity: 0;
+  }
+
+  80% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0.8;
+  }
+}
+
+/* Pool / Sanitation (Cl) */
+.pool-wrapper {
+  width: 60px;
+  height: 50px;
+  background: #bfdbfe;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 8px 8px;
+  border-top: 2px solid #60a5fa;
+}
+
+.germ {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #047857;
+  /* green bacteria */
+  border-radius: 50%;
+  animation: germ-float 4s infinite linear;
+}
+
+.shimmer {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right,
+      transparent,
+      rgba(255, 255, 255, 0.6),
+      transparent);
+  transform: skewX(-20deg);
+  animation: pool-shimmer 3s infinite;
+}
+
+@keyframes germ-float {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(10px, -5px);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translate(20px, 10px);
+    opacity: 0;
+  }
+}
+
+@keyframes pool-shimmer {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 200%;
+  }
+}
+
+/* Fire Stop (Br) */
+.fire-wrapper {
+  width: 50px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.small-flame {
+  width: 20px;
+  height: 30px;
+  background: radial-gradient(#fcd34d, #ef4444);
+  border-radius: 50% 50% 20% 20%;
+  position: absolute;
+  bottom: 5px;
+  animation: flicker-die 3s infinite;
+}
+
+.foam-spray {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 4px;
+  height: 0;
+  background: white;
+  transform: translateX(-50%);
+  animation: spray-down 3s infinite;
+}
+
+.foam-pile {
+  position: absolute;
+  bottom: 0;
+  width: 30px;
+  height: 10px;
+  background: white;
+  border-radius: 10px 10px 0 0;
+  opacity: 0;
+  transform: scale(0);
+  animation: pile-up 3s infinite;
+}
+
+@keyframes flicker-die {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  40% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+
+  80% {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes spray-down {
+  0% {
+    height: 0;
+    opacity: 1;
+  }
+
+  30% {
+    height: 40px;
+    opacity: 1;
+  }
+
+  80% {
+    height: 40px;
+    opacity: 0;
+  }
+
+  100% {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes pile-up {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Thyroid (I) */
+.gland-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thyroid-shape {
+  width: 36px;
+  height: 20px;
+  background: #f472b6;
+  border-radius: 20px;
+  position: relative;
+  animation: gland-pulse 3s infinite;
+}
+
+.iodine-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #7e22ce;
+  border-radius: 50%;
+  top: -10px;
+  animation: absorb 3s infinite;
+}
+
+.iodine-dot:nth-child(1) {
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.iodine-dot:nth-child(2) {
+  left: 50%;
+  animation-delay: 0.5s;
+}
+
+.iodine-dot:nth-child(3) {
+  right: 10%;
+  animation-delay: 1s;
+}
+
+@keyframes gland-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(244, 114, 182, 0.5);
+  }
+}
+
+@keyframes absorb {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(15px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(15px);
+    opacity: 0;
+  }
+}
+
+/* Rusting (O/Oxide) */
+.rust-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.iron-bar {
+  width: 40px;
+  height: 12px;
+  background: #64748b;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.rust-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #b45309;
+  /* Rust orange */
+  animation: rust-spread 4s infinite linear;
+}
+
+@keyframes rust-spread {
+  0% {
+    width: 0;
+  }
+
+  50% {
+    width: 100%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+/* Toxic Gas / Skull (P, S) */
+.gas-wrapper {
+  width: 50px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.skull-icon {
+  width: 14px;
+  height: 12px;
+  background: #4b5563;
+  border-radius: 6px 6px 4px 4px;
+  position: absolute;
+  bottom: 5px;
+  z-index: 2;
+}
+
+.skull-icon::before {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  left: 4px;
+  width: 6px;
+  height: 4px;
+  background: #4b5563;
+  border-radius: 2px;
+}
+
+.skull-icon::after {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 3px;
+  width: 3px;
+  height: 3px;
+  background: #1f2937;
+  border-radius: 50%;
+  box-shadow: 5px 0 0 #1f2937;
+}
+
+.gas-fume {
+  position: absolute;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  background: #a3e635;
+  /* chartreuse toxic */
+  border-radius: 50%;
+  filter: blur(4px);
+  opacity: 0;
+  animation: fume-rise 2s infinite;
+}
+
+.gas-fume:nth-child(1) {
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.gas-fume:nth-child(2) {
+  left: 50%;
+  animation-delay: 0.5s;
+}
+
+.gas-fume:nth-child(3) {
+  left: 70%;
+  animation-delay: 1s;
+}
+
+@keyframes fume-rise {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translateY(-40px) scale(2);
+    opacity: 0;
+  }
+}
+
+/* LED (N) */
+.led-wrapper {
+  width: 40px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.led-bulb {
+  width: 20px;
+  height: 20px;
+  background: #e5e7eb;
+  border-radius: 50% 50% 5px 5px;
+  margin-bottom: 2px;
+  animation: led-blink 2s infinite;
+}
+
+.led-legs {
+  width: 12px;
+  height: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.leg {
+  width: 2px;
+  height: 100%;
+  background: #9ca3af;
+}
+
+@keyframes led-blink {
+
+  0%,
+  100% {
+    background: #e5e7eb;
+    box-shadow: none;
+  }
+
+  50% {
+    background: #3b82f6;
+    box-shadow: 0 0 15px #3b82f6;
+  }
+}
+
+/* Chip (P) */
+.chip-wrapper {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.chip-body {
+  width: 30px;
+  height: 30px;
+  background: #1f2937;
+  border: 1px solid #4b5563;
+  position: relative;
+}
+
+.chip-legs {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.chip-legs::before,
+.chip-legs::after {
+  content: "";
+  position: absolute;
+  background: #9ca3af;
+}
+
+.chip-legs::before {
+  width: 34px;
+  height: 20px;
+  top: 5px;
+  left: -2px;
+  z-index: -1;
+  box-shadow: 0 0 0 2px #1f2937;
+}
+
+/* Simplifying legs visual */
+.data-flow {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #22c55e;
+  box-shadow: 0 0 4px #22c55e;
+  animation: data-zip 1s infinite linear;
+}
+
+@keyframes data-zip {
+  0% {
+    top: 2px;
+    left: 2px;
+    opacity: 1;
+  }
+
+  25% {
+    top: 2px;
+    left: 26px;
+  }
+
+  50% {
+    top: 26px;
+    left: 26px;
+  }
+
+  75% {
+    top: 26px;
+    left: 2px;
+  }
+
+  100% {
+    top: 2px;
+    left: 2px;
+    opacity: 0;
+  }
+}
+
+/* Base Beaker (O - Hydroxide) */
+.base-wrapper {
+  width: 40px;
+  height: 50px;
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-top: none;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 0 0 8px 8px;
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.litmus-paper {
+  width: 8px;
+  height: 30px;
+  background: #ef4444;
+  /* Start Red */
+  position: absolute;
+  left: 50%;
+  top: -10px;
+  transform: translateX(-50%);
+  animation: turn-blue 3s infinite;
+}
+
+@keyframes turn-blue {
+  0% {
+    background: #ef4444;
+    top: -10px;
+  }
+
+  40% {
+    top: 10px;
+    background: #ef4444;
+  }
+
+  60% {
+    background: #3b82f6;
+  }
+
+  /* Turn Blue */
+  80% {
+    top: 10px;
+    background: #3b82f6;
+  }
+
+  100% {
+    top: -10px;
+    background: #3b82f6;
+  }
+}
+
+/* Enamel / Tooth (F) */
+.tooth-wrapper {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.tooth-shape {
+  width: 24px;
+  height: 28px;
+  background: white;
+  border-radius: 4px 4px 10px 10px;
+  position: relative;
+}
+
+.tooth-root {
+  position: absolute;
+  bottom: -8px;
+  width: 8px;
+  height: 12px;
+  background: white;
+  border-radius: 0 0 50% 50%;
+}
+
+.root-l {
+  left: 2px;
+}
+
+.root-r {
+  right: 2px;
+}
+
+.shield-glow {
+  position: absolute;
+  width: 40px;
+  height: 44px;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  opacity: 0;
+  animation: shield-pulse 3s infinite;
+}
+
+@keyframes shield-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* CSS Skull Shape to avoid Emoji */
+.skull-icon {
+  width: 20px;
+  height: 14px;
+  background: #4b5563;
+  /* dark gray */
+  border-radius: 6px 6px 4px 4px;
+  position: absolute;
+  bottom: 5px;
+  z-index: 2;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.skull-icon::before,
+.skull-icon::after {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #1f2937;
+  /* darker eyes */
+  border-radius: 50%;
+  top: 4px;
+}
+
+.skull-icon::before {
+  left: 4px;
+}
+
+.skull-icon::after {
+  right: 4px;
+}
+
+/* Teeth */
+
+/* Odor / Rotten Egg (S) */
+.odor-wrapper {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.egg-shape {
+  width: 30px;
+  height: 40px;
+  background: #fef3c7;
+  /* cream */
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  position: relative;
+  border: 1px solid #d1d5db;
+}
+
+.egg-crack {
+  position: absolute;
+  top: 15px;
+  left: 5px;
+  width: 20px;
+  height: 10px;
+  border-top: 2px solid #4b5563;
+  border-radius: 50%;
+  transform: rotate(-10deg);
+}
+
+.egg-crack::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 5px;
+  width: 10px;
+  height: 10px;
+  border-left: 2px solid #4b5563;
+  transform: rotate(45deg);
+}
+
+.stink-wave {
+  position: absolute;
+  width: 2px;
+  height: 30px;
+  background: #a3e635;
+  /* toxic green */
+  border-radius: 2px;
+  opacity: 0;
+  animation: stink-rise 2s infinite ease-out;
+}
+
+.s-left {
+  left: 10px;
+  transform-origin: bottom;
+  animation-delay: 0s;
+}
+
+.s-right {
+  right: 10px;
+  transform-origin: bottom;
+  animation-delay: 0.5s;
+}
+
+@keyframes stink-rise {
+  0% {
+    transform: scaleY(0.5) translateX(0);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleY(1.5) translateX(10px);
+    opacity: 0;
+  }
+}
+
+/* Odor / Scent (Sulfide) */
+.odor-wrapper {
+  width: 50px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.odor-wave {
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background: rgba(180, 83, 9, 0.4);
+  /* Brownish/Yellowish scent lines */
+  border-radius: 2px;
+  bottom: -20px;
+  animation: odor-waft 3s infinite ease-in-out;
+}
+
+.odor-wave:nth-child(1) {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.odor-wave:nth-child(2) {
+  left: 50%;
+  animation-delay: 1s;
+}
+
+.odor-wave:nth-child(3) {
+  left: 80%;
+  animation-delay: 0.5s;
+}
+
+@keyframes odor-waft {
+  0% {
+    transform: translateY(0) scaleY(0.5) skewX(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translateY(-30px) scaleY(1.2) skewX(10deg);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translateY(-60px) scaleY(1.5) skewX(-10deg);
+    opacity: 0;
+  }
+}
+
+/* Carbonate (CO3) - Effervescence */
+.effervesce-wrapper {
+  width: 50px;
+  height: 60px;
+  position: relative;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  background: rgba(255, 255, 255, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.effervesce-bubble {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  bottom: 5px;
+  animation: bubble-up-fast 1s infinite ease-in;
+}
+
+@keyframes bubble-up-fast {
+  0% {
+    transform: translateY(0) scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-50px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Oxalate (C2O4) - Crystals */
+.crystal-wrapper {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.crystal-core {
+  width: 6px;
+  height: 6px;
+  background: #94a3b8;
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+.needle {
+  position: absolute;
+  width: 4px;
+  height: 30px;
+  background: #f8fafc;
+  top: 50%;
+  left: 50%;
+  transform-origin: 50% 50%;
+  /* Center pivot */
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9));
+  animation: needle-grow 2.5s infinite ease-out;
+}
+
+@keyframes needle-grow {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--r)) translateY(-4px) scaleY(0);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) rotate(var(--r)) translateY(-15px) scaleY(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(var(--r)) translateY(-18px) scaleY(1.1);
+    opacity: 0;
+  }
+}
+
+/* Nitrate (NO3) - All Pass Gate */
+.gate-wrapper {
+  width: 60px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gate-post {
+  width: 4px;
+  height: 30px;
+  background: #64748b;
+  margin: 0 10px;
+}
+
+.gate-bar {
+  position: absolute;
+  width: 30px;
+  height: 4px;
+  background: #22c55e;
+  left: 15px;
+  top: 23px;
+  transform-origin: left;
+  animation: gate-open 2s infinite;
+}
+
+@keyframes gate-open {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  40%,
+  60% {
+    transform: rotate(-90deg);
+  }
+}
+
+/* Nitrite (NO2) - Meat Shield */
+.meat-wrapper {
+  width: 50px;
+  height: 40px;
+  background: #fda4af;
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #f43f5e;
+}
+
+.meat-shield {
+  position: absolute;
+  inset: -5px;
+  border: 2px dashed rgba(244, 63, 94, 0.4);
+  border-radius: 8px;
+  animation: rotate 4s infinite linear;
+}
+
+/* Sulfite (SO3) - Bleach Strip */
+.bleach-wrapper {
+  width: 30px;
+  height: 50px;
+  background: #818cf8;
+  position: relative;
+  overflow: hidden;
+}
+
+.bleach-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  transform: translateY(100%);
+  animation: bleach-move 3s infinite;
+}
+
+@keyframes bleach-move {
+  0% {
+    transform: translateY(100%);
+  }
+
+  50%,
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Phosphate (PO4) - DNA */
+.dna-wrapper {
+  width: 40px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+}
+
+.dna-strand {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3b82f6;
+  animation: dna-spin 2s infinite ease-in-out;
+}
+
+@keyframes dna-spin {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    z-index: 1;
+  }
+
+  50% {
+    transform: translateY(50px) scale(0.6);
+    z-index: 0;
+    opacity: 0.5;
+  }
+}
+
+/* Chlorate (ClO3) - Firework */
+.firework-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+}
+
+.spark {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #fbbf24;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  animation: spark-burst 1.5s infinite;
+}
+
+@keyframes spark-burst {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(calc(var(--dx) * 25px), calc(var(--dy) * 25px)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Hypochlorite (ClO) - Shirt Stain */
+.shirt-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.shirt-body {
+  width: 40px;
+  height: 45px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  clip-path: polygon(20% 0, 80% 0, 100% 20%, 100% 100%, 0 100%, 0 20%);
+}
+
+.stain {
+  position: absolute;
+  width: 15px;
+  height: 12px;
+  background: #78350f;
+  border-radius: 40% 60% 50% 40%;
+  top: 20px;
+  animation: fade-out 3s infinite;
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 0.8;
+  }
+
+  40%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Perchlorate (ClO4) - Rocket */
+.rocket-wrapper {
+  width: 40px;
+  height: 60px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: shake 0.2s infinite;
+}
+
+.rocket-head {
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 15px solid #ef4444;
+}
+
+.rocket-body {
+  width: 20px;
+  height: 30px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+.rocket-flame {
+  width: 10px;
+  height: 20px;
+  background: linear-gradient(#fbbf24, transparent);
+  animation: flame-pulse 0.1s infinite;
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-1px);
+  }
+
+  75% {
+    transform: translateX(1px);
+  }
+}
+
+@keyframes flame-pulse {
+
+  0%,
+  100% {
+    height: 15px;
+    opacity: 0.8;
+  }
+
+  50% {
+    height: 25px;
+    opacity: 1;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Chelation (C2O4) - Binding */
+.binding-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.binding-center {
+  width: 20px;
+  height: 20px;
+  background: #94a3b8;
+  border-radius: 4px;
+  position: relative;
+  z-index: 2;
+}
+
+.metal-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #fbbf24;
+  border-radius: 50%;
+  animation: bind-metal 2s infinite ease-in-out;
+}
+
+.metal-dot:nth-child(2) {
+  animation-delay: 1s;
+}
+
+@keyframes bind-metal {
+  0% {
+    transform: scale(1) translate(25px, 0);
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.5) translate(0, 0);
+    opacity: 0;
+  }
+}
+
+/* Geometry (NO2) - Bent Shape */
+.geometry-wrapper {
+  width: 50px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.atom-central {
+  width: 12px;
+  height: 12px;
+  background: #3b82f6;
+  border-radius: 50%;
+  position: absolute;
+  top: 5px;
+}
+
+.atom-side {
+  width: 10px;
+  height: 10px;
+  background: #ef4444;
+  border-radius: 50%;
+  position: absolute;
+  animation: bent-slide 2s infinite ease-in-out;
+}
+
+.side-l {
+  top: 25px;
+  left: 10px;
+}
+
+.side-r {
+  top: 25px;
+  right: 10px;
+}
+
+@keyframes bent-slide {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: translateY(-5px) scale(1.1);
+  }
+}
+
+/* Wilting (ClO3) - Herbicide */
+.wilting-wrapper {
+  width: 40px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wilting-stem {
+  width: 4px;
+  height: 30px;
+  background: #065f46;
+  transform-origin: bottom;
+  animation: droop 3s infinite;
+}
+
+.wilting-leaf {
+  width: 20px;
+  height: 12px;
+  background: #059669;
+  border-radius: 50% 50% 0 50%;
+  position: absolute;
+  top: 5px;
+  left: -15px;
+  transform-origin: right bottom;
+  animation: leaf-brown 3s infinite;
+}
+
+@keyframes droop {
+
+  0%,
+  20% {
+    transform: rotate(0);
+    background: #065f46;
+  }
+
+  80%,
+  100% {
+    transform: rotate(45deg);
+    background: #78350f;
+  }
+}
+
+@keyframes leaf-brown {
+
+  0%,
+  20% {
+    background: #059669;
+    transform: rotate(0);
+  }
+
+  80%,
+  100% {
+    background: #78350f;
+    transform: rotate(30deg);
+  }
+}
+
+/* Planet (ClO4) - Mars Soil */
+.planet-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.planet-mars {
+  width: 34px;
+  height: 34px;
+  background: radial-gradient(circle at 30% 30%, #fca5a1, #991b1b);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.crater {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  width: 6px;
+  height: 4px;
+}
+
+.planet-scanner {
+  position: absolute;
+  width: 40px;
+  height: 2px;
+  background: rgba(34, 197, 94, 0.6);
+  box-shadow: 0 0 8px #22c55e;
+  top: 10px;
+  animation: scan-vertical 2s infinite ease-in-out;
+}
+
+@keyframes scan-vertical {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.2;
+  }
+
+  50% {
+    transform: translateY(30px);
+    opacity: 1;
+  }
+}
+
+/* Fallback Variants */
+.pulse-circle {
+  width: 20px;
+  height: 20px;
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 50%;
+  animation: pulse-grow 2s infinite;
+}
+
+@keyframes pulse-grow {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.star-glow {
+  width: 10px;
+  height: 10px;
+  background: #fbbf24;
+  clip-path: polygon(50% 0%,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 91%,
+      50% 70%,
+      21% 91%,
+      32% 57%,
+      2% 35%,
+      39% 35%);
+  animation: star-spin 4s infinite linear;
+}
+
+@keyframes star-spin {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+
+  to {
+    transform: rotate(360deg) scale(1.2);
+  }
+}
+
+/* ========================================
+   NEW TRANSITION METAL ANIMATIONS
+   ======================================== */
+
+/* 1. Colorless Solution (Cu+) - Clear Water Ripple */
+.colorless-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.clear-drop {
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle at 30% 30%,
+      rgba(255, 255, 255, 0.9),
+      rgba(200, 220, 240, 0.3));
+  border-radius: 50%;
+  border: 2px solid rgba(150, 180, 200, 0.4);
+  position: relative;
+  animation: water-shimmer 2s infinite ease-in-out;
+}
+
+.ripple-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(100, 150, 200, 0.3);
+  border-radius: 50%;
+  animation: ripple-expand 2s infinite ease-out;
+}
+
+.ripple-ring:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.ripple-ring:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes water-shimmer {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes ripple-expand {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+/* 2. Disproportion Reaction (Cu+) - Split Animation */
+.disproportion-wrapper {
+  width: 60px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.center-ion {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #b87333, #cd7f32);
+  border-radius: 50%;
+  position: absolute;
+  animation: split-center 3s infinite;
+}
+
+.split-left {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+  border-radius: 50%;
+  position: absolute;
+  left: 8px;
+  opacity: 0;
+  animation: split-fly-left 3s infinite;
+}
+
+.split-right {
+  width: 12px;
+  height: 12px;
+  background: linear-gradient(135deg, #b87333, #8b5a00);
+  border-radius: 50%;
+  position: absolute;
+  right: 8px;
+  opacity: 0;
+  animation: split-fly-right 3s infinite;
+}
+
+@keyframes split-center {
+
+  0%,
+  30% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+
+  70%,
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes split-fly-left {
+
+  0%,
+  50% {
+    transform: translateX(15px);
+    opacity: 0;
+  }
+
+  70% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-5px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes split-fly-right {
+
+  0%,
+  50% {
+    transform: translateX(-15px);
+    opacity: 0;
+  }
+
+  70% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(5px);
+    opacity: 0.8;
+  }
+}
+
+/* 3. Blue Color Solution (Cu2+) */
+.blue-solution-wrapper {
+  width: 45px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.blue-beaker {
+  width: 35px;
+  height: 40px;
+  background: linear-gradient(180deg,
+      rgba(59, 130, 246, 0.2) 0%,
+      rgba(14, 165, 233, 0.8) 100%);
+  border: 2px solid rgba(59, 130, 246, 0.5);
+  border-radius: 0 0 8px 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.blue-liquid {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 70%;
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  animation: liquid-wave 2s infinite ease-in-out;
+}
+
+.blue-bubble {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: bubble-rise-blue 2s infinite;
+}
+
+.blue-bubble:nth-child(1) {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.blue-bubble:nth-child(2) {
+  left: 50%;
+  animation-delay: 0.5s;
+}
+
+.blue-bubble:nth-child(3) {
+  left: 75%;
+  animation-delay: 1s;
+}
+
+@keyframes liquid-wave {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes bubble-rise-blue {
+  0% {
+    bottom: 5px;
+    opacity: 1;
+  }
+
+  100% {
+    bottom: 35px;
+    opacity: 0;
+  }
+}
+
+/* 4. Hemoglobin O2 Binding (Fe2+) */
+.hemoglobin-wrapper {
+  width: 55px;
+  height: 55px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.red-cell {
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle at 50% 50%, #fecaca, #ef4444);
+  border-radius: 50%;
+  position: relative;
+  animation: cell-pulse 2s infinite;
+  box-shadow: inset 0 0 15px rgba(185, 28, 28, 0.5);
+}
+
+.red-cell::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15px;
+  height: 15px;
+  background: rgba(127, 29, 29, 0.4);
+  border-radius: 50%;
+}
+
+.oxygen-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-radius: 50%;
+  animation: oxygen-bind 3s infinite;
+}
+
+.oxygen-dot:nth-child(1) {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: 0s;
+}
+
+.oxygen-dot:nth-child(2) {
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  animation-delay: 0.5s;
+}
+
+.oxygen-dot:nth-child(3) {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  animation-delay: 1s;
+}
+
+.oxygen-dot:nth-child(4) {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  animation-delay: 1.5s;
+}
+
+@keyframes cell-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes oxygen-bind {
+
+  0%,
+  20% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+
+  40%,
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+}
+
+/* 5. Golden Rain Precipitate (Pb2+) */
+.golden-rain-wrapper {
+  width: 50px;
+  height: 55px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-drop {
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  background: linear-gradient(180deg, #fbbf24, #f59e0b);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation: gold-fall 2s infinite;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.5);
+}
+
+.gold-drop:nth-child(1) {
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.gold-drop:nth-child(2) {
+  left: 30%;
+  animation-delay: 0.3s;
+}
+
+.gold-drop:nth-child(3) {
+  left: 50%;
+  animation-delay: 0.6s;
+}
+
+.gold-drop:nth-child(4) {
+  left: 70%;
+  animation-delay: 0.9s;
+}
+
+.gold-drop:nth-child(5) {
+  left: 85%;
+  animation-delay: 0.2s;
+}
+
+.gold-pile {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 12px;
+  background: linear-gradient(180deg, #f59e0b, #d97706);
+  border-radius: 50% 50% 0 0;
+  animation: pile-glow 2s infinite;
+}
+
+@keyframes gold-fall {
+  0% {
+    top: -10px;
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 45px;
+    opacity: 0;
+  }
+}
+
+@keyframes pile-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(251, 191, 36, 0.5);
+  }
+
+  50% {
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.8);
+  }
+}
+
+/* 6. Deep Purple (MnO4-) */
+.deep-purple-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.purple-core {
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(circle at 30% 30%, #a855f7, #6b21a8);
+  border-radius: 50%;
+  animation: purple-pulse 2s infinite;
+  box-shadow: 0 0 20px rgba(147, 51, 234, 0.6);
+}
+
+.purple-wave {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(147, 51, 234, 0.4);
+  border-radius: 50%;
+  animation: purple-spread 2s infinite;
+}
+
+.purple-wave:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.purple-wave:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes purple-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes purple-spread {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* 7. Oxidizer Fire (MnO4-) */
+.oxidizer-wrapper {
+  width: 50px;
+  height: 55px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.oxidizer-base {
+  width: 20px;
+  height: 5px;
+  background: #374151;
+  border-radius: 2px;
+  position: relative;
+}
+
+.oxidizer-flame {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 30px solid #f97316;
+  filter: blur(1px);
+  animation: flame-dance 0.3s infinite alternate;
+}
+
+.oxidizer-flame::before {
+  content: "";
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 20px solid #fbbf24;
+}
+
+.spark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #fef08a;
+  border-radius: 50%;
+  animation: spark-fly 1s infinite;
+}
+
+.spark:nth-child(1) {
+  left: 30%;
+  animation-delay: 0s;
+}
+
+.spark:nth-child(2) {
+  left: 50%;
+  animation-delay: 0.3s;
+}
+
+.spark:nth-child(3) {
+  left: 70%;
+  animation-delay: 0.6s;
+}
+
+@keyframes flame-dance {
+  0% {
+    transform: translateX(-50%) scaleY(1) scaleX(1);
+  }
+
+  100% {
+    transform: translateX(-50%) scaleY(1.1) scaleX(0.9);
+  }
+}
+
+@keyframes spark-fly {
+  0% {
+    bottom: 10px;
+    opacity: 1;
+  }
+
+  100% {
+    bottom: 50px;
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+
+/* 8. Pigment Swatch (CrO4) */
+.pigment-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.paint-blob {
+  width: 35px;
+  height: 30px;
+  background: linear-gradient(135deg, #fef08a 0%, #facc15 50%, #eab308 100%);
+  border-radius: 60% 40% 50% 50% / 50% 50% 50% 50%;
+  animation: blob-morph 4s infinite;
+  box-shadow: 2px 3px 8px rgba(234, 179, 8, 0.4);
+}
+
+.paint-drip {
+  position: absolute;
+  bottom: 5px;
+  width: 6px;
+  height: 12px;
+  background: linear-gradient(180deg, #facc15, #ca8a04);
+  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+  animation: drip-fall 3s infinite;
+}
+
+@keyframes blob-morph {
+
+  0%,
+  100% {
+    border-radius: 60% 40% 50% 50% / 50% 50% 50% 50%;
+  }
+
+  25% {
+    border-radius: 50% 60% 40% 50% / 40% 60% 50% 50%;
+  }
+
+  50% {
+    border-radius: 40% 50% 60% 50% / 50% 40% 60% 50%;
+  }
+
+  75% {
+    border-radius: 50% 40% 50% 60% / 60% 50% 40% 50%;
+  }
+}
+
+@keyframes drip-fall {
+
+  0%,
+  50% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  60% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+}
+
+/* 9. pH Color Shift (CrO4 -> Cr2O7) */
+.ph-shift-wrapper {
+  width: 50px;
+  height: 45px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ph-tube {
+  width: 20px;
+  height: 40px;
+  background: linear-gradient(180deg,
+      transparent 0%,
+      transparent 20%,
+      var(--ph-color, #facc15) 20%);
+  border: 2px solid #9ca3af;
+  border-radius: 0 0 10px 10px;
+  position: relative;
+  animation: ph-change 4s infinite;
+}
+
+@keyframes ph-change {
+
+  0%,
+  25% {
+    --ph-color: #facc15;
+  }
+
+  50%,
+  75% {
+    --ph-color: #f97316;
+  }
+
+  100% {
+    --ph-color: #facc15;
+  }
+}
+
+.acid-drop {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 8px;
+  background: #ef4444;
+  border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+  animation: acid-drip 4s infinite;
+}
+
+@keyframes acid-drip {
+
+  0%,
+  40% {
+    top: -8px;
+    opacity: 1;
+  }
+
+  50% {
+    top: 5px;
+    opacity: 0;
+  }
+
+  100% {
+    top: -8px;
+    opacity: 0;
+  }
+}
+
+/* 10. Volcano Reaction (Cr2O7) */
+.volcano-wrapper {
+  width: 55px;
+  height: 55px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.volcano-cone {
+  width: 40px;
+  height: 35px;
+  background: linear-gradient(180deg, #f97316 0%, #78350f 60%);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  position: relative;
+}
+
+.volcano-ash {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #166534;
+  border-radius: 50%;
+  animation: ash-erupt 2s infinite;
+}
+
+.volcano-ash:nth-child(1) {
+  left: 40%;
+  animation-delay: 0s;
+}
+
+.volcano-ash:nth-child(2) {
+  left: 55%;
+  animation-delay: 0.3s;
+}
+
+.volcano-ash:nth-child(3) {
+  left: 45%;
+  animation-delay: 0.6s;
+}
+
+.volcano-smoke {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 15px;
+  background: rgba(22, 101, 52, 0.6);
+  border-radius: 50%;
+  animation: smoke-rise 2s infinite;
+}
+
+@keyframes ash-erupt {
+  0% {
+    top: 5px;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    top: -25px;
+    opacity: 0;
+    transform: translateX(var(--ash-x, 10px));
+  }
+}
+
+.volcano-ash:nth-child(1) {
+  --ash-x: -15px;
+}
+
+.volcano-ash:nth-child(2) {
+  --ash-x: 15px;
+}
+
+.volcano-ash:nth-child(3) {
+  --ash-x: 5px;
+}
+
+@keyframes smoke-rise {
+  0% {
+    top: 5px;
+    opacity: 0.8;
+    transform: translateX(-50%) scale(0.5);
+  }
+
+  100% {
+    top: -20px;
+    opacity: 0;
+    transform: translateX(-50%) scale(1.5);
+  }
+}
+
+/* 11. Titration Color Change (Cr2O7) */
+.titration-wrapper {
+  width: 50px;
+  height: 55px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.burette-tip {
+  width: 4px;
+  height: 10px;
+  background: #6b7280;
+  position: relative;
+}
+
+.titrant-drop {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: titrant-fall 2s infinite;
+}
+
+.flask-body {
+  width: 30px;
+  height: 25px;
+  background: linear-gradient(180deg, transparent 0%, transparent 30%);
+  border: 2px solid #9ca3af;
+  border-radius: 0 0 15px 15px;
+  margin-top: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.flask-liquid {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 70%;
+  animation: color-transition 4s infinite;
+}
+
+@keyframes titrant-fall {
+
+  0%,
+  80% {
+    bottom: -5px;
+    opacity: 1;
+  }
+
+  90% {
+    bottom: -20px;
+    opacity: 1;
+  }
+
+  100% {
+    bottom: -20px;
+    opacity: 0;
+  }
+}
+
+@keyframes color-transition {
+
+  0%,
+  30% {
+    background: linear-gradient(180deg, #fb923c, #ea580c);
+  }
+
+  50%,
+  80% {
+    background: linear-gradient(180deg, #4ade80, #16a34a);
+  }
+
+  100% {
+    background: linear-gradient(180deg, #fb923c, #ea580c);
+  }
+}
+
+/* 12. Ammonia Smell (NH4+) */
+.ammonia-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nose-icon {
+  width: 20px;
+  height: 25px;
+  background: #fcd34d;
+  border-radius: 50% 50% 40% 40%;
+  position: relative;
+}
+
+.ammonia-wave {
+  position: absolute;
+  width: 30px;
+  height: 8px;
+  border: 2px solid rgba(34, 197, 94, 0.5);
+  border-radius: 50%;
+  animation: wave-approach 2s infinite;
+}
+
+.ammonia-wave:nth-child(1) {
+  right: -25px;
+  animation-delay: 0s;
+}
+
+.ammonia-wave:nth-child(2) {
+  right: -35px;
+  animation-delay: 0.4s;
+}
+
+.ammonia-wave:nth-child(3) {
+  right: -45px;
+  animation-delay: 0.8s;
+}
+
+@keyframes wave-approach {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+}
+
+/* 13. Slippery/Saponification (OH-) */
+.soap-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.soap-bar {
+  width: 30px;
+  height: 20px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: 4px;
+  position: relative;
+  animation: soap-slide 3s infinite;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.soap-bubble {
+  position: absolute;
+  background: radial-gradient(circle at 30% 30%,
+      rgba(255, 255, 255, 0.8),
+      rgba(200, 220, 255, 0.3));
+  border-radius: 50%;
+  animation: bubble-pop 2s infinite;
+}
+
+.soap-bubble:nth-child(1) {
+  width: 8px;
+  height: 8px;
+  top: -10px;
+  left: 5px;
+  animation-delay: 0s;
+}
+
+.soap-bubble:nth-child(2) {
+  width: 6px;
+  height: 6px;
+  top: -8px;
+  right: 5px;
+  animation-delay: 0.5s;
+}
+
+.soap-bubble:nth-child(3) {
+  width: 5px;
+  height: 5px;
+  top: -12px;
+  left: 15px;
+  animation-delay: 1s;
+}
+
+@keyframes soap-slide {
+
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+
+  50% {
+    transform: translateX(5px) rotate(5deg);
+  }
+}
+
+@keyframes bubble-pop {
+
+  0%,
+  70% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* 14. Buffer Equilibrium (HCO3-) */
+.buffer-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.balance-beam {
+  width: 40px;
+  height: 4px;
+  background: #6b7280;
+  border-radius: 2px;
+  animation: balance-tilt 3s infinite ease-in-out;
+  transform-origin: center;
+}
+
+.balance-ball {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: -8px;
+}
+
+.ball-acid {
+  left: 5px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.ball-base {
+  right: 5px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.pivot-point {
+  position: absolute;
+  bottom: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 10px solid #374151;
+}
+
+@keyframes balance-tilt {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(5deg);
+  }
+
+  75% {
+    transform: rotate(-5deg);
+  }
+}
+
+/* 15. Hot Ice Crystallization (CH3COO-) */
+.hot-ice-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.crystal-seed {
+  width: 8px;
+  height: 8px;
+  background: #e5e7eb;
+  transform: rotate(45deg);
+  position: absolute;
+  animation: crystal-grow 3s infinite;
+}
+
+.crystal-branch {
+  position: absolute;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, #f3f4f6, #d1d5db);
+  animation: branch-grow 3s infinite;
+}
+
+.crystal-branch:nth-child(1) {
+  transform: rotate(0deg);
+  animation-delay: 0.2s;
+}
+
+.crystal-branch:nth-child(2) {
+  transform: rotate(60deg);
+  animation-delay: 0.4s;
+}
+
+.crystal-branch:nth-child(3) {
+  transform: rotate(120deg);
+  animation-delay: 0.6s;
+}
+
+.crystal-branch:nth-child(4) {
+  transform: rotate(180deg);
+  animation-delay: 0.8s;
+}
+
+.crystal-branch:nth-child(5) {
+  transform: rotate(240deg);
+  animation-delay: 1s;
+}
+
+.crystal-branch:nth-child(6) {
+  transform: rotate(300deg);
+  animation-delay: 1.2s;
+}
+
+.heat-wave {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: 50%;
+  animation: heat-pulse 1.5s infinite;
+}
+
+@keyframes crystal-grow {
+  0% {
+    transform: rotate(45deg) scale(0.5);
+  }
+
+  50% {
+    transform: rotate(45deg) scale(1.5);
+  }
+
+  100% {
+    transform: rotate(45deg) scale(0.5);
+  }
+}
+
+@keyframes branch-grow {
+
+  0%,
+  20% {
+    height: 0;
+  }
+
+  60% {
+    height: 18px;
+  }
+
+  100% {
+    height: 0;
+  }
+}
+
+@keyframes heat-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+}
+
+/* 16. Cyanide Toxicity (CN-) */
+.cyanide-wrapper {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skull-shape {
+  width: 28px;
+  height: 30px;
+  background: #fef3c7;
+  border-radius: 50% 50% 40% 40%;
+  position: relative;
+  animation: skull-throb 2s infinite;
+}
+
+.skull-shape::before,
+.skull-shape::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 10px;
+  background: #1f2937;
+  border-radius: 50%;
+  top: 10px;
+}
+
+.skull-shape::before {
+  left: 5px;
+}
+
+.skull-shape::after {
+  right: 5px;
+}
+
+.crossbones {
+  position: absolute;
+  bottom: 2px;
+  width: 35px;
+  height: 8px;
+}
+
+.bone {
+  position: absolute;
+  width: 30px;
+  height: 4px;
+  background: #fef3c7;
+  border-radius: 4px;
+  top: 50%;
+  left: 50%;
+}
+
+.bone:first-child {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.bone:last-child {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.danger-pulse {
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  border: 3px solid rgba(239, 68, 68, 0.5);
+  border-radius: 50%;
+  animation: danger-ring 1.5s infinite;
+}
+
+@keyframes skull-throb {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes danger-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}

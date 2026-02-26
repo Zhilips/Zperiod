@@ -1,0 +1,2067 @@
+/* =========================================
+   tools.css — Chemistry calculator cards, balancer, molar mass, empirical, solubility
+   ========================================= */
+
+/* ========================================
+   Chemistry Tools Page - Modular Card Design
+   ======================================== */
+.chemistry-tools-page {
+  align-items: center;
+  justify-content: center;
+  padding-top: 40px;
+}
+
+.chem-tools-container {
+  max-width: 900px;
+  width: 100%;
+  padding: 60px;
+  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chem-tools-title {
+  font-size: 3.5vmin;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.8vmin;
+  text-align: center;
+  letter-spacing: -0.03em;
+}
+
+.chem-tools-subtitle {
+  font-size: 1.1vmin;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 4vmin;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.chem-tools-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vmin;
+  width: 100%;
+}
+
+/* Chemistry Tool Card - Element Button Style */
+.chem-tool-card {
+  background-color: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 2vmin 2.5vmin;
+  cursor: pointer;
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2vmin;
+  position: relative;
+  user-select: none;
+  min-height: 10vmin;
+}
+
+.chem-tool-card:hover {
+  background-color: var(--element-hover);
+  transform: translateY(-4px) scale(1.02);
+  z-index: 100;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.18);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.chem-tool-card:active {
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* Tool Icon Box - Similar to Element Box */
+.chem-tool-icon-box {
+  width: 8vmin;
+  height: 8vmin;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-color);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.chem-tool-icon-box svg {
+  width: 60%;
+  height: 60%;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.chem-tool-card:hover .chem-tool-icon-box {
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.chem-tool-card:hover .chem-tool-icon-box svg {
+  transform: scale(1.1);
+}
+
+/* Tool Number Badge */
+.chem-tool-number {
+  position: absolute;
+  top: 0.6vmin;
+  left: 0.8vmin;
+  font-size: 1.2vmin;
+  font-weight: 700;
+  color: var(--text-secondary);
+  opacity: 0.6;
+}
+
+/* Tool Icon Color Variations */
+.balancer-icon {
+  background: linear-gradient(135deg, #ffcccc 0%, #ffe5cc 100%);
+}
+
+.balancer-icon svg {
+  color: #78350f;
+}
+
+.molar-icon {
+  background: linear-gradient(135deg, #fff2cc 0%, #d9e2f3 100%);
+}
+
+.molar-icon svg {
+  color: #5d522e;
+}
+
+.percent-icon {
+  background: linear-gradient(135deg, #d1e7dd 0%, #e2f0d9 100%);
+}
+
+.percent-icon svg {
+  color: #2e5d4b;
+}
+
+.empirical-icon {
+  background: linear-gradient(135deg, #e0ccff 0%, #d9e2f3 100%);
+}
+
+.empirical-icon svg {
+  color: #4b2e5d;
+}
+
+/* Tool Info Section */
+.chem-tool-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vmin;
+  padding-right: 2vmin;
+}
+
+.chem-tool-name {
+  font-size: 2vmin;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.chem-tool-card:hover .chem-tool-name {
+  color: var(--text-highlight);
+}
+
+.chem-tool-desc {
+  font-size: 1.3vmin;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* Tool Tags */
+.chem-tool-tags {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  align-items: center;
+}
+
+.grade-tag,
+.feature-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.grade-tag {
+  background: rgba(120, 53, 15, 0.1);
+  color: var(--text-highlight);
+  border: 1px solid rgba(120, 53, 15, 0.2);
+  border-radius: 10px;
+}
+
+.feature-tag {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+}
+
+/* Arrow Indicator */
+.chem-tool-arrow {
+  font-size: 2.5vmin;
+  color: var(--text-muted);
+  font-weight: 300;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.chem-tool-card:hover .chem-tool-arrow {
+  opacity: 1;
+  color: var(--text-highlight);
+  transform: translateX(4px);
+}
+
+/* Original tool styles (for modal content) */
+.tools-title {
+  font-size: 3.5vmin;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.8vmin;
+  text-align: center;
+  letter-spacing: -0.03em;
+}
+
+.tools-subtitle {
+  font-size: 1.1vmin;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 4vmin;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.tool-section {
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 2vmin;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.tool-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.tool-heading {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.tool-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.tool-input-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+
+.tool-input,
+.tool-select {
+  padding: 14px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-family: "Inter", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-primary);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.tool-input:focus,
+.tool-select:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.tool-button {
+  padding: 12px 24px;
+  background: var(--text-primary);
+  color: var(--bg-color);
+  border: 1px solid var(--text-primary);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-family: "Inter", sans-serif;
+}
+
+.tool-button:hover {
+  background: var(--text-highlight);
+  border-color: var(--text-highlight);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.tool-button:active {
+  transform: translateY(0) scale(1);
+}
+
+.tool-result {
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tool-explanation {
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--text-highlight);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tool-explanation h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-highlight);
+  letter-spacing: -0.01em;
+}
+
+.tool-explanation ol,
+.tool-explanation ul {
+  margin-left: 20px;
+  margin-top: 8px;
+}
+
+.tool-explanation li {
+  margin-bottom: 6px;
+}
+
+.tool-check {
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tool-check h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.tool-check table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.tool-check td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-family: "Courier New", monospace;
+}
+
+.tool-check td:first-child {
+  font-weight: 600;
+}
+
+.tool-breakdown {
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tool-breakdown table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tool-breakdown th {
+  text-align: left;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  opacity: 0.8;
+}
+
+.tool-breakdown td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+  font-family: "Inter", monospace;
+  color: var(--text-primary);
+}
+
+.tool-breakdown tr:last-child td {
+  border-bottom: none;
+  font-weight: 700;
+  background: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+}
+
+.formula-inputs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.element-input-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.element-input-row label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.element-input-row input {
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-family: "Inter", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-primary);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.element-input-row input:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Features Page Styles */
+.features-page {
+  align-items: flex-start;
+  padding-top: 80px;
+}
+
+.features-container {
+  max-width: 1200px;
+  width: 100%;
+  padding: 20px;
+}
+
+.features-title {
+  font-size: 3.5vmin;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.8vmin;
+  text-align: center;
+  letter-spacing: -0.03em;
+}
+
+.features-subtitle {
+  font-size: 1.1vmin;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 4vmin;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* Ion elements: responsive to width only.
+   Boxes keep a reasonable minimum size; page scrolls vertically if needed. */
+.ions-table-page .element {
+  width: clamp(60px, 5vw, 90px);
+  container-type: inline-size;
+}
+
+/* Long formulas (e.g. CH₃COO⁻) need smaller symbol text to fit */
+.ions-table-page .element.ion-long-formula .symbol {
+  font-size: 22cqi;
+}
+
+
+.feature-modal-body {
+  padding: 60px;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Tool name label - plain text in padding area */
+.tool-padding-label {
+  position: absolute;
+  top: 20px;
+  left: 60px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -0.02em;
+  pointer-events: none;
+}
+
+.feature-modal-body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Feature modal uses same size as element modal */
+#feature-modal-content {
+  flex-direction: column;
+}
+
+.feature-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.feature-detail-icon {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--element-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.feature-detail-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.feature-detail-content {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+
+.feature-detail-section {
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 16px;
+}
+
+.feature-detail-section h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.feature-detail-section p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.feature-detail-section ul {
+  margin-left: 24px;
+  margin-top: 12px;
+}
+
+.feature-detail-section li {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.tool-modal-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tool-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Special two-column layout for Empirical Formula tool */
+.tool-modal-content.empirical-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.empirical-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empirical-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empirical-layout .tool-result-box,
+.empirical-layout .tool-explanation-box {
+  grid-column: span 2;
+}
+
+.compact-tips {
+  padding: 20px;
+}
+
+.compact-tips h4 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.compact-tips ol,
+.compact-tips ul {
+  margin-left: 20px;
+  line-height: 1.6;
+}
+
+.compact-tips li {
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+/* ========================================
+   Balance Scale Balancer UI
+   ======================================== */
+.balancer-scale-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 20px;
+  height: 100%;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+/* SVG Balance Scale */
+.balance-scale-svg {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.1));
+}
+
+.scale-stand,
+.scale-base {
+  stroke: #94a3b8;
+  fill: none;
+}
+
+.scale-pivot {
+  fill: #475569;
+  stroke: #94a3b8;
+  stroke-width: 2;
+}
+
+.scale-pivot-cap {
+  fill: #64748b;
+}
+
+.scale-beam-group {
+  transform-origin: 250px 95px;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.scale-beam {
+  stroke: #e2e8f0;
+  fill: none;
+}
+
+.scale-chain {
+  stroke: #94a3b8;
+  stroke-width: 2;
+  fill: none;
+}
+
+.scale-pan {
+  fill: none;
+  stroke: #e2e8f0;
+  stroke-width: 2;
+  color: #e2e8f0;
+}
+
+.scale-label {
+  fill: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "Inter", sans-serif;
+}
+
+/* Pan and suspension physics - keep pans level via Y translation */
+.scale-pan,
+.left-suspension,
+.right-suspension {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Tilting animations - entire scale tilts as one unit */
+.scale-beam-group.tilt-left {
+  transform: rotate(-12deg);
+}
+
+.scale-beam-group.tilt-right {
+  transform: rotate(12deg);
+}
+
+.scale-beam-group.tilt-left-slight {
+  transform: rotate(-6deg);
+}
+
+.scale-beam-group.tilt-right-slight {
+  transform: rotate(6deg);
+}
+
+.scale-beam-group.balanced {
+  transform: rotate(0deg);
+}
+
+/* Physics wobble animation when transitioning */
+@keyframes pan-wobble {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  15% {
+    transform: rotate(3deg);
+  }
+
+  30% {
+    transform: rotate(-2deg);
+  }
+
+  45% {
+    transform: rotate(1.5deg);
+  }
+
+  60% {
+    transform: rotate(-1deg);
+  }
+
+  75% {
+    transform: rotate(0.5deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.scale-beam-group.wobbling .left-pan,
+.scale-beam-group.wobbling .right-pan {
+  animation: pan-wobble 0.6s ease-out;
+}
+
+/* Shake animation for auto-balance */
+@keyframes scale-shake {
+
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+
+  10% {
+    transform: rotate(-5deg);
+  }
+
+  20% {
+    transform: rotate(5deg);
+  }
+
+  30% {
+    transform: rotate(-4deg);
+  }
+
+  40% {
+    transform: rotate(4deg);
+  }
+
+  50% {
+    transform: rotate(-3deg);
+  }
+
+  60% {
+    transform: rotate(3deg);
+  }
+
+  70% {
+    transform: rotate(-2deg);
+  }
+
+  80% {
+    transform: rotate(2deg);
+  }
+
+  90% {
+    transform: rotate(-1deg);
+  }
+}
+
+.scale-beam-group.shaking {
+  animation: scale-shake 0.8s ease-out;
+}
+
+/* Input Areas */
+.balancer-inputs {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.balancer-formula-input {
+  padding: 14px 18px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-family: "Inter", sans-serif;
+  background: white;
+  color: #1e293b;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.balancer-formula-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.balancer-formula-input::placeholder {
+  color: #94a3b8;
+}
+
+.balancer-arrow {
+  font-size: 2rem;
+  color: #94a3b8;
+  font-weight: 300;
+}
+
+.atom-count-display {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-align: center;
+  min-height: 20px;
+}
+
+/* Feedback Area */
+.balancer-feedback {
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feedback-text {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.balancer-feedback.balanced {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.balancer-feedback.balanced .feedback-text {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+.balancer-feedback.unbalanced {
+  background: rgba(251, 191, 36, 0.15);
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.balancer-feedback.unbalanced .feedback-text {
+  color: #d97706;
+}
+
+/* Auto Balance Button */
+.auto-balance-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+.auto-balance-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+}
+
+.auto-balance-btn:active {
+  transform: translateY(0);
+}
+
+.auto-balance-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.auto-balance-btn:hover svg {
+  transform: rotate(90deg);
+}
+
+/* Balanced Equation Display */
+.balanced-equation-display {
+  padding: 20px 32px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 2px solid rgba(34, 197, 94, 0.3);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.balanced-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.balanced-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #22c55e;
+  letter-spacing: 0.02em;
+}
+
+/* End Balance Scale Styles */
+
+.tool-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tool-input-section label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tool-input-hint {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-style: italic;
+}
+
+.tool-button.primary-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, var(--text-primary) 0%, #4a3f36 100%);
+  color: var(--bg-color);
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  align-self: flex-start;
+}
+
+.tool-button.primary-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.tool-result-box {
+  background: linear-gradient(135deg, var(--element-bg) 0%, #f9f5ef 100%);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+}
+
+.big-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-highlight);
+}
+
+.unit {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-left: 8px;
+}
+
+.tool-explanation-box,
+.tool-breakdown-box,
+.tool-check-box {
+  background: var(--element-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.tool-explanation-box h4,
+.tool-breakdown-box h4,
+.tool-check-box h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+.tool-explanation-box ol,
+.tool-explanation-box ul {
+  margin-left: 24px;
+  line-height: 1.8;
+}
+
+.tool-explanation-box li {
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.tool-tips-section h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.tool-tips-section ul,
+.tool-tips-section ol {
+  margin-left: 24px;
+  line-height: 1.7;
+}
+
+.tool-tips-section li {
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.tool-tips-section p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+
+/* Section Icon Styling */
+.section-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  vertical-align: middle;
+  color: var(--text-highlight);
+}
+
+.section-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.section-icon.warning {
+  color: #dc6b00;
+}
+
+/* Tool Modal Icon Theming */
+.tool-modal-icon.balancer-icon {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #b91c1c;
+}
+
+.tool-modal-icon.molar-icon {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #b45309;
+}
+
+.tool-modal-icon.percent-icon {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #047857;
+}
+
+.tool-modal-icon.empirical-icon {
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  color: #4338ca;
+}
+
+/* Enhanced Tool Select */
+.tool-select {
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+  background: var(--bg-color);
+  color: var(--text-primary);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%235D544F' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.tool-select:focus {
+  outline: none;
+  border-color: var(--text-highlight);
+  box-shadow: 0 0 0 3px rgba(120, 53, 15, 0.1);
+}
+
+/* Enhanced Warning Box */
+.warning-box {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.warning-box::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2392400E' stroke-width='2'%3E%3Cpath d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/%3E%3Cline x1='12' y1='9' x2='12' y2='13'/%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* h4 in tool sections */
+.tool-tips-section h4,
+.tool-explanation-box h4,
+.tool-breakdown-box h4,
+.tool-check-box h4 {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+
+/* ========================================
+   Molar Mass Calculator - Electronic Scale
+   倾斜3D电子秤 + 精准出票
+   ======================================== */
+
+/* 整体包裹器 - 3D透视空间 */
+.electronic-scale-wrapper {
+  position: relative;
+  width: 360px;
+  margin: 0 auto 60px;
+  transform-style: preserve-3d;
+  transform: rotateX(15deg) rotateZ(-3deg);
+  /* 不要transition，保持固定 */
+}
+
+/* Ground shadow - 桌面投影 */
+.electronic-scale-wrapper::after {
+  content: "";
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%) rotateZ(3deg);
+  width: 85%;
+  height: 30px;
+  background: radial-gradient(ellipse at center,
+      rgba(0, 0, 0, 0.13) 0%,
+      transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* 元素方块区域 - 固定高度 */
+.scale-blocks-area {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  height: 100px;
+  /* 固定高度，不随内容变化 */
+  padding: 10px;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 10;
+}
+
+/* Individual Element Blocks */
+.element-block {
+  position: relative;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 0 15px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  min-width: 45px;
+  min-height: 45px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: blockBounceIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes blockBounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.6);
+  }
+
+  60% {
+    opacity: 1;
+    transform: translateY(4px) scale(1.05);
+  }
+
+  80% {
+    transform: translateY(-2px) scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.element-block:hover {
+  transform: scale(1.08) translateY(-8px);
+  z-index: 10;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Tooltip for hover */
+.block-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(5px);
+  background: rgba(30, 41, 59, 0.95);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 20;
+  font-family: "Inter", sans-serif;
+}
+
+.block-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -6px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(30, 41, 59, 0.95) transparent transparent transparent;
+}
+
+.element-block:hover .block-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* The Scale itself - 秤主体 */
+.electronic-scale-base {
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 0 #94a3b8,
+    0 20px 40px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.electronic-scale-base::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      transparent 50%);
+  pointer-events: none;
+}
+
+/* Metal Platform on top - 顶部称重台 */
+.scale-platform-top {
+  width: 280px;
+  height: 12px;
+  border-radius: 100px;
+  margin-top: -6px;
+  margin-bottom: 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(to right,
+      #78909c,
+      #b0bec5 30%,
+      #78909c 70%,
+      #546e7a);
+  transition:
+    transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1),
+    filter 0.35s ease;
+}
+
+.scale-platform-top.has-weight {
+  transform: translateY(2px);
+  filter: brightness(0.95);
+}
+
+/* Digital Screen - 数字显示屏 */
+.scale-screen {
+  width: 220px;
+  height: 50px;
+  background: #0a0f1a;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 15px;
+  font-family: "Courier New", monospace;
+  font-size: 1.8rem;
+  color: #4ade80;
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.7);
+  border: 2px solid #1e293b;
+  letter-spacing: 2px;
+}
+
+.receipt-wrapper::before {
+  /* 去掉顶部锯齿，避免漏出 */
+  display: none;
+}
+
+.receipt-wrapper::after {
+  /* 锯齿底边 */
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background:
+    linear-gradient(135deg, #f9fafb 50%, transparent 50%),
+    linear-gradient(-135deg, #f9fafb 50%, transparent 50%);
+  background-size: 10px 8px;
+  background-repeat: repeat-x;
+}
+
+.receipt-header {
+  text-align: center;
+  border-bottom: none;
+  padding-bottom: 6px;
+  margin-bottom: 0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+/* 条形码样式 */
+.receipt-barcode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  letter-spacing: -1px;
+  color: #1f2937;
+  margin: 4px 0 8px;
+  border-bottom: 1px dashed #d1d5db;
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.receipt-date {
+  font-size: 0.7rem;
+  text-align: center;
+  color: #9ca3af;
+  margin-top: 0;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.receipt-item-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.receipt-item-name {
+  display: flex;
+  gap: 6px;
+  color: #4b5563;
+}
+
+.receipt-item-qty {
+  color: #9ca3af;
+  font-size: 0.75rem;
+}
+
+.receipt-total-row {
+  border-top: 1px dashed #d1d5db;
+  margin-top: 12px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #1f2937;
+}
+
+.receipt-footer {
+  text-align: center;
+  font-size: 0.65rem;
+  margin-top: 14px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-top: 1px dashed #e5e7eb;
+  padding-top: 10px;
+}
+
+/* ========================================
+   Molar Mass Scale - Realtime Split Layout
+   ======================================== */
+.molar-tool-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 40px;
+  height: 100%;
+  align-items: start;
+}
+
+/* LEFT COLUMN: Inputs & Tips */
+.molar-input-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Glass float card for input section */
+.molar-input-panel .tool-input-section {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.molar-input-panel .tool-input-section:hover {
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 12px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.molar-input-panel .tool-input-section:focus-within {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow:
+    0 0 0 3px rgba(99, 102, 241, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 12px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Input card label with icon */
+.molar-input-label {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  color: #475569 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.molar-label-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 7px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* Options row */
+.molar-options-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.molar-exact-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #475569;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.molar-exact-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #6366f1;
+}
+
+/* RIGHT COLUMN: The Stage */
+.molar-scale-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 0;
+  padding-bottom: 200px;
+  position: relative;
+  perspective: 800px;
+}
+
+/* Front Panel - 前面板（带出票口）*/
+.scale-front-panel {
+  width: 100%;
+  height: 35px;
+  background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 出票口 - 比小票宽一点 */
+.receipt-slot {
+  width: 260px;
+  /* 比小票(240px)宽 */
+  height: 10px;
+  /* 竖向更宽 */
+  background: #0a0f1a;
+  border-radius: 5px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+/* 小票动画容器 - 精准对齐出票口 */
+.receipt-anim-container {
+  position: absolute;
+  top: 218px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+  height: 400px;
+  z-index: 9;
+  pointer-events: none;
+  overflow: hidden;
+  /* 裁剪超出部分 */
+}
+
+/* 小票本身 */
+.receipt-wrapper {
+  width: 240px;
+  background: linear-gradient(180deg, #fefefe 0%, #f9fafb 100%);
+  padding: 14px 16px 20px;
+  border-radius: 0;
+  box-shadow:
+    4px 4px 12px rgba(0, 0, 0, 0.15),
+    8px 8px 24px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.02);
+  position: relative;
+  font-family: "Courier New", monospace;
+  font-size: 0.75rem;
+  color: #374151;
+  transform: translateY(-300px);
+  /* 固定值，确保完全隐藏 */
+  opacity: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition:
+    transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Receipt Animation States - 小票动画状态 */
+.receipt-wrapper.printing {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.receipt-wrapper.discarding {
+  transform: translateY(500px);
+  /* 固定值，往下掉落 */
+  opacity: 0;
+  transition:
+    transform 0.4s ease-in,
+    opacity 0.3s ease;
+}
+
+/* 移除 discarding 后瞬间回到上方，无动画 */
+.receipt-wrapper.reset-position {
+  transition: none !important;
+}
+
+/* Input Styles */
+.realtime-input {
+  font-size: 1.5rem;
+  padding: 16px 20px;
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  background: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.realtime-input:focus {
+  border-color: var(--text-highlight);
+  background: #fff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive - Electronic Scale */
+@media (max-width: 900px) {
+  .molar-tool-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .electronic-scale-wrapper {
+    transform: rotateX(8deg) rotateZ(-2deg);
+    width: 320px;
+  }
+
+  .molar-scale-stage {
+    padding-bottom: 250px;
+  }
+}
+
+/* Highlight Enter Key hint */
+.enter-hint {
+  font-size: 0.8rem;
+  color: #475569;
+  margin-top: 8px;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.kbd-key {
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  box-shadow: 0 2px 0 #94a3b8;
+}
+
+/* ========================================
+   Molar Mass - Learning Mode & Tooltips
+   ======================================== */
+
+/* Show Calculation Button */
+.show-calc-btn {
+  width: 100%;
+  padding: 10px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.show-calc-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+/* Calculation Steps Container */
+.calc-steps-content {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calc-step-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #f1f5f9;
+}
+
+.calc-step-row:last-child {
+  border-bottom: none;
+  font-weight: 700;
+  color: #0f172a;
+  padding-top: 10px;
+  margin-top: 5px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.calc-step-formula {
+  color: #64748b;
+  font-family: "SF Mono", monospace;
+  font-size: 0.85rem;
+}
+
+
+/* ============================================
+   Molar Mass Calculator - Apple Style Tips
+   ============================================ */
+.formula-live-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(248, 250, 252, 0.6);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 12px;
+  margin-top: 8px;
+  min-height: 44px;
+}
+
+.formula-live-preview .preview-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.formula-live-preview .preview-formula {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  font-family:
+    "SF Pro Display",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.formula-live-preview .preview-formula sub {
+  font-size: 0.9em;
+  vertical-align: sub;
+}
+
+.formula-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(248, 250, 252, 0.6);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  border-radius: 10px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  transition: all 0.25s ease;
+}
+
+.formula-suggestion.has-message {
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+
+.formula-suggestion.has-error {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  color: #991b1b;
+}
+
+.formula-suggestion.has-error .suggestion-icon {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+.formula-suggestion .suggestion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: rgba(234, 179, 8, 0.15);
+  border-radius: 50%;
+  color: #b45309;
+  flex-shrink: 0;
+}
+
+.formula-suggestion .suggestion-icon svg {
+  display: block;
+}
+
+.formula-suggestion .suggestion-text {
+  line-height: 1.4;
+}
+
+/* Tips Section - Neutral glass float card */
+.molar-tips-apple {
+  background: rgba(248, 250, 252, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  padding: 16px 20px;
+  margin-top: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  flex-grow: 1;
+  transition: all 0.2s ease;
+}
+
+/* Tips header with icon */
+.molar-tips-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.molar-tips-header svg {
+  color: #94a3b8;
+}
+
+.molar-tips-apple .tips-item {
+  display: block;
+  padding: 5px 0;
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.molar-tips-apple .tips-item::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: #94a3b8;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.molar-tips-apple .tips-examples {
+  margin-top: 16px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.molar-tips-apple .example-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 0.8rem;
+}
+
+.molar-tips-apple .example-row code {
+  font-family: "SF Mono", "Monaco", monospace;
+  font-size: 0.8rem;
+  color: #475569;
+  background: #fff;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  min-width: 90px;
+}
+
+.molar-tips-apple .example-row span {
+  color: #94a3b8;
+}
+
+.molar-tips-apple .example-row .result {
+  font-weight: 600;
+  color: #1e293b;
+  font-family:
+    "SF Pro Display",
+    -apple-system,
+    sans-serif;
+}
+
+.molar-tips-apple .example-row .result sub {
+  font-size: 0.7em;
+  vertical-align: baseline;
+  position: relative;
+  top: 0.25em;
+}

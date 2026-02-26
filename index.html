@@ -28,16 +28,18 @@
         content="Master chemistry visually with 3D atom models, ion engine, and exam-ready tools.">
     <meta name="twitter:image" content="logo.svg">
 
-    <!-- Theme Color (for mobile browsers) -->
-    <meta name="theme-color" content="#4f7dfc">
-
     <link rel="icon" type="image/svg+xml" href="logo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=6">
-    <link rel="stylesheet" href="worksheet-styles.css">
-    <link rel="stylesheet" href="ion-animations.css">
+    <link rel="stylesheet" href="css/base.css?v=7">
+    <link rel="stylesheet" href="css/grid.css?v=7">
+    <link rel="stylesheet" href="css/modal.css?v=7">
+    <link rel="stylesheet" href="css/tools.css?v=7">
+    <link rel="stylesheet" href="css/ions.css?v=7">
+    <link rel="stylesheet" href="css/worksheet-styles.css?v=7">
+    <link rel="stylesheet" href="css/ion-animations.css?v=7">
+    <link rel="stylesheet" href="css/mobile-landing.css?v=7">
     <script type="text/javascript">
         (function (c, l, a, r, i, t, y) {
             c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
@@ -48,6 +50,131 @@
 </head>
 
 <body>
+    <!-- Desktop Only Overlay / Mobile Landing Page -->
+    <div id="desktop-only-overlay" class="desktop-only-overlay">
+        <!-- Fallback for desktop (hidden by CSS) -->
+        <div class="desktop-only-content">
+            <h1 class="desktop-only-title">Desktop Experience Only</h1>
+            <p class="desktop-only-text">Please access Zperiod on a desktop browser.</p>
+        </div>
+
+        <!-- Mobile Landing Page -->
+        <div class="mobile-landing">
+            <!-- Hero Section -->
+            <section class="ml-hero">
+                <div class="ml-hero-bg"></div>
+                <div class="ml-hero-content">
+                    <img src="logo.svg" alt="Zperiod" class="ml-logo">
+                    <h1 class="ml-title">Zperiod</h1>
+                    <p class="ml-subtitle">Master Chemistry.<br>Visually &amp; Instantly.</p>
+                    <div class="ml-badge-row">
+                        <span class="ml-badge">118 Elements</span>
+                        <span class="ml-badge">3D Models</span>
+                        <span class="ml-badge">Free</span>
+                    </div>
+                </div>
+                <div class="ml-scroll-indicator">
+                    <span>Scroll to explore</span>
+                    <div class="ml-scroll-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Features -->
+            <div class="ml-section-header ml-reveal">
+                <span class="ml-section-label">Features</span>
+                <h2 class="ml-section-title">Everything you need<br>for Chemistry.</h2>
+            </div>
+
+            <section class="ml-features">
+                <!-- Feature 1: Periodic Table -->
+                <div class="ml-feature ml-reveal">
+                    <div class="ml-feature-tag">Interactive</div>
+                    <h3 class="ml-feature-title">Periodic Table</h3>
+                    <p class="ml-feature-desc">All 118 elements with category color-coding, phase data at STP, and instant access to comprehensive chemical information.</p>
+                    <div class="ml-img-frame">
+                        <img src="images/preview-table.png" alt="Interactive Periodic Table" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Feature 2: Atom Models -->
+                <div class="ml-feature ml-reveal">
+                    <div class="ml-feature-tag">3D Visualization</div>
+                    <h3 class="ml-feature-title">Atom Models</h3>
+                    <p class="ml-feature-desc">Interactive 3D atom structures with electron shells, swipeable info cards, and detailed properties for every element.</p>
+                    <div class="ml-img-frame">
+                        <img src="images/preview-modal.png" alt="3D Atom Model" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Feature 3: Chemistry Tools -->
+                <div class="ml-feature ml-reveal">
+                    <div class="ml-feature-tag">Chemistry Tools</div>
+                    <h3 class="ml-feature-title">Equation Balancer</h3>
+                    <p class="ml-feature-desc">Balance chemical equations with a real-time physics-based scale visualization and one-click auto-balance.</p>
+                    <div class="ml-img-frame">
+                        <img src="images/preview-tools.png" alt="Equation Balancer" loading="lazy">
+                    </div>
+                </div>
+
+                <!-- Feature 4: Worksheet -->
+                <div class="ml-feature ml-reveal">
+                    <div class="ml-feature-tag">Education</div>
+                    <h3 class="ml-feature-title">Worksheet Generator</h3>
+                    <p class="ml-feature-desc">Generate print-ready balanced equation worksheets with adjustable difficulty, multiple reaction types, and PDF export.</p>
+                    <div class="ml-img-frame">
+                        <img src="images/preview-worksheet.png" alt="Worksheet Generator" loading="lazy">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Strip -->
+            <section class="ml-stats ml-reveal">
+                <div class="ml-stat">
+                    <span class="ml-stat-number">118</span>
+                    <span class="ml-stat-label">Elements</span>
+                </div>
+                <div class="ml-stat">
+                    <span class="ml-stat-number">50+</span>
+                    <span class="ml-stat-label">Ions</span>
+                </div>
+                <div class="ml-stat">
+                    <span class="ml-stat-number">4</span>
+                    <span class="ml-stat-label">Tools</span>
+                </div>
+                <div class="ml-stat">
+                    <span class="ml-stat-number">3D</span>
+                    <span class="ml-stat-label">Atoms</span>
+                </div>
+            </section>
+
+            <!-- CTA -->
+            <section class="ml-cta ml-reveal">
+                <div class="ml-cta-card">
+                    <svg class="ml-cta-icon" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    <h2 class="ml-cta-title">Best on Desktop</h2>
+                    <p class="ml-cta-text">Zperiod is a professional-grade educational tool. For the full interactive 3D experience, visit on a desktop browser.</p>
+                    <a href="https://zperiod.app" class="ml-cta-btn">Visit zperiod.app</a>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="ml-footer">
+                <img src="logo.svg" alt="Zperiod" class="ml-footer-logo">
+                <p>&copy; 2026 Philip. All rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+
     <!-- Welcome Intro Modal -->
     <div id="welcome-modal" class="modal-overlay">
         <div class="modal-content welcome-redesign">
@@ -216,10 +343,6 @@
     </nav>
 
     <div class="container" id="main-container">
-        <!-- <header>
-            <h1>The Periodic Table</h1>
-            <p>of Elements</p>
-        </header> -->
         <div class="periodic-table" id="periodic-table">
         </div>
     </div>
@@ -748,6 +871,10 @@
                             <span class="ov-label">Group</span>
                             <span class="ov-value" id="modal-group">18</span>
                         </div>
+                        <div class="overview-item area-period">
+                            <span class="ov-label">Period</span>
+                            <span class="ov-value" id="modal-period">1</span>
+                        </div>
                         <div class="overview-item area-amphoteric" id="amphoteric-card" style="display: none;">
                             <span class="ov-label">Chemical Property</span>
                             <span class="ov-value">Amphoteric</span>
@@ -1129,9 +1256,9 @@
         </div>
     </div>
     <script src="three.min.js"></script>
-    <script src="ion-animations.js"></script>
-    <script src="script.js?v=2"></script>
-    <script src="worksheet-generator.js"></script>
+    <script src="js/ion-animations.js?v=7"></script>
+    <script type="module" src="script.js?v=7"></script>
+    <script src="js/worksheet-generator.js?v=7"></script>
 
     <!-- Global Floating About Button -->
     <button class="floating-about-btn" id="floating-about-btn" title="About Zperiod">
@@ -1146,6 +1273,30 @@
     <div class="copyright-notice">
         © 2026 Philip. All rights reserved.
     </div>
+
+    <!-- Mobile Landing Scroll Animations -->
+    <script>
+        (function () {
+            if (window.innerWidth >= 860) return;
+            function initMobileLanding() {
+                var els = document.querySelectorAll('.ml-reveal');
+                if (!els.length) return;
+                var observer = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('ml-visible');
+                        }
+                    });
+                }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+                els.forEach(function (el) { observer.observe(el); });
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initMobileLanding);
+            } else {
+                initMobileLanding();
+            }
+        })();
+    </script>
 </body>
 
 </html>

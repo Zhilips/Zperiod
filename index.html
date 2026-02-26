@@ -1274,6 +1274,24 @@
         © 2026 Philip. All rights reserved.
     </div>
 
+        <!-- User-Agent based mobile detection -->
+        <script>
+        function isMobileDevice() {
+            return /Mobi|Android|iPhone|iPad|iPod|Mobile|Tablet|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        if (!isMobileDevice()) {
+            document.addEventListener('DOMContentLoaded', function() {
+                var overlay = document.getElementById('desktop-only-overlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                }
+                var mainContainer = document.querySelector('.container');
+                if (mainContainer) {
+                    mainContainer.style.display = '';
+                }
+            });
+        }
+        </script>
     <!-- Mobile Landing Scroll Animations -->
     <script>
         (function () {

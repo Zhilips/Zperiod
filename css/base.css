@@ -1041,21 +1041,38 @@ body.hide-nav .version-dropdown {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sv-suggest-send svg {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .sv-suggest-send:hover {
   background: #333;
-  transform: scale(1.05);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.sv-suggest-send:hover svg {
+  transform: translate(1px, -1px);
 }
 
 .sv-suggest-send:active {
-  transform: scale(0.94);
+  transform: scale(0.92);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .sv-suggest-send.sent {
   background: #16a34a;
+  transform: scale(1.05);
+  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.2);
+}
+
+.sv-suggest-send.sent svg {
+  transform: scale(1.2);
 }
 
 .sv-suggest-status {

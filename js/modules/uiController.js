@@ -350,6 +350,20 @@ function syncSliderVisuals(bounds, selected) {
   eitUI.sliderFill.style.left = `${Math.max(0, Math.min(100, minPct))}%`;
   eitUI.sliderFill.style.width =
     `${Math.max(0, Math.min(100, maxPct) - Math.max(0, Math.min(100, minPct)))}%`;
+
+  // Fix overlapping thumbs: bring the correct thumb to the front
+  if (selected.min === selected.max) {
+    if (minPct > 50) {
+      eitUI.rangeMinInput.style.zIndex = "10";
+      eitUI.rangeMaxInput.style.zIndex = "5";
+    } else {
+      eitUI.rangeMinInput.style.zIndex = "5";
+      eitUI.rangeMaxInput.style.zIndex = "10";
+    }
+  } else {
+    eitUI.rangeMinInput.style.zIndex = "5";
+    eitUI.rangeMaxInput.style.zIndex = "5";
+  }
 }
 
 function syncNumericSlider(config, bounds, selected) {

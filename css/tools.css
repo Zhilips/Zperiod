@@ -42,130 +42,164 @@
 }
 
 .chem-tools-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5vmin;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 28px;
   width: 100%;
+  max-width: 1000px;
 }
 
-/* Chemistry Tool Card - Element Button Style */
+@media (max-width: 768px) {
+  .chem-tools-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* Chemistry Tool Card - Redesigned */
 .chem-tool-card {
-  background-color: var(--element-bg);
+  background: var(--bg-color);
   border: 1px solid var(--border-color);
-  border-radius: 24px;
-  padding: 2vmin 2.5vmin;
+  border-radius: 32px;
+  padding: 40px;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 2vmin;
+  flex-direction: column;
+  gap: 32px;
   position: relative;
-  user-select: none;
-  min-height: 10vmin;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+html.dark-theme .chem-tool-card {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.chem-tool-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 32px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.0));
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+}
+
+html.dark-theme .chem-tool-card::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
 }
 
 .chem-tool-card:hover {
-  background-color: var(--element-hover);
-  transform: translateY(-4px) scale(1.02);
-  z-index: 100;
-  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.18);
-  border-color: rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.12), 0 0 0 2px var(--text-highlight);
+  background: var(--element-bg);
+}
+
+.chem-tool-card:hover::before {
+  opacity: 1;
 }
 
 .chem-tool-card:active {
-  transform: translateY(-2px) scale(1.01);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12), 0 0 0 2px var(--text-highlight);
 }
 
-/* Tool Icon Box - Similar to Element Box */
+.chem-tool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* Tool Icon Box */
 .chem-tool-icon-box {
-  width: 8vmin;
-  height: 8vmin;
-  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-color);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
+  border-radius: 20px;
   position: relative;
-  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .chem-tool-icon-box svg {
-  width: 60%;
-  height: 60%;
-  color: var(--text-primary);
-  transition: all 0.3s ease;
+  width: 36px;
+  height: 36px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .chem-tool-card:hover .chem-tool-icon-box {
-  border-color: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: scale(1.08) rotate(-4deg);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
 }
 
-.chem-tool-card:hover .chem-tool-icon-box svg {
-  transform: scale(1.1);
+/* Arrow */
+.chem-tool-arrow {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--border-color);
+  color: var(--text-primary);
+  opacity: 0;
+  transform: scale(0.8) translate(-10px, 10px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chem-tool-arrow svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chem-tool-card:hover .chem-tool-arrow {
+  opacity: 1;
+  transform: scale(1) translate(0, 0);
+  background: var(--text-highlight);
+  color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.chem-tool-card:hover .chem-tool-arrow svg {
+  transform: translateX(2px);
 }
 
 /* Tool Number Badge */
 .chem-tool-number {
   position: absolute;
-  top: 0.6vmin;
-  left: 0.8vmin;
-  font-size: 1.2vmin;
-  font-weight: 700;
-  color: var(--text-secondary);
-  opacity: 0.6;
-}
-
-/* Tool Icon Color Variations */
-.balancer-icon {
-  background: linear-gradient(135deg, #ffcccc 0%, #ffe5cc 100%);
-}
-
-.balancer-icon svg {
-  color: #78350f;
-}
-
-.molar-icon {
-  background: linear-gradient(135deg, #fff2cc 0%, #d9e2f3 100%);
-}
-
-.molar-icon svg {
-  color: #5d522e;
-}
-
-.percent-icon {
-  background: linear-gradient(135deg, #d1e7dd 0%, #e2f0d9 100%);
-}
-
-.percent-icon svg {
-  color: #2e5d4b;
-}
-
-.empirical-icon {
-  background: linear-gradient(135deg, #e0ccff 0%, #d9e2f3 100%);
-}
-
-.empirical-icon svg {
-  color: #4b2e5d;
+  top: 8px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  color: inherit;
+  opacity: 0.5;
 }
 
 /* Tool Info Section */
 .chem-tool-info {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.8vmin;
-  padding-right: 2vmin;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
 }
 
 .chem-tool-name {
-  font-size: 2vmin;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 800;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin: 0;
   transition: color 0.3s ease;
 }
@@ -175,18 +209,46 @@
 }
 
 .chem-tool-desc {
-  font-size: 1.3vmin;
+  font-size: 1.05rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
-  opacity: 0.85;
+  font-weight: 500;
+}
+
+/* Tool Icon Color Variations */
+.balancer-icon {
+  background: linear-gradient(135deg, #ffcccc 0%, #ffe5cc 100%);
+  color: #c2410c;
+}
+
+.molar-icon {
+  background: linear-gradient(135deg, #fff2cc 0%, #d9e2f3 100%);
+  color: #854d0e;
+}
+
+.percent-icon {
+  background: linear-gradient(135deg, #d1e7dd 0%, #e2f0d9 100%);
+  color: #047857;
+}
+
+.empirical-icon {
+  background: linear-gradient(135deg, #e0ccff 0%, #d9e2f3 100%);
+  color: #6d28d9;
+}
+
+html.dark-theme .balancer-icon,
+html.dark-theme .molar-icon,
+html.dark-theme .percent-icon,
+html.dark-theme .empirical-icon {
+  opacity: 0.9;
 }
 
 /* Tool Tags */
 .chem-tool-tags {
   display: flex;
-  gap: 6px;
-  margin-top: 4px;
+  gap: 10px;
+  margin-top: 10px;
   align-items: center;
 }
 
@@ -195,43 +257,37 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 20px;
-  padding: 0 8px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: 600;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
   white-space: nowrap;
 }
 
 .grade-tag {
-  background: rgba(120, 53, 15, 0.1);
-  color: var(--text-highlight);
-  border: 1px solid rgba(120, 53, 15, 0.2);
-  border-radius: 10px;
+  background: rgba(120, 53, 15, 0.08);
+  color: #b45309;
+  border: 1px solid rgba(120, 53, 15, 0.15);
+}
+
+html.dark-theme .grade-tag {
+  color: #fcd34d;
+  background: rgba(252, 211, 77, 0.1);
+  border-color: rgba(252, 211, 77, 0.2);
 }
 
 .feature-tag {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.03);
   color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* Arrow Indicator */
-.chem-tool-arrow {
-  font-size: 2.5vmin;
-  color: var(--text-muted);
-  font-weight: 300;
-  opacity: 0.4;
-  transition: all 0.3s ease;
-}
-
-.chem-tool-card:hover .chem-tool-arrow {
-  opacity: 1;
-  color: var(--text-highlight);
-  transform: translateX(4px);
+html.dark-theme .feature-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Original tool styles (for modal content) */

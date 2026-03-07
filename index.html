@@ -535,83 +535,135 @@
                 <div class="chem-tools-grid">
                     <!-- Equation Balancer (Position 1) -->
                     <div class="chem-tool-card" data-tool="balancer">
-                        <div class="chem-tool-icon-box balancer-icon">
-                            <span class="chem-tool-number">1</span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 3v18M3 12h18M7 7l10 10M17 7L7 17" />
-                            </svg>
+                        <div class="chem-tool-header">
+                            <div class="chem-tool-icon-box balancer-icon">
+                                <span class="chem-tool-number">1</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M12 3v18" />
+                                    <path d="M3 9l9-4 9 4" />
+                                    <path d="M3 9v4c0 2 2 4 4 4s4-2 4-4" />
+                                    <path d="M21 9v4c0 2-2 4-4 4s-4-2-4-4" />
+                                    <line x1="8" y1="21" x2="16" y2="21" />
+                                </svg>
+                            </div>
+                            <span class="chem-tool-arrow">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
                         </div>
                         <div class="chem-tool-info">
                             <h3 class="chem-tool-name">Equation Balancer</h3>
-                            <p class="chem-tool-desc">Balance chemical equations with visual feedback and step-by-step
-                                solutions.</p>
+                            <p class="chem-tool-desc">Balance complex chemical equations automatically with visual
+                                stoichiometry feedback.</p>
                             <div class="chem-tool-tags">
                                 <span class="grade-tag">Grade 9-12</span>
                                 <span class="feature-tag">Interactive</span>
                             </div>
                         </div>
-                        <span class="chem-tool-arrow">→</span>
                     </div>
 
                     <!-- Molar Mass Calculator (Position 2) -->
                     <div class="chem-tool-card" data-tool="molar-mass">
-                        <div class="chem-tool-icon-box molar-icon">
-                            <span class="chem-tool-number">2</span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="4" y="4" width="16" height="16" rx="2" />
-                                <path d="M8 12h8M12 8v8" />
-                            </svg>
+                        <div class="chem-tool-header">
+                            <div class="chem-tool-icon-box molar-icon">
+                                <span class="chem-tool-number">2</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="4" y="4" width="16" height="16" rx="3" ry="3" />
+                                    <line x1="8" y1="9" x2="16" y2="9" />
+                                    <line x1="8" y1="13" x2="10" y2="13" />
+                                    <line x1="14" y1="13" x2="16" y2="13" />
+                                    <line x1="8" y1="17" x2="10" y2="17" />
+                                    <line x1="14" y1="17" x2="16" y2="17" />
+                                </svg>
+                            </div>
+                            <span class="chem-tool-arrow">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
                         </div>
                         <div class="chem-tool-info">
-                            <h3 class="chem-tool-name">Molar Mass Calculator</h3>
-                            <p class="chem-tool-desc">Calculate molar mass with element-by-element breakdown.</p>
+                            <h3 class="chem-tool-name">Molar Mass</h3>
+                            <p class="chem-tool-desc">Instantly compute molecular weights with a detailed
+                                element-by-element mass breakdown.</p>
                             <div class="chem-tool-tags">
                                 <span class="grade-tag">Grade 10-11</span>
                                 <span class="feature-tag">Calculation</span>
                             </div>
                         </div>
-                        <span class="chem-tool-arrow">→</span>
                     </div>
 
                     <!-- Empirical & Molecular Formula (Position 3) -->
                     <div class="chem-tool-card" data-tool="empirical">
-                        <div class="chem-tool-icon-box empirical-icon">
-                            <span class="chem-tool-number">3</span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M9 3v18M15 3v18M3 9h18M3 15h18" />
-                            </svg>
+                        <div class="chem-tool-header">
+                            <div class="chem-tool-icon-box empirical-icon">
+                                <span class="chem-tool-number">3</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                                    <line x1="12" y1="22.08" x2="12" y2="12" />
+                                </svg>
+                            </div>
+                            <span class="chem-tool-arrow">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
                         </div>
                         <div class="chem-tool-info">
-                            <h3 class="chem-tool-name">Empirical & Molecular Formula</h3>
-                            <p class="chem-tool-desc">Calculate empirical and molecular formulas from mass data.</p>
+                            <h3 class="chem-tool-name">Empirical Formula</h3>
+                            <p class="chem-tool-desc">Derive empirical and true molecular formulas smoothly from
+                                experimental mass data.</p>
                             <div class="chem-tool-tags">
                                 <span class="grade-tag">Grade 10-11</span>
                                 <span class="feature-tag">Formula</span>
                             </div>
                         </div>
-                        <span class="chem-tool-arrow">→</span>
                     </div>
 
                     <!-- Solubility Table (Position 4) -->
                     <div class="chem-tool-card" data-tool="solubility">
-                        <div class="chem-tool-icon-box"
-                            style="background:linear-gradient(135deg, #10b981, #059669); color:white;">
-                            <span class="chem-tool-number">4</span>
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M3 3v18h18" />
-                                <rect x="7" y="7" width="4" height="4" />
-                                <rect x="13" y="13" width="4" height="4" />
-                            </svg>
+                        <div class="chem-tool-header">
+                            <div class="chem-tool-icon-box solubility-icon"
+                                style="background:linear-gradient(135deg, #d1f4e0 0%, #a7f3d0 100%);">
+                                <span class="chem-tool-number">4</span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4.5 3h15" />
+                                    <path d="M6 3v16a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V3" />
+                                    <path d="M6 14h12" />
+                                    <circle cx="10" cy="18" r="1.5" fill="#059669" stroke="none" />
+                                    <circle cx="14" cy="16" r="1.5" fill="#059669" stroke="none" />
+                                </svg>
+                            </div>
+                            <span class="chem-tool-arrow">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </span>
                         </div>
                         <div class="chem-tool-info">
                             <h3 class="chem-tool-name">Solubility Table</h3>
-                            <p class="chem-tool-desc">Reference chart for ionic compound solubility rules.</p>
+                            <p class="chem-tool-desc">Quickly reference interactive charts and rules for ionic compound
+                                solubilities.</p>
                             <div class="chem-tool-tags">
                                 <span class="grade-tag">Reference</span>
                                 <span class="feature-tag">Grid</span>
                             </div>
                         </div>
-                        <span class="chem-tool-arrow">→</span>
                     </div>
                 </div>
             </div>

@@ -2168,3 +2168,161 @@ html.dark-theme .feature-tag {
   position: relative;
   top: 0.25em;
 }
+/* ========================================
+   Z-Tool Unified Component Library
+   ======================================== */
+.z-tool-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.z-tool-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.z-tool-input-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.z-tool-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  color: var(--text-primary);
+  background: var(--bg-color);
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.z-tool-input:focus {
+  background: var(--bg-color);
+  border-color: var(--text-highlight);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.z-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.z-tool-btn.primary {
+  background: var(--text-primary);
+  color: var(--bg-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.z-tool-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  background: var(--text-highlight);
+}
+
+.z-tool-btn.primary:active {
+  transform: translateY(0);
+}
+
+.z-tool-btn.secondary {
+  background: var(--element-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.z-tool-btn.secondary:hover {
+  background: var(--border-color);
+}
+
+.z-tool-result-box {
+  padding: 20px;
+  background: rgba(167, 243, 208, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: zFadeIn 0.3s ease;
+}
+
+@keyframes zFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.z-data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+}
+
+.z-data-table th,
+.z-data-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.z-data-table th {
+  background: var(--element-bg);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.z-data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.z-data-table tr:nth-child(even) {
+  background: rgba(0,0,0,0.02);
+}
+html.dark-theme .z-data-table tr:nth-child(even) {
+  background: rgba(255,255,255,0.02);
+}
+
+/* Fix Molar Mass Layout */
+.z-molar-row {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+@media (max-width: 768px) {
+  .z-molar-row {
+    flex-direction: column;
+  }
+}

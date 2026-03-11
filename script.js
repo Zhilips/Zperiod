@@ -1021,317 +1021,7 @@ function generateBalancerToolContent() {
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             }
 
-            .balancer-input-section {
-                display: flex;
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .balancer-input-row {
-                display: grid;
-                grid-template-columns: 1fr auto 1fr;
-                gap: 12px;
-                align-items: center;
-            }
-
-            .balancer-input-group {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-                padding: 16px;
-                background: rgba(255, 255, 255, 0.72);
-                backdrop-filter: blur(20px) saturate(180%);
-                -webkit-backdrop-filter: blur(20px) saturate(180%);
-                border-radius: 16px;
-                border: 1px solid rgba(255, 255, 255, 0.6);
-                box-shadow:
-                    0 2px 8px rgba(0, 0, 0, 0.04),
-                    0 8px 24px rgba(0, 0, 0, 0.08),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-                transition: all 0.2s ease;
-            }
-
-            .balancer-input-group:hover {
-                box-shadow:
-                    0 4px 12px rgba(0, 0, 0, 0.06),
-                    0 12px 32px rgba(0, 0, 0, 0.1),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            }
-
-            .balancer-input-group:focus-within {
-                border-color: rgba(99, 102, 241, 0.4);
-                box-shadow:
-                    0 0 0 3px rgba(99, 102, 241, 0.12),
-                    0 4px 12px rgba(0, 0, 0, 0.06),
-                    0 12px 32px rgba(0, 0, 0, 0.1),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            }
-
-            .balancer-input-label {
-                font-size: 13px;
-                font-weight: 600;
-                color: #475569;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .balancer-input-label .label-icon {
-                width: 20px;
-                height: 20px;
-                border-radius: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 11px;
-                font-weight: 700;
-                color: white;
-            }
-            .balancer-input-label .label-icon.reactant { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-            .balancer-input-label .label-icon.product { background: linear-gradient(135deg, #10b981, #059669); }
-
-            .balancer-text-input {
-                width: 100%;
-                padding: 12px 14px;
-                font-size: 1rem;
-                font-weight: 500;
-                font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-                color: #1e293b;
-                background: rgba(255, 255, 255, 0.5);
-                border: 1.5px solid rgba(0, 0, 0, 0.08);
-                border-radius: 10px;
-                outline: none;
-                transition: all 0.2s ease;
-            }
-
-            .balancer-text-input:focus {
-                background: rgba(255, 255, 255, 0.8);
-                border-color: rgba(99, 102, 241, 0.4);
-                box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
-            }
-
-            .balancer-text-input::placeholder {
-                color: #94a3b8;
-                font-weight: 400;
-            }
-
-            .balancer-arrow-divider {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 48px;
-                height: 48px;
-                background: rgba(255, 255, 255, 0.72);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border-radius: 14px;
-                border: 1px solid rgba(255, 255, 255, 0.6);
-                box-shadow:
-                    0 2px 8px rgba(0, 0, 0, 0.04),
-                    0 4px 16px rgba(0, 0, 0, 0.06),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            }
-
-            .balancer-arrow-divider svg {
-                width: 24px;
-                height: 24px;
-                color: #64748b;
-            }
-
-            .balancer-atom-counts {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-                padding: 10px 14px;
-                background: #f8fafc;
-                border-radius: 12px;
-                border: 1px solid #e2e8f0;
-            }
-
-            .atom-count-column {
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-            }
-
-            .atom-count-title {
-                font-size: 11px;
-                font-weight: 700;
-                color: #64748b;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                padding-bottom: 6px;
-                border-bottom: 1px dashed #cbd5e1;
-            }
-
-            .atom-count-list {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 6px;
-                min-height: 28px;
-            }
-
-            .atom-tag {
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-                padding: 4px 10px;
-                font-size: 13px;
-                font-weight: 600;
-                border-radius: 12px;
-                background: #ffffff;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            }
-            .atom-tag.left {
-                color: #4f46e5;
-                border: 1px solid rgba(99, 102, 241, 0.3);
-            }
-            .atom-tag.right {
-                color: #059669;
-                border: 1px solid rgba(16, 185, 129, 0.3);
-            }
-
-            .balancer-status-bar {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                padding: 18px 32px;
-                border-radius: 16px;
-                font-size: 1rem;
-                font-weight: 600;
-                transition: all 0.2s ease;
-                background: rgba(248, 250, 252, 0.72);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                color: #64748b;
-                border: 2px solid transparent;
-                box-shadow:
-                    0 2px 8px rgba(0, 0, 0, 0.04),
-                    0 4px 16px rgba(0, 0, 0, 0.06),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            }
-
-            .balancer-status-bar.balanced {
-                background: rgba(209, 250, 229, 0.72);
-                color: #047857;
-                border-color: transparent;
-            }
-
-            .balancer-status-bar.unbalanced {
-                background: rgba(254, 243, 199, 0.72);
-                color: #b45309;
-                border-color: transparent;
-            }
-
-            .balancer-status-bar .status-icon {
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            .balancer-status-bar.balanced .status-icon { background: #10b981; color: white; }
-            .balancer-status-bar.unbalanced .status-icon { background: #f59e0b; color: white; }
-
-            .balancer-action-buttons {
-                display: flex;
-                gap: 10px;
-                justify-content: flex-start;
-            }
-
-            .balancer-btn {
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                padding: 18px 36px;
-                font-size: 1.05rem;
-                font-weight: 600;
-                border-radius: 16px;
-                border: none;
-                cursor: pointer;
-                transition: all 0.2s ease;
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                flex-shrink: 0;
-                white-space: nowrap;
-            }
-
-            @container balancer (max-width: 700px) {
-                .balancer-btn {
-                    padding: 14px 20px;
-                    font-size: 0.9rem;
-                    gap: 6px;
-                    border-radius: 12px;
-                }
-                .balancer-status-bar {
-                    padding: 14px 20px;
-                    font-size: 0.9rem;
-                    border-radius: 12px;
-                }
-            }
-
-            @container balancer (max-width: 550px) {
-                .balancer-btn {
-                    padding: 10px 12px;
-                    font-size: 0.8rem;
-                    gap: 4px;
-                    border-radius: 10px;
-                }
-                .balancer-btn svg {
-                    display: none;
-                }
-                .balancer-status-bar {
-                    padding: 10px 12px;
-                    font-size: 0.8rem;
-                    border-radius: 10px;
-                }
-            }
-
-            .balancer-btn-primary {
-                background: rgba(30, 41, 59, 0.88);
-                color: white;
-                border: 2px solid transparent;
-                box-shadow:
-                    0 2px 8px rgba(0, 0, 0, 0.12),
-                    0 8px 24px rgba(0, 0, 0, 0.16),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            }
-
-            .balancer-btn-primary:hover {
-                background: rgba(30, 41, 59, 0.95);
-                transform: translateY(-1px);
-                box-shadow:
-                    0 4px 12px rgba(0, 0, 0, 0.15),
-                    0 12px 32px rgba(0, 0, 0, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            }
-
-            .balancer-btn-primary:active {
-                transform: translateY(0);
-            }
-
-            .balancer-btn-secondary {
-                background: rgba(255, 255, 255, 0.72);
-                color: #475569;
-                border: 2px solid transparent;
-                box-shadow:
-                    0 2px 8px rgba(0, 0, 0, 0.04),
-                    0 4px 16px rgba(0, 0, 0, 0.06),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            }
-
-            .balancer-btn-secondary:hover {
-                background: rgba(255, 255, 255, 0.85);
-                box-shadow:
-                    0 4px 12px rgba(0, 0, 0, 0.06),
-                    0 8px 24px rgba(0, 0, 0, 0.08),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            }
+            
 
             .balancer-result-box {
                 display: none;
@@ -1481,40 +1171,23 @@ function generateBalancerToolContent() {
                 </div>
             </div>
 
-            <div class="balancer-input-section">
-                <div class="balancer-input-row">
-                    <div class="balancer-input-group">
-                        <label class="balancer-input-label">
-                            <span class="label-icon reactant">R</span>
-                            ${"Reactants"}
-                        </label>
-                        <input type="text"
-                               id="reactants-input"
-                               class="balancer-text-input"
-                               placeholder="${"e.g., Fe + O2"}"
-                               autocomplete="off"
-                               spellcheck="false">
+            <div class="z-tool-layout" style="gap: 16px;">
+                <div style="display: flex; gap: 16px; align-items: flex-end;">
+                    <div class="z-tool-input-group" style="flex: 1;">
+                        <label class="z-tool-input-label">Reactants</label>
+                        <input type="text" id="reactants-input" class="z-tool-input" placeholder="e.g., Fe + O2" autocomplete="off" spellcheck="false">
                     </div>
-
-                    <div class="balancer-arrow-divider">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
-                    </div>
-
-                    <div class="balancer-input-group">
-                        <label class="balancer-input-label">
-                            <span class="label-icon product">P</span>
-                            ${"Products"}
-                        </label>
-                        <input type="text"
-                               id="products-input"
-                               class="balancer-text-input"
-                               placeholder="${"e.g., Fe2O3"}"
-                               autocomplete="off"
-                               spellcheck="false">
+                    <div class="z-tool-input-group" style="flex: 1;">
+                        <label class="z-tool-input-label">Products</label>
+                        <input type="text" id="products-input" class="z-tool-input" placeholder="e.g., Fe2O3" autocomplete="off" spellcheck="false">
                     </div>
                 </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
+                <button id="auto-balance-btn" class="z-tool-btn primary">Auto Balance</button>
+                <button id="clear-balancer-btn" class="z-tool-btn secondary">Clear</button>
+                <div class="balancer-status-bar" id="balance-feedback" style="flex: 1; min-width: 0;">Enter equation</div>
             </div>
 
             <div style="display: flex; align-items: center; gap: 12px;">
@@ -1554,11 +1227,11 @@ function generateMolarMassToolContent() {
   return `
 
         <div class="tool-padding-label">${"Molar Mass Calculator"}</div>
-        <div class="molar-tool-layout">
+        <div class="z-molar-row">
             <!-- Left Column: Input & Info -->
             <div class="molar-input-panel">
-                <div class="tool-input-section molar-input-card">
-                    <label for="modal-formula-input" class="molar-input-label">
+                <div class="z-tool-layout">
+                    <label for="modal-formula-input" class="z-tool-input-label">
                         <span class="molar-label-icon">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/>
@@ -1568,7 +1241,7 @@ function generateMolarMassToolContent() {
                     </label>
                     <input type="text" id="modal-formula-input"
                            placeholder="e.g. H2O, CuSO4.5H2O"
-                           class="realtime-input"
+                           class="z-tool-input realtime-input"
                            autocomplete="off"
                            spellcheck="false">
 
@@ -1761,20 +1434,7 @@ function generateEmpiricalToolContent() {
                 flex: 1; position: relative; display: flex; align-items: center; min-width: 0;
             }
 
-            .emp-input-field {
-                width: 100%; height: 42px;
-                background: rgba(255,255,255,0.9);
-                border: 1.5px solid rgba(0,0,0,0.08); border-radius: 10px;
-                padding: 0 26px 0 12px;
-                font-size: 15px; font-weight: 600; color: var(--text-primary);
-                transition: all 0.2s ease; font-variant-numeric: tabular-nums;
-            }
-            .emp-input-field:focus {
-                outline: none; border-color: var(--accent-purple);
-                box-shadow: 0 0 0 3px rgba(175, 82, 222, 0.15); background: #fff;
-            }
-            .emp-input-field::placeholder { color: var(--text-tertiary); font-weight: 400; }
-            .emp-input-field.emp-invalid { border-color: #ef4444 !important; }
+            
 
             .emp-unit {
                 position: absolute; right: 10px;
@@ -1822,38 +1482,9 @@ function generateEmpiricalToolContent() {
                 background: rgba(0,0,0,0.04); color: var(--text-tertiary);
                 border-radius: 4px; text-transform: uppercase;
             }
-            .emp-mol-input {
-                width: 100%; height: 42px;
-                background: rgba(255,255,255,0.9);
-                border: 1.5px solid rgba(0,0,0,0.08); border-radius: 10px;
-                padding: 0 12px; font-size: 15px; font-weight: 600;
-                color: var(--text-primary); transition: all 0.2s ease;
-            }
-            .emp-mol-input:focus {
-                outline: none; border-color: var(--accent-purple);
-                box-shadow: 0 0 0 3px rgba(175, 82, 222, 0.15); background: #fff;
-            }
+            
 
-            .emp-calc-btn {
-                width: 100%; height: 44px; margin-top: 6px;
-                background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
-                color: #fff; border: none; border-radius: 12px;
-                font-size: 14px; font-weight: 600; cursor: pointer;
-                display: flex; align-items: center; justify-content: center; gap: 8px;
-                transition: all 0.2s ease;
-                box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4), inset 0 1px 0 rgba(255,255,255,0.2);
-            }
-            .emp-calc-btn:hover:not(:disabled) {
-                transform: translateY(-1px);
-                box-shadow: 0 6px 18px rgba(139, 92, 246, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
-            }
-            .emp-calc-btn:active:not(:disabled) {
-                transform: translateY(0);
-                box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4);
-            }
-            .emp-calc-btn:disabled {
-                opacity: 0.45; cursor: not-allowed; transform: none;
-            }
+            
             .emp-calc-btn svg { width: 16px; height: 16px; }
 
             .emp-quick-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 6px; }
@@ -2073,16 +1704,16 @@ function generateEmpiricalToolContent() {
                         <div class="emp-input-stack" id="modal-element-inputs"></div>
 
                         <div class="emp-quick-actions">
-                            <button class="emp-icon-btn remove" id="emp-remove-element-btn" title="Remove last element row">
+                            <button class="z-tool-btn secondary" id="emp-remove-element-btn" title="Remove last element row">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             </button>
-                            <button class="emp-icon-btn add" id="emp-add-element-btn" title="Add element row">
+                            <button class="z-tool-btn secondary" id="emp-add-element-btn" title="Add element row">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                             </button>
-                            <button class="emp-icon-btn reset" id="emp-reset-btn" title="Reset all fields">
+                            <button class="z-tool-btn secondary" id="emp-reset-btn" title="Reset all fields">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 1 9 9 9.01 9.01 0 0 1-8.7-6.7"/><path d="M3 3v6h6"/></svg>
                             </button>
-                            <button class="emp-icon-btn random" id="emp-random-fill-btn" title="Fill with a random compound">
+                            <button class="z-tool-btn primary" id="emp-random-fill-btn" title="Fill with a random compound">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-9-9c2.52 0 4.85.83 6.72 2.24"/><path d="M21 3v6h-6"/></svg>
                             </button>
                         </div>
@@ -2101,9 +1732,9 @@ function generateEmpiricalToolContent() {
                             <span>Molecular Mass</span>
                             <span class="emp-optional-pill">Optional</span>
                         </div>
-                        <input type="text" inputmode="decimal" id="modal-mol-mass" class="emp-mol-input" placeholder="e.g. 180 g/mol">
+                        <input type="text" inputmode="decimal" id="modal-mol-mass" class="z-tool-input" placeholder="e.g. 180 g/mol">
 
-                        <button id="modal-calc-formula-btn" class="emp-calc-btn">
+                        <button id="modal-calc-formula-btn" class="z-tool-btn primary" style="width: 100%; margin-top: 10px;">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
@@ -2937,7 +2568,7 @@ function renderEmpiricalInputs(presetSymbols = null) {
           <div class="emp-value-wrapper">
             <input type="text" inputmode="decimal"
               id="modal-elem${i + 1}-value"
-              class="emp-input-field"
+              class="z-tool-input"
               placeholder="${isOptional ? 'optional' : placeholder}"
               autocomplete="off">
             <span class="emp-unit">%</span>
@@ -3503,7 +3134,7 @@ function generateSolubilityToolContent() {
                         <div class="sol-section-label">Enter Chemical Formula</div>
                         <div class="sol-input-stack">
                             <input type="text" id="solubility-input" class="sol-input-field" placeholder="e.g. NaCl, AgNO3" autocomplete="off">
-                            <button id="check-solubility-btn" class="sol-check-btn">Check Solubility</button>
+                            <button id="check-solubility-btn" class="z-tool-btn primary">Check Solubility</button>
                         </div>
                     </div>
 
@@ -3516,7 +3147,7 @@ function generateSolubilityToolContent() {
                 <!-- Right: Reference Table -->
                 <div class="sol-table-panel">
                     <div class="sol-table-title">Solubility Rules Reference</div>
-                    <table class="sol-glass-table">
+                    <table class="z-data-table">
                         <tbody>
                             <tr>
                                 <td><span class="sol-anion-name"><span class="sol-ion"><span class="sol-ion-base">NO</span><span class="sol-ion-scripts"><span class="sup">−</span><span class="sub">3</span></span></span></span><span class="sol-anion-label">Nitrate</span></td>

@@ -1209,23 +1209,21 @@ body.hide-nav .version-dropdown {
 /* Settings Pills Custom Styles */
 .sv-pill-group {
     display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    padding: 3px;
-    border-radius: 9999px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03), inset 0 2px 5px rgba(255,255,255,0.7);
-    border: 1px solid rgba(255,255,255,0.6);
+    justify-content: center;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 4px;
+    border-radius: 22px;
+    flex-shrink: 0;
     position: relative;
 }
 .sv-pill-btn {
-    padding: 6px 16px;
+    padding: 8px 20px;
     border: none;
-    border-radius: 9999px;
+    border-radius: 18px;
     background: transparent;
     color: #444;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
     transition: color 0.25s ease;
@@ -1241,11 +1239,14 @@ body.hide-nav .version-dropdown {
 }
 .sv-pill-slider {
     position: absolute;
-    top: 3px;
-    bottom: 3px;
-    background: white;
-    border-radius: 9999px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    top: 4px;
+    left: 0;
+    height: calc(100% - 8px);
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+      width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 0;
+    pointer-events: none;
 }

@@ -2920,12 +2920,12 @@ export function initModalUI() {
 // Manages unit preferences from the Settings page
 export function initGlobalUnits() {
     // Helper to setup a sv-pill style metric toggle
-    function setupUnitSetting(metricKey, elementId) {
+    function setupUnitSetting(metricKeys, elementId) {
+        if (!Array.isArray(metricKeys)) metricKeys = [metricKeys];
         const group = document.getElementById(elementId);
         if (!group) return;
         
         const btns = Array.from(group.querySelectorAll(".sv-pill-btn"));
-        const activeIdx = l3UnitState[metricKey] || 0;
         
         // Add dynamic slider for beautiful animation
         const slider = document.createElement("div");
@@ -2935,22 +2935,33 @@ export function initGlobalUnits() {
         function moveSliderTo(btn) {
             const groupRect = group.getBoundingClientRect();
             const btnRect = btn.getBoundingClientRect();
-            slider.style.width = btnRect.width + "px";
-            slider.style.transform = `translateX(${btnRect.left - groupRect.left}px)`;
+            // Only update if visible (width > 0)
+            if (btnRect.width > 0) {
+                slider.style.width = btnRect.width + "px";
+                slider.style.transform = `translateX(${btnRect.left - groupRect.left}px)`;
+            }
         }
 
-        // Init state
-        btns.forEach((btn, idx) => {
-            if (idx === activeIdx) {
-                btn.classList.add("active");
-                // Position initial slider without transition
+        // Init layout when element becomes visible (fixes display:none issue)
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                const activeIdx = l3UnitState[metricKeys[0]] || 0;
                 slider.style.transition = "none";
+                moveSliderTo(btns[activeIdx]);
                 requestAnimationFrame(() => {
-                    moveSliderTo(btn);
                     requestAnimationFrame(() => {
                         slider.style.transition = "";
                     });
                 });
+            }
+        });
+        observer.observe(group);
+
+        // Init state
+        const activeIdx = l3UnitState[metricKeys[0]] || 0;
+        btns.forEach((btn, idx) => {
+            if (idx === activeIdx) {
+                btn.classList.add("active");
             } else {
                 btn.classList.remove("active");
             }
@@ -2962,16 +2973,7 @@ export function initGlobalUnits() {
                 btn.classList.add("active");
                 moveSliderTo(btn);
                 
-                l3UnitState[metricKey] = idx;
-                
-                // For temperature, sync both melt and boil
-                if (metricKey === "melt") {
-                    l3UnitState.boil = idx;
-                } else if (metricKey === "boil") {
-                    l3UnitState.melt = idx;
-                }
-                
-                // If a modal/panel is currently open, it will use the new unit when next interacted with.
+                metricKeys.forEach(key => l3UnitState[key] = idx);
             });
         });
         
@@ -2988,8 +2990,7 @@ export function initGlobalUnits() {
         });
     }
 
-    setupUnitSetting("melt", "setting-unit-temp");    
-    setupUnitSetting("density", "setting-unit-density");
-    setupUnitSetting("ie", "setting-unit-ie");
-    setupUnitSetting("ea", "setting-unit-ea");
+    setupUnitSetting(["melt", "boil"], "setting-unit-temp");    
+    setupUnitSetting(["density"], "setting-unit-density");
+    setupUnitSetting(["ie", "ea"], "setting-unit-energy");
 }

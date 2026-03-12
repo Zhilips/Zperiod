@@ -6,7 +6,6 @@
    Chemistry Tools Page - Modular Card Design
    ======================================== */
 .chemistry-tools-page {
-  display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;

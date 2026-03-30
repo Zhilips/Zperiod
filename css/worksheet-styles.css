@@ -677,10 +677,34 @@
    Responsive Design (Shrinking Window)
    ========================================= */
 
-@media (max-height: 750px) {
-
-    .controls-header p,
+@media (max-height: 800px) {
+    .controls-header p {
+        font-size: 0.75rem;
+        line-height: 1.2;
+        margin-bottom: 0;
+    }
     .trust-text {
+        font-size: 0.7rem;
+        margin-top: 6px;
+        line-height: 1.2;
+    }
+    .checkbox-subtitle {
+        font-size: 0.65rem;
+        line-height: 1.1;
+    }
+    .worksheet-controls {
+        gap: 6px;
+    }
+}
+
+@media (max-height: 680px) {
+    .controls-header p,
+    .trust-text,
+    .checkbox-subtitle {
         display: none;
+    }
+    
+    .checkbox-text-wrapper {
+        justify-content: center;
     }
 }

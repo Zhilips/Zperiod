@@ -59,7 +59,9 @@ export const finallyData = {
         "density": "0.08988 g/L",
         "meltingPoint": "-259.16°C",
         "boilingPoint": "-252.87°C",
-        "electronAffinity": "72.8 kJ/mol"
+        "electronAffinity": "72.8 kJ/mol",
+        "atomicRadius": "53 pm",
+        "specificHeat": "14.3000 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -93,7 +95,7 @@ export const finallyData = {
       "period": "1",
       "phaseAtSTP": "Gas",
       "valenceElectrons": "2",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "0"
     },
     "level2_atomic": {
@@ -131,9 +133,11 @@ export const finallyData = {
         "electronegativity": null,
         "firstIonization": "2372 kJ/mol",
         "density": "0.1786 g/L",
-        "meltingPoint": "— (0.95 K at 2.5 MPa)",
+        "meltingPoint": "0.95 K (at 2.5 MPa)",
         "boilingPoint": "-268.93°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "31 pm",
+        "specificHeat": "5.1931 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -205,7 +209,9 @@ export const finallyData = {
         "density": "0.534 g/cm³",
         "meltingPoint": "180.5°C",
         "boilingPoint": "1342°C",
-        "electronAffinity": "59.6 kJ/mol"
+        "electronAffinity": "59.6 kJ/mol",
+        "atomicRadius": "167 pm",
+        "specificHeat": "3.5700 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -273,7 +279,9 @@ export const finallyData = {
         "density": "1.85 g/cm³",
         "meltingPoint": "1287°C",
         "boilingPoint": "2469°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "112 pm",
+        "specificHeat": "1.8200 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -306,7 +314,7 @@ export const finallyData = {
       "period": "2",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "3",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3"
     },
     "level2_atomic": {
@@ -349,7 +357,9 @@ export const finallyData = {
         "density": "2.34 g/cm³",
         "meltingPoint": "2076°C",
         "boilingPoint": "3927°C",
-        "electronAffinity": "26.7 kJ/mol"
+        "electronAffinity": "26.7 kJ/mol",
+        "atomicRadius": "87 pm",
+        "specificHeat": "1.0300 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -384,7 +394,7 @@ export const finallyData = {
       "period": "2",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "4",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "-4, +4"
     },
     "level2_atomic": {
@@ -434,10 +444,12 @@ export const finallyData = {
       "physical": {
         "electronegativity": 2.55,
         "firstIonization": "1086 kJ/mol",
-        "density": "2.26 g/cm³ (Graphite)",
-        "meltingPoint": "Sublimes (~3642°C)",
-        "boilingPoint": "Sublimes",
-        "electronAffinity": "153.9 kJ/mol"
+        "density": "2.26 g/cm³ (graphite)",
+        "meltingPoint": "~3642°C (sublimes)",
+        "boilingPoint": "N/A",
+        "electronAffinity": "153.9 kJ/mol",
+        "atomicRadius": "67 pm",
+        "specificHeat": "0.7100 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -519,7 +531,9 @@ export const finallyData = {
         "density": "1.251 g/L",
         "meltingPoint": "-210.0°C",
         "boilingPoint": "-195.79°C",
-        "electronAffinity": "7 kJ/mol"
+        "electronAffinity": "7 kJ/mol",
+        "atomicRadius": "56 pm",
+        "specificHeat": "1.0400 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -601,7 +615,9 @@ export const finallyData = {
         "density": "1.429 g/L",
         "meltingPoint": "-218.79°C",
         "boilingPoint": "-182.96°C",
-        "electronAffinity": "141 kJ/mol"
+        "electronAffinity": "141 kJ/mol",
+        "atomicRadius": "48 pm",
+        "specificHeat": "0.9190 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -669,7 +685,9 @@ export const finallyData = {
         "density": "1.696 g/L",
         "meltingPoint": "-219.67°C",
         "boilingPoint": "-188.11°C",
-        "electronAffinity": "328 kJ/mol"
+        "electronAffinity": "328 kJ/mol",
+        "atomicRadius": "42 pm",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -704,7 +722,7 @@ export const finallyData = {
       "period": "2",
       "phaseAtSTP": "Gas",
       "valenceElectrons": "8",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "0"
     },
     "level2_atomic": {
@@ -749,7 +767,9 @@ export const finallyData = {
         "density": "0.9002 g/L",
         "meltingPoint": "-248.59°C",
         "boilingPoint": "-246.05°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "38 pm",
+        "specificHeat": "1.0300 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -816,7 +836,9 @@ export const finallyData = {
         "density": "0.968 g/cm³",
         "meltingPoint": "97.79°C",
         "boilingPoint": "883°C",
-        "electronAffinity": "52.8 kJ/mol"
+        "electronAffinity": "52.8 kJ/mol",
+        "atomicRadius": "190 pm",
+        "specificHeat": "1.2300 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -893,7 +915,9 @@ export const finallyData = {
         "density": "1.74 g/cm³",
         "meltingPoint": "650°C",
         "boilingPoint": "1090°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "145 pm",
+        "specificHeat": "1.0200 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -962,7 +986,9 @@ export const finallyData = {
         "density": "2.70 g/cm³",
         "meltingPoint": "660.3°C",
         "boilingPoint": "2519°C",
-        "electronAffinity": "42.5 kJ/mol"
+        "electronAffinity": "42.5 kJ/mol",
+        "atomicRadius": "118 pm",
+        "specificHeat": "0.8970 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -995,7 +1021,7 @@ export const finallyData = {
       "period": "3",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "4",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "-4, +4"
     },
     "level2_atomic": {
@@ -1043,7 +1069,9 @@ export const finallyData = {
         "density": "2.33 g/cm³",
         "meltingPoint": "1414°C",
         "boilingPoint": "3265°C",
-        "electronAffinity": "133.6 kJ/mol"
+        "electronAffinity": "133.6 kJ/mol",
+        "atomicRadius": "111 pm",
+        "specificHeat": "0.7050 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1110,10 +1138,12 @@ export const finallyData = {
       "physical": {
         "electronegativity": 2.19,
         "firstIonization": "1012 kJ/mol",
-        "density": "1.82 g/cm³ (white P)",
-        "meltingPoint": "44.15°C (white P)",
-        "boilingPoint": "280.5°C (white P)",
-        "electronAffinity": "71 kJ/mol"
+        "density": "1.82 g/cm³ (phosphorus)",
+        "meltingPoint": "44.15°C (phosphorus)",
+        "boilingPoint": "280.5°C (phosphorus)",
+        "electronAffinity": "71 kJ/mol",
+        "atomicRadius": "98 pm",
+        "specificHeat": "0.7690 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1133,7 +1163,7 @@ export const finallyData = {
         "Steel production"
       ],
       "hazards": [
-        "White P is highly toxic and pyrophoric (ignites in air)"
+        "P allotrope is highly toxic and pyrophoric (ignites in air)"
       ]
     }
   },
@@ -1200,7 +1230,9 @@ export const finallyData = {
         "density": "2.07 g/cm³",
         "meltingPoint": "115.2°C",
         "boilingPoint": "444.6°C",
-        "electronAffinity": "200 kJ/mol"
+        "electronAffinity": "200 kJ/mol",
+        "atomicRadius": "88 pm",
+        "specificHeat": "0.7050 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1277,7 +1309,9 @@ export const finallyData = {
         "density": "3.21 g/L",
         "meltingPoint": "-101.5°C",
         "boilingPoint": "-34.0°C",
-        "electronAffinity": "349 kJ/mol"
+        "electronAffinity": "349 kJ/mol",
+        "atomicRadius": "79 pm",
+        "specificHeat": "0.4782 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1311,7 +1345,7 @@ export const finallyData = {
       "period": "3",
       "phaseAtSTP": "Gas",
       "valenceElectrons": "8",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "0"
     },
     "level2_atomic": {
@@ -1356,7 +1390,9 @@ export const finallyData = {
         "density": "1.78 g/L",
         "meltingPoint": "-189.4°C",
         "boilingPoint": "-185.8°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "71 pm",
+        "specificHeat": "0.5203 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1433,7 +1469,9 @@ export const finallyData = {
         "density": "0.862 g/cm³",
         "meltingPoint": "63.5°C",
         "boilingPoint": "759°C",
-        "electronAffinity": "48.4 kJ/mol"
+        "electronAffinity": "48.4 kJ/mol",
+        "atomicRadius": "243 pm",
+        "specificHeat": "0.7570 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1521,7 +1559,9 @@ export const finallyData = {
         "density": "1.55 g/cm³",
         "meltingPoint": "842°C",
         "boilingPoint": "1484°C",
-        "electronAffinity": "2.37 kJ/mol"
+        "electronAffinity": "2.37 kJ/mol",
+        "atomicRadius": "194 pm",
+        "specificHeat": "0.6310 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1591,7 +1631,9 @@ export const finallyData = {
         "density": "2.985 g/cm³",
         "meltingPoint": "1541°C",
         "boilingPoint": "2836°C",
-        "electronAffinity": "18.1 kJ/mol"
+        "electronAffinity": "18.1 kJ/mol",
+        "atomicRadius": "184 pm",
+        "specificHeat": "0.5670 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1679,7 +1721,9 @@ export const finallyData = {
         "density": "4.507 g/cm³",
         "meltingPoint": "1668°C",
         "boilingPoint": "3287°C",
-        "electronAffinity": "7.6 kJ/mol"
+        "electronAffinity": "7.6 kJ/mol",
+        "atomicRadius": "176 pm",
+        "specificHeat": "0.5200 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1695,7 +1739,7 @@ export const finallyData = {
       "commonUses": [
         "Joint replacements",
         "Aircraft engines",
-        "White pigment (TiO₂)"
+        "Pigment (TiO₂)"
       ],
       "hazards": [
         "Nontoxic (biologically inert)"
@@ -1755,7 +1799,9 @@ export const finallyData = {
         "density": "6.11 g/cm³",
         "meltingPoint": "1910°C",
         "boilingPoint": "3407°C",
-        "electronAffinity": "50.6 kJ/mol"
+        "electronAffinity": "50.6 kJ/mol",
+        "atomicRadius": "171 pm",
+        "specificHeat": "0.4890 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1841,7 +1887,9 @@ export const finallyData = {
         "density": "7.19 g/cm³",
         "meltingPoint": "1907°C",
         "boilingPoint": "2671°C",
-        "electronAffinity": "64.3 kJ/mol"
+        "electronAffinity": "64.3 kJ/mol",
+        "atomicRadius": "166 pm",
+        "specificHeat": "0.4480 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -1918,7 +1966,9 @@ export const finallyData = {
         "density": "7.21 g/cm³",
         "meltingPoint": "1246°C",
         "boilingPoint": "2061°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "161 pm",
+        "specificHeat": "0.4790 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2003,7 +2053,9 @@ export const finallyData = {
         "density": "7.874 g/cm³",
         "meltingPoint": "1538°C",
         "boilingPoint": "2862°C",
-        "electronAffinity": "15.7 kJ/mol"
+        "electronAffinity": "15.7 kJ/mol",
+        "atomicRadius": "156 pm",
+        "specificHeat": "0.4490 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2075,7 +2127,9 @@ export const finallyData = {
         "density": "8.90 g/cm³",
         "meltingPoint": "1495°C",
         "boilingPoint": "2927°C",
-        "electronAffinity": "63.7 kJ/mol"
+        "electronAffinity": "63.7 kJ/mol",
+        "atomicRadius": "152 pm",
+        "specificHeat": "0.4210 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2167,7 +2221,9 @@ export const finallyData = {
         "density": "8.908 g/cm³",
         "meltingPoint": "1455°C",
         "boilingPoint": "2913°C",
-        "electronAffinity": "112 kJ/mol"
+        "electronAffinity": "112 kJ/mol",
+        "atomicRadius": "149 pm",
+        "specificHeat": "0.4450 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2244,7 +2300,9 @@ export const finallyData = {
         "density": "8.96 g/cm³",
         "meltingPoint": "1084.6°C",
         "boilingPoint": "2562°C",
-        "electronAffinity": "118.4 kJ/mol"
+        "electronAffinity": "118.4 kJ/mol",
+        "atomicRadius": "145 pm",
+        "specificHeat": "0.3844 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2334,7 +2392,9 @@ export const finallyData = {
         "density": "7.14 g/cm³",
         "meltingPoint": "419.5°C",
         "boilingPoint": "907°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "142 pm",
+        "specificHeat": "0.3880 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2409,7 +2469,9 @@ export const finallyData = {
         "density": "5.91 g/cm³",
         "meltingPoint": "29.76°C",
         "boilingPoint": "2204°C",
-        "electronAffinity": "28.9 kJ/mol"
+        "electronAffinity": "28.9 kJ/mol",
+        "atomicRadius": "136 pm",
+        "specificHeat": "0.3710 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2442,7 +2504,7 @@ export const finallyData = {
       "period": "4",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "4",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+4, +2"
     },
     "level2_atomic": {
@@ -2495,7 +2557,9 @@ export const finallyData = {
         "density": "5.323 g/cm³",
         "meltingPoint": "938.3°C",
         "boilingPoint": "2833°C",
-        "electronAffinity": "119 kJ/mol"
+        "electronAffinity": "119 kJ/mol",
+        "atomicRadius": "125 pm",
+        "specificHeat": "0.3214 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2528,7 +2592,7 @@ export const finallyData = {
       "period": "4",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "5",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "-3, +3, +5"
     },
     "level2_atomic": {
@@ -2565,9 +2629,11 @@ export const finallyData = {
         "electronegativity": 2.18,
         "firstIonization": "947 kJ/mol",
         "density": "5.727 g/cm³",
-        "meltingPoint": "Sublimes at 615°C",
-        "boilingPoint": "Sublimes",
-        "electronAffinity": "78 kJ/mol"
+        "meltingPoint": "616°C (sublimes)",
+        "boilingPoint": "N/A",
+        "electronAffinity": "78 kJ/mol",
+        "atomicRadius": "114 pm",
+        "specificHeat": "0.3280 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2601,7 +2667,7 @@ export const finallyData = {
       "period": "4",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "6",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "-2, +4, +6"
     },
     "level2_atomic": {
@@ -2665,7 +2731,9 @@ export const finallyData = {
         "density": "4.81 g/cm³ (gray)",
         "meltingPoint": "220.8°C",
         "boilingPoint": "685°C",
-        "electronAffinity": "195 kJ/mol"
+        "electronAffinity": "195 kJ/mol",
+        "atomicRadius": "103 pm",
+        "specificHeat": "0.3212 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2743,7 +2811,9 @@ export const finallyData = {
         "density": "3.1028 g/cm³ (liquid)",
         "meltingPoint": "-7.2°C",
         "boilingPoint": "58.8°C",
-        "electronAffinity": "324.6 kJ/mol"
+        "electronAffinity": "324.6 kJ/mol",
+        "atomicRadius": "94 pm",
+        "specificHeat": "0.9473 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2777,7 +2847,7 @@ export const finallyData = {
       "period": "4",
       "phaseAtSTP": "Gas",
       "valenceElectrons": "8",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "0"
     },
     "level2_atomic": {
@@ -2839,7 +2909,9 @@ export const finallyData = {
         "density": "3.749 g/L",
         "meltingPoint": "-157.37°C",
         "boilingPoint": "-153.42°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "88 pm",
+        "specificHeat": "0.2481 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2911,7 +2983,9 @@ export const finallyData = {
         "density": "1.532 g/cm³",
         "meltingPoint": "39.3°C",
         "boilingPoint": "688°C",
-        "electronAffinity": "46.9 kJ/mol"
+        "electronAffinity": "46.9 kJ/mol",
+        "atomicRadius": "265 pm",
+        "specificHeat": "0.3640 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -2993,7 +3067,9 @@ export const finallyData = {
         "density": "2.64 g/cm³",
         "meltingPoint": "777°C",
         "boilingPoint": "1377°C",
-        "electronAffinity": "5.03 kJ/mol"
+        "electronAffinity": "5.03 kJ/mol",
+        "atomicRadius": "219 pm",
+        "specificHeat": "0.3000 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3063,7 +3139,9 @@ export const finallyData = {
         "density": "4.472 g/cm³",
         "meltingPoint": "1526°C",
         "boilingPoint": "3345°C",
-        "electronAffinity": "29.6 kJ/mol"
+        "electronAffinity": "29.6 kJ/mol",
+        "atomicRadius": "212 pm",
+        "specificHeat": "0.2980 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3097,7 +3175,7 @@ export const finallyData = {
       "period": "5",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+4"
     },
     "level2_atomic": {
@@ -3150,7 +3228,9 @@ export const finallyData = {
         "density": "6.52 g/cm³",
         "meltingPoint": "1855°C",
         "boilingPoint": "4377°C",
-        "electronAffinity": "41.1 kJ/mol"
+        "electronAffinity": "41.1 kJ/mol",
+        "atomicRadius": "206 pm",
+        "specificHeat": "0.2780 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3184,7 +3264,7 @@ export const finallyData = {
       "period": "5",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+5"
     },
     "level2_atomic": {
@@ -3223,7 +3303,9 @@ export const finallyData = {
         "density": "8.57 g/cm³",
         "meltingPoint": "2477°C",
         "boilingPoint": "4744°C",
-        "electronAffinity": "86.1 kJ/mol"
+        "electronAffinity": "86.1 kJ/mol",
+        "atomicRadius": "198 pm",
+        "specificHeat": "0.2650 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3256,7 +3338,7 @@ export const finallyData = {
       "period": "5",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+6"
     },
     "level2_atomic": {
@@ -3326,7 +3408,9 @@ export const finallyData = {
         "density": "10.28 g/cm³",
         "meltingPoint": "2623°C",
         "boilingPoint": "4639°C",
-        "electronAffinity": "71.9 kJ/mol"
+        "electronAffinity": "71.9 kJ/mol",
+        "atomicRadius": "190 pm",
+        "specificHeat": "0.2510 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3359,7 +3443,7 @@ export const finallyData = {
       "period": "5",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+7"
     },
     "level2_atomic": {
@@ -3408,7 +3492,9 @@ export const finallyData = {
         "density": "11.0 g/cm³",
         "meltingPoint": "2157°C",
         "boilingPoint": "4265°C",
-        "electronAffinity": "53 kJ/mol"
+        "electronAffinity": "53 kJ/mol",
+        "atomicRadius": "183 pm",
+        "specificHeat": "0.0630 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3428,7 +3514,7 @@ export const finallyData = {
         "Radioactive (radiotoxicity depends on isotope)"
       ]
     },
-    "isotopeNotes": "Technetium has no stable isotopes. Tc-97, Tc-98, and Tc-99 are the longest-lived. Tc-99m is widely used in medical imaging."
+    "isotopeNotes": "Tc-97, Tc-98, and Tc-99 are the longest-lived. Tc-99m is widely used in medical imaging."
   },
   "44": {
     "id": 44,
@@ -3440,7 +3526,7 @@ export const finallyData = {
       "period": "5",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3, +4"
     },
     "level2_atomic": {
@@ -3511,7 +3597,9 @@ export const finallyData = {
         "density": "12.45 g/cm³",
         "meltingPoint": "2334°C",
         "boilingPoint": "4150°C",
-        "electronAffinity": "101.3 kJ/mol"
+        "electronAffinity": "101.3 kJ/mol",
+        "atomicRadius": "178 pm",
+        "specificHeat": "0.2380 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3544,7 +3632,7 @@ export const finallyData = {
       "period": "5",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3"
     },
     "level2_atomic": {
@@ -3585,7 +3673,9 @@ export const finallyData = {
         "density": "12.41 g/cm³",
         "meltingPoint": "1963°C",
         "boilingPoint": "3695°C",
-        "electronAffinity": "109.7 kJ/mol"
+        "electronAffinity": "109.7 kJ/mol",
+        "atomicRadius": "173 pm",
+        "specificHeat": "0.2400 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3599,7 +3689,7 @@ export const finallyData = {
       ],
       "commonUses": [
         "Catalytic converters (80% of use)",
-        "Jewelry plating (white gold finish)"
+        "Jewelry plating (gold finish)"
       ],
       "hazards": [
         "Compounds are toxic/carcinogenic",
@@ -3617,7 +3707,7 @@ export const finallyData = {
       "period": "5",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer d only here)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+2"
     },
     "level2_atomic": {
@@ -3682,7 +3772,9 @@ export const finallyData = {
         "density": "12.023 g/cm³",
         "meltingPoint": "1554.9°C",
         "boilingPoint": "2963°C",
-        "electronAffinity": "53.7 kJ/mol"
+        "electronAffinity": "53.7 kJ/mol",
+        "atomicRadius": "169 pm",
+        "specificHeat": "0.2400 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3759,7 +3851,9 @@ export const finallyData = {
         "density": "10.49 g/cm³",
         "meltingPoint": "961.8°C",
         "boilingPoint": "2162°C",
-        "electronAffinity": "125.6 kJ/mol"
+        "electronAffinity": "125.6 kJ/mol",
+        "atomicRadius": "165 pm",
+        "specificHeat": "0.2350 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3855,7 +3949,9 @@ export const finallyData = {
         "density": "8.65 g/cm³",
         "meltingPoint": "321.1°C",
         "boilingPoint": "767°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "161 pm",
+        "specificHeat": "0.2300 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -3932,7 +4028,9 @@ export const finallyData = {
         "density": "7.31 g/cm³",
         "meltingPoint": "156.6°C",
         "boilingPoint": "2072°C",
-        "electronAffinity": "28.9 kJ/mol"
+        "electronAffinity": "28.9 kJ/mol",
+        "atomicRadius": "156 pm",
+        "specificHeat": "0.2330 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4044,10 +4142,12 @@ export const finallyData = {
       "physical": {
         "electronegativity": 1.96,
         "firstIonization": "709 kJ/mol",
-        "density": "7.265 g/cm³ (white)",
+        "density": "7.265 g/cm³ (tin)",
         "meltingPoint": "231.9°C",
         "boilingPoint": "2602°C",
-        "electronAffinity": "107.3 kJ/mol"
+        "electronAffinity": "107.3 kJ/mol",
+        "atomicRadius": "145 pm",
+        "specificHeat": "0.2170 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4124,7 +4224,9 @@ export const finallyData = {
         "density": "6.697 g/cm³",
         "meltingPoint": "630.6°C",
         "boilingPoint": "1587°C",
-        "electronAffinity": "103.2 kJ/mol"
+        "electronAffinity": "103.2 kJ/mol",
+        "atomicRadius": "145 pm",
+        "specificHeat": "0.2070 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4211,7 +4313,9 @@ export const finallyData = {
         "density": "6.24 g/cm³",
         "meltingPoint": "449.5°C",
         "boilingPoint": "988°C",
-        "electronAffinity": "190.2 kJ/mol"
+        "electronAffinity": "190.2 kJ/mol",
+        "atomicRadius": "140 pm",
+        "specificHeat": "0.2010 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4284,7 +4388,9 @@ export const finallyData = {
         "density": "4.933 g/cm³",
         "meltingPoint": "113.7°C",
         "boilingPoint": "184.3°C",
-        "electronAffinity": "295.2 kJ/mol"
+        "electronAffinity": "295.2 kJ/mol",
+        "atomicRadius": "140 pm",
+        "specificHeat": "0.4290 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4318,7 +4424,7 @@ export const finallyData = {
       "period": "5",
       "phaseAtSTP": "Gas",
       "valenceElectrons": "8",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "0"
     },
     "level2_atomic": {
@@ -4398,7 +4504,9 @@ export const finallyData = {
         "density": "5.894 g/L",
         "meltingPoint": "-111.75°C",
         "boilingPoint": "-108.1°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "0.1583 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4466,7 +4574,9 @@ export const finallyData = {
         "density": "1.93 g/cm³",
         "meltingPoint": "28.44°C",
         "boilingPoint": "671°C",
-        "electronAffinity": "45.5 kJ/mol"
+        "electronAffinity": "45.5 kJ/mol",
+        "atomicRadius": "260 pm",
+        "specificHeat": "0.2420 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4552,7 +4662,9 @@ export const finallyData = {
         "density": "3.51 g/cm³",
         "meltingPoint": "727°C",
         "boilingPoint": "1845°C",
-        "electronAffinity": "13.95 kJ/mol"
+        "electronAffinity": "13.95 kJ/mol",
+        "atomicRadius": "215 pm",
+        "specificHeat": "0.2050 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4629,7 +4741,9 @@ export const finallyData = {
         "density": "6.162 g/cm³",
         "meltingPoint": "920°C",
         "boilingPoint": "3464°C",
-        "electronAffinity": "48 kJ/mol"
+        "electronAffinity": "48 kJ/mol",
+        "atomicRadius": "195 pm",
+        "specificHeat": "0.1950 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4723,7 +4837,9 @@ export const finallyData = {
         "density": "6.770 g/cm³",
         "meltingPoint": "799°C",
         "boilingPoint": "3443°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "185 pm",
+        "specificHeat": "0.1920 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4803,7 +4919,9 @@ export const finallyData = {
         "density": "6.77 g/cm³",
         "meltingPoint": "931°C",
         "boilingPoint": "3520°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "185 pm",
+        "specificHeat": "0.1930 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4906,7 +5024,9 @@ export const finallyData = {
         "density": "7.01 g/cm³",
         "meltingPoint": "1016°C",
         "boilingPoint": "3074°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "185 pm",
+        "specificHeat": "0.1900 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -4989,7 +5109,9 @@ export const finallyData = {
         "density": "7.26 g/cm³",
         "meltingPoint": "1042°C",
         "boilingPoint": "3000°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "185 pm",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -5009,7 +5131,7 @@ export const finallyData = {
         "Radioactive"
       ]
     },
-    "isotopeNotes": "Promethium has no stable isotopes. Pm-145 (t½ 17.7 y) and Pm-147 (t½ 2.62 y) are the longest-lived.",
+    "isotopeNotes": "Pm-145 (t½ 17.7 y) and Pm-147 (t½ 2.62 y) are the longest-lived.",
     "uiLayout": {
       "fallbackDisplayRow": "9",
       "fallbackDisplayColumn": 7
@@ -5091,7 +5213,9 @@ export const finallyData = {
         "density": "7.52 g/cm³",
         "meltingPoint": "1072°C",
         "boilingPoint": "1794°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "185 pm",
+        "specificHeat": "0.1960 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5171,7 +5295,9 @@ export const finallyData = {
         "density": "5.244 g/cm³",
         "meltingPoint": "826°C",
         "boilingPoint": "1529°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "185 pm",
+        "specificHeat": "0.1820 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5274,7 +5400,9 @@ export const finallyData = {
         "density": "7.90 g/cm³",
         "meltingPoint": "1313°C",
         "boilingPoint": "3273°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "180 pm",
+        "specificHeat": "0.2400 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5353,7 +5481,9 @@ export const finallyData = {
         "density": "8.23 g/cm³",
         "meltingPoint": "1356°C",
         "boilingPoint": "3230°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "175 pm",
+        "specificHeat": "0.1820 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5459,7 +5589,9 @@ export const finallyData = {
         "density": "8.540 g/cm³",
         "meltingPoint": "1412°C",
         "boilingPoint": "2567°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "175 pm",
+        "specificHeat": "0.1670 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5536,7 +5668,9 @@ export const finallyData = {
         "density": "8.795 g/cm³",
         "meltingPoint": "1474°C",
         "boilingPoint": "2700°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "175 pm",
+        "specificHeat": "0.1650 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5637,7 +5771,9 @@ export const finallyData = {
         "density": "9.066 g/cm³",
         "meltingPoint": "1529°C",
         "boilingPoint": "2868°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "175 pm",
+        "specificHeat": "0.1680 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5714,7 +5850,9 @@ export const finallyData = {
         "density": "9.32 g/cm³",
         "meltingPoint": "1545°C",
         "boilingPoint": "1950°C",
-        "electronAffinity": "50 kJ/mol"
+        "electronAffinity": "50 kJ/mol",
+        "atomicRadius": "175 pm",
+        "specificHeat": "0.1600 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5820,7 +5958,9 @@ export const finallyData = {
         "density": "6.90 g/cm³",
         "meltingPoint": "824°C",
         "boilingPoint": "1196°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "175 pm",
+        "specificHeat": "0.1540 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5902,7 +6042,9 @@ export const finallyData = {
         "density": "9.841 g/cm³",
         "meltingPoint": "1663°C",
         "boilingPoint": "3402°C",
-        "electronAffinity": "31 kJ/mol"
+        "electronAffinity": "31 kJ/mol",
+        "atomicRadius": "175 pm",
+        "specificHeat": "0.1540 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -5942,7 +6084,7 @@ export const finallyData = {
       "period": "6",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+4"
     },
     "level2_atomic": {
@@ -6000,7 +6142,9 @@ export const finallyData = {
         "density": "13.31 g/cm³",
         "meltingPoint": "2233°C",
         "boilingPoint": "4603°C",
-        "electronAffinity": "78.6 kJ/mol"
+        "electronAffinity": "78.6 kJ/mol",
+        "atomicRadius": "155 pm",
+        "specificHeat": "0.1440 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6033,7 +6177,7 @@ export const finallyData = {
       "period": "6",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (forms complexes/oxoanions)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+5"
     },
     "level2_atomic": {
@@ -6077,7 +6221,9 @@ export const finallyData = {
         "density": "16.69 g/cm³",
         "meltingPoint": "3017°C",
         "boilingPoint": "5458°C",
-        "electronAffinity": "14.5 kJ/mol"
+        "electronAffinity": "14.5 kJ/mol",
+        "atomicRadius": "145 pm",
+        "specificHeat": "0.1400 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6111,7 +6257,7 @@ export const finallyData = {
       "period": "6",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (forms polyoxometalates, e.g., WO₄²⁻)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+6, +5, +4"
     },
     "level2_atomic": {
@@ -6169,9 +6315,11 @@ export const finallyData = {
         "electronegativity": 2.36,
         "firstIonization": "770 kJ/mol",
         "density": "19.25 g/cm³",
-        "meltingPoint": "3422°C [Highest of all metals]",
+        "meltingPoint": "3422°C",
         "boilingPoint": "5555°C",
-        "electronAffinity": "106.1 kJ/mol"
+        "electronAffinity": "106.1 kJ/mol",
+        "atomicRadius": "135 pm",
+        "specificHeat": "0.1320 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6207,7 +6355,7 @@ export const finallyData = {
       "period": "6",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+7"
     },
     "level2_atomic": {
@@ -6253,7 +6401,9 @@ export const finallyData = {
         "density": "21.02 g/cm³",
         "meltingPoint": "3186°C",
         "boilingPoint": "5596°C",
-        "electronAffinity": "151 kJ/mol"
+        "electronAffinity": "151 kJ/mol",
+        "atomicRadius": "135 pm",
+        "specificHeat": "0.1370 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6285,7 +6435,7 @@ export const finallyData = {
       "period": "6",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+4, +8"
     },
     "level2_atomic": {
@@ -6351,7 +6501,9 @@ export const finallyData = {
         "density": "22.59 g/cm³",
         "meltingPoint": "3033°C",
         "boilingPoint": "5012°C",
-        "electronAffinity": "205.3 kJ/mol"
+        "electronAffinity": "205.3 kJ/mol",
+        "atomicRadius": "130 pm",
+        "specificHeat": "0.1300 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6383,7 +6535,7 @@ export const finallyData = {
       "period": "6",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3, +4"
     },
     "level2_atomic": {
@@ -6429,7 +6581,9 @@ export const finallyData = {
         "density": "22.56 g/cm³",
         "meltingPoint": "2466°C",
         "boilingPoint": "4428°C",
-        "electronAffinity": "222.8 kJ/mol"
+        "electronAffinity": "222.8 kJ/mol",
+        "atomicRadius": "135 pm",
+        "specificHeat": "0.1310 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6462,7 +6616,7 @@ export const finallyData = {
       "period": "6",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+2, +4"
     },
     "level2_atomic": {
@@ -6528,7 +6682,9 @@ export const finallyData = {
         "density": "21.45 g/cm³",
         "meltingPoint": "1768.3°C",
         "boilingPoint": "3825°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "135 pm",
+        "specificHeat": "0.1330 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6601,7 +6757,9 @@ export const finallyData = {
         "density": "19.30 g/cm³",
         "meltingPoint": "1064.2°C",
         "boilingPoint": "2856°C",
-        "electronAffinity": "19.2 kJ/mol"
+        "electronAffinity": "19.2 kJ/mol",
+        "atomicRadius": "135 pm",
+        "specificHeat": "0.1291 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6699,7 +6857,9 @@ export const finallyData = {
         "density": "13.534 g/cm³",
         "meltingPoint": "-38.83°C",
         "boilingPoint": "356.7°C",
-        "electronAffinity": "35.1 kJ/mol"
+        "electronAffinity": "35.1 kJ/mol",
+        "atomicRadius": "150 pm",
+        "specificHeat": "0.1395 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6772,7 +6932,9 @@ export const finallyData = {
         "density": "11.85 g/cm³",
         "meltingPoint": "304°C",
         "boilingPoint": "1473°C",
-        "electronAffinity": "91.2 kJ/mol"
+        "electronAffinity": "91.2 kJ/mol",
+        "atomicRadius": "190 pm",
+        "specificHeat": "0.1290 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6855,7 +7017,9 @@ export const finallyData = {
         "density": "11.34 g/cm³",
         "meltingPoint": "327.5°C",
         "boilingPoint": "1749°C",
-        "electronAffinity": "183.3 kJ/mol"
+        "electronAffinity": "183.3 kJ/mol",
+        "atomicRadius": "180 pm",
+        "specificHeat": "0.1270 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -6924,14 +7088,16 @@ export const finallyData = {
         "density": "9.78 g/cm³",
         "meltingPoint": "271.4°C",
         "boilingPoint": "1564°C",
-        "electronAffinity": "270.1 kJ/mol"
+        "electronAffinity": "270.1 kJ/mol",
+        "atomicRadius": "160 pm",
+        "specificHeat": "0.1220 J/(g·°C)"
       }
     },
     "level4_history_stse": {
       "history": {
         "discoveryYear": "~1000 CE",
         "discoveredBy": "Alchemists (confused with Pb/Sn)",
-        "namedBy": "German Wismut (white mass)"
+        "namedBy": "German Wismut (mass)"
       },
       "stseContext": [
         "Green Chemistry (Non-toxic lead replacement)"
@@ -7000,7 +7166,9 @@ export const finallyData = {
         "density": "9.196 g/cm³",
         "meltingPoint": "254°C",
         "boilingPoint": "962°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "190 pm",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -7074,10 +7242,12 @@ export const finallyData = {
       "physical": {
         "electronegativity": 2.2,
         "firstIonization": "899 kJ/mol (est)",
-        "density": "~6.2–6.5 g/cm³ (est, not experimentally confirmed)",
+        "density": "~6.2–6.5 g/cm³ (est)",
         "meltingPoint": "~302°C (est)",
         "boilingPoint": "~337°C (est)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -7096,7 +7266,7 @@ export const finallyData = {
         "Highly radioactive"
       ]
     },
-    "isotopeNotes": "Astatine has no stable isotopes. At-218 and At-219 occur in trace amounts in natural uranium decay chains. At-210 and At-211 are synthetic only. At-211 (t½ 7.2 h) is of interest for targeted alpha therapy.",
+    "isotopeNotes": "At-218 and At-219 occur in trace amounts in natural uranium decay chains. At-210 and At-211 are synthetic only. At-211 (t½ 7.2 h) is of interest for targeted alpha therapy.",
     "dataQualityNotes": [
       "Density is estimated from periodic trends; bulk astatine has never been observed. Melting and boiling points are extrapolated and carry large uncertainty."
     ]
@@ -7111,7 +7281,7 @@ export const finallyData = {
       "period": "6",
       "phaseAtSTP": "Gas",
       "valenceElectrons": "8",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "0"
     },
     "level2_atomic": {
@@ -7158,7 +7328,9 @@ export const finallyData = {
         "density": "9.73 g/L",
         "meltingPoint": "-71°C",
         "boilingPoint": "-61.7°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "0.0937 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -7225,7 +7397,9 @@ export const finallyData = {
         "density": "~2.48 g/cm³ (pred)",
         "meltingPoint": "~21°C (pred)",
         "boilingPoint": "~677°C (pred)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -7307,7 +7481,9 @@ export const finallyData = {
         "density": "5.5 g/cm³",
         "meltingPoint": "696°C",
         "boilingPoint": "1737°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "215 pm",
+        "specificHeat": "0.0920 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -7375,7 +7551,9 @@ export const finallyData = {
         "density": "10.07 g/cm³",
         "meltingPoint": "1050°C",
         "boilingPoint": "3198°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "195 pm",
+        "specificHeat": "0.1200 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -7452,7 +7630,9 @@ export const finallyData = {
         "density": "11.72 g/cm³",
         "meltingPoint": "1750°C",
         "boilingPoint": "4788°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "180 pm",
+        "specificHeat": "0.1180 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -7531,7 +7711,9 @@ export const finallyData = {
         "density": "15.37 g/cm³",
         "meltingPoint": "1572°C",
         "boilingPoint": "4027°C (est)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "180 pm",
+        "specificHeat": "0.0991 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -7613,7 +7795,9 @@ export const finallyData = {
         "density": "19.1 g/cm³",
         "meltingPoint": "1132.2°C",
         "boilingPoint": "4131°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "175 pm",
+        "specificHeat": "0.1160 J/(g·°C)"
       }
     },
     "level4_history_stse": {
@@ -7653,7 +7837,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+5",
       "block": "f",
       "series": "Actinide"
@@ -7695,7 +7879,9 @@ export const finallyData = {
         "density": "20.45 g/cm³",
         "meltingPoint": "644°C",
         "boilingPoint": "3902°C (est)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "175 pm",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -7733,7 +7919,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+4",
       "block": "f",
       "series": "Actinide"
@@ -7780,7 +7966,9 @@ export const finallyData = {
         "density": "19.816 g/cm³",
         "meltingPoint": "640°C",
         "boilingPoint": "3228°C",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "175 pm",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -7821,7 +8009,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3",
       "block": "f",
       "series": "Actinide"
@@ -7868,7 +8056,9 @@ export const finallyData = {
         "density": "12.0 g/cm³",
         "meltingPoint": "1176°C",
         "boilingPoint": "2607°C (est)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "175 pm",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -7907,7 +8097,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + d + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3",
       "block": "f",
       "series": "Actinide"
@@ -7947,7 +8137,9 @@ export const finallyData = {
         "density": "13.51 g/cm³",
         "meltingPoint": "1345°C",
         "boilingPoint": "3110°C (est)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -7985,7 +8177,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3",
       "block": "f",
       "series": "Actinide"
@@ -8025,7 +8217,9 @@ export const finallyData = {
         "density": "14.78 g/cm³",
         "meltingPoint": "986°C",
         "boilingPoint": "2627°C (est)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8063,7 +8257,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3",
       "block": "f",
       "series": "Actinide"
@@ -8103,7 +8297,9 @@ export const finallyData = {
         "density": "15.1 g/cm³",
         "meltingPoint": "900°C",
         "boilingPoint": "N/A (est)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8142,7 +8338,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3",
       "block": "f",
       "series": "Actinide"
@@ -8181,7 +8377,9 @@ export const finallyData = {
         "density": "8.84 g/cm³ (est)",
         "meltingPoint": "860°C (est)",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8219,7 +8417,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3",
       "block": "f",
       "series": "Actinide"
@@ -8258,7 +8456,9 @@ export const finallyData = {
         "density": "N/A",
         "meltingPoint": "1527°C (est)",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8296,7 +8496,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3",
       "block": "f",
       "series": "Actinide"
@@ -8335,7 +8535,9 @@ export const finallyData = {
         "density": "N/A",
         "meltingPoint": "827°C (est)",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8373,7 +8575,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "Variable (outer s + f)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+2",
       "block": "f",
       "series": "Actinide"
@@ -8412,7 +8614,9 @@ export const finallyData = {
         "density": "N/A",
         "meltingPoint": "827°C (est)",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8450,7 +8654,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Solid",
       "valenceElectrons": "3",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3",
       "block": "f",
       "series": "Actinide"
@@ -8488,7 +8692,9 @@ export const finallyData = {
         "density": "N/A",
         "meltingPoint": "1627°C (pred)",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8526,7 +8732,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+4"
     },
     "level2_atomic": {
@@ -8564,7 +8770,9 @@ export const finallyData = {
         "density": "23.2 g/cm³ (pred)",
         "meltingPoint": "N/A",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8595,7 +8803,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+5"
     },
     "level2_atomic": {
@@ -8633,7 +8841,9 @@ export const finallyData = {
         "density": "29.3 g/cm³ (pred)",
         "meltingPoint": "N/A",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8664,7 +8874,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+6"
     },
     "level2_atomic": {
@@ -8702,7 +8912,9 @@ export const finallyData = {
         "density": "35.0 g/cm³ (pred)",
         "meltingPoint": "N/A",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8733,7 +8945,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+7"
     },
     "level2_atomic": {
@@ -8772,7 +8984,9 @@ export const finallyData = {
         "density": "37.1 g/cm³ (pred)",
         "meltingPoint": "N/A",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8803,7 +9017,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+8"
     },
     "level2_atomic": {
@@ -8842,7 +9056,9 @@ export const finallyData = {
         "density": "40.7 g/cm³ (pred)",
         "meltingPoint": "N/A",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8873,7 +9089,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+3"
     },
     "level2_atomic": {
@@ -8913,7 +9129,9 @@ export const finallyData = {
         "density": "37.4 g/cm³ (pred)",
         "meltingPoint": "N/A",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -8944,7 +9162,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+2"
     },
     "level2_atomic": {
@@ -8982,7 +9200,9 @@ export const finallyData = {
         "density": "34.8 g/cm³ (pred)",
         "meltingPoint": "N/A",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -9013,7 +9233,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "Variable (outer s + d)",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+1"
     },
     "level2_atomic": {
@@ -9051,7 +9271,9 @@ export const finallyData = {
         "density": "28.7 g/cm³ (pred)",
         "meltingPoint": "N/A",
         "boilingPoint": "N/A",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -9082,7 +9304,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "2",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+2"
     },
     "level2_atomic": {
@@ -9120,7 +9342,9 @@ export const finallyData = {
         "density": "Unknown",
         "meltingPoint": "~10°C (pred)",
         "boilingPoint": "~67°C (pred)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -9151,7 +9375,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "3",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+1"
     },
     "level2_atomic": {
@@ -9188,7 +9412,9 @@ export const finallyData = {
         "density": "~16 g/cm³ (pred)",
         "meltingPoint": "~430°C (pred)",
         "boilingPoint": "~1130°C (pred)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -9219,7 +9445,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "4",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+2"
     },
     "level2_atomic": {
@@ -9256,7 +9482,9 @@ export const finallyData = {
         "density": "~14 g/cm³ (pred)",
         "meltingPoint": "~-73°C (pred)",
         "boilingPoint": "~107°C (pred)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -9287,7 +9515,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "5",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+1"
     },
     "level2_atomic": {
@@ -9325,7 +9553,9 @@ export const finallyData = {
         "density": "~13.5 g/cm³ (pred)",
         "meltingPoint": "~400°C (pred)",
         "boilingPoint": "~1100°C (pred)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -9356,7 +9586,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "6",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "+2"
     },
     "level2_atomic": {
@@ -9394,7 +9624,9 @@ export const finallyData = {
         "density": "~12.9 g/cm³ (pred)",
         "meltingPoint": "364–507°C (pred)",
         "boilingPoint": "762–862°C (pred)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -9425,7 +9657,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "7",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "-1"
     },
     "level2_atomic": {
@@ -9465,7 +9697,9 @@ export const finallyData = {
         "density": "~7.17 g/cm³ (pred)",
         "meltingPoint": "350–550°C (pred)",
         "boilingPoint": "610°C (pred)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {
@@ -9496,7 +9730,7 @@ export const finallyData = {
       "period": "7",
       "phaseAtSTP": "Unknown",
       "valenceElectrons": "8",
-      "commonIons": "None (covalent or complex ions dominant)",
+      "commonIons": "No common ions",
       "commonOxidationStates": "0"
     },
     "level2_atomic": {
@@ -9533,7 +9767,9 @@ export const finallyData = {
         "density": "~4.9–5.1 g/cm³ (pred)",
         "meltingPoint": "~50°C (pred)",
         "boilingPoint": "~80°C (pred)",
-        "electronAffinity": "N/A"
+        "electronAffinity": "N/A",
+        "atomicRadius": "N/A",
+        "specificHeat": "N/A"
       }
     },
     "level4_history_stse": {

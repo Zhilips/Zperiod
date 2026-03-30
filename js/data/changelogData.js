@@ -4,6 +4,18 @@
 
 export const changelogData = [
   {
+    version: "2.0.0",
+    date: "2026-03-22",
+    changes: [
+      "New: Element Information Toggle (EIT) adds full-table property visualization with Color and Filter modes",
+      "Redesign: Chemistry Tools homepage rebuilt with cleaner cards, clearer hierarchy, and faster navigation",
+      "Localization: Major multilingual expansion across UI, ions, worksheet, settings, and search",
+      "Data: Added richer element detail, improved historical notes, and more complete information layers",
+      "Search: Added a dedicated search button and improved localized element-name search",
+      "Polish: Fixed a wide range of layout, translation, and interaction bugs across the site",
+    ],
+  },
+  {
     version: "1.3.0",
     date: "2026-03-07",
     changes: [

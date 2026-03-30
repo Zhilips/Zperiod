@@ -2,8 +2,16 @@
 // Page Controller - Main page switching and global nav state
 // =============================================================================
 
+import { onLangChange } from "./langController.js";
+
 export function initPageController(options = {}) {
-  const { onTablePageShown, onIonsPageShown, onToolsPageShown, onWorksheetPageShown } = options;
+  const {
+    onTablePageShown,
+    onIonsPageShown,
+    onToolsPageShown,
+    onWorksheetPageShown,
+    onSettingsPageShown,
+  } = options;
 
   const mainContainer = document.getElementById("main-container");
   const blankPage1 = document.getElementById("blank-page-1");
@@ -18,7 +26,7 @@ export function initPageController(options = {}) {
       if (mainContainer) mainContainer.style.display = "";
     },
     ions: () => {
-      if (ionsPage) ionsPage.style.display = "flex";
+      if (ionsPage) ionsPage.classList.add("active");
     },
     blank1: () => {
       if (blankPage1) blankPage1.classList.add("active");
@@ -35,7 +43,7 @@ export function initPageController(options = {}) {
     if (mainContainer) mainContainer.style.display = "none";
     if (blankPage1) blankPage1.classList.remove("active");
     if (blankPage2) blankPage2.classList.remove("active");
-    if (ionsPage) ionsPage.style.display = "none";
+    if (ionsPage) ionsPage.classList.remove("active");
     if (settingsPage) settingsPage.classList.remove("active");
   }
 
@@ -61,6 +69,10 @@ export function initPageController(options = {}) {
     if (page === "blank2" && typeof onWorksheetPageShown === "function") {
       onWorksheetPageShown();
     }
+
+    if (page === "settings" && typeof onSettingsPageShown === "function") {
+      onSettingsPageShown();
+    }
   }
 
   const globalNavBtns = document.querySelectorAll(".nav-pill-btn, .nav-logo-link, .nav-brand");
@@ -83,58 +95,60 @@ export function initPageController(options = {}) {
   const pillContainer = document.querySelector(".global-nav-pill");
   const pillBtns = pillContainer ? pillContainer.querySelectorAll(".nav-pill-btn") : [];
   let slider = null;
+  let sliderRefreshFrame = null;
+
+  function positionSlider(activeBtn, { immediate = false } = {}) {
+    if (!slider || !pillContainer || !activeBtn) return;
+
+    const containerRect = pillContainer.getBoundingClientRect();
+    const btnRect = activeBtn.getBoundingClientRect();
+
+    if (immediate) slider.style.transition = "none";
+    slider.style.width = `${btnRect.width}px`;
+    slider.style.transform = `translateX(${btnRect.left - containerRect.left}px)`;
+
+    if (immediate) {
+      requestAnimationFrame(() => {
+        if (slider) slider.style.transition = "";
+      });
+    }
+  }
+
+  function refreshSliderPosition(immediate = false) {
+    if (!pillContainer) return;
+    const activeBtn = pillContainer.querySelector(".nav-pill-btn.active");
+    if (activeBtn) positionSlider(activeBtn, { immediate });
+  }
+
+  function scheduleSliderRefresh() {
+    if (sliderRefreshFrame !== null) return;
+
+    sliderRefreshFrame = requestAnimationFrame(() => {
+      sliderRefreshFrame = null;
+      refreshSliderPosition(true);
+    });
+  }
 
   function createSlider() {
     if (!pillContainer || pillBtns.length === 0) return;
     slider = document.createElement("div");
     slider.className = "nav-pill-slider";
     pillContainer.appendChild(slider);
-    // Position on initial active button without animation
-    const activeBtn = pillContainer.querySelector(".nav-pill-btn.active");
-    if (activeBtn) {
-      const containerRect = pillContainer.getBoundingClientRect();
-      const btnRect = activeBtn.getBoundingClientRect();
-      slider.style.transition = "none";
-      slider.style.width = btnRect.width + "px";
-      slider.style.transform = `translateX(${btnRect.left - containerRect.left}px)`;
-      // Re-enable transition after paint
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          slider.style.transition = "";
-        });
-      });
-    }
+    refreshSliderPosition(true);
   }
 
   function moveSliderTo(page) {
-    if (!slider || !pillContainer) return;
     const targetBtn = pillContainer.querySelector(`.nav-pill-btn[data-page="${page}"]`);
-    if (!targetBtn) return;
-    const containerRect = pillContainer.getBoundingClientRect();
-    const btnRect = targetBtn.getBoundingClientRect();
-    slider.style.width = btnRect.width + "px";
-    slider.style.transform = `translateX(${btnRect.left - containerRect.left}px)`;
+    positionSlider(targetBtn);
   }
 
   createSlider();
 
   // Recalculate slider position on resize
-  window.addEventListener("resize", () => {
-    if (!slider) return;
-    const activeBtn = pillContainer.querySelector(".nav-pill-btn.active");
-    if (activeBtn) {
-      const containerRect = pillContainer.getBoundingClientRect();
-      const btnRect = activeBtn.getBoundingClientRect();
-      slider.style.transition = "none";
-      slider.style.width = btnRect.width + "px";
-      slider.style.transform = `translateX(${btnRect.left - containerRect.left}px)`;
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          slider.style.transition = "";
-        });
-      });
-    }
-  });
+  window.addEventListener("resize", scheduleSliderRefresh);
+
+  // Recalculate after language change (button text width changes)
+  onLangChange(() => requestAnimationFrame(() => refreshSliderPosition(true)));
 
   globalNavBtns.forEach((btn) => {
     btn.addEventListener("click", () => {

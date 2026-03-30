@@ -1,0 +1,780 @@
+.tool-modal-header {
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.tool-modal-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: -0.03em;
+}
+
+.tool-modal-tags {
+  display: flex;
+  gap: 8px;
+}
+
+.tool-modal-tags .grade-tag,
+.tool-modal-tags .feature-tag {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.tool-modal-tags .grade-tag {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.tool-modal-tags .feature-tag {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+/* Icon Colors */
+.tool-modal-icon.balancer-icon {
+  background: linear-gradient(135deg, #fef3c7, #fcd34d);
+}
+
+.tool-modal-icon.balancer-icon svg {
+  color: #92400e;
+}
+
+.tool-modal-icon.molar-icon {
+  background: linear-gradient(135deg, #dbeafe, #93c5fd);
+}
+
+.tool-modal-icon.molar-icon svg {
+  color: #1e40af;
+}
+
+.tool-modal-icon.empirical-icon {
+  background: linear-gradient(135deg, #f3e8ff, #c4b5fd);
+}
+
+.tool-modal-icon.empirical-icon svg {
+  color: #6b21a8;
+}
+
+.tool-modal-icon.blank-icon {
+  background: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+}
+
+.tool-modal-icon.blank-icon svg {
+  color: #475569;
+}
+
+/* Unified Input Style */
+.tool-input,
+.tool-select,
+.balancer-formula-input,
+.realtime-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 500;
+  font-family: "SF Mono", "Monaco", "Consolas", monospace;
+  background: #ffffff;
+  color: #1e293b;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.tool-input:focus,
+.tool-select:focus,
+.balancer-formula-input:focus,
+.realtime-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.tool-input::placeholder,
+.realtime-input::placeholder {
+  color: #94a3b8;
+}
+
+/* Unified Button Style */
+.tool-button,
+.tool-button.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family:
+    "Inter",
+    -apple-system,
+    sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.tool-button:hover,
+.tool-button.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.tool-button:active,
+.tool-button.primary-btn:active {
+  transform: translateY(0);
+}
+
+.tool-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Unified Section Labels */
+.tool-input-section label,
+.tool-input-group label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+/* Unified Result Box */
+.tool-result-box {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.result-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.result-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Unified Explanation Box */
+.tool-explanation-box,
+.tool-breakdown-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* Toggle Switch Enhancement */
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 12px;
+  transition: background 0.15s ease;
+}
+
+.toggle-label:hover {
+  background: #f1f5f9;
+}
+
+.toggle-label input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #fff;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.toggle-label input[type="checkbox"]:checked {
+  background-color: #6366f1;
+  border-color: #6366f1;
+}
+
+.toggle-label input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -60%) rotate(45deg);
+}
+
+/* Tips Section */
+.tool-tips-section {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.tool-tips-section h4 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 10px 0;
+}
+
+.tool-tips-section p {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 6px 0;
+  line-height: 1.5;
+}
+
+/* Example Chips */
+.example-box {
+  margin-top: 12px;
+}
+
+.example-box strong {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.formula-chip {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: "SF Mono", "Monaco", monospace;
+}
+
+.formula-chip:hover {
+  background: #6366f1;
+  border-color: #6366f1;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* Balancer Specific Refinements */
+.balancer-inputs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.balancer-input-group {
+  flex: 1;
+}
+
+.balancer-input-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.balancer-arrow {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.balancer-feedback {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.balancer-feedback.balanced {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+.balancer-feedback.unbalanced {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+}
+
+/* Empirical/Lego Tool Layout Refinements */
+.lego-tool-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.lego-input-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lego-stage {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  min-height: 200px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lego-blocks-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.lego-empty-state {
+  text-align: center;
+  padding: 24px;
+}
+
+.lego-empty-state p {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* 浮动积木动画 */
+.floating-blocks-anim {
+  position: relative;
+  width: 160px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+.floating-block {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: floatBlock 3s ease-in-out infinite;
+}
+
+.floating-block.fb-1 {
+  background: linear-gradient(135deg, #64748b, #475569);
+  left: 10px;
+  top: 20px;
+  animation-delay: 0s;
+}
+
+.floating-block.fb-2 {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  left: 60px;
+  top: 5px;
+  animation-delay: 0.4s;
+}
+
+.floating-block.fb-3 {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  left: 110px;
+  top: 25px;
+  animation-delay: 0.8s;
+}
+
+.floating-block.fb-4 {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  left: 60px;
+  top: 50px;
+  animation-delay: 1.2s;
+}
+
+@keyframes floatBlock {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+/* Lego Block Enhancement */
+.lego-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  min-height: 56px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  color: white;
+  box-shadow:
+    inset 0 -3px 0 rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    0 3px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.lego-block:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 -3px 0 rgba(0, 0, 0, 0.15),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.lego-block .block-symbol {
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.lego-block .block-count {
+  font-size: 0.7rem;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+/* Lego Block Colors */
+.lego-block.el-C {
+  background: linear-gradient(135deg, #374151, #1f2937);
+}
+
+.lego-block.el-H {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+}
+
+.lego-block.el-O {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+}
+
+.lego-block.el-N {
+  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+}
+
+.lego-block.el-S {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.lego-block.el-P {
+  background: linear-gradient(135deg, #fb923c, #f97316);
+}
+
+.lego-block.el-Cl {
+  background: linear-gradient(135deg, #34d399, #10b981);
+}
+
+.lego-block.el-default {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+}
+
+/* Lego Group */
+.lego-group {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  min-height: 50px;
+}
+
+.lego-group-label {
+  width: 100%;
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+/* Multiplier Section */
+.multiplier-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: 12px;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.multiplier-section .times-icon {
+  font-size: 1rem;
+}
+
+.multiplier-section .multiplier-value {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.multiplier-section .multiplier-label {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+/* Molecular Result */
+.molecular-result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  border-radius: 12px;
+  border: 2px solid #34d399;
+}
+
+.molecular-result .result-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #047857;
+  text-transform: uppercase;
+}
+
+.molecular-result .result-formula {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #065f46;
+  font-family: "SF Mono", monospace;
+}
+
+/* Lego Block Animation */
+@keyframes blockAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.lego-block.animate-in {
+  animation: blockAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes multiplierPop {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.multiplier-section.animate-in {
+  animation: multiplierPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Lego Stage States */
+.lego-stage.has-result {
+  border-style: solid;
+  border-color: #a78bfa;
+  background: linear-gradient(180deg, #faf5ff, #f5f3ff);
+}
+
+/* Calculation Steps Enhancement */
+.calc-steps-container {
+  margin-top: 12px;
+}
+
+.show-calc-btn {
+  width: 100%;
+  padding: 10px 14px;
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.show-calc-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.show-calc-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.calc-steps-content {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 10px;
+  animation: fadeSlideIn 0.2s ease;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calc-step-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 0.9rem;
+  color: #475569;
+  border-bottom: 1px dashed #f1f5f9;
+}
+
+.calc-step-row:last-child {
+  border-bottom: none;
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid #e2e8f0;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* Enter Hint Enhancement */
+.enter-hint {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.kbd-key {
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  box-shadow: 0 1px 0 #94a3b8;
+}
+
+/* Scrollbar Styling */
+.feature-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.feature-modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.feature-modal-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.feature-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.tool-modal-loading {
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.tool-modal-loading-error {
+  color: #b91c1c;
+}

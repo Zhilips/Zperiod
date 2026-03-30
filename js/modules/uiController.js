@@ -4,6 +4,7 @@
 // =============================================================================
 
 import { finallyData, elements } from "../data/elementsData.js";
+import { translations } from "../data/translations.js";
 import {
   ensureThreeLibLoaded,
   init3DScene,
@@ -15,18 +16,686 @@ import {
   clearCurrentAtom,
   renderScene,
 } from "./threeRenderer.js";
+import { initCardSlider } from "./cardSliderController.js";
+import { createEITController } from "./ui/eitController.js";
+import { initElementTutorial } from "./tutorialController.js";
+import {
+  t,
+  onLangChange,
+  getLang,
+  elementLocales,
+  fetchElementLocale,
+} from "./langController.js";
+import {
+  ELEMENT_NAMES_ZH_HANT,
+  ISOTOPE_ZH_HANT,
+  COMMON_ION_ZH_HANT,
+} from "../data/locales/zhHantUi.js";
+
 
 // v2 dataset stub — file removed; branches gated by zperiodVersion === 'new' are inert.
 const elementsData_v2 = [];
+const REPRESENTATIVE_MASS_NUMBERS = [
+  1, 4, 7, 9, 11, 12, 14, 16, 19, 20,
+  23, 24, 27, 28, 31, 32, 35, 40, 39, 40,
+  45, 48, 51, 52, 55, 56, 59, 59, 64, 65,
+  70, 73, 75, 79, 80, 84, 85, 88, 89, 91,
+  93, 96, 98, 101, 103, 106, 108, 112, 115, 119,
+  122, 128, 127, 131, 133, 137, 139, 140, 141, 144,
+  145, 150, 152, 157, 159, 163, 165, 167, 169, 173,
+  175, 178, 181, 184, 186, 190, 192, 195, 197, 201,
+  204, 207, 209, 209, 210, 222, 223, 226, 227, 232,
+  231, 238, 237, 244, 243, 247, 247, 251, 252, 257,
+  258, 259, 266, 267, 268, 269, 270, 277, 278, 281,
+  282, 285, 286, 289, 290, 293, 294, 294,
+];
 
 // ===== Legend & Category Highlighting =====
 let activeLegendCategory = null;
 let headlineResizeHandler = null;
+let levelSystemBound = false;
+
+// ===== Expandable Ion / Isotope Pill Helpers =====
+const ION_SUBSCRIPT_MAP = {
+  "₀": "0", "₁": "1", "₂": "2", "₃": "3", "₄": "4",
+  "₅": "5", "₆": "6", "₇": "7", "₈": "8", "₉": "9",
+};
+const ION_SUPERSCRIPT_MAP = {
+  "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4",
+  "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9",
+  "⁺": "+", "⁻": "-",
+};
+
+const COMMON_ION_DETAIL_OVERRIDES = {
+  H: { "H⁺": { note: "Usually behaves as an acidic proton in water, often represented by hydronium." }, "H⁻": { note: "A strongly basic hydride ion found mainly in ionic hydrides such as NaH." } },
+  Fe: { "Fe²⁺": { note: "Ferrous iron; common in reducing environments and easily oxidized to Fe³⁺." }, "Fe³⁺": { note: "Ferric iron; the more oxidized common state in many salts and oxides." } },
+  Ti: { "Ti³⁺": { note: "A less stable reducing state that is readily oxidized to Ti⁴⁺." }, "Ti⁴⁺": { note: "The dominant titanium oxidation state, especially in TiO₂ and TiCl₄ chemistry." } },
+  Na: { "Na⁺": { note: "A very stable +1 ion commonly found in salts and aqueous solution." } },
+  Li: { "Li⁺": { note: "The only common lithium ion in ordinary compounds and many battery materials." } },
+  K: { "K⁺": { note: "The usual potassium ion in salts and a major biological electrolyte." } },
+  Mg: { "Mg²⁺": { note: "The normal magnesium ion in salts and an essential ion in biological systems." } },
+  Ca: { "Ca²⁺": { note: "The normal calcium ion in minerals, hard water, and biological signalling." } },
+  Al: { "Al³⁺": { note: "The usual aluminum ion in many salts, though it hydrolyses strongly in water." } },
+  O: { "O²⁻": { note: "The oxide ion is the common oxygen anion in many metal oxides." } },
+  N: { "N³⁻": { note: "Nitride occurs mainly in compounds with very electropositive metals." } },
+  P: { "P³⁻": { note: "Phosphide is mainly found in metal phosphides rather than free in water." } },
+  S: { "S²⁻": { note: "Sulfide is the common sulfur anion in metal sulfides and H2S chemistry." } },
+  F: { "F⁻": { note: "Fluoride is the stable halide ion found in minerals, water treatment, and enamel chemistry." } },
+  Cl: { "Cl⁻": { note: "The most common halide anion, stable in many salts and aqueous systems." } },
+  Br: { "Br⁻": { note: "Bromide is the common bromine anion found in salts and natural bromide-rich brines." } },
+  I: { "I⁻": { note: "Iodide is the stable iodine anion and the form used by the thyroid." } },
+  Sc: { "Sc³⁺": { note: "Scandium is found almost entirely in the +3 state in its compounds." } },
+  V: { "V²⁺": { note: "Vanadium(II) is a lower, reducing state that oxidizes readily in air." }, "V³⁺": { note: "Vanadium(III) is one of the common lower oxidation states in compounds." } },
+  Cr: { "Cr²⁺": { note: "Chromium(II) is a reducing ion that is readily oxidized to Cr3+." }, "Cr³⁺": { note: "Chromium(III) is the more stable common chromium ion in many salts." } },
+  Mn: { "Mn²⁺": { note: "Mn2+ is the most common simple manganese ion in ordinary chemistry." }, "Mn³⁺": { note: "Mn3+ is less stable than Mn2+ and is often stabilized in solids or complexes." } },
+  Co: { "Co²⁺": { note: "Cobalt(II) is the more common simple cobalt ion in salts." }, "Co³⁺": { note: "Cobalt(III) is more often stabilized in coordination complexes." } },
+  Ni: { "Ni²⁺": { note: "Nickel(II) is the most common nickel ion in ordinary compounds." }, "Ni³⁺": { note: "Nickel(III) exists, but it is less common than the Ni2+ state." } },
+  Cu: { "Cu⁺": { note: "Copper(I) appears in some minerals and coordination compounds." }, "Cu²⁺": { note: "Copper(II) is the more common simple copper ion in many salts." } },
+  Zn: { "Zn²⁺": { note: "Zinc almost always appears as Zn²⁺ in simple compounds and biology." } },
+  Ga: { "Ga³⁺": { note: "Gallium usually appears in the +3 state in its compounds." } },
+  Ag: { "Ag⁺": { note: "Silver usually appears as Ag+ in salts such as silver nitrate and silver halides." } },
+  Rb: { "Rb⁺": { note: "Rubidium forms the normal +1 alkali-metal ion, much like potassium." } },
+  Sr: { "Sr²⁺": { note: "Strontium commonly occurs as the +2 ion in salts and minerals." } },
+  Y: { "Y³⁺": { note: "Yttrium is normally found in the +3 state in compounds and minerals." } },
+  Cd: { "Cd²⁺": { note: "Cadmium usually occurs as Cd2+ in its compounds." } },
+  In: { "In³⁺": { note: "Indium commonly occurs as In3+, though In+ compounds are also known." } },
+  Sn: { "Sn²⁺": { note: "Tin(II) is one of the two common tin ion states in salts and reducing compounds." }, "Sn⁴⁺": { note: "Tin(IV) is the more oxidized common state found in compounds such as SnO₂." } },
+  Pb: { "Pb²⁺": { note: "Lead(II) is the more common simple lead ion in many salts and minerals." }, "Pb⁴⁺": { note: "Lead(IV) occurs in more strongly oxidized lead compounds." } },
+  Ba: { "Ba²⁺": { note: "Barium commonly occurs as the +2 ion in salts such as sulfate and carbonate." } },
+  Hg: { "Hg₂²⁺": { note: "Mercury(I) commonly exists as the dimeric mercurous ion Hg₂²⁺." }, "Hg²⁺": { note: "Mercury(II) is the more oxidized common mercury ion in many compounds." } },
+  Au: { "Au⁺": { note: "Gold(I) is one of the common oxidation states in gold coordination chemistry." }, "Au³⁺": { note: "Gold(III) is the higher common state in many gold complexes." } },
+  Tl: { "Tl⁺": { note: "Thallium(I) is the more stable common thallium ion in many compounds." }, "Tl³⁺": { note: "Thallium(III) is the more oxidized and less stable common state." } },
+  Bi: { "Bi³⁺": { note: "Bismuth(III) is the most common oxidation state of bismuth in compounds." } },
+  At: { "At⁻": { note: "Astatide is a predicted halide-like anion, expected to resemble iodide." } },
+  U: { "U⁴⁺": { note: "Uranium(IV) is important in UO2, a major nuclear fuel material." } },
+};
+
+const ISOTOPE_DETAIL_OVERRIDES = {
+  H: { "H-1": "Protium is the most abundant hydrogen isotope in nature.", "H-2": "Deuterium is stable and commonly used in heavy water and tracing studies.", "H-3": "Tritium is radioactive and widely known from fusion and tracing applications." },
+  Li: { "Li-6": "Lithium-6 is important in neutron reactions and tritium production.", "Li-7": "Lithium-7 is the more abundant natural isotope of lithium." },
+  C: { "C-13": "Carbon-13 is stable and widely used in NMR and isotope tracing.", "C-14": "Carbon-14 is radioactive and well known for radiocarbon dating." },
+  Fe: { "Fe-56": "Iron-56 is the most abundant natural isotope of iron." },
+  Mn: { "Mn-55": "Manganese-55 is the only stable natural isotope of manganese." },
+  Co: { "Co-59": "Cobalt-59 is the only stable natural isotope of cobalt." },
+  I: { "I-127": "Iodine-127 is the only stable natural isotope of iodine." },
+  U: { "U-235": "Uranium-235 is the key fissile isotope used in many nuclear applications.", "U-238": "Uranium-238 is the most abundant uranium isotope and is weakly radioactive." },
+  Tc: { "Tc-99": "Technetium-99 is a long-lived radioactive isotope of a fully radioactive element." },
+};
+
+const ELEMENT_NAMES_ZH = [
+  "", "氢", "氦", "锂", "铍", "硼", "碳", "氮", "氧", "氟", "氖",
+  "钠", "镁", "铝", "硅", "磷", "硫", "氯", "氩",
+  "钾", "钙", "钪", "钛", "钒", "铬", "锰", "铁", "钴", "镍", "铜", "锌", "镓", "锗", "砷", "硒", "溴", "氪",
+  "铷", "锶", "钇", "锆", "铌", "钼", "锝", "钌", "铑", "钯", "银", "镉", "铟", "锡", "锑", "碲", "碘", "氙",
+  "铯", "钡", "镧", "铈", "镨", "钕", "钷", "钐", "铕", "钆", "铽", "镝", "钬", "铒", "铥", "镱", "镥", "铪", "钽", "钨", "铼", "锇", "铱", "铂", "金", "汞", "铊", "铅", "铋", "钋", "砹", "氡",
+  "钫", "镭", "锕", "钍", "镤", "铀", "镎", "钚", "镅", "锔", "锫", "锎", "锿", "镄", "钔", "锘", "铹", "𬬻", "𬭊", "𬭳", "𬭛", "𬭤", "䥑", "𫟼", "𬬭", "鎶", "鿭", "𫓧", "镆", "𫟷", "鿬", "鿫"
+];
+
+const ELEMENT_PINYIN_ZH = [
+  "", "qīng", "hài", "lǐ", "pí", "péng", "tàn", "dàn", "yǎng", "fú", "nǎi",
+  "nà", "měi", "lǚ", "guī", "lín", "liú", "lǜ", "yà",
+  "jiǎ", "gài", "kàng", "tài", "fán", "gè", "měng", "tiě", "gǔ", "niè", "tóng", "xīn", "jiā", "zhě", "shēn", "xī", "xiù", "kè",
+  "rú", "sī", "yǐ", "gào", "ní", "mù", "dé", "liǎo", "lǎo", "bǎ", "yín", "gé", "yīn", "xī", "tī", "dì", "diǎn", "xiān",
+  "sè", "bèi", "lán", "shì", "pǔ", "nǚ", "pǒ", "shān", "yǒu", "gá", "tè", "dī", "huǒ", "ěr", "diū", "yì", "lǔ", "hā", "tǎn", "wū", "lái", "é", "yī", "bó", "jīn", "gǒng", "tā", "qiān", "bì", "pō", "ài", "dōng",
+  "fāng", "léi", "ā", "tǔ", "pú", "yóu", "ná", "bù", "méi", "jū", "pèi", "kāi", "āi", "fèi", "mén", "nuò", "láo", "lú", "dū", "xǐ", "bō", "hēi", "mài", "dá", "lún", "gē", "nǐ", "fū", "mò", "lì", "tián", "ào"
+];
+
+function getElementAnnotation(number, lang) {
+  if (lang === "zh") return ELEMENT_PINYIN_ZH[number] || "";
+  // Traditional Chinese should prefer zhuyin rather than pinyin.
+  return "";
+}
+
+function localizeElementName(element) {
+  if (!element || !element.number) return "";
+  const lang = getLang();
+  if (lang.startsWith("zh")) {
+    const useTraditionalChinese = lang === "zh-Hant";
+    if (element.symbol === "La-Lu") return useTraditionalChinese ? "鑭系" : "镧系";
+    if (element.symbol === "Ac-Lr") return useTraditionalChinese ? "錒系" : "锕系";
+    const localizedNames = useTraditionalChinese ? ELEMENT_NAMES_ZH_HANT : ELEMENT_NAMES_ZH;
+    return localizedNames[element.number] || element.name;
+  }
+  if (elementLocales[lang]?.[element.number]?.name) {
+    return elementLocales[lang][element.number].name;
+  }
+  return element.name;
+}
+
+const ISOTOPE_ZH = {
+  H: { "H-1": "氕是自然界中最丰富的氢同位素。", "H-2": "氘是稳定的同位素，广泛用于重水和示踪研究。", "H-3": "氚具有放射性，被广泛应用于核聚变和示踪技术。" },
+  Li: { "Li-6": "锂-6 在中子反应和氚的生产中非常重要。", "Li-7": "锂-7 是自然界中更丰富的锂同位素。" },
+  C: { "C-13": "碳-13 是稳定的同位素，广泛用于核磁共振（NMR）和同位素示踪。", "C-14": "碳-14 具有放射性，因用于放射性碳定年法而闻名。" },
+  Fe: { "Fe-56": "铁-56 是自然界中最丰富的铁同位素。" },
+  Mn: { "Mn-55": "锰-55 是锰唯一的天然稳定同位素。" },
+  Co: { "Co-59": "钴-59 是钴唯一的天然稳定同位素。" },
+  I: { "I-127": "碘-127 是碘唯一的天然稳定同位素。" },
+  U: { "U-235": "铀-235 是用于许多核应用的关键裂变同位素。", "U-238": "铀-238 是最丰富的铀同位素，具有微弱的放射性。" },
+  Tc: { "Tc-99": "锝-99 是一种长寿命的放射性同位素，也是锝元素的代表。" },
+};
+
+const COMMON_ION_ZH = {
+  H: { "H⁺": "在水中通常作为酸性质子存在，常以水合氢离子表示。", "H⁻": "强碱性的氢负离子，主要存在于如 NaH 这样的离子型氢化物中。" },
+  Fe: { "Fe²⁺": "亚铁离子；常见于还原环境，容易被氧化为 Fe³⁺。", "Fe³⁺": "铁离子；是许多铁盐和氧化物中更常见的较高氧化态。" },
+  Ti: { "Ti³⁺": "不太稳定的还原态，容易被氧化为 Ti⁴⁺。", "Ti⁴⁺": "钛的主要氧化态，尤其在 TiO₂ 和 TiCl₄ 中最常见。" },
+  Na: { "Na⁺": "非常稳定的 +1 价离子，广泛存在于盐和水溶液中。" },
+  Li: { "Li⁺": "在普通化合物和许多电池材料中唯一的常见锂离子。" },
+  K: { "K⁺": "这是一种稳定的钾离子，也是一种重要的生物电解质。" },
+  Mg: { "Mg²⁺": "普通镁离子，是生物系统中必不可少的离子。" },
+  Ca: { "Ca²⁺": "常见的钙离子，存在于矿物质、硬水和生物信号传导中。" },
+  Al: { "Al³⁺": "铝的常见离子形式，在水中会发生强烈水解。" },
+  O: { "O²⁻": "氧离子是许多金属氧化物中的常见阴离子。" },
+  N: { "N³⁻": "氮离子主要存在于由极度电正性金属组成的化合物中。" },
+  P: { "P³⁻": "磷离子主要存在于金属磷化物中，很少游离在水中。" },
+  S: { "S²⁻": "硫离子是金属硫化物和 H2S 化学中的常见硫阴离子。" },
+  F: { "F⁻": "氟离子是稳定的卤素离子，存在于矿物、水处理和牙釉质中。" },
+  Cl: { "Cl⁻": "最常见的卤素阴离子，在许多盐和水体系中非常稳定。" },
+  Br: { "Br⁻": "溴离子，常见于盐和天然富溴卤水中。" },
+  I: { "I⁻": "碘离子，是甲状腺利用的稳定形态。" },
+  Sc: { "Sc³⁺": "钪在其化合物中几乎全部以 +3 价状态存在。" },
+  V: { "V²⁺": "钒(II) 是一种较低的还原态，在空气中容易被氧化。", "V³⁺": "钒(III) 是化合物中常见的低氧化态之一。" },
+  Cr: { "Cr²⁺": "铬(II) 是一种还原性离子，极易被氧化为 Cr³⁺。", "Cr³⁺": "铬(III) 是许多盐中更稳定的常见铬离子态。" },
+  Mn: { "Mn²⁺": "Mn²⁺ 是普通化学中最常见、最简单的锰离子。", "Mn³⁺": "Mn³⁺ 不及 Mn²⁺ 稳定，常被固定在固体或配合物中。" },
+  Co: { "Co²⁺": "钴(II) 是盐中更常见的简单钴离子态。", "Co³⁺": "钴(III) 更常在配位配合物中被稳定下来。" },
+  Ni: { "Ni²⁺": "镍(II) 是普通化合物中最常用的镍离子。", "Ni³⁺": "存在镍(III)，但不如 Ni²⁺ 常见。" },
+  Cu: { "Cu⁺": "铜(I) 出现在部分矿物和配位化合物中。", "Cu²⁺": "铜(II) 是许多盐中更常见的简单铜离子。" },
+  Zn: { "Zn²⁺": "锌在简单化合物和生物体内几乎总是以 Zn²⁺ 形式存在。" },
+  Ga: { "Ga³⁺": "镓在其化合物中通常表现为 +3 价。" },
+  Ag: { "Ag⁺": "银通常以 Ag⁺ 的形式存在于硝酸银和卤化银等盐中。" },
+  Rb: { "Rb⁺": "铷形成普通的 +1 价碱金属离子，性质与钾非常相似。" },
+  Sr: { "Sr²⁺": "锶通常以 +2 价离子的形式存在于盐和矿物中。" },
+  Y: { "Y³⁺": "钇通常在其化合物和矿石中表现为 +3 价态。" },
+  Cd: { "Cd²⁺": "镉通常在其化合物中以 Cd²⁺ 的形式出现。" },
+  In: { "In³⁺": "铟通常以 In³⁺ 的形式出现，尽管也存在 In⁺ 化合物。" },
+  Sn: { "Sn²⁺": "锡(II) 是盐和还原性物质中两种常见的锡离子之一。", "Sn⁴⁺": "锡(IV) 是更高氧化态的离子，见于如 SnO₂ 这样的化合物。" },
+  Pb: { "Pb²⁺": "铅(II) 是许多铅盐和矿石中更常见的简单铅离子。", "Pb⁴⁺": "铅(IV) 出现在氧化性极强的铅化合物中。" },
+  Ba: { "Ba²⁺": "钡通常以 +2 价离子的形式存在于硫酸盐和碳酸盐等盐中。" },
+  Hg: { "Hg₂²⁺": "亚汞通常以二聚体离子 Hg₂²⁺ 的形式存在。", "Hg²⁺": "汞(II) 是许多化合物中更常见的较高氧化态汞离子。" },
+  Au: { "Au⁺": "金(I) 是金配位化学中常见的氧化态之一。", "Au³⁺": "金(III) 是许多金络合物中较高级别的常见状态。" },
+  Tl: { "Tl⁺": "在许多化合物中，铊(I) 是比铊(III) 更稳定的普通铊离子。", "Tl³⁺": "铊(III) 是氧化程度更高但不太稳定的常见状态。" },
+  Bi: { "Bi³⁺": "铋(III) 是化合物中最常表现出的铋氧化态。" },
+  At: { "At⁻": "砹离子被预测具有类似卤素的阴离子结构，可能类似于碘离子。" },
+  U: { "U⁴⁺": "铀(IV) 在 UO₂ 中十分重要，这是一种主要的核燃料。" }
+};
+
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+function unicodeToHtmlGlobal(text) {
+  let result = "", i = 0;
+  while (i < text.length) {
+    if (ION_SUBSCRIPT_MAP[text[i]] !== undefined) {
+      let sub = "";
+      while (i < text.length && ION_SUBSCRIPT_MAP[text[i]] !== undefined) { sub += ION_SUBSCRIPT_MAP[text[i]]; i++; }
+      result += `<sub>${sub}</sub>`; continue;
+    }
+    if (ION_SUPERSCRIPT_MAP[text[i]] !== undefined) {
+      let sup = "";
+      while (i < text.length && ION_SUPERSCRIPT_MAP[text[i]] !== undefined) { sup += ION_SUPERSCRIPT_MAP[text[i]]; i++; }
+      result += `<sup>${sup}</sup>`; continue;
+    }
+    result += text[i]; i++;
+  }
+  return result;
+}
+
+function localizeNoAdditionalData() {
+  const lang = getLang();
+  if (lang === "zh-Hant") return "暫無更多詳細資料。";
+  if (lang.startsWith("zh")) return "暂无更多详细数据。";
+  if (lang.startsWith("ru")) return "Дополнительные данные отсутствуют.";
+  if (lang.startsWith("fr")) return "Aucune information supplementaire disponible.";
+  if (lang.startsWith("fa")) return "اطلاعات تکمیلی موجود نیست.";
+  if (lang.startsWith("ur")) return "مزید تفصیلی معلومات دستیاب نہیں۔";
+  if (lang.startsWith("tl")) return "Wala pang karagdagang detalye.";
+  return "No additional data available.";
+}
+
+function buildLocalizedCommonIonNote(element, symbol) {
+  const lang = getLang();
+  const localizedName = localizeElementName(element);
+
+  if (lang.startsWith("fr")) {
+    return `${symbol} est un ion courant de l'element ${localizedName} dans ses composes usuels.`;
+  }
+  if (lang.startsWith("ru")) {
+    return `${symbol} — распространенный ион элемента ${localizedName} в его обычных соединениях.`;
+  }
+  if (lang.startsWith("fa")) {
+    return `${symbol} یکی از یون‌های رایج ${localizedName} در ترکیبات معمول آن است.`;
+  }
+  if (lang.startsWith("ur")) {
+    return `${symbol} ${localizedName} کا ایک عام آئن ہے جو اس کے عام مرکبات میں پایا جاتا ہے۔`;
+  }
+  if (lang.startsWith("tl")) {
+    return `${symbol} ay isang karaniwang ion ng ${localizedName} sa mga karaniwang compound nito.`;
+  }
+  return `${symbol} is a common ion of ${element.name} in its usual compounds.`;
+}
+
+function buildCommonIonDetailMarkup(element, symbol) {
+  const override = COMMON_ION_DETAIL_OVERRIDES[element.symbol]?.[symbol];
+  let note = override?.note || localizeNoAdditionalData();
+  
+  const lang = getLang();
+  if (lang.startsWith("zh")) {
+    const commonIonNotes = lang === "zh-Hant" ? COMMON_ION_ZH_HANT : COMMON_ION_ZH;
+    if (!override?.note) {
+      note = localizeNoAdditionalData();
+    } else if (commonIonNotes[element.symbol]?.[symbol]) {
+      note = commonIonNotes[element.symbol][symbol];
+    }
+  } else if (lang !== "en") {
+    note = buildLocalizedCommonIonNote(element, symbol);
+  }
+  
+  return `<div class="ion-item-detail-inner"><p class="ion-detail-note">${escapeHtml(note)}</p></div>`;
+}
+
+function localizeSimpleStatusText(value, fallback = "—") {
+  const normalized = String(value ?? "").trim();
+  if (!normalized) return fallback;
+  if (/^unknown$/i.test(normalized)) return t("elementL1.unknown");
+  if (/^no common ions$/i.test(normalized)) return t("elementL1.noCommonIons");
+  
+  // Phase handling with proper short-circuit fallback
+  const phaseMap = { Solid: 1, Liquid: 1, Gas: 1 };
+  if (phaseMap[normalized]) {
+    let localizedPhase = t(`eit.propertyVal.basic.phaseAtSTP.${normalized}`);
+    if (localizedPhase === `eit.propertyVal.basic.phaseAtSTP.${normalized}`) {
+      localizedPhase = t(`eit.propertyVal.${normalized}`);
+    }
+    if (localizedPhase && localizedPhase !== `eit.propertyVal.${normalized}`) {
+      return localizedPhase;
+    }
+  }
+
+  // Category handling
+  const catKey = "tableLegend." + normalized.replace(/[- ](.)/g, (match, grp) => grp.toUpperCase()).replace(/^(.)/, (match, grp) => grp.toLowerCase());
+  const localizedCat = t(catKey);
+  if (localizedCat && localizedCat !== catKey) {
+    return localizedCat;
+  }
+
+  return normalized;
+}
+
+function localizeValence(val) {
+  if (!val || val === "—") return "—";
+  if (val === "Unknown") return t("elementL1.unknown");
+  const lang = getLang();
+  if (lang.startsWith("zh")) {
+    const replacements = lang === "zh-Hant"
+      ? [
+          [/Variable \(outer s \+ d \+ f\)/i, "可變 (外層 s + d + f)"],
+          [/Variable \(outer s \+ d\)/i, "可變 (外層 s + d)"],
+          [/Variable \(outer s \+ f\)/i, "可變 (外層 s + f)"],
+          [/Variable \(outer d only here\)/i, "可變 (僅外層 d)"],
+          [/Variable/i, "可變"],
+          [/\(d-subshell is full\)/gi, "(d 子殼層已充滿)"],
+          [/\(s-subshell only\)/gi, "(僅 s 子殼層)"],
+          [/\(f-subshell filling\)/gi, "(f 子殼層填充中)"],
+          [/\(half-filled d\)/gi, "(d 半填充)"],
+          [/\(full d before s\)/gi, "(d 先於 s 充滿)"],
+          [/\(d-subshell\)/gi, "(d 子殼層)"],
+          [/subshell/gi, "子殼層"],
+          [/outer/gi, "外層"],
+        ]
+      : [
+          [/Variable \(outer s \+ d \+ f\)/i, "可变 (外层 s + d + f)"],
+          [/Variable \(outer s \+ d\)/i, "可变 (外层 s + d)"],
+          [/Variable \(outer s \+ f\)/i, "可变 (外层 s + f)"],
+          [/Variable \(outer d only here\)/i, "可变 (仅外层 d)"],
+          [/Variable/i, "可变"],
+          [/\(d-subshell is full\)/gi, "(d 子壳层已充满)"],
+          [/\(s-subshell only\)/gi, "(仅 s 子壳层)"],
+          [/\(f-subshell filling\)/gi, "(f 子壳层填充中)"],
+          [/\(half-filled d\)/gi, "(d 半填充)"],
+          [/\(full d before s\)/gi, "(d 先于 s 充满)"],
+          [/\(d-subshell\)/gi, "(d 子壳层)"],
+          [/subshell/gi, "子壳层"],
+          [/outer/gi, "外层"],
+        ];
+
+    return replacements.reduce(
+      (localized, [pattern, replacement]) => localized.replace(pattern, replacement),
+      String(val),
+    );
+  }
+  if (lang.startsWith("ru")) {
+    return String(val)
+      .replace(/Variable \(outer s \+ d \+ f\)/i, "Переменная (внешние s + d + f)")
+      .replace(/Variable \(outer s \+ d\)/i, "Переменная (внешние s + d)")
+      .replace(/Variable \(outer s \+ f\)/i, "Переменная (внешние s + f)")
+      .replace(/Variable \(outer d only here\)/i, "Переменная (только внешние d)")
+      .replace(/Variable/i, "Переменная")
+      .replace(/\(d-subshell is full\)/gi, "(d-подоболочка заполнена)")
+      .replace(/\(s-subshell only\)/gi, "(только s-подоболочка)")
+      .replace(/\(f-subshell filling\)/gi, "(f-подоболочка заполняется)")
+      .replace(/subshell/gi, "подоболочка")
+      .replace(/outer/gi, "внешние");
+  }
+  return val;
+}
+
+function localizeNA() {
+  const lang = getLang();
+  if (lang === "zh-Hant") return "暫無";
+  if (lang.startsWith("zh")) return "暂无";
+  if (lang.startsWith("ru")) return "Н/Д";
+  if (lang.startsWith("fr")) return "N/D";
+  if (lang.startsWith("fa")) return "ناموجود";
+  if (lang.startsWith("ur")) return "دستیاب نہیں";
+  if (lang.startsWith("tl")) return "Wala";
+  return "N/A";
+}
+
+function localizeIsotopeStability(value) {
+  const normalized = String(value ?? "").trim();
+  if (!normalized) return "";
+
+  const lang = getLang();
+  const lower = normalized.toLowerCase();
+
+  if (/(radioactive|放射)/i.test(lower)) {
+    return t("elementModal.radioactive");
+  }
+  if (/(stable|穩定|稳定)/i.test(lower)) {
+    return t("elementModal.stable");
+  }
+
+  if (lang === "zh-Hant") {
+    return normalized
+      .replace(/稳定/g, "穩定")
+      .replace(/鲍林/g, "鮑林");
+  }
+
+  return normalized;
+}
+
+function compactLocalizedHistoryText(text) {
+  const normalized = String(text ?? "").trim();
+  if (!normalized) return normalized;
+
+  const lang = getLang();
+  if (!lang.startsWith("zh")) return normalized;
+
+  return normalized
+    .replace(/\s*\(([A-Za-z][A-Za-z0-9 .,'’"“”:&/+-]*)\)\s*/g, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function buildTextDetailMarkup(note) {
+  const normalizedNote = String(note || "").trim();
+  if (!normalizedNote) return "";
+  return `<div class="ion-item-detail-inner"><p class="ion-detail-note">${escapeHtml(normalizedNote)}</p></div>`;
+}
+
+function shortenDetailText(text, fallback) {
+  if (!text) return fallback;
+  const normalized = String(text).replace(/\s+/g, " ").trim();
+  if (!normalized) return fallback;
+  const firstSentence = normalized.match(/.*?[.!?](?:\s|$)/)?.[0]?.trim() || normalized;
+  if (firstSentence.length <= 120) return firstSentence;
+  return `${firstSentence.slice(0, 117).trimEnd()}...`;
+}
+
+function buildIsotopeFallbackNote(element, isotope) {
+  const percentText = String(isotope.percent || "").trim();
+  const abundanceMatch = percentText.match(/\(([^)]+)\)/);
+  const abundance = abundanceMatch?.[1] || "";
+  const isRadioactive = /radioactive|decay|t½|half-life/i.test(percentText);
+  const isStable = /stable/i.test(percentText) && !isRadioactive;
+  const lang = getLang();
+  
+  if (lang.startsWith("zh")) {
+    if (lang === "zh-Hant") {
+      if (isStable && abundance) return `穩定同位素；自然豐度 ${abundance}。`;
+      if (isStable) return `${localizeElementName(element)} 的穩定同位素。`;
+      if (isRadioactive && /trace/i.test(percentText)) return "放射性同位素，自然界中僅存在痕量。";
+      if (isRadioactive && abundance) return `放射性同位素；自然豐度 ${abundance}。`;
+      if (isRadioactive) return `${localizeElementName(element)} 的放射性同位素。`;
+      return "暫無更多詳細資料。";
+    }
+    if (isStable && abundance) return `稳定同位素；自然丰度 ${abundance}。`;
+    if (isStable) return `${localizeElementName(element)} 的稳定同位素。`;
+    if (isRadioactive && /trace/i.test(percentText)) return "放射性同位素，自然界中仅存在痕量。";
+    if (isRadioactive && abundance) return `放射性同位素；自然丰度 ${abundance}。`;
+    if (isRadioactive) return `${localizeElementName(element)} 的放射性同位素。`;
+    return "暂无更多详细数据。";
+  }
+  if (lang.startsWith("ru")) {
+    if (isStable && abundance) return `Стабильный изотоп; природная распространенность ${abundance}.`;
+    if (isStable) return `Стабильный изотоп ${localizeElementName(element)}.`;
+    if (isRadioactive && /trace/i.test(percentText)) return "Радиоактивный изотоп, присутствует в природе в следовых количествах.";
+    if (isRadioactive && abundance) return `Радиоактивный изотоп; природная распространенность ${abundance}.`;
+    if (isRadioactive) return `Радиоактивный изотоп ${localizeElementName(element)}.`;
+    return localizeNoAdditionalData();
+  }
+  if (lang.startsWith("fr")) {
+    if (isStable && abundance) return `Isotope stable de ${localizeElementName(element)}; abondance naturelle ${abundance}.`;
+    if (isStable) return `Isotope stable de ${localizeElementName(element)}.`;
+    if (isRadioactive && /trace/i.test(percentText)) return "Isotope radioactif present seulement a l'etat de traces naturelles.";
+    if (isRadioactive && abundance) return `Isotope radioactif de ${localizeElementName(element)}; abondance naturelle ${abundance}.`;
+    if (isRadioactive) return `Isotope radioactif de ${localizeElementName(element)}.`;
+    return localizeNoAdditionalData();
+  }
+  if (lang.startsWith("fa")) {
+    if (isStable && abundance) return `ایزوتوپ پایدار ${localizeElementName(element)}؛ فراوانی طبیعی ${abundance}.`;
+    if (isStable) return `ایزوتوپ پایدار ${localizeElementName(element)}.`;
+    if (isRadioactive && /trace/i.test(percentText)) return "ایزوتوپ رادیواکتیو که در طبیعت فقط به مقدار ناچیز یافت می‌شود.";
+    if (isRadioactive && abundance) return `ایزوتوپ رادیواکتیو ${localizeElementName(element)}؛ فراوانی طبیعی ${abundance}.`;
+    if (isRadioactive) return `ایزوتوپ رادیواکتیو ${localizeElementName(element)}.`;
+    return localizeNoAdditionalData();
+  }
+  if (lang.startsWith("ur")) {
+    if (isStable && abundance) return `${localizeElementName(element)} کا مستحکم آئسوٹوپ؛ قدرتی فراوانی ${abundance}۔`;
+    if (isStable) return `${localizeElementName(element)} کا مستحکم آئسوٹوپ۔`;
+    if (isRadioactive && /trace/i.test(percentText)) return "تابکار آئسوٹوپ جو قدرتی طور پر صرف نہایت قلیل مقدار میں پایا جاتا ہے۔";
+    if (isRadioactive && abundance) return `${localizeElementName(element)} کا تابکار آئسوٹوپ؛ قدرتی فراوانی ${abundance}۔`;
+    if (isRadioactive) return `${localizeElementName(element)} کا تابکار آئسوٹوپ۔`;
+    return localizeNoAdditionalData();
+  }
+  if (lang.startsWith("tl")) {
+    if (isStable && abundance) return `Matatag na isotope ng ${localizeElementName(element)}; likas na kasaganaan ${abundance}.`;
+    if (isStable) return `Matatag na isotope ng ${localizeElementName(element)}.`;
+    if (isRadioactive && /trace/i.test(percentText)) return "Radyoaktibong isotope na matatagpuan lamang sa bakas na dami sa kalikasan.";
+    if (isRadioactive && abundance) return `Radyoaktibong isotope ng ${localizeElementName(element)}; likas na kasaganaan ${abundance}.`;
+    if (isRadioactive) return `Radyoaktibong isotope ng ${localizeElementName(element)}.`;
+    return localizeNoAdditionalData();
+  }
+
+  if (isStable && abundance) return `Stable isotope; natural abundance ${abundance}.`;
+  if (isStable) return `Stable isotope of ${element.name}.`;
+  if (isRadioactive && /trace/i.test(percentText)) return "Radioactive isotope present only in trace natural amounts.";
+  if (isRadioactive && abundance) return `Radioactive isotope; natural abundance ${abundance}.`;
+  if (isRadioactive) return `Radioactive isotope of ${element.name}.`;
+  return localizeNoAdditionalData();
+}
+
+function localizeIsotopeNotes(text) {
+  if (!text) return "";
+  const lang = getLang();
+  if (lang.startsWith("zh")) {
+    if (lang === "zh-Hant") {
+      return String(text)
+        .replace(/Synthetic element\.?\s*/gi, "人工合成元素。")
+        .replace(/is the longest-lived isotope amenable to study/gi, "是目前可研究的半衰期最長的同位素")
+        .replace(/is the longest-lived isotope/gi, "是目前已知半衰期最長的同位素")
+        .replace(/is the longest-lived known isotope/gi, "是已知半衰期最長的同位素")
+        .replace(/is the longest-lived confirmed isotope/gi, "是已確認的半衰期最長的同位素")
+        .replace(/is among the longest-lived/gi, "是半衰期較長的同位素之一")
+        .replace(/is a strong neutron source used industrially/gi, "是工業上使用的強中子源")
+        .replace(/is used in smoke detectors/gi, "被廣泛用於煙霧報警器")
+        .replace(/is the only confirmed isotope/gi, "是唯一已確認的同位素")
+        .replace(/Chemical studies confirmed/gi, "化學研究證實")
+        .replace(/Chemical experiments suggest/gi, "化學實驗表明")
+        .replace(/No chemical properties have been experimentally verified/gi, "其化學性質尚未通過實驗驗證")
+        .replace(/Predicted to be near the island of stability/gi, "預計接近穩定島")
+        .replace(/Relativistic effects predict/gi, "相對論效應預測")
+        .replace(/it may be a solid or a semiconductor rather than a noble gas/gi, "它可能是固體或半導體，而非稀有氣體")
+        .replace(/high volatility, possibly liquid or gaseous at STP/gi, "具有高揮發性，在標準狀態下可能為液態或氣態")
+        .replace(/volatile/gi, "揮發性")
+        .replace(/like osmium/gi, "與鋨類似")
+        .replace(/forms/gi, "形成")
+        .replace(/has t½/gi, "半衰期為");
+    }
+    return String(text)
+      .replace(/Synthetic element\.?\s*/gi, "人工合成元素。")
+      .replace(/is the longest-lived isotope amenable to study/gi, "是目前可研究的半衰期最长的同位素")
+      .replace(/is the longest-lived isotope/gi, "是目前已知半衰期最长的同位素")
+      .replace(/is the longest-lived known isotope/gi, "是已知半衰期最长的同位素")
+      .replace(/is the longest-lived confirmed isotope/gi, "是已确认的半衰期最长的同位素")
+      .replace(/is among the longest-lived/gi, "是半衰期较长的同位素之一")
+      .replace(/is a strong neutron source used industrially/gi, "是工业上使用的强中子源")
+      .replace(/is used in smoke detectors/gi, "被广泛用于烟雾报警器")
+      .replace(/is the only confirmed isotope/gi, "是唯一已确认的同位素")
+      .replace(/Chemical studies confirmed/gi, "化学研究证实")
+      .replace(/Chemical experiments suggest/gi, "化学实验表明")
+      .replace(/No chemical properties have been experimentally verified/gi, "其化学性质尚未通过实验验证")
+      .replace(/Predicted to be near the island of stability/gi, "预计接近稳定岛")
+      .replace(/Relativistic effects predict/gi, "相对论效应预测")
+      .replace(/it may be a solid or a semiconductor rather than a noble gas/gi, "它可能是固体或半导体，而非稀有气体")
+      .replace(/high volatility, possibly liquid or gaseous at STP/gi, "具有高挥发性，在标准状态下可能为液态或气态")
+      .replace(/volatile/gi, "挥发性")
+      .replace(/like osmium/gi, "与锇类似")
+      .replace(/forms/gi, "形成")
+      .replace(/has t½/gi, "半衰期为");
+  }
+  if (lang.startsWith("ru")) {
+    return String(text)
+      .replace(/Synthetic element\.?\s*/gi, "Синтетический элемент. ")
+      .replace(/is the longest-lived isotope/gi, "— наиболее долгоживущий изотоп")
+      .replace(/is the longest-lived known isotope/gi, "— наиболее долгоживущий известный изотоп")
+      .replace(/No chemical properties have been experimentally verified/gi, "Химические свойства экспериментально не подтверждены");
+  }
+  return text;
+}
+
+function buildIsotopeDetailMarkup(element, isotope, isotopeNotes) {
+  const override = ISOTOPE_DETAIL_OVERRIDES[element.symbol]?.[isotope.name];
+  const lang = getLang();
+  let note = override || shortenDetailText(localizeIsotopeNotes(isotopeNotes), "") || buildIsotopeFallbackNote(element, isotope);
+  
+  if (lang.startsWith("zh")) {
+    const isotopeNotesByLang = lang === "zh-Hant" ? ISOTOPE_ZH_HANT : ISOTOPE_ZH;
+    if (isotopeNotesByLang[element.symbol]?.[isotope.name]) {
+      note = isotopeNotesByLang[element.symbol][isotope.name];
+    }
+  } else if (lang !== "en") {
+    note = buildIsotopeFallbackNote(element, isotope);
+  }
+  
+  return `<div class="ion-item-detail-inner"><p class="ion-detail-note">${escapeHtml(note)}</p></div>`;
+}
+
+function splitEntriesOutsideParentheses(text) {
+  const entries = []; let depth = 0; let current = "";
+  for (const char of String(text || "")) {
+    if (char === "(") depth++;
+    if (char === ")" && depth > 0) depth--;
+    if (char === "," && depth === 0) { if (current.trim()) entries.push(current.trim()); current = ""; continue; }
+    current += char;
+  }
+  if (current.trim()) entries.push(current.trim());
+  return entries;
+}
+
+function closeExpandedDetailItems(container, except = null) {
+  container.querySelectorAll(".ion-item-expandable.active").forEach((expandedItem) => {
+    if (expandedItem === except) return;
+    expandedItem.classList.remove("active");
+    expandedItem.setAttribute("aria-expanded", "false");
+  });
+}
+
+function createExpandablePill({ summaryHtml, detailMarkup, container }) {
+  const item = document.createElement("div");
+  item.className = "ion-item ion-item-expandable";
+  item.setAttribute("role", "button");
+  item.setAttribute("tabindex", "0");
+  item.setAttribute("aria-expanded", "false");
+  item.innerHTML = `<div class="ion-item-summary">${summaryHtml}</div><div class="ion-item-detail">${detailMarkup}</div>`;
+
+  const toggleItem = () => {
+    const isActive = item.classList.contains("active");
+    closeExpandedDetailItems(container, item);
+    item.classList.toggle("active", !isActive);
+    item.setAttribute("aria-expanded", String(!isActive));
+  };
+
+  const triggerBounce = () => {
+    item.style.transition = "none";
+    item.style.transform = "scale(0.94)";
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        item.style.transition = "transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1)";
+        item.style.transform = "scale(1)";
+        setTimeout(() => { item.style.transition = ""; item.style.transform = ""; }, 450);
+      });
+    });
+  };
+
+  item.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleItem();
+    triggerBounce();
+  });
+  item.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    e.preventDefault(); toggleItem();
+  });
+  return item;
+}
+
 
 function clearHeadlineResizeHandler() {
   if (!headlineResizeHandler) return;
   window.removeEventListener("resize", headlineResizeHandler);
   headlineResizeHandler = null;
+}
+
+function getRepresentativeMassNumber(atomicNumber, fallback = null) {
+  if (atomicNumber < 1 || atomicNumber > REPRESENTATIVE_MASS_NUMBERS.length) {
+    return fallback;
+  }
+  return REPRESENTATIVE_MASS_NUMBERS[atomicNumber - 1];
+}
+
+function formatAverageAtomicMass(value, atomicNumber, fallbackWeight = null) {
+  const raw = value == null ? "" : String(value).trim();
+  const fallbackMass = getRepresentativeMassNumber(
+    atomicNumber,
+    Number.isFinite(fallbackWeight) ? Math.round(fallbackWeight) : fallbackWeight,
+  );
+
+  if (!raw || raw === "—") {
+    return fallbackMass != null ? String(fallbackMass) : "—";
+  }
+
+  const bracketedMatch = raw.match(/\[\s*(\d+(?:\.\d+)?)\s*\]/);
+  if (bracketedMatch) {
+    return bracketedMatch[1];
+  }
+
+  const cleaned = raw
+    .replace(/\s*\((?:radioactive|highly radioactive)[^)]+\)\s*/i, "")
+    .replace(/\s*\((?:radioactive|highly radioactive)\)\s*/i, "")
+    .trim();
+
+  if (cleaned && /^[\d.]+$/.test(cleaned)) {
+    return cleaned;
+  }
+
+  if (/radioactive/i.test(raw) && fallbackMass != null) {
+    return String(fallbackMass);
+  }
+
+  return cleaned || raw;
 }
 
 function bindKeyboardActivation(el, onActivate) {
@@ -59,6 +728,49 @@ function normalizeCategoryClass(catClass) {
   };
   return aliasMap[catClass] || catClass;
 }
+
+let legendMeasureCanvas = null;
+
+function getTranslationByPath(source, path) {
+  return String(path || "")
+    .split(".")
+    .reduce((acc, key) => (acc && acc[key] != null ? acc[key] : null), source);
+}
+
+function measureLegendTextWidth(text) {
+  if (!legendMeasureCanvas) {
+    legendMeasureCanvas = document.createElement("canvas");
+  }
+  const ctx = legendMeasureCanvas.getContext("2d");
+  if (!ctx) return 0;
+  ctx.font =
+    '600 11px "Inter", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif';
+  return Math.ceil(ctx.measureText(String(text || "")).width);
+}
+
+function getLegendItemMinWidth(nameKey) {
+  const enLabel = getTranslationByPath(translations.en, nameKey) || "";
+  const labelWidth = measureLegendTextWidth(enLabel);
+  // 10(swatch) + 5(gap) + 16(horizontal padding) + 3(border breathing room)
+  return labelWidth + 34;
+}
+
+function updateAlkalineEarthMarquee(item) {
+  if (!item || !item.classList.contains("legend-marquee-item")) return;
+  const label = item.querySelector(".legend-label");
+  const labelText = item.querySelector(".legend-label-text");
+  if (!label || !labelText) return;
+
+  item.classList.remove("marquee-overflow");
+  item.style.removeProperty("--legend-marquee-shift");
+
+  const overflow = Math.ceil(labelText.scrollWidth - label.clientWidth);
+  if (overflow > 1) {
+    item.classList.add("marquee-overflow");
+    item.style.setProperty("--legend-marquee-shift", `${overflow}px`);
+  }
+}
+
 function highlightCategory(container, catClass) {
   const normalized = normalizeCategoryClass(catClass);
   container.classList.add("highlighting");
@@ -77,868 +789,95 @@ function clearHighlights(container) {
   highlighted.forEach((el) => el.classList.remove("highlighted"));
 }
 
-const EIT_PROPERTY_CONFIG = [
-  { key: "category", label: "Category", type: "category" },
-  {
-    key: "meltingPoint",
-    label: "Melting Point",
-    type: "numeric",
-    unit: "°C",
-    digits: 0,
-    source: "meltingPoint",
-    units: [
-      { unit: "°C", digits: 0, convert: (v) => v },
-      { unit: "°F", digits: 0, convert: (v) => v * 9 / 5 + 32 },
-      { unit: "K", digits: 0, convert: (v) => v + 273.15 },
-    ],
-  },
-  {
-    key: "density",
-    label: "Density",
-    type: "numeric",
-    unit: "g/cm³",
-    digits: 2,
-    source: "density",
-    units: [
-      { unit: "g/cm³", digits: 2, convert: (v) => v },
-      { unit: "kg/m³", digits: 0, convert: (v) => v * 1000 },
-      { unit: "lb/ft³", digits: 2, convert: (v) => v * 62.42796 },
-    ],
-  },
-  {
-    key: "boilingPoint",
-    label: "Boiling Point",
-    type: "numeric",
-    unit: "°C",
-    digits: 0,
-    source: "boilingPoint",
-    units: [
-      { unit: "°C", digits: 0, convert: (v) => v },
-      { unit: "°F", digits: 0, convert: (v) => v * 9 / 5 + 32 },
-      { unit: "K", digits: 0, convert: (v) => v + 273.15 },
-    ],
-  },
-  {
-    key: "electronegativity",
-    label: "Electronegativity",
-    type: "numeric",
-    unit: "",
-    digits: 2,
-    source: "electronegativity",
-  },
-  {
-    key: "firstIonization",
-    label: "1st Ionization",
-    type: "numeric",
-    unit: "kJ/mol",
-    digits: 0,
-    source: "firstIonization",
-    units: [
-      { unit: "kJ/mol", digits: 0, convert: (v) => v },
-      { unit: "eV", digits: 2, convert: (v) => v / 96.485 },
-    ],
-  },
-  {
-    key: "electronAffinity",
-    label: "Electron Affinity",
-    type: "numeric",
-    unit: "kJ/mol",
-    digits: 1,
-    source: "electronAffinity",
-    units: [
-      { unit: "kJ/mol", digits: 1, convert: (v) => v },
-      { unit: "eV", digits: 2, convert: (v) => v / 96.485 },
-    ],
-  },
-];
-const EIT_PROPERTY_MAP = new Map(EIT_PROPERTY_CONFIG.map((cfg) => [cfg.key, cfg]));
-let eitRegistry = [];
-let eitUI = null;
-let eitState = {
-  property: "category",
-  mode: "color",
-  numericRanges: new Map(),
-  unitIndex: new Map(),   // tracks which unit is active per property key
-};
-
-/** Get the active unit config for a property (with conversion function) */
-function getActiveUnit(config) {
-  if (!config?.units || !config.units.length) return null;
-  const idx = eitState.unitIndex.get(config.key) || 0;
-  return config.units[idx];
-}
-
-/** Cycle to the next unit for this property and return the new unit config */
-function cycleUnit(config) {
-  if (!config?.units || config.units.length <= 1) return null;
-  const currentIdx = eitState.unitIndex.get(config.key) || 0;
-  const nextIdx = (currentIdx + 1) % config.units.length;
-  eitState.unitIndex.set(config.key, nextIdx);
-  // Clear stored range so slider resets to new unit bounds
-  eitState.numericRanges.delete(config.key);
-  return config.units[nextIdx];
-}
-
-/** Get the effective unit string for display */
-function getEffectiveUnit(config) {
-  const alt = getActiveUnit(config);
-  return alt ? alt.unit : (config?.unit || "");
-}
-
-/** Get the effective digits for display */
-function getEffectiveDigits(config) {
-  const alt = getActiveUnit(config);
-  return alt ? alt.digits : (config?.digits ?? 2);
-}
-
-/** Convert a raw value (always stored in base unit like °C) to the active display unit */
-function convertToActiveUnit(value, config) {
-  if (!Number.isFinite(value)) return value;
-  const alt = getActiveUnit(config);
-  return alt ? alt.convert(value) : value;
-}
-let lockLegendInteractions = false;
-let eitPanelOpen = false;
-
-function normalizeCategoryLabel(category) {
-  return normalizeCategoryClass(String(category || "Unknown")
-    .toLowerCase()
-    .replace(/ /g, "-")
-    .replace(/[^a-z0-9-]/g, ""));
-}
-
-/**
- * Parse a raw metric string into an interval object.
- * Returns { min, max, predicted, approximate, suffix } or null.
- * For EIT slider/filter, use min/max for overlap checking.
- * For color gradient, use midpoint (min+max)/2.
- */
-function parseNumericMetric(rawValue, metricKey) {
-  if (rawValue === null || rawValue === undefined) return null;
-  if (typeof rawValue === "number") {
-    return Number.isFinite(rawValue)
-      ? { min: rawValue, max: rawValue, predicted: false, approximate: false, suffix: "" }
-      : null;
-  }
-  const text = String(rawValue).trim();
-  if (!text) return null;
-  if (text === "N/A" || text === "Unknown" || text === "—") return null;
-  // em-dash "—" means no data, but en-dash "–" is a range separator
-  if (text.includes("—")) return null;
-
-  const predicted = /\(pred\)/i.test(text);
-  const approximate = /^~/.test(text) || /~/.test(text);
-  const normalized = text.replace(/−/g, "-").replace(/,/g, "");
-
-  // Build suffix string for display
-  let suffix = "";
-  if (approximate) suffix += "~";
-  if (predicted) suffix += suffix ? " (pred)" : "(pred)";
-
-  // Try range pattern first: e.g. "364–507°C (pred)" or "350–550°C (pred)"
-  const rangeMatch = normalized.match(/(-?\d+(?:\.\d+)?)\s*[–\-]\s*(-?\d+(?:\.\d+)?)/);
-  if (rangeMatch) {
-    const lo = Number.parseFloat(rangeMatch[1]);
-    const hi = Number.parseFloat(rangeMatch[2]);
-    if (Number.isFinite(lo) && Number.isFinite(hi)) {
-      if (metricKey === "firstIonization" && /ev/i.test(normalized)) {
-        return { min: lo * 96.485, max: hi * 96.485, predicted, approximate, suffix };
-      }
-      return { min: Math.min(lo, hi), max: Math.max(lo, hi), predicted, approximate, suffix };
-    }
-  }
-
-  // Single value
-  const match = normalized.match(/-?\d+(?:\.\d+)?/);
-  if (!match) return null;
-  const value = Number.parseFloat(match[0]);
-  if (!Number.isFinite(value)) return null;
-
-  if (metricKey === "firstIonization" && /ev/i.test(normalized)) {
-    const converted = value * 96.485;
-    return { min: converted, max: converted, predicted, approximate, suffix };
-  }
-  return { min: value, max: value, predicted, approximate, suffix };
-}
-
-function getMetricValue(elementNumber, metricKey) {
-  const physical = finallyData[elementNumber]?.level3_properties?.physical || {};
-  return parseNumericMetric(physical[metricKey], metricKey);
-}
-
-function registerEITElementCell(cell, element) {
-  if (!cell || !element || typeof element.number !== "number") return;
-  const metrics = {};
-  EIT_PROPERTY_CONFIG.forEach((config) => {
-    if (config.type !== "numeric") return;
-    metrics[config.key] = getMetricValue(element.number, config.source);
-  });
-  eitRegistry.push({
-    cell,
-    number: element.number,
-    categoryLabel: element.category || "Unknown",
-    categoryClass: normalizeCategoryLabel(element.category),
-    metrics,
-  });
-}
-
-function resetEITState() {
-  eitState = {
-    property: "category",
-    mode: "color",
-    numericRanges: new Map(),
-    unitIndex: new Map(),
-  };
-  eitPanelOpen = false;
-}
-
-function resetEITRegistry() {
-  eitRegistry = [];
-}
-
-function formatEITValue(value, config, withUnit = false) {
-  if (!Number.isFinite(value)) return "N/A";
-  const displayValue = convertToActiveUnit(value, config);
-  const digits = getEffectiveDigits(config);
-  const valueText = displayValue.toFixed(digits);
-  if (!withUnit) return valueText;
-  const unit = getEffectiveUnit(config);
-  return unit ? `${valueText} ${unit}` : valueText;
-}
-
-/** Get the midpoint value from an interval metric for gradient coloring */
-function getMetricMidpoint(metric) {
-  if (!metric) return null;
-  // Legacy: plain number (shouldn't happen after refactor but be safe)
-  if (typeof metric === "number") return Number.isFinite(metric) ? metric : null;
-  if (!Number.isFinite(metric.min) || !Number.isFinite(metric.max)) return null;
-  return (metric.min + metric.max) / 2;
-}
-
-/** Check if an interval metric overlaps with a selected range */
-function metricOverlapsRange(metric, selMin, selMax) {
-  if (!metric) return false;
-  if (typeof metric === "number") return Number.isFinite(metric) && metric >= selMin && metric <= selMax;
-  if (!Number.isFinite(metric.min) || !Number.isFinite(metric.max)) return false;
-  // Interval overlap: element.max >= selectedMin && element.min <= selectedMax
-  return metric.max >= selMin && metric.min <= selMax;
-}
-
-/** Check if an interval metric has valid data */
-function metricHasData(metric) {
-  if (!metric) return false;
-  if (typeof metric === "number") return Number.isFinite(metric);
-  return Number.isFinite(metric.min) && Number.isFinite(metric.max);
-}
-
-function getColorForRatio(ratio) {
-  const bounded = Math.max(0, Math.min(1, ratio));
-  const hue = 210 - bounded * 200;
-  const saturation = 82;
-  const lightness = 78 - bounded * 22;
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-}
-
-function getNumericRatio(value, min, max) {
-  if (!Number.isFinite(value) || !Number.isFinite(min) || !Number.isFinite(max)) {
-    return null;
-  }
-  if (Math.abs(max - min) < 1e-9) return 0.5;
-  return (value - min) / (max - min);
-}
-
-function clearEITCellStyles() {
-  eitRegistry.forEach(({ cell }) => {
-    cell.classList.remove(
-      "eit-colored",
-      "eit-dimmed",
-      "eit-focus",
-      "eit-no-data",
-      "eit-out-range",
-    );
-    cell.style.removeProperty("--eit-cell-color");
-  });
-}
-
-function updateEITLegend({
-  visible,
-  title = "",
-  note = "",
-  min = null,
-  max = null,
-  mid = null,
-}) {
-  if (!eitUI) return;
-  // Legend elements may not exist in inline layout
-  if (!eitUI.legend) return;
-  eitUI.legend.hidden = !visible;
-  if (!visible) return;
-
-  if (eitUI.legendTitle) eitUI.legendTitle.textContent = title;
-  if (eitUI.legendNote) eitUI.legendNote.textContent = note;
-  if (eitUI.legendMin) eitUI.legendMin.textContent = min ?? "N/A";
-  if (eitUI.legendMid) eitUI.legendMid.textContent = mid ?? "N/A";
-  if (eitUI.legendMax) eitUI.legendMax.textContent = max ?? "N/A";
-  if (eitUI.legendBar) {
-    eitUI.legendBar.style.background =
-      `linear-gradient(90deg, ${getColorForRatio(0)} 0%, ${getColorForRatio(0.5)} 50%, ${getColorForRatio(1)} 100%)`;
-  }
-}
-
-function getStoredNumericRange(propertyKey, minBound, maxBound) {
-  const stored = eitState.numericRanges.get(propertyKey);
-  if (!stored) return { min: minBound, max: maxBound };
-  const min = Math.max(minBound, Math.min(stored.min, maxBound));
-  const max = Math.max(minBound, Math.min(stored.max, maxBound));
-  if (min > max) return { min: minBound, max: maxBound };
-  return { min, max };
-}
-
-function setPropertyNote(message) {
-  if (!eitUI?.propertyNote) return;
-  eitUI.propertyNote.textContent = message || "";
-}
-
-function syncSliderVisuals(bounds, selected) {
-  if (!eitUI || !bounds || !selected) return;
-  const range = Math.max(bounds.max - bounds.min, 1e-9);
-  const minPct = ((selected.min - bounds.min) / range) * 100;
-  const maxPct = ((selected.max - bounds.min) / range) * 100;
-  eitUI.sliderFill.style.left = `${Math.max(0, Math.min(100, minPct))}%`;
-  eitUI.sliderFill.style.width =
-    `${Math.max(0, Math.min(100, maxPct) - Math.max(0, Math.min(100, minPct)))}%`;
-
-  // Fix overlapping thumbs: bring the correct thumb to the front
-  if (selected.min === selected.max) {
-    if (minPct > 50) {
-      eitUI.rangeMinInput.style.zIndex = "10";
-      eitUI.rangeMaxInput.style.zIndex = "5";
-    } else {
-      eitUI.rangeMinInput.style.zIndex = "5";
-      eitUI.rangeMaxInput.style.zIndex = "10";
-    }
-  } else {
-    eitUI.rangeMinInput.style.zIndex = "5";
-    eitUI.rangeMaxInput.style.zIndex = "5";
-  }
-}
-
-function syncNumericSlider(config, bounds, selected) {
-  if (!eitUI) return;
-  if (!bounds || !Number.isFinite(bounds.min) || !Number.isFinite(bounds.max)) {
-    eitUI.sliderSection.hidden = true;
-    return;
-  }
-
-  eitUI.sliderSection.hidden = false;
-  eitUI.sliderBounds = bounds;
-  const rangeSpan = bounds.max - bounds.min;
-  if (Math.abs(rangeSpan) < 1e-9) {
-    eitUI.selectedMin.textContent = formatEITValue(bounds.min, config, true);
-    eitUI.selectedMax.textContent = formatEITValue(bounds.max, config, true);
-    eitUI.rangeMinInput.disabled = true;
-    eitUI.rangeMaxInput.disabled = true;
-    eitUI.sliderFill.style.left = "0%";
-    eitUI.sliderFill.style.width = "100%";
-    return;
-  }
-  eitUI.rangeMinInput.disabled = false;
-  eitUI.rangeMaxInput.disabled = false;
-
-  let step = config.digits === 0 ? 1 : 1 / Math.pow(10, Math.min(config.digits || 2, 3));
-  if (rangeSpan > 0 && rangeSpan < step) {
-    step = Math.max(rangeSpan / 200, 1e-4);
-  }
-
-  const minInput = eitUI.rangeMinInput;
-  const maxInput = eitUI.rangeMaxInput;
-  minInput.min = String(bounds.min);
-  minInput.max = String(bounds.max);
-  minInput.step = String(step);
-  maxInput.min = String(bounds.min);
-  maxInput.max = String(bounds.max);
-  maxInput.step = String(step);
-  minInput.value = String(selected.min);
-  maxInput.value = String(selected.max);
-
-  eitUI.selectedMin.textContent = formatEITValue(selected.min, config, true);
-  eitUI.selectedMax.textContent = formatEITValue(selected.max, config, true);
-  syncSliderVisuals(bounds, selected);
-}
-
-function setEITPanelOpen(open) {
-  if (!eitUI) return;
-  eitPanelOpen = Boolean(open);
-  eitUI.propertyTrigger.setAttribute("aria-expanded", eitPanelOpen ? "true" : "false");
-  if (eitPanelOpen) {
-    eitUI.propertyPanel.classList.add("eit-panel-visible");
-  } else {
-    eitUI.propertyPanel.classList.remove("eit-panel-visible");
-  }
-}
-
-function syncEITControls(config) {
-  if (!eitUI) return;
-  // Update trigger label with current unit
-  if (eitUI.currentProperty && config) {
-    const unit = getEffectiveUnit(config);
-    eitUI.currentProperty.textContent = unit
-      ? `${config.label} ${unit}`
-      : config.label;
-  }
-  // Sync chips — update unit display on each chip
-  if (eitUI.chips) {
-    eitUI.chips.forEach((chip) => {
-      const isActive = chip.dataset.property === eitState.property;
-      chip.classList.toggle("active", isActive);
-      // Update chip unit text if this chip has units
-      const chipConfig = EIT_PROPERTY_MAP.get(chip.dataset.property);
-      if (chipConfig?.units && chipConfig.units.length > 1) {
-        const unitSpan = chip.querySelector(".eit-chip-unit");
-        if (unitSpan) {
-          const currentUnit = getEffectiveUnit(chipConfig);
-          unitSpan.textContent = currentUnit;
-        }
-      }
-    });
-  }
-  // Sync mode buttons
-  eitUI.modeButtons.forEach((btn) => {
-    const isActive = btn.dataset.mode === eitState.mode;
-    btn.classList.toggle("active", isActive);
-    btn.setAttribute("aria-pressed", isActive ? "true" : "false");
-  });
-  // Sync mode slider position
-  syncModeSlider();
-}
-
-function syncModeSlider() {
-  if (!eitUI || !eitUI.modeSlider) return;
-  const activeBtn = eitUI.modeButtons.find((btn) => btn.classList.contains("active"));
-  if (!activeBtn) return;
-  const group = activeBtn.parentElement;
-  if (!group) return;
-  const groupRect = group.getBoundingClientRect();
-  const btnRect = activeBtn.getBoundingClientRect();
-  const offsetX = btnRect.left - groupRect.left - 3; // 3px = padding
-  eitUI.modeSlider.style.width = `${btnRect.width}px`;
-  eitUI.modeSlider.style.transform = `translateX(${offsetX}px)`;
-}
-
-function applyCategoryEIT(config) {
-  if (!eitUI) return;
-  eitUI.sliderSection.hidden = true;
-  setPropertyNote("Category is discrete. Use legend chips below for category-only focus.");
-  updateEITLegend({ visible: false });
-}
-
-function applyNumericEIT(config) {
-  if (!eitUI) return;
-
-  const rows = eitRegistry.map((entry) => ({
-    entry,
-    metric: entry.metrics[config.key],  // interval object or null
-  }));
-
-  // Collect all boundary values for computing global min/max
-  const allValues = [];
-  rows.forEach(({ metric }) => {
-    if (!metricHasData(metric)) return;
-    allValues.push(metric.min, metric.max);
-  });
-  allValues.sort((a, b) => a - b);
-  const numericCount = rows.filter(({ metric }) => metricHasData(metric)).length;
-
-  if (!allValues.length) {
-    rows.forEach(({ entry }) => {
-      entry.cell.classList.add("eit-no-data", "eit-dimmed");
-    });
-    eitUI.sliderSection.hidden = true;
-    setPropertyNote("No usable numeric data for this property in current dataset.");
-    updateEITLegend({
-      visible: true,
-      title: `${config.label} Range`,
-      note: "No usable data in current dataset",
-      min: "N/A",
-      mid: "N/A",
-      max: "N/A",
-    });
-    return;
-  }
-
-  const min = allValues[0];
-  const max = allValues[allValues.length - 1];
-  const selected = getStoredNumericRange(config.key, min, max);
-  eitState.numericRanges.set(config.key, selected);
-  syncNumericSlider(config, { min, max }, selected);
-  setPropertyNote(
-    `Selected window: ${formatEITValue(selected.min, config, true)} → ${formatEITValue(selected.max, config, true)}`,
-  );
-  let inRangeCount = 0;
-  const isFilter = eitState.mode === "filter";
-
-  // Single pass: compute and apply state for each cell using toggle
-  // Uses interval overlap: element.max >= selectedMin && element.min <= selectedMax
-  rows.forEach(({ entry, metric }) => {
-    const cl = entry.cell.classList;
-    const hasData = metricHasData(metric);
-    const inRange = hasData && metricOverlapsRange(metric, selected.min, selected.max);
-
-    if (hasData) {
-      // Use midpoint for gradient coloring
-      const midpoint = getMetricMidpoint(metric);
-      const ratio = getNumericRatio(midpoint, min, max);
-      entry.cell.style.setProperty("--eit-cell-color", getColorForRatio(ratio));
-    }
-
-    if (inRange) inRangeCount += 1;
-
-    // Toggle classes in one batch — no clear required
-    cl.toggle("eit-colored", hasData);
-    cl.toggle("eit-no-data", !hasData);
-    cl.toggle("eit-dimmed", !hasData || (isFilter && !inRange));
-    cl.toggle("eit-focus", inRange);
-    cl.toggle("eit-out-range", hasData && !inRange && !isFilter);
-  });
-
-  updateEITLegend({
-    visible: true,
-    title: config.label,
-    note: `${inRangeCount}/${numericCount} in selected range`,
-    min: formatEITValue(selected.min, config, true),
-    mid: "Selected",
-    max: formatEITValue(selected.max, config, true),
-  });
-}
-
-function applyEIT(tableContainer) {
-  if (!tableContainer) return;
-  const config = EIT_PROPERTY_MAP.get(eitState.property) || EIT_PROPERTY_CONFIG[0];
-  if (!config) return;
-
-  if (config.type === "category" && eitState.mode === "filter") {
-    eitState.mode = "color";
-  }
-
-  syncEITControls(config);
-
-  lockLegendInteractions = config.type !== "category";
-  tableContainer.classList.toggle("eit-active", lockLegendInteractions);
-
-  if (lockLegendInteractions) {
+const eitController = createEITController({
+  normalizeCategoryClass,
+  onLegendReset: (container) => {
     activeLegendCategory = null;
-    clearLegendSelection(tableContainer);
-    clearHighlights(tableContainer);
-  }
-
-  if (config.type === "category") {
-    // Clear numeric-specific styles/classes only when resetting to Category
-    clearEITCellStyles();
-    applyCategoryEIT(config);
-  } else {
-    // DO NOT invoke clearEITCellStyles() here to prevent extreme layout thrashing and 
-    // forced recalculation of 118 cell transitions. applyNumericEIT inherently toggles 
-    // all classes and overwrites strictly what's necessary, resulting in butter-smooth FPS.
-    applyNumericEIT(config);
-  }
-}
-
-function ensureEITController(tableContainer) {
-  if (!tableContainer) return;
-
-  let root = document.getElementById("eit-controller");
-  if (!root) {
-    root = document.createElement("section");
-    root.id = "eit-controller";
-    root.className = "eit-controller";
-    root.setAttribute("aria-label", "Element Information Toggle");
-
-    // Build property chips HTML
-    const chipsHTML = EIT_PROPERTY_CONFIG.map((config) => {
-      const hasMultiUnits = config.units && config.units.length > 1;
-      const displayUnit = getEffectiveUnit(config);
-      const unitSpan = displayUnit
-        ? `<span class="eit-chip-unit">${displayUnit}</span>`
-        : "";
-      const label = `${config.label}${unitSpan}`;
-      const extraAttrs = hasMultiUnits ? ` data-has-units="true" title="Click again to change unit"` : "";
-      return `<button type="button" class="eit-chip${config.key === "category" ? " active" : ""}" data-property="${config.key}"${extraAttrs}>${label}</button>`;
-    }).join("");
-
-    root.innerHTML = `
-      <button type="button" class="eit-property-trigger" id="eit-property-trigger" aria-controls="eit-property-panel" aria-expanded="false">
-        <span class="eit-current-property" id="eit-current-property">Category</span>
-        <span class="eit-trigger-caret" aria-hidden="true">▾</span>
-      </button>
-      <div class="eit-slider-section" id="eit-slider-section" hidden>
-        <span id="eit-selected-min"></span>
-        <div class="eit-dual-slider" id="eit-dual-slider">
-          <div class="eit-slider-track"></div>
-          <div class="eit-slider-fill" id="eit-slider-fill"></div>
-          <input type="range" id="eit-range-min" class="eit-range-input eit-range-input-min" />
-          <input type="range" id="eit-range-max" class="eit-range-input eit-range-input-max" />
-        </div>
-        <span id="eit-selected-max"></span>
-      </div>
-      <div class="eit-mode-group" role="group" aria-label="Visualization mode">
-        <div class="eit-mode-slider" id="eit-mode-slider"></div>
-        <button type="button" class="eit-mode-btn active" data-mode="color" aria-pressed="true">Color</button>
-        <button type="button" class="eit-mode-btn" data-mode="filter" aria-pressed="false">Filter</button>
-      </div>
-      <button type="button" class="eit-reset-btn" id="eit-reset-btn">Reset</button>
-      <div class="eit-property-panel" id="eit-property-panel">
-        <div class="eit-property-chips" id="eit-property-chips">
-          ${chipsHTML}
-        </div>
-      </div>
-      <div class="eit-property-note" id="eit-property-note" style="display:none"></div>
-    `;
-
-    // Hidden select for backwards compat
-    const hiddenSelect = document.createElement("select");
-    hiddenSelect.id = "eit-property-select";
-    hiddenSelect.style.display = "none";
-    root.appendChild(hiddenSelect);
-  }
-
-  if (root.parentElement !== tableContainer) {
-    tableContainer.appendChild(root);
-  }
-  tableContainer.classList.add("has-eit");
-
-  eitUI = {
-    root,
-    propertyTrigger: root.querySelector("#eit-property-trigger"),
-    propertyPanel: root.querySelector("#eit-property-panel"),
-    currentProperty: root.querySelector("#eit-current-property"),
-    tip: null,
-    propertySelect: root.querySelector("#eit-property-select"),
-    chips: Array.from(root.querySelectorAll(".eit-chip")),
-    sliderSection: root.querySelector("#eit-slider-section"),
-    selectedMin: root.querySelector("#eit-selected-min"),
-    selectedMax: root.querySelector("#eit-selected-max"),
-    sliderFill: root.querySelector("#eit-slider-fill"),
-    rangeMinInput: root.querySelector("#eit-range-min"),
-    rangeMaxInput: root.querySelector("#eit-range-max"),
-    propertyNote: root.querySelector("#eit-property-note"),
-    modeButtons: Array.from(root.querySelectorAll(".eit-mode-btn")),
-    modeSlider: root.querySelector("#eit-mode-slider"),
-    resetButton: root.querySelector("#eit-reset-btn"),
-    closeButton: root.querySelector("#eit-panel-close"),
-    legend: root.querySelector("#eit-legend"),
-    legendTitle: root.querySelector("#eit-legend-title"),
-    legendNote: root.querySelector("#eit-legend-note"),
-    legendBar: root.querySelector("#eit-legend-bar"),
-    legendMin: root.querySelector("#eit-legend-min"),
-    legendMid: root.querySelector("#eit-legend-mid"),
-    legendMax: root.querySelector("#eit-legend-max"),
-  };
-
-  // Populate hidden select (backwards compat)
-  eitUI.propertySelect.innerHTML = "";
-  EIT_PROPERTY_CONFIG.forEach((config) => {
-    const option = document.createElement("option");
-    option.value = config.key;
-    option.textContent = config.unit ? `${config.label} (${config.unit})` : config.label;
-    eitUI.propertySelect.appendChild(option);
-  });
-
-  if (!root.dataset.bound) {
-    // Trigger toggles dropdown
-    eitUI.propertyTrigger.addEventListener("click", (event) => {
-      event.stopPropagation();
-      setEITPanelOpen(!eitPanelOpen);
-    });
-    // Prevent clicks inside panel from closing it
-    eitUI.propertyPanel.addEventListener("click", (event) => {
-      event.stopPropagation();
-    });
-    // Property chips — click active chip to cycle unit, click inactive to switch property
-    eitUI.chips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        const clickedProperty = chip.dataset.property;
-        if (clickedProperty === eitState.property) {
-          // Re-clicking active property → cycle unit
-          const config = EIT_PROPERTY_MAP.get(clickedProperty);
-          if (config?.units && config.units.length > 1) {
-            cycleUnit(config);
-            applyEIT(tableContainer);
-          }
-          // Don't close the panel so user can keep cycling
-          return;
-        }
-        eitState.property = clickedProperty;
-        applyEIT(tableContainer);
-        setEITPanelOpen(false);
-      });
-    });
-    // Range sliders — FAST PATH using requestAnimationFrame
-    // Instead of calling applyEIT (which syncs controls, clears classes,
-    // recomputes colors, updates legend), we use a dedicated function that
-    // ONLY toggles the 3 range-dependent classes on each cell.
-    let eitSliderRafId = null;
-    let eitSliderPending = null; // { min, max, config }
-
-    function updateCellRangeClasses(selMin, selMax, config) {
-      const isFilter = eitState.mode === "filter";
-      let inRangeCount = 0;
-      const numericCount = eitRegistry.reduce((n, e) => n + (metricHasData(e.metrics[config.key]) ? 1 : 0), 0);
-
-      for (let i = 0, len = eitRegistry.length; i < len; i++) {
-        const entry = eitRegistry[i];
-        const metric = entry.metrics[config.key];
-        if (!metricHasData(metric)) continue;
-        // Interval overlap check
-        const inRange = metricOverlapsRange(metric, selMin, selMax);
-        if (inRange) inRangeCount++;
-        const cl = entry.cell.classList;
-        cl.toggle("eit-dimmed", isFilter && !inRange);
-        cl.toggle("eit-focus", inRange);
-        cl.toggle("eit-out-range", !inRange && !isFilter);
-      }
-
-      setPropertyNote(
-        `Selected window: ${formatEITValue(selMin, config, true)} → ${formatEITValue(selMax, config, true)}`,
-      );
-      updateEITLegend({
-        visible: true,
-        title: config.label,
-        note: `${inRangeCount}/${numericCount} in selected range`,
-        min: formatEITValue(selMin, config, true),
-        mid: "Selected",
-        max: formatEITValue(selMax, config, true),
-      });
-    }
-
-    const scheduleRangeUpdate = () => {
-      if (eitSliderRafId) return;
-      eitSliderRafId = requestAnimationFrame(() => {
-        eitSliderRafId = null;
-        if (eitSliderPending) {
-          updateCellRangeClasses(eitSliderPending.min, eitSliderPending.max, eitSliderPending.config);
-          eitSliderPending = null;
-        }
-      });
-    };
-
-    eitUI.rangeMinInput.addEventListener("input", () => {
-      const config = EIT_PROPERTY_MAP.get(eitState.property);
-      if (!config || config.type !== "numeric") return;
-      let minValue = Number.parseFloat(eitUI.rangeMinInput.value);
-      let maxValue = Number.parseFloat(eitUI.rangeMaxInput.value);
-      if (minValue > maxValue) {
-        minValue = maxValue;
-        eitUI.rangeMinInput.value = String(minValue);
-      }
-      eitState.numericRanges.set(config.key, { min: minValue, max: maxValue });
-      // Immediate lightweight visual sync
-      syncSliderVisuals(eitUI.sliderBounds, { min: minValue, max: maxValue });
-      eitUI.selectedMin.textContent = formatEITValue(minValue, config, true);
-      // Schedule fast cell class updates
-      eitSliderPending = { min: minValue, max: maxValue, config };
-      scheduleRangeUpdate();
-    });
-    eitUI.rangeMaxInput.addEventListener("input", () => {
-      const config = EIT_PROPERTY_MAP.get(eitState.property);
-      if (!config || config.type !== "numeric") return;
-      let minValue = Number.parseFloat(eitUI.rangeMinInput.value);
-      let maxValue = Number.parseFloat(eitUI.rangeMaxInput.value);
-      if (maxValue < minValue) {
-        maxValue = minValue;
-        eitUI.rangeMaxInput.value = String(maxValue);
-      }
-      eitState.numericRanges.set(config.key, { min: minValue, max: maxValue });
-      // Immediate lightweight visual sync
-      syncSliderVisuals(eitUI.sliderBounds, { min: minValue, max: maxValue });
-      eitUI.selectedMax.textContent = formatEITValue(maxValue, config, true);
-      // Schedule fast cell class updates
-      eitSliderPending = { min: minValue, max: maxValue, config };
-      scheduleRangeUpdate();
-    });
-    // Mode buttons
-    eitUI.modeButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        eitState.mode = button.dataset.mode === "filter" ? "filter" : "color";
-        applyEIT(tableContainer);
-      });
-    });
-    // Reset
-    eitUI.resetButton.addEventListener("click", () => {
-      resetEITState();
-      applyEIT(tableContainer);
-    });
-    // Close on outside click
-    document.addEventListener("click", (event) => {
-      if (!eitUI || !eitUI.root.contains(event.target)) {
-        setEITPanelOpen(false);
-      }
-    });
-    root.dataset.bound = "true";
-  }
-
-  applyEIT(tableContainer);
-  if (typeof window._scalePeriodicTable === "function") {
-    requestAnimationFrame(() => {
-      window._scalePeriodicTable();
-    });
-  }
-}
+    clearLegendSelection(container);
+    clearHighlights(container);
+  },
+});
 
 function createLegend(container) {
   const legendContainer = document.createElement("div");
   legendContainer.id = "table-legend";
-  const categories = [
+  
+  window.createDefaultLegend = function() {
+    const lg = document.getElementById("table-legend");
+    if (!lg) return;
+    lg.innerHTML = "";
+    lg.className = ""; // clear possible custom classes
+    populateLegend(lg);
+  };
+
+  function populateLegend(targetContainer) {
+    const categories = [
     // Row 1 (4 items)
-    { name: "Alkali Metal", class: "alkali-metal" },
-    { name: "Alkaline Earth", class: "alkaline-earth-metal" },
-    { name: "Transition Metal", class: "transition-metal" },
-    { name: "Metalloid", class: "metalloid" },
+    { nameKey: "tableLegend.alkaliMetal", class: "alkali-metal" },
+    { nameKey: "tableLegend.alkalineEarth", class: "alkaline-earth-metal" },
+    { nameKey: "tableLegend.transitionMetal", class: "transition-metal" },
+    { nameKey: "tableLegend.metalloid", class: "metalloid" },
     // Row 2 (4 items)
-    { name: "Halogen", class: "halogen" },
-    { name: "Noble Gas", class: "noble-gas" },
-    { name: "Lanthanide", class: "lanthanide" },
-    { name: "Actinide", class: "actinide" },
+    { nameKey: "tableLegend.halogen", class: "halogen" },
+    { nameKey: "tableLegend.nobleGas", class: "noble-gas" },
+    { nameKey: "tableLegend.lanthanide", class: "lanthanide" },
+    { nameKey: "tableLegend.actinide", class: "actinide" },
     // Row 3 (2 wider items)
     {
-      name: "Other nonmetal",
+      nameKey: "tableLegend.otherNonmetal",
       class: "other-nonmetal",
       layoutClass: "legend-wide-left",
     },
     {
-      name: "Post-Transition",
+      nameKey: "tableLegend.postTransition",
       class: "post-transition-metal",
       layoutClass: "legend-wide-right",
     },
   ];
   categories.forEach((cat) => {
+    const localizedName = t(cat.nameKey);
     const item = document.createElement("div");
     item.classList.add("legend-item");
     if (cat.layoutClass) item.classList.add(cat.layoutClass);
     item.setAttribute("data-category", cat.class);
+    item.setAttribute("data-name-key", cat.nameKey);
     item.setAttribute("role", "button");
     item.setAttribute("tabindex", "0");
     item.setAttribute("aria-pressed", "false");
-    item.setAttribute("aria-label", `Toggle ${cat.name} highlight`);
+    item.setAttribute(
+      "aria-label",
+      t("tableLegend.toggleHighlight").replace("{name}", localizedName),
+    );
     const swatch = document.createElement("div");
     swatch.className = `legend-swatch ${cat.class}`;
     swatch.style.pointerEvents = "none";
     const label = document.createElement("span");
-    label.textContent = cat.name;
+    label.className = "legend-label";
+    const labelText = document.createElement("span");
+    labelText.className = "legend-label-text";
+    labelText.textContent = localizedName;
+    label.appendChild(labelText);
     label.style.pointerEvents = "none";
+    item.style.minWidth = `${getLegendItemMinWidth(cat.nameKey)}px`;
+    if (cat.nameKey === "tableLegend.alkalineEarth") {
+      item.classList.add("alkaline-earth-marquee");
+    }
+    item.classList.add("legend-marquee-item");
     item.appendChild(swatch);
     item.appendChild(label);
+    requestAnimationFrame(() => updateAlkalineEarthMarquee(item));
     item.addEventListener("mouseenter", () => {
-      if (lockLegendInteractions) return;
+      if (eitController.isLegendLocked()) return;
       if (activeLegendCategory) return;
       highlightCategory(container, cat.class);
     });
     item.addEventListener("mouseleave", () => {
-      if (lockLegendInteractions) return;
+      if (eitController.isLegendLocked()) return;
       if (activeLegendCategory) return;
       clearHighlights(container);
     });
     const toggleLegendFilter = () => {
-      if (lockLegendInteractions) return;
+      if (eitController.isLegendLocked()) return;
       if (activeLegendCategory === cat.class) {
         activeLegendCategory = null;
         item.classList.remove("active");
@@ -957,45 +896,86 @@ function createLegend(container) {
       toggleLegendFilter();
     });
     bindKeyboardActivation(item, toggleLegendFilter);
-    legendContainer.appendChild(item);
+    targetContainer.appendChild(item);
   });
+  }
+
+  populateLegend(legendContainer);
+
+  if (!legendContainer.dataset.langBound) {
+    onLangChange(() => {
+      legendContainer.querySelectorAll(".legend-item").forEach((item) => {
+        const nameKey = item.getAttribute("data-name-key");
+        if (!nameKey) return;
+        const localizedName = t(nameKey);
+        const labelText = item.querySelector(".legend-label-text");
+        if (labelText) labelText.textContent = localizedName;
+        requestAnimationFrame(() => updateAlkalineEarthMarquee(item));
+        item.setAttribute(
+          "aria-label",
+          t("tableLegend.toggleHighlight").replace("{name}", localizedName),
+        );
+      });
+    });
+    legendContainer.dataset.langBound = "true";
+  }
+
+  if (!legendContainer.dataset.resizeBound) {
+    window.addEventListener("resize", () => {
+      legendContainer.querySelectorAll(".legend-marquee-item").forEach((item) => {
+        updateAlkalineEarthMarquee(item);
+      });
+    });
+    legendContainer.dataset.resizeBound = "true";
+  }
+
   container.appendChild(legendContainer);
+}
+
+function updatePeriodicTableLocalizedText(tableContainer) {
+  if (!tableContainer) return;
+
+  tableContainer.querySelectorAll(".element[data-element-number]").forEach((cell) => {
+    const elementId = String(cell.dataset.elementNumber || "").trim();
+    const element = elements.find((entry) => String(entry.number) === elementId);
+    if (!element) return;
+
+    const nameEl = cell.querySelector(".name");
+    if (nameEl) {
+      const locName = localizeElementName(element);
+      nameEl.textContent = locName;
+      const lang = document.documentElement.lang || "en";
+      if (locName.length <= 6 && !lang.startsWith("zh")) {
+        nameEl.classList.add("short-name");
+      } else {
+        nameEl.classList.remove("short-name");
+      }
+    }
+
+    if (cell.classList.contains("range-block")) {
+      cell.setAttribute(
+        "aria-label",
+        element.symbol === "La-Lu"
+          ? t("tableLegend.toggleLanthanide")
+          : t("tableLegend.toggleActinide"),
+      );
+      return;
+    }
+
+    cell.setAttribute(
+      "aria-label",
+      `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
+    );
+  });
 }
 
 // ===== Periodic Table Grid Generation =====
 export function buildPeriodicTable(tableContainer) {
-  resetEITRegistry();
-  resetEITState();
-  lockLegendInteractions = false;
+  eitController.resetEITRegistry();
+  eitController.resetEITState();
 
   const grid = {};
   elements.forEach((element) => {
-    // Range blocks (La-Lu, Ac-Lr) skip phase calculation but still enter grid
-    if (typeof element.number !== "string") {
-      // Calculate Phase @ STP (25°C)
-      if (!element.phase) {
-        const data = finallyData[element.number] || {};
-        const parseT = (s) => {
-          const m = (s || "").match(/-?[\d.]+/);
-          return m ? parseFloat(m[0]) : null;
-        };
-        const m = parseT(data.level3_properties?.physical?.meltingPoint);
-        const b = parseT(data.level3_properties?.physical?.boilingPoint);
-
-        if (element.number >= 104) {
-          element.phase = "Unknown";
-        } else if (b !== null && 25 > b) {
-          element.phase = "Gas";
-        } else if (m !== null && 25 < m) {
-          element.phase = "Solid";
-        } else if (m !== null) {
-          element.phase = "Liquid";
-        } else {
-          element.phase = "Unknown";
-        }
-      }
-    }
-
     if (element.row && element.column) {
       grid[`${element.row}-${element.column}`] = element;
     }
@@ -1006,6 +986,7 @@ export function buildPeriodicTable(tableContainer) {
       const cell = document.createElement("div");
       if (element) {
         cell.classList.add("element");
+        cell.dataset.elementNumber = String(element.number);
         cell.setAttribute("role", "button");
         cell.setAttribute("tabindex", "0");
         if (element.category) {
@@ -1018,14 +999,14 @@ export function buildPeriodicTable(tableContainer) {
         cell.innerHTML = `
                       <span class="number">${element.number}</span>
                       <span class="symbol">${element.symbol}</span>
-                      <span class="name">${element.name}</span>
+                      <span class="name">${localizeElementName(element)}</span>
                   `;
         // Range blocks (La-Lu, Ac-Lr): toggle category highlight instead of modal
         if (element.symbol === "La-Lu" || element.symbol === "Ac-Lr") {
           cell.classList.add("range-block");
           const catClass = element.symbol === "La-Lu" ? "lanthanide" : "actinide";
           const toggleRangeHighlight = () => {
-            if (lockLegendInteractions) return;
+            if (eitController.isLegendLocked()) return;
             if (activeLegendCategory === catClass) {
               activeLegendCategory = null;
               clearLegendSelection(tableContainer);
@@ -1040,8 +1021,8 @@ export function buildPeriodicTable(tableContainer) {
           cell.setAttribute(
             "aria-label",
             element.symbol === "La-Lu"
-              ? "Toggle lanthanide highlight"
-              : "Toggle actinide highlight",
+              ? t("tableLegend.toggleLanthanide")
+              : t("tableLegend.toggleActinide"),
           );
           cell.addEventListener("click", toggleRangeHighlight);
           bindKeyboardActivation(cell, toggleRangeHighlight);
@@ -1049,11 +1030,12 @@ export function buildPeriodicTable(tableContainer) {
           const openElementModal = () => showModal(element);
           cell.setAttribute(
             "aria-label",
-            `${element.name} (${element.symbol}), atomic number ${element.number}`,
+            `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
           );
           cell.addEventListener("click", openElementModal);
           bindKeyboardActivation(cell, openElementModal);
-          registerEITElementCell(cell, element);
+          eitController.registerEITElementCell(cell, element);
+
         }
       } else {
         cell.classList.add("empty");
@@ -1073,11 +1055,12 @@ export function buildPeriodicTable(tableContainer) {
   lanthanides.forEach((element, index) => {
     const cell = document.createElement("div");
     cell.classList.add("element", "lanthanide");
+    cell.dataset.elementNumber = String(element.number);
     cell.setAttribute("role", "button");
     cell.setAttribute("tabindex", "0");
     cell.setAttribute(
       "aria-label",
-      `${element.name} (${element.symbol}), atomic number ${element.number}`,
+      `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
     );
     if (element.category) {
       const catClass = normalizeCategoryClass(element.category
@@ -1089,12 +1072,13 @@ export function buildPeriodicTable(tableContainer) {
     cell.innerHTML = `
               <span class="number">${element.number}</span>
               <span class="symbol">${element.symbol}</span>
-              <span class="name">${element.name}</span>
+              <span class="name">${localizeElementName(element)}</span>
           `;
     const openElementModal = () => showModal(element);
     cell.addEventListener("click", openElementModal);
     bindKeyboardActivation(cell, openElementModal);
-    registerEITElementCell(cell, element);
+    eitController.registerEITElementCell(cell, element);
+
     cell.style.gridRow = 9;
     cell.style.gridColumn = 4 + index;
     tableContainer.appendChild(cell);
@@ -1102,11 +1086,12 @@ export function buildPeriodicTable(tableContainer) {
   actinides.forEach((element, index) => {
     const cell = document.createElement("div");
     cell.classList.add("element", "actinide");
+    cell.dataset.elementNumber = String(element.number);
     cell.setAttribute("role", "button");
     cell.setAttribute("tabindex", "0");
     cell.setAttribute(
       "aria-label",
-      `${element.name} (${element.symbol}), atomic number ${element.number}`,
+      `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
     );
     if (element.category) {
       const catClass = normalizeCategoryClass(element.category
@@ -1118,17 +1103,33 @@ export function buildPeriodicTable(tableContainer) {
     cell.innerHTML = `
               <span class="number">${element.number}</span>
               <span class="symbol">${element.symbol}</span>
-              <span class="name">${element.name}</span>
+              <span class="name">${localizeElementName(element)}</span>
           `;
     const openElementModal = () => showModal(element);
     cell.addEventListener("click", openElementModal);
     bindKeyboardActivation(cell, openElementModal);
-    registerEITElementCell(cell, element);
+    eitController.registerEITElementCell(cell, element);
+
     cell.style.gridRow = 10;
     cell.style.gridColumn = 4 + index;
     tableContainer.appendChild(cell);
   });
-  ensureEITController(tableContainer);
+  
+  // Apply text cramping and correct language classes initially
+  updatePeriodicTableLocalizedText(tableContainer);
+
+  if (!tableContainer.dataset.langBound) {
+    onLangChange(() => {
+      updatePeriodicTableLocalizedText(tableContainer);
+    });
+    tableContainer.dataset.langBound = "true";
+  }
+
+  fetchElementLocale(getLang()).finally(() => {
+    updatePeriodicTableLocalizedText(tableContainer);
+  });
+
+  eitController.ensureEITController(tableContainer);
   const hash = window.location.hash.toLowerCase();
   if (hash === "#pb" || hash === "#lead") {
     const leadElement = elements.find((el) => el.symbol === "Pb");
@@ -1144,7 +1145,7 @@ let modal, modalClose, modalSymbol, modalName, modalNumber, modalCategory,
   modalEtymology, modalDescription, modalDensity, modalMelt, modalBoil,
   modalNegativity, modalRadius, modalIonization, modalElectronAffinity, modalWatermark,
   atomContainer, modalCharge, modalP, modalE, modalN, modalPeriod,
-  modalGroup, modalCompounds, modalUses, modalHazards, modalShells,
+  modalGroup, modalCompounds, modalUses, modalHazards,
   eduNames, eduIsotopes, eduCardsContainer;
 
 // ===== Pure Helpers =====
@@ -1191,56 +1192,103 @@ function getElementCategory(element) {
   if (otherNonmetals.includes(element.number)) return "Other nonmetal";
   return "Metal";
 }
-function calculateShells(element) {
-  const z = element.number;
-  let shells = [];
-  if (z <= 20) {
-    let remaining = z;
-    let filled = Math.min(remaining, 2);
-    shells.push(filled);
-    remaining -= filled;
-    if (remaining > 0) {
-      filled = Math.min(remaining, 8);
-      shells.push(filled);
-      remaining -= filled;
-    }
-    if (remaining > 0) {
-      filled = Math.min(remaining, 8);
-      shells.push(filled);
-      remaining -= filled;
-    }
-    if (remaining > 0) {
-      filled = Math.min(remaining, 2);
-      shells.push(filled);
-      remaining -= filled;
-    }
-  } else {
-    return `${element.row} shells`;
-  }
-  return shells.join(", ");
-}
-
 // ===== L3 Stat Item: Clickable Unit Conversion =====
 // Tracks the current unit index per metric key so cycling persists during a modal session
-const l3UnitState = { ie: 0, ea: 0, melt: 0, boil: 0, density: 0 };
+let savedUnits = null;
+try {
+  const stored = localStorage.getItem('zperiod_units');
+  if (stored) savedUnits = JSON.parse(stored);
+} catch (e) {
+  // Ignore storage access failures and fall back to default units.
+}
+export const l3UnitState = savedUnits || { ie: 0, ea: 0, melt: 0, boil: 0, density: 0 };
+
+function saveUnits() {
+  try {
+    localStorage.setItem('zperiod_units', JSON.stringify(l3UnitState));
+  } catch (e) {
+    // Ignore storage access failures so the UI keeps working.
+  }
+  if (window._syncGlobalUnitButtons) window._syncGlobalUnitButtons();
+}
+
+export function setGlobalUnit(type, idx) {
+  if (type === 'temp') {
+    l3UnitState.melt = idx;
+    l3UnitState.boil = idx;
+  } else if (type === 'density') {
+    l3UnitState.density = idx;
+  } else if (type === 'energy') {
+    l3UnitState.ie = idx;
+    l3UnitState.ea = idx;
+  }
+  saveUnits();
+}
 
 const L3_UNIT_CONFIGS = {
+  // Helper to parse strings containing numbers, ranges, approx symbols, and pred flags
+  _parseStr(raw, isEV_IE = false) {
+    if (!raw || raw === "N/A" || raw === "Unknown" || String(raw).includes("Sublimes") || String(raw).includes("Pressurized")) return null;
+    const s = String(raw).replace(/−/g, "-").replace(/,/g, "");
+    const isPred = /pred/i.test(s);
+    // Strip pred flags and standard units so they don't get into the template
+    let clean = s.replace(/\(pred\)/ig, "")
+                 .replace(/g\/cm³/g, "")
+                 .replace(/kJ\/mol/g, "")
+                 .replace(/eV/ig, "")
+                 .replace(/°C/g, "")
+                 .trim();
+
+    if (clean === "—" || clean === "") return null;
+
+    // Keep trailing notes like "(graphite)" or "(est)" and render them after the unit.
+    const trailingNotes = [];
+    let trailingMatch;
+    while ((trailingMatch = clean.match(/\s*(\([^)]*\))\s*$/))) {
+      trailingNotes.unshift(trailingMatch[1]);
+      clean = clean.slice(0, trailingMatch.index).trim();
+    }
+    const postUnitNote = trailingNotes.length ? ` ${trailingNotes.join(" ")}` : "";
+
+    const numMatches = [];
+    // Match any float number
+    const regex = /-?\d+\.?\d*/g;
+    let match;
+    while ((match = regex.exec(clean)) !== null) {
+      numMatches.push({ index: match.index, length: match[0].length, val: parseFloat(match[0]) });
+    }
+
+    if (numMatches.length === 0) return null;
+
+    let template = clean;
+    for (let i = numMatches.length - 1; i >= 0; i--) {
+      const m = numMatches[i];
+      template = template.substring(0, m.index) + `{${i}}` + template.substring(m.index + m.length);
+    }
+
+    const vals = numMatches.map(m => isEV_IE ? m.val * 96.485 : m.val);
+
+    return { template, vals, isPred, postUnitNote };
+  },
+
   density: {
     units: [
       { unit: "g/cm³", digits: 2 },
       { unit: "kg/m³", digits: 0 },
       { unit: "lb/ft³", digits: 2 },
     ],
-    parse(raw) {
-      if (!raw || raw === "N/A" || raw === "Unknown") return null;
-      const m = String(raw).match(/[\d.]+/);
-      return m ? parseFloat(m[0]) : null;
-    },
-    convert(baseVal, unitIdx) {
-      if (!Number.isFinite(baseVal)) return "N/A";
-      if (unitIdx === 1) return (baseVal * 1000).toString();
-      if (unitIdx === 2) return (baseVal * 62.42796).toFixed(2);
-      return baseVal.toFixed(2);
+    parse(raw) { return L3_UNIT_CONFIGS._parseStr(raw); },
+    convert(baseObj, unitIdx) {
+      if (!baseObj) return { text: localizeNA(), isPred: false };
+      const { template, vals, isPred, postUnitNote = "" } = baseObj;
+      const formattedVals = vals.map(baseVal => {
+        if (unitIdx === 1) return (baseVal * 1000).toString();
+        if (unitIdx === 2) return (baseVal * 62.42796).toFixed(2);
+        return baseVal.toFixed(2);
+      });
+      let out = template;
+      formattedVals.forEach((fv, i) => { out = out.replace(`{${i}}`, fv); });
+      return { text: out, isPred, postUnitNote };
     },
   },
   ie: {
@@ -1248,20 +1296,20 @@ const L3_UNIT_CONFIGS = {
       { unit: "kJ/mol", digits: 0 },
       { unit: "eV", digits: 2 },
     ],
-    parse(raw) {
-      if (!raw || raw === "N/A") return null;
-      const s = String(raw).replace(/−/g, "-").replace(/,/g, "");
-      if (/ev/i.test(s)) {
-        const num = parseFloat(s);
-        return Number.isFinite(num) ? num * 96.485 : null; // convert eV → kJ/mol (base)
-      }
-      const m = s.match(/-?[\d.]+/);
-      return m ? parseFloat(m[0]) : null;
+    parse(raw) { 
+        const isEV = String(raw).toLowerCase().includes("ev");
+        return L3_UNIT_CONFIGS._parseStr(raw, isEV); 
     },
-    convert(baseVal, unitIdx) {
-      if (!Number.isFinite(baseVal)) return "N/A";
-      if (unitIdx === 1) return (baseVal / 96.485).toFixed(2);
-      return Math.round(baseVal).toString();
+    convert(baseObj, unitIdx) {
+      if (!baseObj) return { text: localizeNA(), isPred: false };
+      const { template, vals, isPred, postUnitNote = "" } = baseObj;
+      const formattedVals = vals.map(baseVal => {
+        if (unitIdx === 1) return (baseVal / 96.485).toFixed(2);
+        return Math.round(baseVal).toString();
+      });
+      let out = template;
+      formattedVals.forEach((fv, i) => { out = out.replace(`{${i}}`, fv); });
+      return { text: out, isPred, postUnitNote };
     },
   },
   ea: {
@@ -1269,16 +1317,17 @@ const L3_UNIT_CONFIGS = {
       { unit: "kJ/mol", digits: 1 },
       { unit: "eV", digits: 2 },
     ],
-    parse(raw) {
-      if (!raw || raw === "N/A") return null;
-      const s = String(raw).replace(/−/g, "-").replace(/,/g, "");
-      const m = s.match(/-?[\d.]+/);
-      return m ? parseFloat(m[0]) : null;
-    },
-    convert(baseVal, unitIdx) {
-      if (!Number.isFinite(baseVal)) return "N/A";
-      if (unitIdx === 1) return (baseVal / 96.485).toFixed(2);
-      return baseVal.toFixed(1);
+    parse(raw) { return L3_UNIT_CONFIGS._parseStr(raw); },
+    convert(baseObj, unitIdx) {
+      if (!baseObj) return { text: localizeNA(), isPred: false };
+      const { template, vals, isPred, postUnitNote = "" } = baseObj;
+      const formattedVals = vals.map(baseVal => {
+        if (unitIdx === 1) return (baseVal / 96.485).toFixed(2);
+        return baseVal.toFixed(1);
+      });
+      let out = template;
+      formattedVals.forEach((fv, i) => { out = out.replace(`{${i}}`, fv); });
+      return { text: out, isPred, postUnitNote };
     },
   },
   melt: {
@@ -1287,119 +1336,181 @@ const L3_UNIT_CONFIGS = {
       { unit: "°F", digits: 1 },
       { unit: "K", digits: 1 },
     ],
-    /**
-     * Parse raw melt/boil string into { min, max, suffix }.
-     * Preserves range info and (pred)/~ annotations.
-     * Returns null for N/A values.
-     */
     parse(raw) {
-      if (!raw || typeof raw !== "string") return null;
-      if (raw.includes("\u2014") || raw.includes("Pressurized") || raw === "N/A" || raw.includes("Unknown") || raw.includes("Sublimes")) return null;
+      if (!raw || raw === "N/A" || raw === "Unknown" || String(raw).includes("Sublimes") || String(raw).includes("Pressurized")) return null;
+      const s = String(raw).replace(/−/g, "-").replace(/,/g, "");
+      const isPred = /pred/i.test(s);
+      const clean = s.replace(/\(pred\)/ig, "").trim();
+      if (clean === "—" || clean === "") return null;
 
-      const predicted = /\(pred\)/i.test(raw);
-      const approximate = /~/.test(raw);
-      let suffix = "";
-      if (approximate) suffix += "~";
-      if (predicted) suffix += suffix ? " (pred)" : "(pred)";
+      // Normalize notations like "— (0.95 K at 2.5 MPa)" to plain text.
+      let displayText = clean.replace(/^—\s*/, "").trim();
+      if (displayText.startsWith("(") && displayText.endsWith(")")) {
+        displayText = displayText.slice(1, -1).trim();
+      }
 
-      const s = raw.replace(/\u2212/g, "-").replace(/,/g, "").replace(/°C/g, "").trim();
-      // Try range: "364–507"
-      const rangeMatch = s.match(/(-?[\d.]+)\s*[\u2013\-]\s*(-?[\d.]+)/);
-      if (rangeMatch) {
-        const lo = parseFloat(rangeMatch[1]);
-        const hi = parseFloat(rangeMatch[2]);
-        if (Number.isFinite(lo) && Number.isFinite(hi)) {
-          return { min: Math.min(lo, hi), max: Math.max(lo, hi), suffix, isRange: true };
+      const hasSublimesNote = /\(sublimes\)/i.test(displayText);
+      displayText = displayText.replace(/\(sublimes\)/ig, "").trim();
+
+      const trailingNotes = [];
+      let trailingMatch;
+      while ((trailingMatch = displayText.match(/\s*(\([^)]*\))\s*$/))) {
+        trailingNotes.unshift(trailingMatch[1]);
+        displayText = displayText.slice(0, trailingMatch.index).trim();
+      }
+
+      const numRegex = /-?\d+\.?\d*/g;
+      let match;
+      let cursor = 0;
+      let idx = 0;
+      let template = "";
+      const vals = [];
+      const rawVals = [];
+      const tempMask = [];
+
+      while ((match = numRegex.exec(displayText)) !== null) {
+        template += displayText.slice(cursor, match.index);
+
+        const rawNum = match[0];
+        const tail = displayText.slice(match.index + rawNum.length);
+        const unitMatch = tail.match(/^\s*(°C|°F|K)\b/i);
+
+        let baseC = parseFloat(rawNum);
+        let isTempValue = false;
+        let consumed = 0;
+
+        if (unitMatch) {
+          isTempValue = true;
+          const unit = unitMatch[1].toUpperCase();
+          if (unit === "K") baseC = baseC - 273.15;
+          if (unit === "°F") baseC = (baseC - 32) * 5 / 9;
+          consumed = unitMatch[0].length;
         }
+
+        vals.push(baseC);
+        rawVals.push(rawNum);
+        tempMask.push(isTempValue);
+        template += `{${idx}}`;
+
+        cursor = match.index + rawNum.length + consumed;
+        idx += 1;
       }
-      const m = s.match(/-?[\d.]+/);
-      if (!m) return null;
-      const v = parseFloat(m[0]);
-      return Number.isFinite(v) ? { min: v, max: v, suffix, isRange: false } : null;
+
+      if (idx === 0) return null;
+      template += displayText.slice(cursor);
+      const postUnitParts = [];
+      if (hasSublimesNote) postUnitParts.push("(sublimes)");
+      postUnitParts.push(...trailingNotes);
+      return {
+        template,
+        vals,
+        rawVals,
+        tempMask,
+        isPred,
+        postUnitNote: postUnitParts.length ? ` ${postUnitParts.join(" ")}` : "",
+      };
     },
-    convert(baseVal, unitIdx) {
-      if (!Number.isFinite(baseVal)) return "N/A";
-      if (unitIdx === 1) return (baseVal * 9 / 5 + 32).toFixed(1);
-      if (unitIdx === 2) return (baseVal + 273.15).toFixed(1);
-      return baseVal.toFixed(1);
-    },
-    /** Format a parsed result (with range + suffix) for a given unit index */
-    formatParsed(parsed, unitIdx) {
-      if (!parsed || !Number.isFinite(parsed.min)) return "N/A";
-      const c = L3_UNIT_CONFIGS.melt.convert;
-      if (parsed.isRange) {
-        return `${c(parsed.min, unitIdx)}\u2013${c(parsed.max, unitIdx)}`;
-      }
-      const valText = c(parsed.min, unitIdx);
-      return parsed.suffix.startsWith("~") ? `~${valText}` : valText;
-    },
-    /** Get the suffix part to display after the unit, e.g. " (pred)" */
-    getSuffix(parsed) {
-      if (!parsed || !parsed.suffix) return "";
-      // Remove leading ~ (shown in value), keep (pred)
-      const s = parsed.suffix.replace(/^~\s*/, "").trim();
-      return s ? ` ${s}` : "";
+    convert(baseObj, unitIdx) {
+      if (!baseObj) return { text: localizeNA(), isPred: false };
+      const { template, vals, rawVals, tempMask, isPred, postUnitNote = "" } = baseObj;
+      const formattedVals = vals.map((baseVal, i) => {
+        if (!tempMask?.[i]) return rawVals?.[i] ?? String(baseVal);
+        if (unitIdx === 1) return (baseVal * 9 / 5 + 32).toFixed(1);
+        if (unitIdx === 2) return (baseVal + 273.15).toFixed(1);
+        return baseVal.toFixed(1);
+      });
+      let out = template;
+      formattedVals.forEach((fv, i) => { out = out.replace(`{${i}}`, fv); });
+      return { text: out, isPred, postUnitNote };
     },
   },
   boil: {
-    // Same conversion logic as melt
     get units() { return L3_UNIT_CONFIGS.melt.units; },
     parse(raw) { return L3_UNIT_CONFIGS.melt.parse(raw); },
-    convert(baseVal, unitIdx) { return L3_UNIT_CONFIGS.melt.convert(baseVal, unitIdx); },
-    formatParsed(parsed, unitIdx) { return L3_UNIT_CONFIGS.melt.formatParsed(parsed, unitIdx); },
-    getSuffix(parsed) { return L3_UNIT_CONFIGS.melt.getSuffix(parsed); },
+    convert(baseObj, unitIdx) { return L3_UNIT_CONFIGS.melt.convert(baseObj, unitIdx); },
   },
 };
 
-function setupL3UnitConversion(blueCard, rawData) {
+let _globalExtremes = null;
+function getGlobalPhysicalExtremes() {
+  if (_globalExtremes) return _globalExtremes;
+  const metrics = ['firstIonization', 'electronAffinity', 'electronegativity', 'density', 'meltingPoint', 'boilingPoint', 'atomicRadius', 'specificHeat'];
+  _globalExtremes = {};
+  metrics.forEach(m => _globalExtremes[m] = { min: Infinity, max: -Infinity, minElements: new Set(), maxElements: new Set() });
+
+  const eitRegistry = eitController.getRegistry();
+  if (!eitRegistry.length) return _globalExtremes;
+
+  const metricVals = {};
+  metrics.forEach(m => metricVals[m] = []);
+
+  eitRegistry.forEach(entry => {
+    metrics.forEach(m => {
+       const val = entry.metrics[m];
+       if (Number.isFinite(val)) {
+           metricVals[m].push({ num: entry.number, val });
+       }
+    });
+  });
+
+  metrics.forEach(m => {
+     const arr = metricVals[m];
+     if (arr.length === 0) return;
+     let min = arr[0].val; let max = arr[0].val;
+     arr.forEach(item => { if(item.val < min) min = item.val; if(item.val > max) max = item.val; });
+     _globalExtremes[m].min = min;
+     _globalExtremes[m].max = max;
+     arr.forEach(item => {
+        if(item.val === min) _globalExtremes[m].minElements.add(item.num);
+        if(item.val === max) _globalExtremes[m].maxElements.add(item.num);
+     });
+  });
+
+  return _globalExtremes;
+}
+
+function setupL3UnitConversion(blueCard, rawData, extData) {
   if (!blueCard) return;
   const items = blueCard.querySelectorAll(".l3-stat-item.l3-clickable[data-metric]");
   items.forEach((item) => {
     const metric = item.dataset.metric;
     const cfg = L3_UNIT_CONFIGS[metric];
     if (!cfg) return;
-    const parsed = cfg.parse(rawData[metric]);
-    // Store parsed data for click handler
-    item._l3Parsed = parsed;
-    item._l3Metric = metric;
-    // For non-temp metrics, also store legacy base value
-    item._l3Base = parsed && typeof parsed === "object" ? parsed.min : parsed;
-    // Set cursor
-    item.style.cursor = "pointer";
-    // Remove old listener if any (use clone trick)
+    const baseVal = cfg.parse(rawData[metric]);
     const newItem = item.cloneNode(true);
-    newItem._l3Parsed = parsed;
-    newItem._l3Metric = metric;
-    newItem._l3Base = item._l3Base;
-    newItem.style.cursor = "pointer";
     item.parentNode.replaceChild(newItem, item);
+    
+    if (!baseVal) {
+      newItem.style.cursor = "default";
+      newItem.removeAttribute("title");
+      // we do not remove l3-clickable so future elements can still be found
+      return;
+    }
+    newItem._l3Base = baseVal;
+    newItem._l3Metric = metric;
+    newItem.style.cursor = "pointer";
+    newItem.title = t("common.clickToChangeUnit");
 
-    // Helper to update display for melt/boil (range + suffix aware)
-    function updateTempDisplay(el, parsedData, unitIdx, unitCfg) {
+    function triggerRender(el, unitIdx) {
+      const c = L3_UNIT_CONFIGS[el._l3Metric];
+      const val = el._l3Base;
+      const res = c.convert(val, unitIdx);
+      const textVal = (res && typeof res === 'object') ? res.text : res;
+      const isPred = (res && typeof res === 'object' && res.isPred);
+      const postUnitNote = (res && typeof res === 'object' && res.postUnitNote) ? res.postUnitNote : "";
+
       const valEl = el.querySelector(".l3-stat-value");
       const unitEl = el.querySelector(".l3-stat-unit");
-      if (unitCfg.formatParsed) {
-        // Range/suffix aware path
-        if (valEl) valEl.textContent = unitCfg.formatParsed(parsedData, unitIdx);
-        if (unitEl) {
-          const suffixStr = unitCfg.getSuffix ? unitCfg.getSuffix(parsedData) : "";
-          unitEl.textContent = unitCfg.units[unitIdx].unit + suffixStr;
-        }
-      } else {
-        // Simple numeric path (ie, ea, density)
-        const baseVal = parsedData && typeof parsedData === "object" ? parsedData.min : parsedData;
-        if (valEl) valEl.textContent = unitCfg.convert(baseVal, unitIdx);
-        if (unitEl) unitEl.textContent = unitCfg.units[unitIdx].unit;
-      }
-    }
+      if (valEl) valEl.textContent = textVal;
+      const suffix = isPred ? " (pred)" : "";
+      let extSuffix = (extData && extData[el._l3Metric]) ? `<span class="l3-stat-ext">${extData[el._l3Metric]}</span>` : "";
+      if (unitEl) unitEl.innerHTML = `${c.units[unitIdx].unit}${suffix}${postUnitNote} ${extSuffix}`;    }
 
-    // Apply current persisted unit state immediately
     const currentIdx = l3UnitState[metric] || 0;
-    if (currentIdx > 0) {
-      updateTempDisplay(newItem, parsed, currentIdx, cfg);
-    } else if (cfg.formatParsed && parsed) {
-      // Even at index 0, apply suffix for pred/range values
-      updateTempDisplay(newItem, parsed, 0, cfg);
+    if (baseVal && currentIdx >= 0) {
+      triggerRender(newItem, currentIdx);
+    } else {
+        triggerRender(newItem, 0);
     }
 
     newItem.addEventListener("click", (e) => {
@@ -1407,11 +1518,9 @@ function setupL3UnitConversion(blueCard, rawData) {
       const m = newItem._l3Metric;
       const c = L3_UNIT_CONFIGS[m];
       if (!c) return;
-      // Cycle unit
       l3UnitState[m] = (l3UnitState[m] + 1) % c.units.length;
-      const unitIdx = l3UnitState[m];
-      updateTempDisplay(newItem, newItem._l3Parsed, unitIdx, c);
-      // Micro-animation feedback
+      saveUnits();
+      triggerRender(newItem, l3UnitState[m]);
       newItem.style.transition = "transform 0.15s ease";
       newItem.style.transform = "scale(0.95)";
       setTimeout(() => { newItem.style.transform = "scale(1)"; }, 150);
@@ -1469,42 +1578,53 @@ function populateSimplifiedView(element) {
     return divs[0] || null;
   };
   const formatTemp = (temp) => {
-    if (!temp || typeof temp !== "string") return "N/A";
+    if (!temp || typeof temp !== "string") return localizeNA();
     if (
-      temp.includes("—") ||
       temp.includes("Pressurized") ||
       temp === "N/A" ||
       temp.includes("Unknown")
     )
-      return "N/A";
-    // Preserve range and annotations - strip only unit, keep ~, (pred), ranges
-    let result = temp.replace(/\s*°C\s*/g, "").trim();
-    // Remove trailing (pred) from value — it will be shown in the unit span via setupL3UnitConversion
-    result = result.replace(/\s*\(pred\)\s*$/i, "").trim();
-    return result;
+      return localizeNA();
+    return temp.replace(" °C", "").replace("°C", "").trim();
   };
   const formatDensity = (density) => {
     if (!density || density === "N/A" || density === "Unknown")
-      return { value: "N/A", unit: "" };
+      return { value: localizeNA(), unit: "" };
     const parts = density.split(" ");
     return { value: parts[0], unit: parts.slice(1).join(" ") };
   };
   const formatElectronegativity = (en) => {
-    if (en === null || en === undefined) return "N/A";
+    if (en === null || en === undefined) return localizeNA();
     if (typeof en === "string") {
-      if (en.includes("—") || en.trim() === "") return "N/A";
+      if (en.includes("—") || en.trim() === "") return localizeNA();
       const num = en.match(/[\d.]+/);
-      return num ? parseFloat(num[0]).toFixed(2) : "N/A";
+      return num ? parseFloat(num[0]).toFixed(2) : localizeNA();
     }
     return en.toFixed(2);
   };
   const formatIonization = (ie) => {
-    if (!ie) return "N/A";
-    if (typeof ie === "string" && ie.includes("kJ/mol"))
-      return ie.replace(" kJ/mol", "").trim();
-    if (typeof ie === "string" && ie.includes("eV")) {
-      const ev = parseFloat(ie);
-      return !isNaN(ev) ? Math.round(ev * 96.485).toString() : "N/A";
+    if (!ie) return localizeNA();
+    if (typeof ie === "string") {
+      const trimmed = ie.trim();
+      if (
+        trimmed === "" ||
+        trimmed === "N/A" ||
+        trimmed === "Unknown" ||
+        trimmed === "—"
+      ) {
+        return localizeNA();
+      }
+      if (trimmed.includes("kJ/mol")) {
+        return trimmed.replace(" kJ/mol", "").trim();
+      }
+      if (trimmed.includes("eV")) {
+        const ev = parseFloat(trimmed);
+        return !isNaN(ev) ? Math.round(ev * 96.485).toString() : localizeNA();
+      }
+      return trimmed;
+    }
+    if (typeof ie === "number") {
+      return String(ie);
     }
     return ie;
   };
@@ -1513,6 +1633,25 @@ function populateSimplifiedView(element) {
     return sentences
       .map((s, i) => s.trim() + (i < sentences.length - 1 ? "<br>" : ""))
       .join("");
+  };
+  const formatElectronConfigurationHtml = (config) => {
+    const safeConfig = config || "—";
+    const supMap = {
+      "¹": "<sup>1</sup>",
+      "²": "<sup>2</sup>",
+      "³": "<sup>3</sup>",
+      "⁴": "<sup>4</sup>",
+      "⁵": "<sup>5</sup>",
+      "⁶": "<sup>6</sup>",
+      "⁷": "<sup>7</sup>",
+      "⁸": "<sup>8</sup>",
+      "⁹": "<sup>9</sup>",
+      "⁰": "<sup>0</sup>",
+    };
+    return Object.entries(supMap).reduce(
+      (html, [u, h]) => html.replace(new RegExp(u, "g"), h),
+      safeConfig,
+    );
   };
   const greenCard = document.querySelector(
     ".green-rectangle .card-info-container",
@@ -1526,10 +1665,7 @@ function populateSimplifiedView(element) {
       phaseDisplay = v2Data.level1_basic.phaseAtSTP || phaseDisplay;
     }
 
-    setText(
-      ".green-rectangle .info-row:nth-child(1) .info-value",
-      typeDisplay,
-    );
+    setText("#l1-type-value", localizeSimpleStatusText(typeDisplay, t("elementL1.unknown")));
     let displayRow = element.row;
     let displayCol = element.column;
     if (element.series === "lanthanide") {
@@ -1540,38 +1676,19 @@ function populateSimplifiedView(element) {
       displayCol = 3;
     }
 
-    setText(
-      ".green-rectangle .info-row:nth-child(2) .info-value",
-      `${displayCol || "-"} / ${displayRow || "-"}`,
-    );
-    setText(
-      ".green-rectangle .info-row:nth-child(3) .info-value",
-      phaseDisplay,
-    );
-    const valenceRow = greenCard.querySelector(
-      ".info-row:nth-child(4) .info-value",
-    );
-    if (valenceRow) {
-      let valenceStr = "";
-      if (window.zperiodVersion === 'new' && v2Data) {
-        valenceStr = v2Data.level1_basic.valenceElectrons || "—";
-      } else if (finallyElementData.level1_basic?.valenceElectrons !== undefined && finallyElementData.level1_basic?.valenceElectrons !== null) {
-        const valence = finallyElementData.level1_basic.valenceElectrons;
-        valenceStr = typeof valence === "string" ? valence : valence.toString();
-      } else {
-        valenceStr = "—";
-      }
-      valenceRow.textContent = valenceStr;
-      // Use nowrap for very long valence strings like "Variable (outer s + d + f)"
-      const isExtraLong = typeof valenceStr === "string" && valenceStr.includes("outer s + d + f");
-      const isLong = typeof valenceStr === "string" && (valenceStr.includes("Variable") || valenceStr.includes("(") || valenceStr.length > 5);
-      valenceRow.classList.remove("long-text", "long-text-nowrap");
-      if (isExtraLong) {
-        valenceRow.classList.add("long-text-nowrap");
-      } else if (isLong) {
-        valenceRow.classList.add("long-text");
-      }
-    }
+    setText("#l1-group-period-value", `${displayCol || "-"} / ${displayRow || "-"}`);
+    setText("#l1-phase-value", localizeSimpleStatusText(phaseDisplay, t("elementL1.unknown")));
+
+    const getElectronBlock = (z, col) => {
+      if ((z >= 57 && z <= 71) || (z >= 89 && z <= 103)) return "f";
+      if (z === 2) return "s";
+      if (col >= 1 && col <= 2) return "s";
+      if (col >= 3 && col <= 12) return "d";
+      if (col >= 13 && col <= 18) return "p";
+      return "—";
+    };
+    setText("#l1-electron-block-value", getElectronBlock(element.number, element.column));
+
     const ionsSection = greenCard.querySelector(".ions-section");
     if (ionsSection) {
       ionsSection
@@ -1581,52 +1698,51 @@ function populateSimplifiedView(element) {
       if (window.zperiodVersion === 'new' && v2Data) {
         commonIonsText = v2Data.level1_basic.commonIons || "";
       }
+      const langCode = getLang();
+      if (elementLocales[langCode] && elementLocales[langCode][element.number]?.ions) {
+        commonIonsText = elementLocales[langCode][element.number].ions;
+      }
 
+      const normalizedCommonIonsText = String(commonIonsText || "").trim();
       const hasNoIons =
-        !commonIonsText ||
-        /none|n\/a|inert|unknown|does not form/i.test(commonIonsText) ||
-        !commonIonsText.trim();
-      const unicodeToHtml = (text) => {
-        const subMap = { '₀': '0', '₁': '1', '₂': '2', '₃': '3', '₄': '4', '₅': '5', '₆': '6', '₇': '7', '₈': '8', '₉': '9' };
-        const supMap = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁺': '+', '⁻': '-' };
-        let result = '', i = 0;
-        while (i < text.length) {
-          if (subMap[text[i]] !== undefined) {
-            let sub = '';
-            while (i < text.length && subMap[text[i]] !== undefined) { sub += subMap[text[i]]; i++; }
-            result += `<sub>${sub}</sub>`;
-          } else if (supMap[text[i]] !== undefined) {
-            let sup = '';
-            while (i < text.length && supMap[text[i]] !== undefined) { sup += supMap[text[i]]; i++; }
-            result += `<sup>${sup}</sup>`;
-          } else {
-            result += text[i]; i++;
-          }
+        !normalizedCommonIonsText ||
+        /none|\/a|inert|unknown|does not form|no common ions/i.test(normalizedCommonIonsText);
+      const createIonItem = (symbol, name, detailMarkup = "") => {
+        if (detailMarkup) {
+          return createExpandablePill({
+            container: ionsSection,
+            detailMarkup,
+            summaryHtml: `
+              <span class="ion-symbol">${unicodeToHtmlGlobal(symbol)}</span>
+              <span class="ion-arrow">→</span>
+              <span class="ion-name">${escapeHtml(name)}</span>
+            `,
+          });
         }
-        return result;
-      };
-      const createIonItem = (symbol, name) => {
         const item = document.createElement("div");
         item.className = "ion-item";
-        item.innerHTML = `<span class="ion-symbol">${unicodeToHtml(symbol)}</span><span class="ion-arrow">→</span><span class="ion-name">${name}</span>`;
+        item.innerHTML = `<span class="ion-symbol">${unicodeToHtmlGlobal(symbol)}</span><span class="ion-arrow">→</span><span class="ion-name">${escapeHtml(name)}</span>`;
         return item;
       };
       if (hasNoIons) {
+        const noIonsLabel = /unknown/i.test(normalizedCommonIonsText)
+          ? t("elementL1.unknown")
+          : t("elementL1.noCommonIons");
+        const noIonsDetailMarkup = normalizedCommonIonsText
+          ? buildTextDetailMarkup(noIonsLabel)
+          : "";
         ionsSection.appendChild(
-          createIonItem(element.symbol, "No common ions"),
+          createIonItem(element.symbol, noIonsLabel, noIonsDetailMarkup),
         );
-      } else if (commonIonsText) {
+      } else if (normalizedCommonIonsText) {
         const parseIon = (ionText) => {
-          // Match ion symbol (letters + superscript chars, plus optional subscript like Hg₂²⁺)
           const symMatch = ionText.match(
             /([A-Za-z]+[₀₁₂₃₄₅₆₇₈₉]*[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]+)/,
           );
           if (!symMatch) return { symbol: element.symbol, name: ionText };
           const symbol = symMatch[1];
-          // Find the outermost parentheses content after the symbol
           const afterSymbol = ionText.substring(ionText.indexOf(symbol) + symbol.length).trim();
           if (afterSymbol.startsWith('(')) {
-            // Find matching closing paren (handle nesting)
             let depth = 0, end = -1;
             for (let i = 0; i < afterSymbol.length; i++) {
               if (afterSymbol[i] === '(') depth++;
@@ -1635,19 +1751,22 @@ function populateSimplifiedView(element) {
             const name = end > 0 ? afterSymbol.substring(1, end) : afterSymbol.substring(1);
             return { symbol, name };
           }
-          return { symbol, name: `${element.name} ion` };
+          return { symbol, name: `${localizeElementName(element)} ion` };
         };
-        if (commonIonsText.includes(",")) {
-          commonIonsText
-            .split(",")
+        if (normalizedCommonIonsText.includes(",")) {
+          splitEntriesOutsideParentheses(normalizedCommonIonsText)
             .map((s) => s.trim())
             .forEach((ionText) => {
               const { symbol, name } = parseIon(ionText);
-              ionsSection.appendChild(createIonItem(symbol, name));
+              ionsSection.appendChild(
+                createIonItem(symbol, name, buildCommonIonDetailMarkup(element, symbol)),
+              );
             });
         } else {
-          const { symbol, name } = parseIon(commonIonsText);
-          ionsSection.appendChild(createIonItem(symbol, name));
+          const { symbol, name } = parseIon(normalizedCommonIonsText);
+          ionsSection.appendChild(
+            createIonItem(symbol, name, buildCommonIonDetailMarkup(element, symbol)),
+          );
         }
       }
     }
@@ -1656,19 +1775,45 @@ function populateSimplifiedView(element) {
     ".yellow-rectangle .card-info-container",
   );
   if (yellowCard) {
+    let valenceStr = "";
+    if (window.zperiodVersion === 'new' && v2Data) {
+      valenceStr = v2Data.level1_basic.valenceElectrons || "—";
+    } else if (finallyElementData.level1_basic?.valenceElectrons !== undefined && finallyElementData.level1_basic?.valenceElectrons !== null) {
+      const valence = finallyElementData.level1_basic.valenceElectrons;
+      valenceStr = typeof valence === "string" ? valence : valence.toString();
+    } else {
+      valenceStr = "—";
+    }
+
     let avgMass = finallyElementData.level2_atomic?.mass?.highSchool || "—";
     if (window.zperiodVersion === 'new' && v2Data && v2Data.level2_atomic.mass.standard) {
       avgMass = v2Data.level2_atomic.mass.standard;
     }
-    setText(".yellow-rectangle .info-row:nth-child(1) .info-value", avgMass);
-    setText(
-      ".yellow-rectangle .info-row:nth-child(2) .info-value",
-      element.number.toString(),
-    );
-    setText(
-      ".yellow-rectangle .info-row:nth-child(3) .info-value",
-      element.number.toString(),
-    );
+    const representativeMass = getRepresentativeMassNumber(element.number);
+    const neutronCount = representativeMass !== null
+      ? representativeMass - element.number
+      : "—";
+    let level2Config = finallyElementData.level3_properties?.electronic?.configuration || "—";
+    if (window.zperiodVersion === 'new' && v2Data && v2Data.level3_properties?.electronic?.configuration) {
+      level2Config = v2Data.level3_properties.electronic.configuration;
+    }
+
+    setText("#l2-avg-mass-value", formatAverageAtomicMass(avgMass, element.number, element.weight));
+    setText("#l2-valence-electrons-value", localizeValence(valenceStr));
+    setText("#l2-protons-value", element.number.toString());
+    setText("#l2-neutrons-value", String(neutronCount));
+    setText("#l2-electrons-value", element.number.toString());
+    const level2ValenceRow = yellowCard.querySelector("#l2-valence-electrons-value");
+    if (level2ValenceRow) {
+      const valenceText = String(valenceStr || "");
+      const needsCompact = valenceText.length >= 20 || valenceText.includes("Variable (");
+      level2ValenceRow.classList.toggle("valence-compact", needsCompact);
+    }
+    const level2ConfigNode = yellowCard.querySelector("#l2-configuration-value");
+    if (level2ConfigNode) {
+      level2ConfigNode.innerHTML = formatElectronConfigurationHtml(level2Config);
+    }
+
     const isotopesSection = yellowCard.querySelector(".ions-section");
     if (isotopesSection) {
       isotopesSection
@@ -1696,22 +1841,8 @@ function populateSimplifiedView(element) {
           if (iso.symbol) {
             const match = iso.symbol.match(/[¹²³⁴⁵⁶⁷⁸⁹⁰]+/);
             if (match) {
-              const supToNum = {
-                "⁰": "0",
-                "¹": "1",
-                "²": "2",
-                "³": "3",
-                "⁴": "4",
-                "⁵": "5",
-                "⁶": "6",
-                "⁷": "7",
-                "⁸": "8",
-                "⁹": "9",
-              };
-              return match[0]
-                .split("")
-                .map((c) => supToNum[c] || c)
-                .join("");
+              const supToNum = { "⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9" };
+              return match[0].split("").map((c) => supToNum[c] || c).join("");
             }
           }
           return iso.name?.match(/\d+/)?.[0] || "";
@@ -1719,21 +1850,22 @@ function populateSimplifiedView(element) {
         const massNumber = parseMassNumber();
         if (!massNumber) return;
         const percent = (iso.percent || "").toLowerCase();
-        const isStable =
-          percent &&
-          !percent.includes("trace") &&
-          !percent.includes("radioactive");
-        const neutronNumber =
-          iso.neutron?.replace("n", "").replace("⁰", "0") || "";
-        const isoItem = document.createElement("div");
-        isoItem.className = "ion-item";
-        isoItem.innerHTML = `
-                      <span class="ion-symbol">${numberToSuperscript(massNumber)}${element.symbol}</span>
-                      <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
-                          <span style="font-weight: 600; font-size: 0.95rem;">${neutronNumber} n⁰</span>
-                          <span style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.6; font-weight: 700; letter-spacing: 0.5px; ${isStable ? "" : "color: #B91C1C;"}">${isStable ? "Stable" : "Radioactive"}</span>
-                      </div>
-                  `;
+        const isStable = percent && !percent.includes("trace") && !percent.includes("radioactive");
+        const neutronNumber = iso.neutron?.replace("n", "").replace("⁰", "0") || "";
+        const isoItem = createExpandablePill({
+          container: isotopesSection,
+          detailMarkup: buildIsotopeDetailMarkup(
+            element, iso,
+            finallyElementData.isotopeNotes || "",
+          ),
+          summaryHtml: `
+            <span class="ion-symbol ion-symbol-isotope"><span class="isotope-mass-number">${escapeHtml(massNumber)}</span><span class="isotope-element-symbol">${escapeHtml(element.symbol)}</span></span>
+            <div class="ion-isotope-meta">
+                              <span class="ion-isotope-neutron" style="line-height: 1; margin-bottom: 2px;">${neutronNumber} n⁰</span>
+              <span class="ion-isotope-stability ${isStable ? "stable" : "radioactive"}" style="line-height: 1;">${isStable ? t("elementModal.stable") : t("elementModal.radioactive")}</span>
+            </div>
+          `,
+        });
         isotopesSection.appendChild(isoItem);
       });
     }
@@ -1748,22 +1880,7 @@ function populateSimplifiedView(element) {
       if (window.zperiodVersion === 'new' && v2Data && v2Data.level3_properties.electronic.configuration) {
         config = v2Data.level3_properties.electronic.configuration;
       }
-      const supMap = {
-        "¹": "<sup>1</sup>",
-        "²": "<sup>2</sup>",
-        "³": "<sup>3</sup>",
-        "⁴": "<sup>4</sup>",
-        "⁵": "<sup>5</sup>",
-        "⁶": "<sup>6</sup>",
-        "⁷": "<sup>7</sup>",
-        "⁸": "<sup>8</sup>",
-        "⁹": "<sup>9</sup>",
-        "⁰": "<sup>0</sup>",
-      };
-      configHero.innerHTML = Object.entries(supMap).reduce(
-        (html, [u, h]) => html.replace(new RegExp(u, "g"), h),
-        config,
-      );
+      configHero.innerHTML = formatElectronConfigurationHtml(config);
     }
     const oxidationContainer = blueCard.querySelector(".oxidation-container");
     if (oxidationContainer) {
@@ -1823,6 +1940,8 @@ function populateSimplifiedView(element) {
     let melt = finallyElementData.level3_properties?.physical?.meltingPoint || "";
     let boil = finallyElementData.level3_properties?.physical?.boilingPoint || "";
     let ea = finallyElementData.level3_properties?.physical?.electronAffinity || "";
+    let ar = finallyElementData.level3_properties?.physical?.atomicRadius || "";
+    let sh = finallyElementData.level3_properties?.physical?.specificHeat || "";
 
     if (window.zperiodVersion === 'new' && v2Data) {
       en = v2Data.level3_properties.physical.electronegativity ?? en;
@@ -1831,15 +1950,29 @@ function populateSimplifiedView(element) {
       melt = v2Data.level3_properties.physical.meltingPoint || melt;
       boil = v2Data.level3_properties.physical.boilingPoint || boil;
       ea = v2Data.level3_properties.physical.electronAffinity || ea;
+      ar = v2Data.level3_properties.physical.atomicRadius || ar;
+      sh = v2Data.level3_properties.physical.specificHeat || sh;
     }
 
-    // New order: Row 1 = IE + EA, Row 2 = EN + Density, Row 3 = Melt + Boil
+    const ext = getGlobalPhysicalExtremes();
+    function getExt(metric) {
+      return "";
+    }
+
     setText(".blue-rectangle .l3-stat-item:nth-child(1) .l3-stat-value", formatIonization(ie));
 
-    const eaDisplay = ea && ea !== "N/A" ? ea.replace(" kJ/mol", "").trim() : "N/A";
+    const eaDisplay = ea && ea !== "N/A" ? ea.replace(" kJ/mol", "").trim() : localizeNA();
     setText(".blue-rectangle .l3-stat-item:nth-child(2) .l3-stat-value", eaDisplay);
 
-    setText(".blue-rectangle .l3-stat-item:nth-child(3) .l3-stat-value", formatElectronegativity(en));
+    const enText = formatElectronegativity(en);
+    const enExt = getExt('electronegativity');
+    const enTitleEl = blueCard.querySelector(".l3-stat-item:nth-child(3) .l3-stat-unit");
+    setText(".blue-rectangle .l3-stat-item:nth-child(3) .l3-stat-value", enText);
+    if (enTitleEl && enText !== "N/A" && enText !== localizeNA()) {
+      enTitleEl.innerHTML = `${t("elementModal.pauling")} ${enExt ? `<span class="l3-stat-ext">${enExt}</span>` : ''}`;
+    } else if (enTitleEl) {
+      enTitleEl.innerHTML = t("elementModal.pauling");
+    }
 
     const densityData = formatDensity(den);
     setText(".blue-rectangle .l3-stat-item:nth-child(4) .l3-stat-value", densityData.value);
@@ -1849,8 +1982,34 @@ function populateSimplifiedView(element) {
     setText(".blue-rectangle .l3-stat-item:nth-child(5) .l3-stat-value", formatTemp(melt));
     setText(".blue-rectangle .l3-stat-item:nth-child(6) .l3-stat-value", formatTemp(boil));
 
+    const arDisplay = ar && ar !== "N/A" ? ar.replace(" pm", "").trim() : localizeNA();
+    setText(".blue-rectangle .l3-stat-item:nth-child(7) .l3-stat-value", arDisplay);
+    const arUnitEl = blueCard.querySelector(".l3-stat-item:nth-child(7) .l3-stat-unit");
+    const arExt = getExt('atomicRadius');
+    if (arUnitEl && arDisplay !== "N/A" && arDisplay !== localizeNA()) {
+        arUnitEl.innerHTML = `pm ${arExt ? `<span class="l3-stat-ext">${arExt}</span>` : ''}`;
+    } else if (arUnitEl) {
+        arUnitEl.innerHTML = "pm";
+    }
+
+    const shDisplay = sh && sh !== "N/A" ? sh.replace(" J/(g·°C)", "").trim() : localizeNA();
+    setText(".blue-rectangle .l3-stat-item:nth-child(8) .l3-stat-value", shDisplay);
+    const shUnitEl = blueCard.querySelector(".l3-stat-item:nth-child(8) .l3-stat-unit");
+    const shExt = getExt('specificHeat');
+    if (shUnitEl && shDisplay !== "N/A" && shDisplay !== localizeNA()) {
+        shUnitEl.innerHTML = `J/(g·°C) ${shExt ? `<span class="l3-stat-ext">${shExt}</span>` : ''}`;
+    } else if (shUnitEl) {
+        shUnitEl.innerHTML = "J/(g·°C)";
+    }
+
     // ---- Clickable unit conversion on L3 stat items ----
-    setupL3UnitConversion(blueCard, { ie, ea, melt, boil, density: den });
+    setupL3UnitConversion(blueCard, { ie, ea, melt, boil, density: den }, {
+        ie: getExt('firstIonization'),
+        ea: getExt('electronAffinity'),
+        density: getExt('density'),
+        melt: getExt('meltingPoint'),
+        boil: getExt('boilingPoint')
+    });
   }
   const redCard = document.querySelector(
     ".red-rectangle .card-info-container",
@@ -1882,8 +2041,9 @@ function populateSimplifiedView(element) {
         width: "100%",
         maxWidth: "100%",
         boxSizing: "border-box",
-        display: "flex",
-        justifyContent: "space-between",
+        display: "grid",
+        gridTemplateColumns: "max-content minmax(0, 1fr)",
+        alignItems: "start",
         gap: "10px",
       });
       setStyle(row.querySelector(".info-label"), {
@@ -1899,6 +2059,7 @@ function populateSimplifiedView(element) {
         overflowWrap: "break-word",
         whiteSpace: "normal",
         textAlign: "right",
+        lineHeight: "1.35",
         overflow: "visible",
       });
     });
@@ -1907,10 +2068,8 @@ function populateSimplifiedView(element) {
       year = v2Data.level4_history_stse.history.discoveryYear;
     }
 
-    setText(
-      ".red-rectangle .info-row:nth-child(2) .info-value",
-      year,
-    );
+    setText("#el-modal-l4-year", year);
+    
     let discoveredBy = finallyElementData.level4_history_stse?.history?.discoveredBy || "—";
     let namedBy = finallyElementData.level4_history_stse?.history?.namedBy || "—";
 
@@ -1919,8 +2078,17 @@ function populateSimplifiedView(element) {
       namedBy = v2Data.level4_history_stse.history.namedBy || "—";
     }
 
-    setText(".red-rectangle .info-row:nth-child(3) .info-value", discoveredBy);
-    setText(".red-rectangle .info-row:nth-child(4) .info-value", namedBy);
+    const langCode = getLang();
+    if (elementLocales[langCode] && elementLocales[langCode][element.number]?.history) {
+      discoveredBy = elementLocales[langCode][element.number].history.discoveredBy || discoveredBy;
+      namedBy = elementLocales[langCode][element.number].history.namedBy || namedBy;
+    }
+
+    discoveredBy = compactLocalizedHistoryText(discoveredBy);
+    namedBy = compactLocalizedHistoryText(namedBy);
+
+    setText("#el-modal-l4-discovered-by", discoveredBy);
+    setText("#el-modal-l4-named-by", namedBy);
 
     const propGridSection = redCard.querySelector(".prop-grid-section");
     if (propGridSection) {
@@ -1940,6 +2108,11 @@ function populateSimplifiedView(element) {
           stseVal = v2Data.level4_history_stse.stseContext && v2Data.level4_history_stse.stseContext.length > 0
             ? v2Data.level4_history_stse.stseContext.join(" • ")
             : "";
+        }
+
+        const langCode = getLang();
+        if (elementLocales[langCode] && elementLocales[langCode][element.number]?.stse) {
+          stseVal = elementLocales[langCode][element.number].stse.join(" • ");
         }
 
         stseCell.style.display = "flex";
@@ -1965,6 +2138,11 @@ function populateSimplifiedView(element) {
             : "—";
         }
 
+        const langCode = getLang();
+        if (elementLocales[langCode] && elementLocales[langCode][element.number]?.uses) {
+          usesVal = elementLocales[langCode][element.number].uses.join(", ");
+        }
+
         if (usesContent) {
           setStyle(usesContent, commonContentStyles);
           usesContent.textContent = usesVal;
@@ -1981,6 +2159,11 @@ function populateSimplifiedView(element) {
           hazardsVal = v2Data.level4_history_stse.hazards && v2Data.level4_history_stse.hazards.length > 0
             ? v2Data.level4_history_stse.hazards.join(", ")
             : "—";
+        }
+
+        const langCode = getLang();
+        if (elementLocales[langCode] && elementLocales[langCode][element.number]?.hazards) {
+          hazardsVal = elementLocales[langCode][element.number].hazards.join(", ");
         }
 
         if (hazardsContent) {
@@ -2011,6 +2194,16 @@ export function showModal(element) {
   element.etymology =
     finallyElementData.level4_history_stse?.history?.namedBy || "";
   element.description = (finallyElementData.level4_history_stse?.stseContext || []).join("; ");
+  
+  const langCode = getLang();
+  if (elementLocales[langCode]) {
+    if (elementLocales[langCode][element.number]?.history) {
+      element.etymology = elementLocales[langCode][element.number].history.namedBy || element.etymology;
+    }
+    if (elementLocales[langCode][element.number]?.stse) {
+      element.description = elementLocales[langCode][element.number].stse.join("; ");
+    }
+  }
   initializeLevelSystem(element);
   const isSimplifiedView = element.number <= 118;
   const elementContent = document.querySelector(".element-content");
@@ -2019,7 +2212,7 @@ export function showModal(element) {
   if (elementContent && simplifiedBox && modalInfoPane) {
     if (isSimplifiedView) {
       elementContent.style.display = "none";
-      simplifiedBox.style.display = "flex";
+      simplifiedBox.style.display = "grid";
       modalInfoPane.classList.add("no-scroll");
       populateSimplifiedView(element);
     } else {
@@ -2029,28 +2222,14 @@ export function showModal(element) {
     }
   }
   const eduData = element.educational;
-  const massNumbers = [
-    1, 4, 7, 9, 11, 12, 14, 16, 19, 20,
-    23, 24, 27, 28, 31, 32, 35, 40, 39, 40,
-    45, 48, 51, 52, 55, 56, 59, 59, 64, 65,
-    70, 73, 75, 79, 80, 84, 85, 88, 89, 91,
-    93, 96, 98, 101, 103, 106, 108, 112, 115, 119,
-    122, 128, 127, 131, 133, 137, 139, 140, 141, 144,
-    145, 150, 152, 157, 159, 163, 165, 167, 169, 173,
-    175, 178, 181, 184, 186, 190, 192, 195, 197, 201,
-    204, 207, 209, 209, 210, 222, 223, 226, 227, 232,
-    231, 238, 237, 244, 243, 247, 247, 251, 252, 257,
-    258, 259, 266, 267, 268, 269, 270, 277, 278, 281,
-    282, 285, 286, 289, 290, 293, 294, 294
-  ];
   const headlineMass = document.getElementById("headline-mass");
   const headlineAtomic = document.getElementById("headline-atomic");
   const headlineSymbol = document.getElementById("headline-symbol");
   if (headlineMass) {
-    const massNumber =
-      element.number >= 1 && element.number <= 118
-        ? massNumbers[element.number - 1]
-        : Math.round(element.weight);
+    const massNumber = getRepresentativeMassNumber(
+      element.number,
+      Math.round(element.weight),
+    );
     headlineMass.textContent = massNumber;
   }
   if (headlineAtomic) {
@@ -2061,20 +2240,27 @@ export function showModal(element) {
   }
   const headlineName = document.getElementById("headline-name");
   if (headlineName) {
-    headlineName.textContent = element.name;
+    const lang = getLang();
+    let displayHeadline = localizeElementName(element);
+    const annotation = getElementAnnotation(element.number, lang);
+    if (annotation) {
+      displayHeadline = `${displayHeadline} ${annotation}`;
+    }
+    headlineName.textContent = displayHeadline;
     const resizeFont = () => {
       const container = headlineName.parentElement;
       const leftGroup = container.querySelector(".headline-left-group");
       if (!container || !leftGroup) return;
       const containerWidth = container.offsetWidth;
-      const leftGroupWidth = leftGroup.offsetWidth;
+      // Cap left group to 55% of container so name always gets space
+      const leftGroupWidth = Math.min(leftGroup.offsetWidth, containerWidth * 0.55);
       let margins = 80;
       let fontSize = 2.5;
       headlineName.style.marginLeft = "40px";
       headlineName.style.marginRight = "40px";
       headlineName.style.fontSize = fontSize + "rem";
       let availableWidth = containerWidth - leftGroupWidth - margins;
-      while (headlineName.scrollWidth > availableWidth && fontSize > 1.0) {
+      while (headlineName.scrollWidth > availableWidth && fontSize > 1.5) {
         fontSize -= 0.1;
         headlineName.style.fontSize = fontSize + "rem";
       }
@@ -2085,7 +2271,7 @@ export function showModal(element) {
         availableWidth = containerWidth - leftGroupWidth - margins;
         fontSize = Math.min(2.5, fontSize + 0.3);
         headlineName.style.fontSize = fontSize + "rem";
-        while (headlineName.scrollWidth > availableWidth && fontSize > 1.0) {
+        while (headlineName.scrollWidth > availableWidth && fontSize > 1.5) {
           fontSize -= 0.1;
           headlineName.style.fontSize = fontSize + "rem";
         }
@@ -2098,7 +2284,13 @@ export function showModal(element) {
   const elementText = document.querySelector(".element-text");
   const elementName = document.querySelector(".element-name");
   if (elementText && elementName) {
-    const nameLength = element.name.length;
+    const lang = getLang();
+    let displayHeadline = localizeElementName(element);
+    const annotation = getElementAnnotation(element.number, lang);
+    if (annotation) {
+      displayHeadline = `${displayHeadline} ${annotation}`;
+    }
+    const nameLength = displayHeadline.length;
     let lengthCategory;
     if (nameLength <= 4) {
       lengthCategory = "very-short";
@@ -2121,9 +2313,9 @@ export function showModal(element) {
   if (modalWatermark) {
     modalWatermark.textContent = element.symbol;
   }
-  if (modalPhase) modalPhase.textContent = element.phase || "—";
+  if (modalPhase) modalPhase.textContent = localizeSimpleStatusText(element.phase, "—");
   if (modalCategoryDisplay) {
-    modalCategoryDisplay.textContent = element.category || "—";
+    modalCategoryDisplay.textContent = localizeSimpleStatusText(element.category, "—");
   }
   if (modalConfigLarge) {
     modalConfigLarge.textContent = element.electronConfig || "—";
@@ -2132,7 +2324,7 @@ export function showModal(element) {
   if (modalEtymology) modalEtymology.textContent = element.etymology;
   if (modalDescription) modalDescription.textContent = element.description;
   // Optional helper to set up clickable unit toggling for arbitrary text elements
-  function bindModalUnit(el, metricKey, rawVal) {
+  function bindModalUnit(el, metricKey, rawVal, extLabel = "") {
     if (!el) return;
     const cfg = L3_UNIT_CONFIGS[metricKey];
     if (!cfg || !rawVal || rawVal === "—" || rawVal === "N/A") {
@@ -2151,8 +2343,8 @@ export function showModal(element) {
       return;
     }
 
-    const baseVal = cfg.parse(rawVal);
-    if (!Number.isFinite(baseVal)) {
+    const baseObj = cfg.parse(rawVal);
+    if (!baseObj) {
       el.textContent = rawVal;
       return;
     }
@@ -2163,12 +2355,17 @@ export function showModal(element) {
     // Create new element to flush old listeners
     const newEl = el.cloneNode(true);
     newEl.style.cursor = "pointer";
-    newEl.title = "Click to change unit";
+    newEl.title = t("common.clickToChangeUnit");
 
     function render() {
-      const v = cfg.convert(baseVal, unitIdx);
+      const res = cfg.convert(baseObj, unitIdx);
+      const textVal = (res && typeof res === 'object') ? res.text : res;
+      const isPred = (res && typeof res === 'object' && res.isPred);
+      const postUnitNote = (res && typeof res === 'object' && res.postUnitNote) ? res.postUnitNote : "";
       const u = cfg.units[unitIdx].unit;
-      newEl.textContent = `${v} ${u}`;
+      const suffix = isPred ? " (pred)" : "";
+      const extStr = extLabel ? ` <span class="l3-stat-ext">${extLabel}</span>` : "";
+      newEl.innerHTML = `${textVal} ${u}${suffix}${postUnitNote}${extStr}`;
     }
 
     render();
@@ -2177,6 +2374,7 @@ export function showModal(element) {
       e.stopPropagation();
       unitIdx = (unitIdx + 1) % cfg.units.length;
       l3UnitState[metricKey] = unitIdx;
+      if (typeof saveUnits !== 'undefined') saveUnits();
       render();
     });
 
@@ -2189,19 +2387,30 @@ export function showModal(element) {
     if (metricKey === "ea") modalElectronAffinity = newEl;
   }
 
-  if (modalDensity) bindModalUnit(modalDensity, "density", finallyElementData.level3_properties?.physical?.density || "—");
-  if (modalMelt) bindModalUnit(modalMelt, "melt", finallyElementData.level3_properties?.physical?.meltingPoint || "—");
-  if (modalBoil) bindModalUnit(modalBoil, "boil", finallyElementData.level3_properties?.physical?.boilingPoint || "—");
+  const ext = getGlobalPhysicalExtremes();
+  function getExt(metric) {
+    return "";
+  }
 
-  if (modalNegativity)
-    modalNegativity.textContent = finallyElementData.level3_properties?.physical?.electronegativity ?? "—";
+  if (modalDensity) bindModalUnit(modalDensity, "density", finallyElementData.level3_properties?.physical?.density || "—", getExt('density'));
+  if (modalMelt) bindModalUnit(modalMelt, "melt", finallyElementData.level3_properties?.physical?.meltingPoint || "—", getExt('meltingPoint'));
+  if (modalBoil) bindModalUnit(modalBoil, "boil", finallyElementData.level3_properties?.physical?.boilingPoint || "—", getExt('boilingPoint'));
+
+  if (modalNegativity) {
+    let enVal = finallyElementData.level3_properties?.physical?.electronegativity ?? "—";
+    const enExt = getExt('electronegativity');
+    if (enVal !== "—" && enExt) {
+      enVal += " " + enExt;
+    }
+    modalNegativity.textContent = enVal;
+  }
   if (modalRadius) modalRadius.textContent = element.radius || "—";
 
   if (modalIonization) {
-    bindModalUnit(modalIonization, "ie", finallyElementData.level3_properties?.physical?.firstIonization || "—");
+    bindModalUnit(modalIonization, "ie", finallyElementData.level3_properties?.physical?.firstIonization || "—", getExt('firstIonization'));
   }
   if (modalElectronAffinity) {
-    bindModalUnit(modalElectronAffinity, "ea", finallyElementData.level3_properties?.physical?.electronAffinity || "—");
+    bindModalUnit(modalElectronAffinity, "ea", finallyElementData.level3_properties?.physical?.electronAffinity || "—", getExt('electronAffinity'));
   }
   const grp = element.column;
   if (eduNames && modalCharge) {
@@ -2237,23 +2446,7 @@ export function showModal(element) {
   if (modalP) modalP.textContent = atomicNum;
   if (modalE) modalE.textContent = atomicNum;
   if (modalN) {
-    const massNumbers = [
-      1, 4, 7, 9, 11, 12, 14, 16, 19, 20,
-      23, 24, 27, 28, 31, 32, 35, 40, 39, 40,
-      45, 48, 51, 52, 55, 56, 59, 59, 64, 65,
-      70, 73, 75, 79, 80, 84, 85, 88, 89, 91,
-      93, 96, 98, 101, 103, 106, 108, 112, 115, 119,
-      122, 128, 127, 131, 133, 137, 139, 140, 141, 144,
-      145, 150, 152, 157, 159, 163, 165, 167, 169, 173,
-      175, 178, 181, 184, 186, 190, 192, 195, 197, 201,
-      204, 207, 209, 209, 210, 222, 223, 226, 227, 232,
-      231, 238, 237, 244, 243, 247, 247, 251, 252, 257,
-      258, 259, 266, 267, 268, 269, 270, 277, 278, 281,
-      282, 285, 286, 289, 290, 293, 294, 294
-    ];
-    const massNumber = (atomicNum >= 1 && atomicNum <= 118)
-      ? massNumbers[atomicNum - 1]
-      : null;
+    const massNumber = getRepresentativeMassNumber(atomicNum);
     modalN.textContent = massNumber !== null ? (massNumber - atomicNum) : "—";
   }
 
@@ -2458,9 +2651,6 @@ export function showModal(element) {
   if (modalHazards) {
     modalHazards.textContent = (finallyElementData.level4_history_stse?.hazards || []).join(", ") || "—";
   }
-  if (modalShells) {
-    modalShells.textContent = calculateShells(element);
-  }
   const modalIsotopes = document.getElementById("modal-isotopes");
   if (modalIsotopes) {
     modalIsotopes.innerHTML = "";
@@ -2484,17 +2674,15 @@ export function showModal(element) {
         info.appendChild(abundance);
         const tag = document.createElement("span");
         tag.classList.add("iso-tag");
-        const isStable = (iso.stability || "")
-          .toLowerCase()
-          .includes("stable");
+        const isStable = /(stable|穩定|稳定)/i.test(String(iso.stability || ""));
         tag.classList.add(isStable ? "stable" : "radioactive");
-        tag.textContent = iso.stability || "Radioactive";
+        tag.textContent = localizeIsotopeStability(iso.stability) || t("elementModal.radioactive");
         row.appendChild(info);
         row.appendChild(tag);
         modalIsotopes.appendChild(row);
       });
     } else {
-      modalIsotopes.innerHTML = `<div class="isotope-row no-data-message">No key isotope data available.</div>`;
+      modalIsotopes.innerHTML = `<div class="isotope-row no-data-message">${t("elementModal.noIsotopeData")}</div>`;
     }
   }
   let category = "Element";
@@ -2513,11 +2701,12 @@ export function showModal(element) {
   if (modalContent) {
     modalContent.setAttribute(
       "data-element-name",
-      `${element.symbol} - ${element.name}`,
+      `${element.symbol} - ${localizeElementName(element)}`,
     );
   }
   modal.classList.add("active");
-  document.title = `Zperiod - ${element.name}`;
+  initElementTutorial();
+  document.title = `Zperiod - ${localizeElementName(element)}`;
   document.body.classList.add("hide-nav");
   if (isSimplifiedView) {
     const slider = document.querySelector(".cards-slider");
@@ -2574,17 +2763,30 @@ export function showModal(element) {
 // ===== Level System =====
 window.lockedLevelIndex = window.lockedLevelIndex ?? 0;
 window.isLevelLocked = window.isLevelLocked ?? false;
-function initializeLevelSystem(element) {
-  const levelBtns = document.querySelectorAll(".level-btn");
-  const levelContents = document.querySelectorAll(".level-content");
-  levelBtns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const targetLevel = btn.dataset.level;
-      switchToLevel(targetLevel, element);
-      levelBtns.forEach((b) => b.classList.remove("active"));
-      btn.classList.add("active");
-    });
+
+function updateLevelButtons(activeLevel) {
+  document.querySelectorAll(".level-btn").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.level === activeLevel);
   });
+}
+
+function bindLevelSystemControls() {
+  if (levelSystemBound) return;
+
+  document.addEventListener("click", (event) => {
+    const btn = event.target.closest(".level-btn[data-level]");
+    if (!btn) return;
+    if (modal && !modal.classList.contains("active")) return;
+    if (!window.currentAtomElement) return;
+
+    switchToLevel(btn.dataset.level, window.currentAtomElement);
+  });
+
+  levelSystemBound = true;
+}
+
+function initializeLevelSystem(element) {
+  bindLevelSystemControls();
   const pendingLevelIndex = Number.isInteger(window._pendingLevelIndex)
     ? Math.max(0, window._pendingLevelIndex)
     : null;
@@ -2594,9 +2796,6 @@ function initializeLevelSystem(element) {
       ? String(window.lockedLevelIndex + 1)
       : "1";
   switchToLevel(startLevel, element);
-  levelBtns.forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.level === startLevel);
-  });
 }
 function switchToLevel(level, element) {
   const levelContents = document.querySelectorAll(".level-content");
@@ -2608,6 +2807,7 @@ function switchToLevel(level, element) {
     targetContent.style.display = "block";
     populateLevelContent(level, element);
   }
+  updateLevelButtons(level);
 }
 function populateLevelContent(level, element) {
   const eduData = element.educational;
@@ -2630,23 +2830,7 @@ function populateLevel1(element, eduData) {
   if (level1Protons) level1Protons.textContent = element.number;
   if (level1Electrons) level1Electrons.textContent = element.number;
   if (level1Neutrons) {
-    const massNumbers = [
-      1, 4, 7, 9, 11, 12, 14, 16, 19, 20,
-      23, 24, 27, 28, 31, 32, 35, 40, 39, 40,
-      45, 48, 51, 52, 55, 56, 59, 59, 64, 65,
-      70, 73, 75, 79, 80, 84, 85, 88, 89, 91,
-      93, 96, 98, 101, 103, 106, 108, 112, 115, 119,
-      122, 128, 127, 131, 133, 137, 139, 140, 141, 144,
-      145, 150, 152, 157, 159, 163, 165, 167, 169, 173,
-      175, 178, 181, 184, 186, 190, 192, 195, 197, 201,
-      204, 207, 209, 209, 210, 222, 223, 226, 227, 232,
-      231, 238, 237, 244, 243, 247, 247, 251, 252, 257,
-      258, 259, 266, 267, 268, 269, 270, 277, 278, 281,
-      282, 285, 286, 289, 290, 293, 294, 294
-    ];
-    const massNumber = (element.number >= 1 && element.number <= 118)
-      ? massNumbers[element.number - 1]
-      : null;
+    const massNumber = getRepresentativeMassNumber(element.number);
     level1Neutrons.textContent = massNumber !== null ? (massNumber - element.number) : "—";
   }
   if (level1Mass) level1Mass.textContent = finallyElementData.level2_atomic?.mass?.highSchool || "—";
@@ -2663,8 +2847,8 @@ function populateLevel1(element, eduData) {
   const modalGroup = document.getElementById("modal-group");
   const amphotericCard = document.getElementById("amphoteric-card");
   if (modalCategoryDisplay)
-    modalCategoryDisplay.textContent = element.category || "—";
-  if (modalPhase) modalPhase.textContent = element.phase || "—";
+    modalCategoryDisplay.textContent = localizeSimpleStatusText(element.category, "—");
+  if (modalPhase) modalPhase.textContent = localizeSimpleStatusText(element.phase, "—");
   if (modalGroup) modalGroup.textContent = element.column || "—";
   if (amphotericCard) {
     if (eduData && eduData.amphoteric) {
@@ -2677,163 +2861,53 @@ function populateLevel1(element, eduData) {
 function populateLevel2(element, eduData) { }
 function populateLevel3(element, eduData) { }
 
+
+
 // ===== Swipe Slider =====
 function initSwipeSlider() {
-  // Abort all previous listeners to prevent stacking
-  if (window._elementSliderAbort) window._elementSliderAbort.abort();
-  const ac = new AbortController();
-  window._elementSliderAbort = ac;
-  const sig = { signal: ac.signal };
-
   const slider = document.querySelector(".cards-slider");
-  const dots = document.querySelectorAll(".slider-dots .dot");
-  const slides = document.querySelectorAll(".card-slide");
+  const dots = [...document.querySelectorAll(".slider-dots .dot")];
+  const slides = [...document.querySelectorAll(".card-slide")];
   const lockBtn = document.getElementById("level-lock-btn");
 
   if (!slider || slides.length < 2) return;
 
-  const MAX_INDEX = Math.min(slides.length - 1, 3); // Hard limit: 4 pages max (index 0-3)
-  const hasPendingLevel = Number.isInteger(window._pendingLevelIndex);
-  let currentIndex = hasPendingLevel
-    ? Math.min(Math.max(window._pendingLevelIndex, 0), MAX_INDEX)
-    : window.isLevelLocked
-      ? Math.min(window.lockedLevelIndex, MAX_INDEX)
-      : 0;
-  window._pendingLevelIndex = null;
-  const gap = 20;
-  let isDragging = false;
-  let startX = 0;
-  let startScrollLeft = 0;
+  const maxIndex = Math.min(slides.length - 1, 3);
 
-  if (lockBtn) {
-    lockBtn.style.display = "flex";
-    const newLockBtn = lockBtn.cloneNode(true);
-    lockBtn.parentNode.replaceChild(newLockBtn, lockBtn);
-    newLockBtn.classList.toggle("locked", window.isLevelLocked);
-    newLockBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      window.isLevelLocked = !window.isLevelLocked;
-      window.lockedLevelIndex = currentIndex;
-      newLockBtn.classList.toggle("locked", window.isLevelLocked);
-      updateDots();
-    }, sig);
-  }
-
-  function getSlideWidth() { return slider.clientWidth + gap; }
-
-  function updateDots() {
-    dots.forEach((dot, i) => {
-      dot.classList.toggle("active", i === currentIndex);
-      dot.classList.toggle("locked", window.isLevelLocked && i === window.lockedLevelIndex);
-    });
-  }
-
-  function update3DEffect() {
-    const scrollLeft = slider.scrollLeft;
-    const slideWidth = getSlideWidth();
-    slides.forEach((slide, index) => {
-      const offset = (index * slideWidth - scrollLeft) / slider.clientWidth;
-      if (Math.abs(offset) < 2) {
-        const rotY = -25 * offset;
-        const scale = 1 - 0.12 * Math.abs(offset);
-        const opacity = 1 - 0.4 * Math.abs(offset);
-        slide.style.transform = `perspective(800px) rotateY(${rotY}deg) scale(${scale})`;
-        slide.style.opacity = Math.max(0.3, opacity);
-        slide.style.zIndex = 10 - Math.abs(Math.round(offset));
-      } else {
-        slide.style.opacity = "0";
-      }
-    });
-  }
-
-  function snapToSlide(index, animated = true) {
-    index = Math.max(0, Math.min(index, MAX_INDEX));
-    currentIndex = index;
-    const target = index * getSlideWidth();
-    if (animated) {
-      const start = slider.scrollLeft;
-      const distance = target - start;
-      const duration = 200;
-      let startTime = null;
-      function animate(currentTime) {
-        if (!startTime) startTime = currentTime;
-        const progress = Math.min((currentTime - startTime) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        slider.scrollLeft = start + distance * eased;
-        update3DEffect();
-        if (progress < 1) requestAnimationFrame(animate);
-      }
-      requestAnimationFrame(animate);
-    } else {
-      slider.scrollLeft = target;
-    }
-    updateDots();
-    const el = window.currentAtomElement;
-    if (el) switchToLevel(String(index + 1), el);
-  }
-
-  function getX(e) { return e.touches ? e.touches[0].clientX : e.pageX; }
-  function startDrag(e) { isDragging = true; startX = getX(e); startScrollLeft = slider.scrollLeft; slider.style.cursor = "grabbing"; }
-  function moveDrag(e) { if (!isDragging) return; slider.scrollLeft = startScrollLeft + (startX - getX(e)); update3DEffect(); }
-  function endDrag() {
-    if (!isDragging) return;
-    isDragging = false;
-    slider.style.cursor = "grab";
-    const slideWidth = getSlideWidth();
-    const moved = slider.scrollLeft - currentIndex * slideWidth;
-    const threshold = slideWidth * 0.15;
-    let targetIndex = currentIndex;
-    if (moved > threshold) targetIndex = currentIndex + 1;
-    else if (moved < -threshold) targetIndex = currentIndex - 1;
-    snapToSlide(targetIndex);
-  }
-
-  slider.addEventListener("mousedown", startDrag, sig);
-  slider.addEventListener("touchstart", startDrag, { passive: true, ...sig });
-  document.addEventListener("mousemove", moveDrag, sig);
-  document.addEventListener("touchmove", moveDrag, { passive: true, ...sig });
-  document.addEventListener("mouseup", endDrag, sig);
-  document.addEventListener("touchend", endDrag, sig);
-
-  dots.forEach((dot, index) => {
-    dot.addEventListener("click", () => snapToSlide(Math.min(index, MAX_INDEX)), sig);
+  initCardSlider({
+    abortKey: "_elementSliderAbort",
+    slider,
+    dots,
+    slides,
+    lockButton: lockBtn,
+    maxIndex,
+    enableWheel: true,
+    getInitialIndex: () => {
+      const hasPendingLevel = Number.isInteger(window._pendingLevelIndex);
+      const initialIndex = hasPendingLevel
+        ? Math.min(Math.max(window._pendingLevelIndex, 0), maxIndex)
+        : window.isLevelLocked
+          ? Math.min(window.lockedLevelIndex, maxIndex)
+          : 0;
+      window._pendingLevelIndex = null;
+      return initialIndex;
+    },
+    getLockState: () => ({
+      locked: window.isLevelLocked,
+      index: Math.min(window.lockedLevelIndex, maxIndex),
+    }),
+    setLockState: (locked, index) => {
+      window.isLevelLocked = locked;
+      window.lockedLevelIndex = index;
+    },
+    isModalActive: () => !!modal?.classList.contains("active"),
+    onIndexChange: (index) => {
+      const element = window.currentAtomElement;
+      if (element) switchToLevel(String(index + 1), element);
+    },
   });
 
-  slider.addEventListener("scroll", () => {
-    if (!isDragging) {
-      update3DEffect();
-      const realIndex = Math.max(0, Math.min(Math.round(slider.scrollLeft / getSlideWidth()), MAX_INDEX));
-      dots.forEach((dot, i) => dot.classList.toggle("active", i === realIndex));
-    }
-  }, sig);
 
-  document.addEventListener("keydown", (e) => {
-    const elementModal = document.getElementById("element-modal");
-    if (!elementModal || !elementModal.classList.contains("active")) return;
-    if (e.key === "ArrowRight" || e.key === " ") {
-      e.preventDefault();
-      if (currentIndex < MAX_INDEX) snapToSlide(currentIndex + 1);
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      if (currentIndex > 0) snapToSlide(currentIndex - 1);
-    }
-  }, sig);
-
-  // Trackpad two-finger swipe for Mac
-  let wheelTimeout = null;
-  slider.addEventListener("wheel", (e) => {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 30) {
-      e.preventDefault();
-      if (wheelTimeout) return;
-      wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 300);
-      if (e.deltaX > 0 && currentIndex < MAX_INDEX) snapToSlide(currentIndex + 1);
-      else if (e.deltaX < 0 && currentIndex > 0) snapToSlide(currentIndex - 1);
-    }
-  }, { passive: false, ...sig });
-
-  snapToSlide(currentIndex, false);
-  update3DEffect();
 }
 
 // ===== Initialize Modal UI (call on DOMContentLoaded) =====
@@ -2868,7 +2942,6 @@ export function initModalUI() {
   modalCompounds = document.getElementById("modal-compounds");
   modalUses = document.getElementById("modal-uses");
   modalHazards = document.getElementById("modal-hazards");
-  modalShells = document.getElementById("modal-shells");
   eduNames = document.getElementById("edu-names");
   eduIsotopes = document.getElementById("edu-isotopes");
   eduCardsContainer = document.getElementById("edu-cards-container");
@@ -2908,89 +2981,60 @@ export function initModalUI() {
     closeElementModal();
   });
 
+
+  const tutorialBtn = document.getElementById("element-tutorial-btn");
+  if (tutorialBtn) {
+    tutorialBtn.addEventListener("click", () => {
+      initElementTutorial(true); // pass true to force the tutorial
+    });
+  }
+
   modal.addEventListener("click", (e) => {
     if (window._zperiodIsDragging) return;
     if (e.target === modal) {
       closeElementModal();
     }
   });
-}
 
-// Global Settings Initializer
-// Manages unit preferences from the Settings page
-export function initGlobalUnits() {
-    // Helper to setup a sv-pill style metric toggle
-    function setupUnitSetting(metricKeys, elementId) {
-        if (!Array.isArray(metricKeys)) metricKeys = [metricKeys];
-        const group = document.getElementById(elementId);
-        if (!group) return;
-        
-        const btns = Array.from(group.querySelectorAll(".sv-pill-btn"));
-        
-        // Add dynamic slider for beautiful animation
-        const slider = document.createElement("div");
-        slider.className = "sv-pill-slider";
-        group.appendChild(slider);
-        
-        function moveSliderTo(btn) {
-            const groupRect = group.getBoundingClientRect();
-            const btnRect = btn.getBoundingClientRect();
-            // Only update if visible (width > 0)
-            if (btnRect.width > 0) {
-                slider.style.width = btnRect.width + "px";
-                slider.style.transform = `translateX(${btnRect.left - groupRect.left}px)`;
-            }
-        }
-
-        // Init layout when element becomes visible (fixes display:none issue)
-        const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
-                const activeIdx = l3UnitState[metricKeys[0]] || 0;
-                slider.style.transition = "none";
-                moveSliderTo(btns[activeIdx]);
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        slider.style.transition = "";
-                    });
-                });
-            }
-        });
-        observer.observe(group);
-
-        // Init state
-        const activeIdx = l3UnitState[metricKeys[0]] || 0;
-        btns.forEach((btn, idx) => {
-            if (idx === activeIdx) {
-                btn.classList.add("active");
-            } else {
-                btn.classList.remove("active");
-            }
-            
-            btn.addEventListener("click", () => {
-                if (btn.classList.contains("active")) return;
-                
-                btns.forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                moveSliderTo(btn);
-                
-                metricKeys.forEach(key => l3UnitState[key] = idx);
-            });
-        });
-        
-        // Handle resize layout shifts
-        window.addEventListener("resize", () => {
-            const activeBtn = group.querySelector(".sv-pill-btn.active");
-            if (activeBtn) {
-                slider.style.transition = "none";
-                moveSliderTo(activeBtn);
-                requestAnimationFrame(() => {
-                    slider.style.transition = "";
-                });
-            }
-        });
+  // Re-render modal labels when language changes
+  onLangChange(() => {
+    if (modal && modal.classList.contains("active") && window.currentAtomElement) {
+      reRenderCurrentAtomModal();
     }
-
-    setupUnitSetting(["melt", "boil"], "setting-unit-temp");    
-    setupUnitSetting(["density"], "setting-unit-density");
-    setupUnitSetting(["ie", "ea"], "setting-unit-energy");
+  });
 }
+
+// Texture Toggle Logic
+const textureModes = [
+  { class: '', nameKey: 'texture.defaultSmooth' },
+  { class: 'texture-cardboard', nameKey: 'texture.cardboard' },
+  { class: 'texture-matte', nameKey: 'texture.matte' },
+  { class: 'texture-metal', nameKey: 'texture.metal' }
+];
+let currentTextureIndex = 0;
+
+function applyTexture() {
+    const rectangles = document.querySelectorAll('.green-rectangle, .yellow-rectangle, .blue-rectangle, .red-rectangle');
+    const currentMode = textureModes[currentTextureIndex];
+    
+    rectangles.forEach(rect => {
+        textureModes.forEach(mode => {
+            if (mode.class) rect.classList.remove(mode.class);
+        });
+        if (currentMode.class) {
+            rect.classList.add(currentMode.class);
+        }
+    });
+
+    const toggleBtns = document.querySelectorAll('.texture-toggle-btn');
+    toggleBtns.forEach(btn => {
+        btn.textContent = '✨ ' + t(currentMode.nameKey);
+    });
+}
+
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.texture-toggle-btn')) {
+        currentTextureIndex = (currentTextureIndex + 1) % textureModes.length;
+        applyTexture();
+    }
+});

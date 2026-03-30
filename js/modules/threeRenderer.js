@@ -341,7 +341,9 @@ export function updateAtomStructure(element) {
   }
 
   // --- Settle physics (for-loop, no forEach) ---
-  if (n === 2) {
+  if (n === 1) {
+    particles[0].pos.set(0, 0, 0);
+  } else if (n === 2) {
     particles[0].pos.set(-0.4, 0, 0);
     particles[1].pos.set(0.4, 0, 0);
   } else if (n > 2) {
@@ -370,7 +372,9 @@ export function updateAtomStructure(element) {
 
   // --- Red point light for nucleus glow ---
   if (atomicNumber > 1) {
-    nucleusGroup.add(new THREE.PointLight(0xff0000, 2.0, 15));
+    let lightIntensity = 2.0;
+    if (atomicNumber === 11 && window._zperiodNaMode === "cloud") lightIntensity = 5.0;
+    nucleusGroup.add(new THREE.PointLight(0xff0000, lightIntensity, 15));
   }
 
   // --- NUCLEUS INTERIOR CULLING ---
@@ -411,8 +415,44 @@ export function updateAtomStructure(element) {
     nucleusGroup.add(mesh);
   }
 
+  // --- Helper: Volumetric Cloud Layers ---
+  const buildCloudLayer = (cloudRadius, layers, maxOpacity) => {
+    const cloudGeo = getSphereGeometry(cloudRadius, 32); 
+    const cloudGroup = new THREE.Group();
+    cloudGroup.userData = { isCloud: true };
+    for (let i = 0; i < layers; i++) {
+       // Smooth spacing from 1.0 (outer) down to 0.08 (core focus)
+       const scale = 1.0 - (i / layers) * 0.92; 
+       
+       const x = i / layers; 
+       // Gaussian density profile approximation: core is densest
+       const intensity = Math.exp(-Math.pow((1.0 - x) * 3.0, 2));
+       
+       // Distribute opacity to prevent solid clipping on many layers
+       const layerOpacity = (0.02 + intensity) * maxOpacity * (8.0 / layers);
+       
+       const r = 0.0 + intensity * 0.2;
+       const g = 0.3 + intensity * 0.5;
+       const b = 0.9 + intensity * 0.1;
+       
+       const shellMat = new THREE.MeshBasicMaterial({
+         color: new THREE.Color(r, g, b),
+         transparent: true,
+         opacity: Math.min(layerOpacity, 1.0),
+         blending: THREE.NormalBlending, 
+         depthWrite: false,
+         side: THREE.DoubleSide
+       });
+       const shell = new THREE.Mesh(cloudGeo, shellMat);
+       shell.scale.set(scale, scale, scale);
+       cloudGroup.add(shell);
+    }
+    return cloudGroup;
+  };
+
   // --- Electron shells ---
   const shells = [2, 8, 8, 18, 18, 32, 32];
+  
   let electronsLeft = atomicNumber;
   for (let s = 0; s < shells.length; s++) {
     if (electronsLeft <= 0) break;
@@ -421,6 +461,7 @@ export function updateAtomStructure(element) {
     electronsLeft -= count;
     const radius = 4.5 + s * 2.5;
 
+    // Standard Planetary Bohr Render Path
     // Orbit ring
     const orbitGeo = getTorusGeometry(radius, 0.04, 20, quality.orbitTubularSegments);
     const orbitMat = new THREE.MeshBasicMaterial({
@@ -441,7 +482,7 @@ export function updateAtomStructure(element) {
     wobbleGroup.add(hitMesh);
     orbitHitTargets.push(hitMesh);
 
-    // Electron geometry + trail geometries (TRAIL_LENGTH=10, matching original)
+    // Electron geometry + trail geometries
     const elGeo = getSphereGeometry(0.3, quality.electronSegments);
     const TRAIL_LENGTH = 10;
     const trailGeos = [];
@@ -461,7 +502,6 @@ export function updateAtomStructure(element) {
       elMesh.position.x = radius * Math.cos(angleOffset);
       elMesh.position.z = radius * Math.sin(angleOffset);
 
-      // Trail spheres (original blue, original opacity curve)
       for (let t = 0; t < TRAIL_LENGTH; t++) {
         const tMat = new THREE.MeshBasicMaterial({
           color: 0x0000ff,
@@ -490,9 +530,17 @@ export function updateAtomStructure(element) {
   if (shellsUsed > 0) {
     actualMaxRadius = 4.5 + (shellsUsed - 1) * 2.5;
   }
+  
   atomGroup.userData.maxRadius = actualMaxRadius;
   atomGroup.userData.popStartTime = Date.now();
   atomGroup.scale.set(0.1, 0.1, 0.1);
+
+  // Keep the overlay containers unmounted/hidden when rendering standard view
+  const toggleUi = document.getElementById("na-model-toggle");
+  if (toggleUi) toggleUi.style.display = "none";
+  
+  const eduOverlay = document.getElementById("na-edu-overlay");
+  if (eduOverlay) eduOverlay.style.display = "none";
 }
 
 // ===== Window Resize Handler =====
@@ -591,15 +639,26 @@ export function animateAtom() {
   }
 
   // --- Intro camera animation ---
+  const isNa = window.currentAtomElement && window.currentAtomElement.number === 11;
+  const isEdu = isNa && window._zperiodNaMode === "educational";
+
   if (isIntroAnimating) {
     const elapsed = (Date.now() - introStartTime) * 0.001;
     const t = Math.min(elapsed / 2.0, 1);
     const ease = 1 - Math.pow(1 - t, 5);
     camera.position.z = 20 - (20 - targetCameraZ) * ease;
-    atomGroup.rotation.x = ease * 0.5;
-    atomGroup.rotation.y += 0.002 * ease;
+    
+    if (!isEdu) {
+       atomGroup.rotation.x = ease * 0.5;
+       atomGroup.rotation.y += 0.002 * ease;
+    } else {
+       // Lock rotation for 2D Educational Mode
+       atomGroup.rotation.x = 0;
+       atomGroup.rotation.y = 0;
+    }
+    
     if (t >= 1) isIntroAnimating = false;
-  } else if (!isTopViewMode && !isPaused) {
+  } else if (!isTopViewMode && !isPaused && !isEdu) {
     atomGroup.rotation.y += 0.002 * speedMul;
   }
 
@@ -619,13 +678,21 @@ export function animateAtom() {
   // --- Wobble & nucleus rotation ---
   const wg = _wobbleGroupRef;
   if (wg && !isTopViewMode && !isPaused) {
-    wg.rotation.y += 0.002 * speedMul;
-    wg.rotation.z = Math.sin(time * 0.5 * speedMul) * 0.2;
-    wg.rotation.x = Math.cos(time * 0.3 * speedMul) * 0.1;
+    if (!isEdu) {
+       wg.rotation.y += 0.002 * speedMul;
+       wg.rotation.z = Math.sin(time * 0.5 * speedMul) * 0.2;
+       wg.rotation.x = Math.cos(time * 0.3 * speedMul) * 0.1;
+    } else {
+       wg.rotation.set(0,0,0);
+    }
   }
   if (ng && !isTopViewMode && !isPaused) {
-    ng.rotation.y -= 0.005 * speedMul;
-    ng.rotation.x = Math.sin(time * 0.2 * speedMul) * 0.1;
+    if (!isEdu) {
+       ng.rotation.y -= 0.005 * speedMul;
+       ng.rotation.x = Math.sin(time * 0.2 * speedMul) * 0.1;
+    } else {
+       ng.rotation.set(0,0,0);
+    }
   }
 
   // --- Electrons + trails (for-loop, no forEach) ---
@@ -633,14 +700,34 @@ export function animateAtom() {
   for (let i = 0; i < eLen; i++) {
     const el = electrons[i];
     const ud = el.userData;
+    
+    if (ud.isCloud) {
+      if (!isTopViewMode && !isPaused) {
+        el.rotation.y += 0.003 * speedMul;
+        el.rotation.x += 0.001 * speedMul;
+      }
+      continue;
+    }
+    
     if (!isTopViewMode && !isPaused) {
       ud.angle += ud.speed * speedMul;
     }
     const r = ud.radius;
-    el.position.x = r * Math.cos(ud.angle);
-    el.position.z = r * Math.sin(ud.angle);
+    
+    if (isEdu) {
+       // Flat 2D rotation for Educational mode
+       el.position.x = r * Math.cos(ud.angle);
+       el.position.y = r * Math.sin(ud.angle);
+       // Reset Z just in case
+       el.position.z = 0;
+    } else {
+       // Normal 3D orbit
+       el.position.x = r * Math.cos(ud.angle);
+       el.position.z = r * Math.sin(ud.angle);
+    }
+    
     const trails = ud.trails;
-    if (trails.length > 0) {
+    if (trails && trails.length > 0) {
       for (let t = trails.length - 1; t > 0; t--) {
         trails[t].position.copy(trails[t - 1].position);
       }

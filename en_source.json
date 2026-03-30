@@ -1,0 +1,2292 @@
+{
+  "1": {
+    "ions": "H⁺ (Hydrogen ion), H⁻ (Hydride)",
+    "history": {
+      "discoveryYear": "1766",
+      "discoveredBy": "Henry Cavendish",
+      "namedBy": "Antoine Lavoisier"
+    },
+    "stse": [
+      "Energy transition (Fuel Cells)",
+      "Hydrogen as energy carrier",
+      "Heavy Water (D₂O) in CANDU reactors"
+    ],
+    "uses": [
+      "Ammonia Production",
+      "Hydrogenation"
+    ],
+    "hazards": [
+      "Highly flammable",
+      "Explosion risk"
+    ]
+  },
+  "2": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1868 (spectral); 1895 (isolated)",
+      "discoveredBy": "William Ramsay, Per Teodor Cleve",
+      "namedBy": "Lockyer & Frankland"
+    },
+    "stse": [
+      "Cryogenics (MRI supermagnets)",
+      "Non-renewable resource conservation"
+    ],
+    "uses": [
+      "MRI cooling",
+      "Lifting gas (balloons)",
+      "Shielding gas (welding)"
+    ],
+    "hazards": [
+      "Asphyxiant in confined spaces"
+    ]
+  },
+  "3": {
+    "ions": "Li⁺ (Lithium)",
+    "history": {
+      "discoveryYear": "1817",
+      "discoveredBy": "Johan August Arfwedson",
+      "namedBy": "Jöns Jakob Berzelius"
+    },
+    "stse": [
+      "Battery technology (EV revolution)",
+      "Mental health (Mood stabilizers)"
+    ],
+    "uses": [
+      "Li-ion batteries",
+      "Ceramics",
+      "Lubricants"
+    ],
+    "hazards": [
+      "Reacts vigorously with water",
+      "Corrosive"
+    ]
+  },
+  "4": {
+    "ions": "Be²⁺ (Beryllium)",
+    "history": {
+      "discoveryYear": "1798",
+      "discoveredBy": "Louis-Nicolas Vauquelin",
+      "namedBy": "Friedrich Wöhler"
+    },
+    "stse": [
+      "Aerospace engineering (James Webb Telescope mirrors)",
+      "Nuclear physics (Neutron reflector)"
+    ],
+    "uses": [
+      "X-ray windows",
+      "Non-sparking tools (alloys)"
+    ],
+    "hazards": [
+      "Highly toxic (Berylliosis)",
+      "Carcinogenic"
+    ]
+  },
+  "5": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1808",
+      "discoveredBy": "Gay-Lussac & Thénard (and Davy)",
+      "namedBy": "Derived from \"Borax\""
+    },
+    "stse": [
+      "Agriculture (Essential plant nutrient)",
+      "Nuclear safety (Control rods)"
+    ],
+    "uses": [
+      "Pyrex glass (Borosilicate)",
+      "Fiberglass",
+      "Detergents"
+    ],
+    "hazards": [
+      "Low toxicity as element",
+      "some compounds toxic"
+    ]
+  },
+  "6": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "Prehistoric",
+      "discoveredBy": "Ancient Civilizations",
+      "namedBy": "Antoine Lavoisier"
+    },
+    "stse": [
+      "Climate Change (Carbon Cycle)",
+      "Organic Chemistry (Basis of Life)",
+      "Radiocarbon dating"
+    ],
+    "uses": [
+      "Steel manufacturing",
+      "Filters",
+      "Gemstones",
+      "Fuels"
+    ],
+    "hazards": [
+      "CO/CO₂ from combustion",
+      "dust inhalation"
+    ]
+  },
+  "7": {
+    "ions": "N³⁻ (Nitride)",
+    "history": {
+      "discoveryYear": "1772",
+      "discoveredBy": "Daniel Rutherford",
+      "namedBy": "Jean-Antoine Chaptal"
+    },
+    "stse": [
+      "Agriculture (Haber-Bosch Process/Fertilizers)",
+      "Cryogenics (Liquid N₂)"
+    ],
+    "uses": [
+      "Fertilizers",
+      "Explosives",
+      "Food packaging (inert atmosphere)"
+    ],
+    "hazards": [
+      "Asphyxiant (displaces oxygen)"
+    ]
+  },
+  "8": {
+    "ions": "O²⁻ (Oxide)",
+    "history": {
+      "discoveryYear": "1774",
+      "discoveredBy": "Joseph Priestley / Carl Wilhelm Scheele",
+      "namedBy": "Antoine Lavoisier"
+    },
+    "stse": [
+      "Biological respiration",
+      "Combustion engines",
+      "Ozone layer protection"
+    ],
+    "uses": [
+      "Steel making",
+      "Medical life support",
+      "Water treatment"
+    ],
+    "hazards": [
+      "Oxidizer (accelerates fire)"
+    ]
+  },
+  "9": {
+    "ions": "F⁻ (Fluoride)",
+    "history": {
+      "discoveryYear": "1886",
+      "discoveredBy": "Henri Moissan",
+      "namedBy": "Humphry Davy (suggested)"
+    },
+    "stse": [
+      "Dental health (Water fluoridation)",
+      "Nuclear fuel (UF₆ enrichment)"
+    ],
+    "uses": [
+      "Teflon (PTFE)",
+      "Toothpaste",
+      "Refrigerants"
+    ],
+    "hazards": [
+      "Highly toxic",
+      "Corrosive",
+      "Reacts with almost everything"
+    ]
+  },
+  "10": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1898",
+      "discoveredBy": "William Ramsay & Morris Travers",
+      "namedBy": "Ramsay (from Greek neos)"
+    },
+    "stse": [
+      "Lighting technology",
+      "Lasers"
+    ],
+    "uses": [
+      "Neon signs",
+      "High-voltage indicators",
+      "Cryogenics"
+    ],
+    "hazards": [
+      "Asphyxiant"
+    ]
+  },
+  "11": {
+    "ions": "Na⁺ (Sodium)",
+    "history": {
+      "discoveryYear": "1807",
+      "discoveredBy": "Humphry Davy",
+      "namedBy": "Humphry Davy"
+    },
+    "stse": [
+      "Human biology (Nerve impulses)",
+      "Nuclear reactors (Coolant in fast breeders)"
+    ],
+    "uses": [
+      "Table salt (NaCl)",
+      "Street lights",
+      "Soap making"
+    ],
+    "hazards": [
+      "Reacts violently with water"
+    ]
+  },
+  "12": {
+    "ions": "Mg²⁺ (Magnesium)",
+    "history": {
+      "discoveryYear": "1755 (Identified); 1808 (Isolated)",
+      "discoveredBy": "Joseph Black (Id.); Humphry Davy (Iso.)",
+      "namedBy": "Derived from Magnesia district"
+    },
+    "stse": [
+      "Biological photosynthesis (Chlorophyll center)",
+      "Lightweight alloys"
+    ],
+    "uses": [
+      "Aerospace alloys",
+      "Flares/Fireworks",
+      "Antacids"
+    ],
+    "hazards": [
+      "Flammable (metal fire difficult to extinguish)"
+    ]
+  },
+  "13": {
+    "ions": "Al³⁺ (Aluminum)",
+    "history": {
+      "discoveryYear": "1825",
+      "discoveredBy": "Hans Christian Ørsted",
+      "namedBy": "Humphry Davy"
+    },
+    "stse": [
+      "Recycling (Infinite recyclability)",
+      "Transportation efficiency (Lightweighting)"
+    ],
+    "uses": [
+      "Aircraft structures",
+      "Cans/Foil",
+      "Power lines"
+    ],
+    "hazards": [
+      "Dust is flammable/explosive"
+    ]
+  },
+  "14": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1824",
+      "discoveredBy": "Jöns Jakob Berzelius",
+      "namedBy": "Thomas Thomson"
+    },
+    "stse": [
+      "The Digital Age (Semiconductors/Microchips)",
+      "Solar energy (Photovoltaics)"
+    ],
+    "uses": [
+      "Electronics",
+      "Glass/Concrete (as Silicates)",
+      "Silicones"
+    ],
+    "hazards": [
+      "Silicosis (chronic dust inhalation)"
+    ]
+  },
+  "15": {
+    "ions": "P³⁻ (Phosphide)",
+    "history": {
+      "discoveryYear": "1669",
+      "discoveredBy": "Hennig Brand",
+      "namedBy": "Derived from Greek Light-bearing"
+    },
+    "stse": [
+      "Agriculture (Essential fertilizer)",
+      "Biology (DNA backbone/ATP)",
+      "Eutrophication"
+    ],
+    "uses": [
+      "Fertilizers",
+      "Matchboxes (Red P)",
+      "Steel production"
+    ],
+    "hazards": [
+      "P allotrope is highly toxic and pyrophoric (ignites in air)"
+    ]
+  },
+  "16": {
+    "ions": "S²⁻ (Sulfide)",
+    "history": {
+      "discoveryYear": "Prehistoric",
+      "discoveredBy": "Ancient Civilizations",
+      "namedBy": "Antoine Lavoisier (established as element)"
+    },
+    "stse": [
+      "Industrial Chemistry (Sulfuric acid production)",
+      "Environmental Science (Acid Rain/SO₂)"
+    ],
+    "uses": [
+      "Fertilizers",
+      "Gunpowder",
+      "Vulcanization of rubber"
+    ],
+    "hazards": [
+      "SO₂ gas is toxic and corrosive"
+    ]
+  },
+  "17": {
+    "ions": "Cl⁻ (Chloride)",
+    "history": {
+      "discoveryYear": "1774",
+      "discoveredBy": "Carl Wilhelm Scheele",
+      "namedBy": "Humphry Davy (from Greek chloros)"
+    },
+    "stse": [
+      "Public Health (Water chlorination/Disinfection)",
+      "Chemical Warfare (WWI Choking gas)"
+    ],
+    "uses": [
+      "PVC (Plastics)",
+      "Bleach",
+      "Water purification"
+    ],
+    "hazards": [
+      "Highly toxic gas",
+      "Pulmonary irritant"
+    ]
+  },
+  "18": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1894",
+      "discoveredBy": "Lord Rayleigh & William Ramsay",
+      "namedBy": "From Greek argos (lazy/inactive)"
+    },
+    "stse": [
+      "Preservation (Museum documents stored in Ar)",
+      "Atmospheric science"
+    ],
+    "uses": [
+      "Welding (Shielding gas)",
+      "Incandescent light bulbs",
+      "Double-pane windows"
+    ],
+    "hazards": [
+      "Asphyxiant in confined spaces"
+    ]
+  },
+  "19": {
+    "ions": "K⁺ (Potassium)",
+    "history": {
+      "discoveryYear": "1807",
+      "discoveredBy": "Humphry Davy",
+      "namedBy": "Humphry Davy (from 'Potash')"
+    },
+    "stse": [
+      "Agriculture (NPK Fertilizers)",
+      "Geology (K-Ar dating)",
+      "Biology (Nerve transmission)"
+    ],
+    "uses": [
+      "Fertilizers",
+      "Soaps",
+      "Gunpowder (KNO₃)"
+    ],
+    "hazards": [
+      "Reacts violently with water"
+    ]
+  },
+  "20": {
+    "ions": "Ca²⁺ (Calcium)",
+    "history": {
+      "discoveryYear": "1808",
+      "discoveredBy": "Humphry Davy",
+      "namedBy": "From Latin calx (lime)"
+    },
+    "stse": [
+      "Construction (Concrete/Cement chemistry)",
+      "Human Anatomy (Bones/Teeth structure)"
+    ],
+    "uses": [
+      "Cement",
+      "Steelmaking (Desulfurization)",
+      "Dietary supplements"
+    ],
+    "hazards": [
+      "Reacts with water (slowly compared to Na/K)"
+    ]
+  },
+  "21": {
+    "ions": "Sc³⁺ (Scandium)",
+    "history": {
+      "discoveryYear": "1879",
+      "discoveredBy": "Lars Fredrik Nilson",
+      "namedBy": "From Latin Scandia (Scandinavia)"
+    },
+    "stse": [
+      "Prediction validation (Mendeleev predicted it as 'Eka-boron')"
+    ],
+    "uses": [
+      "Aerospace alloys (Aluminum-Scandium for MiG fighters)",
+      "Stadium lighting"
+    ],
+    "hazards": [
+      "Elemental dust is flammable"
+    ]
+  },
+  "22": {
+    "ions": "Ti³⁺ (Titanium(III)), Ti⁴⁺ (Titanium(IV))",
+    "history": {
+      "discoveryYear": "1791",
+      "discoveredBy": "William Gregor",
+      "namedBy": "Martin Heinrich Klaproth (Titans of mythology)"
+    },
+    "stse": [
+      "Medical Engineering (Biocompatible implants)",
+      "Aerospace (High strength-to-weight ratio)"
+    ],
+    "uses": [
+      "Joint replacements",
+      "Aircraft engines",
+      "Pigment (TiO₂)"
+    ],
+    "hazards": [
+      "Nontoxic (biologically inert)"
+    ]
+  },
+  "23": {
+    "ions": "V²⁺ (Vanadium(II)), V³⁺ (Vanadium(III))",
+    "history": {
+      "discoveryYear": "1801",
+      "discoveredBy": "Andrés Manuel del Río",
+      "namedBy": "Nils Gabriel Sefström (Vanadis, Norse goddess)"
+    },
+    "stse": [
+      "Materials Science (High-speed steel tools)"
+    ],
+    "uses": [
+      "Ferrovanadium alloys (Tools, Axles)",
+      "Sulfuric acid catalyst (V₂O₅)"
+    ],
+    "hazards": [
+      "Compounds (especially V₂O₅) are toxic"
+    ]
+  },
+  "24": {
+    "ions": "Cr²⁺ (Chromium(II)), Cr³⁺ (Chromium(III))",
+    "history": {
+      "discoveryYear": "1797",
+      "discoveredBy": "Louis-Nicolas Vauquelin",
+      "namedBy": "From Greek chroma (color)"
+    },
+    "stse": [
+      "Corrosion protection (Stainless steel passivation)",
+      "Environmental Toxicology (Hexavalent chromium)"
+    ],
+    "uses": [
+      "Stainless steel (minimum 10.5%)",
+      "Chrome plating",
+      "Pigments"
+    ],
+    "hazards": [
+      "Cr(VI) is carcinogenic and highly toxic",
+      "Cr(III) essentiality debated in modern literature"
+    ]
+  },
+  "25": {
+    "ions": "Mn²⁺ (Manganese(II)), Mn³⁺ (Manganese(III))",
+    "history": {
+      "discoveryYear": "1774",
+      "discoveredBy": "Johan Gottlieb Gahn",
+      "namedBy": "Derived from Magnesia"
+    },
+    "stse": [
+      "Metallurgy (Essential for steel strength)",
+      "Batteries (Alkaline cells)"
+    ],
+    "uses": [
+      "Steel alloys",
+      "Aluminum beverage cans",
+      "Dry cell batteries (MnO₂)"
+    ],
+    "hazards": [
+      "Manganism (neurotoxicity) from chronic dust inhalation"
+    ]
+  },
+  "26": {
+    "ions": "Fe²⁺ (Iron(II)), Fe³⁺ (Iron(III))",
+    "history": {
+      "discoveryYear": "Prehistoric (~4000 BCE)",
+      "discoveredBy": "Ancient Civilizations (Iron Age)",
+      "namedBy": "From Anglo-Saxon iren (Symbol Fe from Latin ferrum)"
+    },
+    "stse": [
+      "Civilization development (Steel infrastructure)",
+      "Biology (Hemoglobin/Oxygen transport)"
+    ],
+    "uses": [
+      "Construction (Steel)",
+      "Vehicles",
+      "Machinery"
+    ],
+    "hazards": [
+      "Low toxicity",
+      "acute overdose toxic"
+    ]
+  },
+  "27": {
+    "ions": "Co²⁺ (Cobalt(II)), Co³⁺ (Cobalt(III))",
+    "history": {
+      "discoveryYear": "1735",
+      "discoveredBy": "Georg Brandt",
+      "namedBy": "From German Kobold (goblin/spirit)"
+    },
+    "stse": [
+      "Renewable Energy (EV Batteries)",
+      "Medical (Radiation therapy Co-60)",
+      "Biology (Vitamin B12)"
+    ],
+    "uses": [
+      "Lithium-ion battery cathodes",
+      "Superalloys (Turbines)",
+      "Blue pigments"
+    ],
+    "hazards": [
+      "Toxic",
+      "Skin sensitizer"
+    ]
+  },
+  "28": {
+    "ions": "Ni²⁺ (Nickel(II)), Ni³⁺ (Nickel(III))",
+    "history": {
+      "discoveryYear": "1751",
+      "discoveredBy": "Axel Fredrik Cronstedt",
+      "namedBy": "From Kupfernickel (Devil's copper)"
+    },
+    "stse": [
+      "Currency (Coins)",
+      "Alloys (Stainless steel)",
+      "Catalysis (Hydrogenation)"
+    ],
+    "uses": [
+      "Stainless steel",
+      "Batteries",
+      "Plating",
+      "Coins"
+    ],
+    "hazards": [
+      "Common allergen (contact dermatitis)"
+    ]
+  },
+  "29": {
+    "ions": "Cu⁺ (Copper(I)), Cu²⁺ (Copper(II))",
+    "history": {
+      "discoveryYear": "Prehistoric (~9000 BCE)",
+      "discoveredBy": "Middle Eastern Civilizations",
+      "namedBy": "From Latin Cyprium (Metal of Cyprus)"
+    },
+    "stse": [
+      "Electrification (Global grid)",
+      "Antimicrobial properties (Hospital surfaces)"
+    ],
+    "uses": [
+      "Wiring",
+      "Plumbing",
+      "Alloys (Bronze/Brass)"
+    ],
+    "hazards": [
+      "Toxic to invertebrates/aquatic life",
+      "essential for humans"
+    ]
+  },
+  "30": {
+    "ions": "Zn²⁺ (Zinc)",
+    "history": {
+      "discoveryYear": "~1000 CE (India); 1746 (Europe isolation)",
+      "discoveredBy": "Indian metallurgists; Andreas Sigismund Marggraf",
+      "namedBy": "Paracelsus (from German Zinke)"
+    },
+    "stse": [
+      "Corrosion protection (Sacrificial anode)",
+      "Biochemistry (Enzyme cofactor)"
+    ],
+    "uses": [
+      "Galvanizing steel",
+      "Die-casting",
+      "Brass alloy"
+    ],
+    "hazards": [
+      "Metal fume fever (from welding)"
+    ]
+  },
+  "31": {
+    "ions": "Ga³⁺ (Gallium)",
+    "history": {
+      "discoveryYear": "1875",
+      "discoveredBy": "Paul-Émile Lecoq de Boisbaudran",
+      "namedBy": "Lecoq de Boisbaudran (Gallia/France)"
+    },
+    "stse": [
+      "Semiconductor physics (LEDs/Lasers)",
+      "Mendeleev's 'Eka-aluminum'"
+    ],
+    "uses": [
+      "Blue/Violet LEDs (GaN)",
+      "Integrated circuits",
+      "High-temp thermometers"
+    ],
+    "hazards": [
+      "Corrosive to aluminum (liquid metal embrittlement)"
+    ]
+  },
+  "32": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1886",
+      "discoveredBy": "Clemens Winkler",
+      "namedBy": "Winkler (Germania/Germany)"
+    },
+    "stse": [
+      "Electronics history (First transistors were Ge)",
+      "Fiber optics"
+    ],
+    "uses": [
+      "Fiber optics",
+      "Infrared optics",
+      "Polymerization catalysts"
+    ],
+    "hazards": [
+      "Some organic compounds toxic"
+    ]
+  },
+  "33": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "~1250 (Isolated)",
+      "discoveredBy": "Albertus Magnus (attributed)",
+      "namedBy": "From Persian zarnikh (yellow orpiment)"
+    },
+    "stse": [
+      "Toxicology (Historical poison)",
+      "Semiconductor doping (n-type)"
+    ],
+    "uses": [
+      "Semiconductors (GaAs)",
+      "Wood preservatives (historical)",
+      "Alloys"
+    ],
+    "hazards": [
+      "Highly toxic",
+      "Carcinogenic"
+    ]
+  },
+  "34": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1817",
+      "discoveredBy": "Jöns Jakob Berzelius",
+      "namedBy": "From Greek selene (Moon)"
+    },
+    "stse": [
+      "Xerox process (Photoconductivity)",
+      "Biological trace element"
+    ],
+    "uses": [
+      "Photocopying",
+      "Glass decolorizing",
+      "Solar cells"
+    ],
+    "hazards": [
+      "Toxic in large amounts",
+      "essential in trace amounts"
+    ]
+  },
+  "35": {
+    "ions": "Br⁻ (Bromide)",
+    "history": {
+      "discoveryYear": "1826",
+      "discoveredBy": "Antoine Jérôme Balard",
+      "namedBy": "From Greek bromos (stench)"
+    },
+    "stse": [
+      "Flame retardants",
+      "Ozone depletion"
+    ],
+    "uses": [
+      "Flame retardants",
+      "Drilling fluids",
+      "Photographic film (AgBr)"
+    ],
+    "hazards": [
+      "Corrosive liquid",
+      "vapor is highly toxic"
+    ]
+  },
+  "36": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1898",
+      "discoveredBy": "William Ramsay & Morris Travers",
+      "namedBy": "From Greek kryptos (hidden)"
+    },
+    "stse": [
+      "Measurement standards (Meter was defined by Kr-86 light 1960-1983)"
+    ],
+    "uses": [
+      "High-speed photography flashes",
+      "Fluorescent bulbs",
+      "Double-pane windows"
+    ],
+    "hazards": [
+      "Asphyxiant",
+      "Radioactive ⁸⁵Kr is a fission product"
+    ]
+  },
+  "37": {
+    "ions": "Rb⁺ (Rubidium)",
+    "history": {
+      "discoveryYear": "1861",
+      "discoveredBy": "Robert Bunsen & Gustav Kirchhoff",
+      "namedBy": "From Latin rubidius (deep red, from spectrum)"
+    },
+    "stse": [
+      "Geochronology (Dating of rocks/minerals)",
+      "Atomic clocks"
+    ],
+    "uses": [
+      "Vacuum tube getters",
+      "Photocells",
+      "Atomic clocks"
+    ],
+    "hazards": [
+      "Reacts violently with water (ignites spontaneously)"
+    ]
+  },
+  "38": {
+    "ions": "Sr²⁺ (Strontium)",
+    "history": {
+      "discoveryYear": "1790 (identified); 1808 (isolated)",
+      "discoveredBy": "Adair Crawford (Id.); Humphry Davy (Iso.)",
+      "namedBy": "From Strontian, Scotland"
+    },
+    "stse": [
+      "Nuclear fallout tracking (Sr-90 mimics Calcium in bones)",
+      "Fireworks"
+    ],
+    "uses": [
+      "Red fireworks/flares",
+      "Glow-in-the-dark paints (SrAl₂O₄)"
+    ],
+    "hazards": [
+      "Sr-90 is a dangerous radiotoxin",
+      "elemental Sr reacts with water"
+    ]
+  },
+  "39": {
+    "ions": "Y³⁺ (Yttrium)",
+    "history": {
+      "discoveryYear": "1794",
+      "discoveredBy": "Johan Gadolin",
+      "namedBy": "From Ytterby, Sweden"
+    },
+    "stse": [
+      "Superconductors (YBCO)",
+      "LEDs"
+    ],
+    "uses": [
+      "Red phosphors (CRTs/LEDs)",
+      "Laser crystals (Nd:YAG)",
+      "Superconductors"
+    ],
+    "hazards": [
+      "Compounds can be toxic",
+      "dust is flammable"
+    ]
+  },
+  "40": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1789",
+      "discoveredBy": "Martin Heinrich Klaproth",
+      "namedBy": "From Persian zargun (gold-colored)"
+    },
+    "stse": [
+      "Nuclear energy (Fuel rod cladding due to low neutron absorption)",
+      "Gemstones"
+    ],
+    "uses": [
+      "Nuclear fuel cladding",
+      "Chemical piping",
+      "Fake diamonds (CZ)"
+    ],
+    "hazards": [
+      "Powder is highly flammable/explosive",
+      "biologically inert"
+    ]
+  },
+  "41": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1801",
+      "discoveredBy": "Charles Hatchett",
+      "namedBy": "Niobe (daughter of Tantalus)"
+    },
+    "stse": [
+      "MRI Technology (Superconducting magnets)",
+      "Steel production"
+    ],
+    "uses": [
+      "Superconducting magnets (MRI)",
+      "Pipelines",
+      "Hypoallergenic jewelry"
+    ],
+    "hazards": [
+      "Dust causes eye/skin irritation"
+    ]
+  },
+  "42": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1778",
+      "discoveredBy": "Carl Wilhelm Scheele",
+      "namedBy": "From Greek molybdos (lead-like)"
+    },
+    "stse": [
+      "Enzymatic function (Essential for nitrogen fixation in plants)"
+    ],
+    "uses": [
+      "High-strength steel alloys",
+      "Lubricants (MoS₂)",
+      "Nuclear imaging (Mo-99 precursor)"
+    ],
+    "hazards": [
+      "Toxic in high doses",
+      "essential trace element"
+    ]
+  },
+  "43": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1937",
+      "discoveredBy": "Carlo Perrier & Emilio Segrè",
+      "namedBy": "From Greek technetos (artificial)"
+    },
+    "stse": [
+      "Nuclear Medicine (Tc-99m is the world's most used medical radiotracer)"
+    ],
+    "uses": [
+      "Medical imaging (Bone scans, heart scans)",
+      "Research"
+    ],
+    "hazards": [
+      "Radioactive (radiotoxicity depends on isotope)"
+    ]
+  },
+  "44": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1844",
+      "discoveredBy": "Karl Ernst Claus",
+      "namedBy": "From Ruthenia (Latin for Russia)"
+    },
+    "stse": [
+      "Green Chemistry (Catalysts)",
+      "Electronics (Chip resistors)"
+    ],
+    "uses": [
+      "Electrical contacts",
+      "Hard disk drives",
+      "Solar energy"
+    ],
+    "hazards": [
+      "RuO₄ is highly toxic and volatile"
+    ]
+  },
+  "45": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1803",
+      "discoveredBy": "William Hyde Wollaston",
+      "namedBy": "From Greek rhodon (rose, due to salt color)"
+    },
+    "stse": [
+      "Automotive Industry (Catalytic converters for NOx reduction)"
+    ],
+    "uses": [
+      "Catalytic converters (80% of use)",
+      "Jewelry plating (gold finish)"
+    ],
+    "hazards": [
+      "Compounds are toxic/carcinogenic",
+      "metal is inert"
+    ]
+  },
+  "46": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1803",
+      "discoveredBy": "William Hyde Wollaston",
+      "namedBy": "From asteroid Pallas"
+    },
+    "stse": [
+      "Hydrogen Economy (Can absorb 900x volume of H₂)",
+      "Catalytic converters"
+    ],
+    "uses": [
+      "Catalytic converters",
+      "Dentistry",
+      "Fuel cells",
+      "Hydrogen purification"
+    ],
+    "hazards": [
+      "Low toxicity",
+      "but can cause allergic reactions"
+    ]
+  },
+  "47": {
+    "ions": "Ag⁺ (Silver)",
+    "history": {
+      "discoveryYear": "Prehistoric (~3000 BCE)",
+      "discoveredBy": "Ancient Civilizations",
+      "namedBy": "Anglo-Saxon seolfor (Symbol Ag from Latin argentum)"
+    },
+    "stse": [
+      "Medicine (Antibacterial properties)",
+      "Photography (Traditional film chemistry)"
+    ],
+    "uses": [
+      "Jewelry",
+      "Electronics (Best conductor)",
+      "Mirrors",
+      "Solar panels"
+    ],
+    "hazards": [
+      "Argyria (skin turns blue from chronic exposure)",
+      "toxic to aquatic life"
+    ]
+  },
+  "48": {
+    "ions": "Cd²⁺ (Cadmium)",
+    "history": {
+      "discoveryYear": "1817",
+      "discoveredBy": "Friedrich Stromeyer",
+      "namedBy": "From Latin cadmia (calamine)"
+    },
+    "stse": [
+      "Environmental Pollution (Ni-Cd battery disposal)",
+      "Pigments"
+    ],
+    "uses": [
+      "Ni-Cd Batteries (being phased out)",
+      "Solar cells (CdTe)",
+      "Pigments"
+    ],
+    "hazards": [
+      "Highly toxic",
+      "Carcinogen",
+      "Accumulates in kidneys"
+    ]
+  },
+  "49": {
+    "ions": "In³⁺ (Indium)",
+    "history": {
+      "discoveryYear": "1863",
+      "discoveredBy": "Ferdinand Reich & H.T. Richter",
+      "namedBy": "From Indigo spectrum line"
+    },
+    "stse": [
+      "Touchscreen Technology (Indium Tin Oxide films)"
+    ],
+    "uses": [
+      "LCD/OLED screens (ITO)",
+      "Solders",
+      "Semiconductors"
+    ],
+    "hazards": [
+      "Compounds are toxic",
+      "damage lungs/kidneys"
+    ]
+  },
+  "50": {
+    "ions": "Sn²⁺ (Tin(II)), Sn⁴⁺ (Tin(IV))",
+    "history": {
+      "discoveryYear": "Prehistoric (~3000 BCE)",
+      "discoveredBy": "Ancient Civilizations (Bronze Age)",
+      "namedBy": "Anglo-Saxon tin (Symbol Sn from Latin stannum)"
+    },
+    "stse": [
+      "Food Safety (Tin cans)",
+      "Metallurgy (Bronze/Solder)"
+    ],
+    "uses": [
+      "Solder (electronics)",
+      "Plating (steel cans)",
+      "Bronze alloys"
+    ],
+    "hazards": [
+      "Organic tin compounds are toxic",
+      "metal is non-toxic"
+    ]
+  },
+  "51": {
+    "ions": "Sb³⁻ (Antimonide), Sb³⁺ (Antimony(III))",
+    "history": {
+      "discoveryYear": "~3000 BCE",
+      "discoveredBy": "Ancient Civilizations",
+      "namedBy": "Symbol Sb from Latin stibium (eyeliner)"
+    },
+    "stse": [
+      "Fire Safety (Flame retardants)",
+      "Lead-acid battery chemistry"
+    ],
+    "uses": [
+      "Flame retardants (Sb₂O₃)",
+      "Lead-acid battery hardening",
+      "Microelectronics"
+    ],
+    "hazards": [
+      "Toxic (similar to Arsenic)",
+      "causes poisoning"
+    ]
+  },
+  "52": {
+    "ions": "Te²⁻ (Telluride)",
+    "history": {
+      "discoveryYear": "1782",
+      "discoveredBy": "Franz-Joseph Müller von Reichenstein",
+      "namedBy": "From Latin tellus (Earth)"
+    },
+    "stse": [
+      "Renewable Energy (CdTe Solar Panels)",
+      "Rewritable optical discs"
+    ],
+    "uses": [
+      "Solar panels",
+      "Alloys (improve machinability)",
+      "Thermoelectric devices"
+    ],
+    "hazards": [
+      "Toxic",
+      "ingestion causes garlic-like breath"
+    ]
+  },
+  "53": {
+    "ions": "I⁻ (Iodide)",
+    "history": {
+      "discoveryYear": "1811",
+      "discoveredBy": "Bernard Courtois",
+      "namedBy": "From Greek iodes (violet)"
+    },
+    "stse": [
+      "Public Health (Iodized salt prevents goiter)",
+      "Nuclear Safety (I-131 protection)"
+    ],
+    "uses": [
+      "Disinfectant (Betadine)",
+      "Contrast media (X-ray)",
+      "Thyroid nutrient"
+    ],
+    "hazards": [
+      "Vapors irritate eyes/lungs",
+      "stains skin"
+    ]
+  },
+  "54": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1898",
+      "discoveredBy": "William Ramsay & Morris Travers",
+      "namedBy": "From Greek xenos (stranger)"
+    },
+    "stse": [
+      "Space Propulsion (Ion thrusters)",
+      "Medical Anesthesia"
+    ],
+    "uses": [
+      "Ion propulsion engines (satellites)",
+      "High-intensity strobe lights",
+      "General anesthetic"
+    ],
+    "hazards": [
+      "Asphyxiant",
+      "compounds (e.g., oxides) can be explosive"
+    ]
+  },
+  "55": {
+    "ions": "Cs⁺ (Cesium)",
+    "history": {
+      "discoveryYear": "1860",
+      "discoveredBy": "Robert Bunsen & Gustav Kirchhoff",
+      "namedBy": "From Latin caesius (sky blue spectrum line)"
+    },
+    "stse": [
+      "Global Timekeeping (Definition of the Second based on Cs-133)"
+    ],
+    "uses": [
+      "Atomic clocks (GPS standard)",
+      "Drilling fluids (Cesium formate)",
+      "Photoelectric cells"
+    ],
+    "hazards": [
+      "Reacts explosively with cold water"
+    ]
+  },
+  "56": {
+    "ions": "Ba²⁺ (Barium)",
+    "history": {
+      "discoveryYear": "1808",
+      "discoveredBy": "Humphry Davy",
+      "namedBy": "From Greek barys (heavy)"
+    },
+    "stse": [
+      "Medical Imaging (Barium swallow X-rays)",
+      "Oil Well Drilling"
+    ],
+    "uses": [
+      "Drilling muds (Barite)",
+      "Fireworks (Green color)",
+      "Medical contrast agent"
+    ],
+    "hazards": [
+      "Soluble compounds are toxic",
+      "BaSO₄ is safe (insoluble)"
+    ]
+  },
+  "57": {
+    "ions": "La³⁺ (Lanthanum)",
+    "history": {
+      "discoveryYear": "1839",
+      "discoveredBy": "Carl Gustaf Mosander",
+      "namedBy": "From Greek lanthanein (to lie hidden)"
+    },
+    "stse": [
+      "Hybrid Vehicles (NiMH batteries)"
+    ],
+    "uses": [
+      "Camera lenses (High refractive index glass)",
+      "Hybrid car batteries",
+      "Lighter flints"
+    ],
+    "hazards": [
+      "Low toxicity",
+      "dust is flammable"
+    ]
+  },
+  "58": {
+    "ions": "Ce³⁺ (Cerium(III)), Ce⁴⁺ (Cerium(IV))",
+    "history": {
+      "discoveryYear": "1803",
+      "discoveredBy": "Martin Heinrich Klaproth, Jöns Jakob Berzelius",
+      "namedBy": "From asteroid Ceres"
+    },
+    "stse": [
+      "Emissions Control (Diesel additives)",
+      "Self-cleaning ovens"
+    ],
+    "uses": [
+      "Catalytic converters",
+      "Mischmetal (lighter flints)",
+      "Glass polishing"
+    ],
+    "hazards": [
+      "Pyrophoric (sparks when struck)",
+      "low toxicity"
+    ]
+  },
+  "59": {
+    "ions": "Pr³⁺ (Praseodymium(III))",
+    "history": {
+      "discoveryYear": "1885",
+      "discoveredBy": "Carl Auer von Welsbach",
+      "namedBy": "From Greek prasios didymos (green twin)"
+    },
+    "stse": [
+      "Renewable Energy (Magnets in wind turbines)"
+    ],
+    "uses": [
+      "High-strength magnets (alloyed with Nd)",
+      "Didymium glass (welder's goggles)",
+      "Yellow pigments"
+    ],
+    "hazards": [
+      "Low toxicity",
+      "dust is flammable"
+    ]
+  },
+  "60": {
+    "ions": "Nd³⁺ (Neodymium(III))",
+    "history": {
+      "discoveryYear": "1885",
+      "discoveredBy": "Carl Auer von Welsbach",
+      "namedBy": "From Greek neos didymos (new twin)"
+    },
+    "stse": [
+      "Green Technology (Essential for EV motors and Wind Turbines)"
+    ],
+    "uses": [
+      "Strongest permanent magnets (NdFeB)",
+      "Lasers (Nd:YAG)",
+      "Glass coloring (purple)"
+    ],
+    "hazards": [
+      "Dust is flammable",
+      "magnets can cause pinching injuries"
+    ]
+  },
+  "61": {
+    "ions": "Pm³⁺ (Promethium(III))",
+    "history": {
+      "discoveryYear": "1945",
+      "discoveredBy": "Marinsky, Glendenin, Coryell",
+      "namedBy": "From Prometheus (Greek titan who stole fire)"
+    },
+    "stse": [
+      "Nuclear Batteries (Betavoltaics)"
+    ],
+    "uses": [
+      "Nuclear batteries for guided missiles/pacemakers",
+      "Luminous paint"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "62": {
+    "ions": "Sm²⁺ (Samarium(II)), Sm³⁺ (Samarium(III))",
+    "history": {
+      "discoveryYear": "1879",
+      "discoveredBy": "Lecoq de Boisbaudran",
+      "namedBy": "From Mineral Samarskite"
+    },
+    "stse": [
+      "Magnet Technology (SmCo magnets)"
+    ],
+    "uses": [
+      "Samarium-Cobalt magnets (high temp stability)",
+      "Cancer treatment (Sm-153)"
+    ],
+    "hazards": [
+      "Low toxicity"
+    ]
+  },
+  "63": {
+    "ions": "Eu²⁺ (Europium(II)), Eu³⁺ (Europium(III))",
+    "history": {
+      "discoveryYear": "1901",
+      "discoveredBy": "Eugène-Anatole Demarçay",
+      "namedBy": "From Europe"
+    },
+    "stse": [
+      "Anti-counterfeiting (Glowing dyes in Euro banknotes)"
+    ],
+    "uses": [
+      "Red phosphors in TV screens/LEDs",
+      "Fluorescent probes"
+    ],
+    "hazards": [
+      "Reacts vividly with water",
+      "non-toxic"
+    ]
+  },
+  "64": {
+    "ions": "Gd³⁺ (Gadolinium(III))",
+    "history": {
+      "discoveryYear": "1880",
+      "discoveredBy": "Jean Charles Galissard de Marignac",
+      "namedBy": "From Mineral Gadolinite (after Johan Gadolin)"
+    },
+    "stse": [
+      "Medical Imaging (MRI Contrast Agents)"
+    ],
+    "uses": [
+      "MRI Contrast agents (Magnevist)",
+      "Neutron shielding",
+      "Magnetic refrigeration"
+    ],
+    "hazards": [
+      "Free ion is toxic",
+      "chelated form used medically"
+    ]
+  },
+  "65": {
+    "ions": "Tb³⁺ (Terbium(III))",
+    "history": {
+      "discoveryYear": "1843",
+      "discoveredBy": "Carl Gustaf Mosander",
+      "namedBy": "From Ytterby, Sweden"
+    },
+    "stse": [
+      "Green Energy (Low-energy lighting phosphors)"
+    ],
+    "uses": [
+      "Green phosphors (fluorescent lamps)",
+      "Terfenol-D (magnetostrictive alloy)"
+    ],
+    "hazards": [
+      "Low toxicity"
+    ]
+  },
+  "66": {
+    "ions": "Dy³⁺ (Dysprosium(III))",
+    "history": {
+      "discoveryYear": "1886",
+      "discoveredBy": "Lecoq de Boisbaudran",
+      "namedBy": "From Greek dysprositos (hard to get)"
+    },
+    "stse": [
+      "Electric Vehicles (Magnet additives)"
+    ],
+    "uses": [
+      "Neodymium magnet additive (increases heat resistance)",
+      "Control rods"
+    ],
+    "hazards": [
+      "Low toxicity",
+      "dust is flammable"
+    ]
+  },
+  "67": {
+    "ions": "Ho³⁺ (Holmium(III))",
+    "history": {
+      "discoveryYear": "1878",
+      "discoveredBy": "Jacques-Louis Soret",
+      "namedBy": "From Holmia (Latin for Stockholm)"
+    },
+    "stse": [
+      "Medical Surgery (Ho:YAG Lasers)"
+    ],
+    "uses": [
+      "Surgical lasers (kidney stones)",
+      "Strongest magnetic fields (magnetic flux concentrator)"
+    ],
+    "hazards": [
+      "Low toxicity"
+    ]
+  },
+  "68": {
+    "ions": "Er³⁺ (Erbium(III))",
+    "history": {
+      "discoveryYear": "1843",
+      "discoveredBy": "Carl Gustaf Mosander",
+      "namedBy": "From Ytterby, Sweden"
+    },
+    "stse": [
+      "Telecommunications (Fiber optic signal amplifiers)"
+    ],
+    "uses": [
+      "EDFA (Erbium-Doped Fiber Amplifiers)",
+      "Dermatology lasers",
+      "Pink glass coloring"
+    ],
+    "hazards": [
+      "Low toxicity"
+    ]
+  },
+  "69": {
+    "ions": "Tm³⁺ (Thulium(III))",
+    "history": {
+      "discoveryYear": "1879",
+      "discoveredBy": "Per Teodor Cleve",
+      "namedBy": "From Thule (mythical North)"
+    },
+    "stse": [
+      "Portable X-rays (Tm-170 source)"
+    ],
+    "uses": [
+      "Portable X-ray machines",
+      "Lasers",
+      "Euro banknotes"
+    ],
+    "hazards": [
+      "Low toxicity"
+    ]
+  },
+  "70": {
+    "ions": "Yb²⁺ (Ytterbium(II)), Yb³⁺ (Ytterbium(III))",
+    "history": {
+      "discoveryYear": "1878",
+      "discoveredBy": "Jean Charles Galissard de Marignac",
+      "namedBy": "From Ytterby, Sweden"
+    },
+    "stse": [
+      "Atomic Clocks (World's most stable clocks)"
+    ],
+    "uses": [
+      "Fiber lasers",
+      "Stress gauges",
+      "Atomic clocks"
+    ],
+    "hazards": [
+      "Eye/skin irritant"
+    ]
+  },
+  "71": {
+    "ions": "Lu³⁺ (Lutetium)",
+    "history": {
+      "discoveryYear": "1907",
+      "discoveredBy": "Georges Urbain",
+      "namedBy": "From Lutetia (Paris)"
+    },
+    "stse": [
+      "Cancer Therapy (Lu-177 radiotherapy)",
+      "Petroleum cracking"
+    ],
+    "uses": [
+      "PET scan detectors (LSO crystals)",
+      "Cancer treatment",
+      "Catalysts"
+    ],
+    "hazards": [
+      "Low toxicity"
+    ]
+  },
+  "72": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1923",
+      "discoveredBy": "Dirk Coster & George de Hevesy",
+      "namedBy": "From Hafnia (Copenhagen)"
+    },
+    "stse": [
+      "Nuclear Reactors (Control rods)",
+      "Microprocessors"
+    ],
+    "uses": [
+      "Nuclear control rods (absorbs neutrons)",
+      "Plasma cutting tips",
+      "Intel chips (high-k dielectric)"
+    ],
+    "hazards": [
+      "Fine dust is pyrophoric"
+    ]
+  },
+  "73": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1802",
+      "discoveredBy": "Anders Gustaf Ekeberg",
+      "namedBy": "From Tantalus (Greek mythology)"
+    },
+    "stse": [
+      "Electronics Supply Chain (\"Conflict mineral\")"
+    ],
+    "uses": [
+      "Capacitors in smartphones/laptops",
+      "Surgical implants (inert)"
+    ],
+    "hazards": [
+      "Low toxicity",
+      "biocompatible"
+    ]
+  },
+  "74": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1783",
+      "discoveredBy": "Juan José & Fausto Elhuyar",
+      "namedBy": "Swedish tung sten (heavy stone); Symbol W from Wolfram"
+    },
+    "stse": [
+      "Lighting (Incandescent filaments)",
+      "Military (Kinetic bombardment)"
+    ],
+    "uses": [
+      "Light bulb filaments",
+      "TIG welding",
+      "Armor-piercing ammunition"
+    ],
+    "hazards": [
+      "Dust irritates lungs",
+      "largely non-toxic"
+    ]
+  },
+  "75": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1925",
+      "discoveredBy": "Walter Noddack, Ida Tacke, Otto Berg",
+      "namedBy": "From Rhenus (Rhine River)"
+    },
+    "stse": [
+      "Aerospace (Jet engine superalloys)"
+    ],
+    "uses": [
+      "Jet engine turbine blades",
+      "Thermocouples",
+      "Catalysts"
+    ],
+    "hazards": [
+      "Low toxicity"
+    ]
+  },
+  "76": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1803",
+      "discoveredBy": "Smithson Tennant",
+      "namedBy": "From Greek osme (smell)"
+    },
+    "stse": [
+      "Density limits (Densest naturally occurring substance)"
+    ],
+    "uses": [
+      "Fountain pen tips",
+      "Electrical contacts",
+      "Fingerprint detection"
+    ],
+    "hazards": [
+      "OsO₄ is extremely toxic and volatile (causes blindness)"
+    ]
+  },
+  "77": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1803",
+      "discoveredBy": "Smithson Tennant",
+      "namedBy": "From Greek iris (rainbow, due to salt colors)"
+    },
+    "stse": [
+      "Geology (K-Pg boundary layer evidence for Dinosaur extinction)"
+    ],
+    "uses": [
+      "Spark plugs",
+      "Crucibles",
+      "Standard Metre Bar (Pt-Ir alloy)"
+    ],
+    "hazards": [
+      "Low toxicity",
+      "dust is flammable"
+    ]
+  },
+  "78": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1735",
+      "discoveredBy": "Antonio de Ulloa",
+      "namedBy": "From Spanish platina (little silver)"
+    },
+    "stse": [
+      "Green Technology (Hydrogen Fuel Cells)",
+      "Medicine (Chemotherapy)"
+    ],
+    "uses": [
+      "Catalytic converters",
+      "Jewelry",
+      "Pacemaker electrodes",
+      "Cisplatin (cancer drug)"
+    ],
+    "hazards": [
+      "Metallic Pt is inert",
+      "salts can cause asthma"
+    ]
+  },
+  "79": {
+    "ions": "Au⁺ (Gold(I)), Au³⁺ (Gold(III))",
+    "history": {
+      "discoveryYear": "Prehistoric (~6000 BCE)",
+      "discoveredBy": "Ancient Civilizations",
+      "namedBy": "Anglo-Saxon gold (Symbol Au from Latin aurum)"
+    },
+    "stse": [
+      "Economics (Gold Standard)",
+      "Electronics (Corrosion-free contacts)"
+    ],
+    "uses": [
+      "Currency/Jewelry",
+      "Electronics plating",
+      "Radiation shielding"
+    ],
+    "hazards": [
+      "Non-toxic (edible in leaf form)"
+    ]
+  },
+  "80": {
+    "ions": "Hg₂²⁺ (Mercury(I)), Hg²⁺ (Mercury(II))",
+    "history": {
+      "discoveryYear": "~1500 BCE",
+      "discoveredBy": "Ancient Egyptians/Chinese",
+      "namedBy": "From Planet Mercury (Symbol Hg from hydrargyrum)"
+    },
+    "stse": [
+      "Environmental Toxicology (Minamata disease)",
+      "Bioaccumulation in fish"
+    ],
+    "uses": [
+      "Thermometers (historical)",
+      "Dental amalgam",
+      "Fluorescent bulbs"
+    ],
+    "hazards": [
+      "Highly toxic neurotoxin (vapor and compounds)"
+    ]
+  },
+  "81": {
+    "ions": "Tl⁺ (Thallium(I)), Tl³⁺ (Thallium(III))",
+    "history": {
+      "discoveryYear": "1861",
+      "discoveredBy": "William Crookes",
+      "namedBy": "From Greek thallos (green twig)"
+    },
+    "stse": [
+      "Forensic Science (\"The Poisoner's Poison\")"
+    ],
+    "uses": [
+      "Rat poison (banned)",
+      "Electronics",
+      "Cardiac stress tests (Tl-201)"
+    ],
+    "hazards": [
+      "Extremely toxic",
+      "accumulates in body"
+    ]
+  },
+  "82": {
+    "ions": "Pb²⁺ (Lead(II)), Pb⁴⁺ (Lead(IV))",
+    "history": {
+      "discoveryYear": "~7000 BCE",
+      "discoveredBy": "Ancient Civilizations",
+      "namedBy": "Anglo-Saxon lead (Symbol Pb from Latin plumbum)"
+    },
+    "stse": [
+      "Public Health (Flint Water Crisis)",
+      "Environmental banning (Leaded gasoline)"
+    ],
+    "uses": [
+      "Car batteries (Pb-acid)",
+      "Radiation shielding",
+      "Bullets"
+    ],
+    "hazards": [
+      "Potent neurotoxin",
+      "affects IQ in children"
+    ]
+  },
+  "83": {
+    "ions": "Bi³⁺ (Bismuth(III))",
+    "history": {
+      "discoveryYear": "~1000 CE",
+      "discoveredBy": "Alchemists (confused with Pb/Sn)",
+      "namedBy": "German Wismut (mass)"
+    },
+    "stse": [
+      "Green Chemistry (Non-toxic lead replacement)"
+    ],
+    "uses": [
+      "Pepto-Bismol (Stomach relief)",
+      "Lead-free shot/solder",
+      "Fire sprinklers"
+    ],
+    "hazards": [
+      "Low toxicity (unusual for heavy metals)"
+    ]
+  },
+  "84": {
+    "ions": "Po²⁺ (Polonium(II)), Po⁴⁺ (Polonium(IV))",
+    "history": {
+      "discoveryYear": "1898",
+      "discoveredBy": "Marie & Pierre Curie",
+      "namedBy": "From Poland (Marie's homeland)"
+    },
+    "stse": [
+      "Nuclear Assassination (Litvinenko poisoning)",
+      "Static elimination"
+    ],
+    "uses": [
+      "Anti-static brushes",
+      "Heat source in satellites (rare)"
+    ],
+    "hazards": [
+      "Extremely radiotoxic (alpha emitter)",
+      "fatal in micrograms"
+    ]
+  },
+  "85": {
+    "ions": "At⁻ (Astatide, predicted)",
+    "history": {
+      "discoveryYear": "1940",
+      "discoveredBy": "Dale R. Corson, Kenneth Ross MacKenzie, Emilio Segrè",
+      "namedBy": "From Greek astatos (unstable)"
+    },
+    "stse": [
+      "Targeted Alpha Therapy (Cancer treatment research)"
+    ],
+    "uses": [
+      "Medical research only (rarest natural element)"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "86": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1900",
+      "discoveredBy": "Friedrich Ernst Dorn",
+      "namedBy": "Derived from Radium"
+    },
+    "stse": [
+      "Indoor Air Quality (Lung cancer risk in basements)"
+    ],
+    "uses": [
+      "Radiation therapy (historical)",
+      "Earthquake prediction research"
+    ],
+    "hazards": [
+      "Radioactive gas",
+      "carcinogen via inhalation"
+    ]
+  },
+  "87": {
+    "ions": "Fr⁺ (Francium)",
+    "history": {
+      "discoveryYear": "1939",
+      "discoveredBy": "Marguerite Perey",
+      "namedBy": "From France"
+    },
+    "stse": [
+      "Fundamental Physics (Parity violation studies)"
+    ],
+    "uses": [
+      "Research only (due to extreme scarcity and radioactivity)"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "88": {
+    "ions": "Ra²⁺ (Radium)",
+    "history": {
+      "discoveryYear": "1898",
+      "discoveredBy": "Marie & Pierre Curie",
+      "namedBy": "Latin radius (ray)"
+    },
+    "stse": [
+      "Labor Rights (\"Radium Girls\" poisoning cases)",
+      "History of Oncology"
+    ],
+    "uses": [
+      "Historical glow-in-the-dark paint (banned)",
+      "Cancer treatment (Ra-223)"
+    ],
+    "hazards": [
+      "Highly radiotoxic bone seeker (mimics Calcium)"
+    ]
+  },
+  "89": {
+    "ions": "Ac³⁺ (Actinium)",
+    "history": {
+      "discoveryYear": "1899",
+      "discoveredBy": "André-Louis Debierne",
+      "namedBy": "Greek aktis (ray)"
+    },
+    "stse": [
+      "Targeted Alpha Therapy (TAT) for cancer"
+    ],
+    "uses": [
+      "Neutron source",
+      "Immunotherapy (Ac-225)"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "90": {
+    "ions": "Th⁴⁺ (Thorium(IV))",
+    "history": {
+      "discoveryYear": "1829",
+      "discoveredBy": "Jöns Jakob Berzelius",
+      "namedBy": "Thor (Norse god of thunder)"
+    },
+    "stse": [
+      "Future Energy (Thorium molten salt reactors)"
+    ],
+    "uses": [
+      "Gas lantern mantles",
+      "TIG welding electrodes",
+      "Nuclear fuel potential"
+    ],
+    "hazards": [
+      "Low radioactivity",
+      "heavy metal toxicity"
+    ]
+  },
+  "91": {
+    "ions": "Pa⁴⁺ (Protactinium(IV))",
+    "history": {
+      "discoveryYear": "1913",
+      "discoveredBy": "Fajans & Göhring",
+      "namedBy": "Greek protos (first) + actinium"
+    },
+    "stse": [
+      "Radiometric dating (Protactinium-Thorium dating)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Highly toxic and radioactive"
+    ]
+  },
+  "92": {
+    "ions": "U³⁺ (Uranium(III)), U⁴⁺ (Uranium(IV))",
+    "history": {
+      "discoveryYear": "1789",
+      "discoveredBy": "Martin Heinrich Klaproth",
+      "namedBy": "Planet Uranus"
+    },
+    "stse": [
+      "Nuclear Age (Fission power, Atomic weapons)",
+      "Geothermal heat (Earth's core)"
+    ],
+    "uses": [
+      "Nuclear fuel",
+      "Armor plating (Depleted U)",
+      "Yellow glass (historical)"
+    ],
+    "hazards": [
+      "Radiotoxic and chemotoxic (kidney damage)"
+    ]
+  },
+  "93": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1940",
+      "discoveredBy": "McMillan & Abelson",
+      "namedBy": "Planet Neptune"
+    },
+    "stse": [
+      "First transuranic element"
+    ],
+    "uses": [
+      "Precursor to Pu-238 production; Neutron detectors"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "94": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1940",
+      "discoveredBy": "Seaborg, McMillan, Kennedy, Wahl",
+      "namedBy": "Planet Pluto"
+    },
+    "stse": [
+      "Global Security (Nuclear non-proliferation)",
+      "Space Exploration (RTG batteries)"
+    ],
+    "uses": [
+      "Nuclear weapons",
+      "RTG power for spacecraft (Voyager/Mars rovers)"
+    ],
+    "hazards": [
+      "Extremely radiotoxic",
+      "criticality hazard"
+    ]
+  },
+  "95": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1944",
+      "discoveredBy": "Glenn T. Seaborg et al.",
+      "namedBy": "The Americas"
+    },
+    "stse": [
+      "Domestic Safety (Ionization smoke detectors)"
+    ],
+    "uses": [
+      "Smoke detectors (Am-241)",
+      "Neutron sources"
+    ],
+    "hazards": [
+      "Radioactive (accumulates in bones)"
+    ]
+  },
+  "96": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1944",
+      "discoveredBy": "Seaborg, James, Ghiorso",
+      "namedBy": "Marie & Pierre Curie"
+    },
+    "stse": [
+      "Space Exploration (Alpha particle X-ray Spectrometers)"
+    ],
+    "uses": [
+      "Alpha source in Mars Rovers (APXS)"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "97": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1949",
+      "discoveredBy": "Thompson, Ghiorso, Seaborg",
+      "namedBy": "Berkeley, California"
+    },
+    "stse": [
+      "Heavy Element Synthesis (Target material)"
+    ],
+    "uses": [
+      "Synthesizing Tennessine (Element 117)"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "98": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1950",
+      "discoveredBy": "Thompson, Street, Ghiorso, Seaborg",
+      "namedBy": "State of California"
+    },
+    "stse": [
+      "Industrial Sensing (Neutron moisture gauges)"
+    ],
+    "uses": [
+      "Neutron startup source for reactors",
+      "Gold/Oil prospecting"
+    ],
+    "hazards": [
+      "Intense neutron emitter"
+    ]
+  },
+  "99": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1952",
+      "discoveredBy": "Albert Ghiorso et al.",
+      "namedBy": "Albert Einstein"
+    },
+    "stse": [
+      "Cold War Science (Discovered in \"Ivy Mike\" H-bomb debris)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "100": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1952",
+      "discoveredBy": "Albert Ghiorso et al.",
+      "namedBy": "Enrico Fermi"
+    },
+    "stse": [
+      "Limit of neutron capture (Heaviest element formable by bombardment)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "101": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1955",
+      "discoveredBy": "Ghiorso, Harvey, Choppin, Thompson, Seaborg",
+      "namedBy": "Dmitri Mendeleev"
+    },
+    "stse": [
+      "\"Atom-at-a-time\" synthesis (First element made this way)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "102": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1966",
+      "discoveredBy": "JINR (Russia)",
+      "namedBy": "Alfred Nobel"
+    },
+    "stse": [
+      "Naming controversy (Disputed between USA, Sweden, USSR)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "103": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1961",
+      "discoveredBy": "Ghiorso et al.",
+      "namedBy": "Ernest Lawrence"
+    },
+    "stse": [
+      "Periodicity Debate (Placement in d-block vs f-block)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "104": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1964",
+      "discoveredBy": "Dubna (USSR) / Berkeley (USA)",
+      "namedBy": "Ernest Rutherford"
+    },
+    "stse": [
+      "Cold War Science (Transfermium Wars)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "105": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1968",
+      "discoveredBy": "Dubna (USSR) / Berkeley (USA)",
+      "namedBy": "Dubna, Russia"
+    },
+    "stse": [
+      "International cooperation (IUPAC naming resolution)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "106": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1974",
+      "discoveredBy": "Lawrence Berkeley Lab",
+      "namedBy": "Glenn T. Seaborg"
+    },
+    "stse": [
+      "Naming Controversy (First element named after a living person)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "107": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1981",
+      "discoveredBy": "GSI Helmholtz Centre (Germany)",
+      "namedBy": "Niels Bohr"
+    },
+    "stse": [
+      "Heavy Ion Research"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "108": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1984",
+      "discoveredBy": "GSI Helmholtz Centre (Germany)",
+      "namedBy": "State of Hesse (Hassia)"
+    },
+    "stse": [
+      "Superheavy Chemistry (Proven to form volatile tetroxide HsO₄)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "109": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1982",
+      "discoveredBy": "GSI Helmholtz Centre (Germany)",
+      "namedBy": "Lise Meitner"
+    },
+    "stse": [
+      "Women in Science (Meitner discovered fission but was overlooked for Nobel)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "110": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1994",
+      "discoveredBy": "GSI Helmholtz Centre (Germany)",
+      "namedBy": "Darmstadt, Germany"
+    },
+    "stse": [
+      "Ion Beam Technology"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "111": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1994",
+      "discoveredBy": "GSI Helmholtz Centre (Germany)",
+      "namedBy": "Wilhelm Röntgen"
+    },
+    "stse": [
+      "History of X-rays"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "112": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1996",
+      "discoveredBy": "GSI Helmholtz Centre (Germany)",
+      "namedBy": "Nicolaus Copernicus"
+    },
+    "stse": [
+      "Relativistic Chemistry (Acts more like a noble gas than a metal)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "113": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "2003",
+      "discoveredBy": "RIKEN (Japan)",
+      "namedBy": "From Nihon (Japan)"
+    },
+    "stse": [
+      "First element discovered in Asia"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "114": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "1998",
+      "discoveredBy": "JINR (Russia)",
+      "namedBy": "Flerov Laboratory"
+    },
+    "stse": [
+      "\"Island of Stability\" research"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  },
+  "115": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "2003",
+      "discoveredBy": "JINR (Russia) & Vanderbilt/LLNL (USA)",
+      "namedBy": "Moscow Region"
+    },
+    "stse": [
+      "Extreme matter synthesis"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "116": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "2000",
+      "discoveredBy": "LLNL (USA) & JINR (Russia)",
+      "namedBy": "Lawrence Livermore National Laboratory"
+    },
+    "stse": [
+      "International Science Collaboration"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "117": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "2010",
+      "discoveredBy": "JINR (Russia), ORNL/Vanderbilt (USA)",
+      "namedBy": "State of Tennessee (Oak Ridge Lab)"
+    },
+    "stse": [
+      "Synthesis required Berkelium target"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Highly radioactive"
+    ]
+  },
+  "118": {
+    "ions": "No common ions",
+    "history": {
+      "discoveryYear": "2002",
+      "discoveredBy": "JINR (Russia) & LLNL (USA)",
+      "namedBy": "Yuri Oganessian"
+    },
+    "stse": [
+      "Relativistic Effects (Predicted to be solid, not gas)"
+    ],
+    "uses": [
+      "Research only"
+    ],
+    "hazards": [
+      "Radioactive"
+    ]
+  }
+}

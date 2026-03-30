@@ -27,6 +27,132 @@
   padding: 90px 20px 0;
 }
 
+.ions-table-shell {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2vh, 20px);
+  padding: 10px 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-width: 0 !important;
+  height: auto;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.ion-table-section {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: clamp(8px, 2vh, 20px);
+}
+
+.ion-table-heading {
+  font-size: clamp(1rem, 2vh, 1.25rem);
+  font-weight: 800;
+  color: #222;
+  margin-bottom: clamp(6px, 1vh, 12px);
+  border-bottom: 2px solid #ddd;
+  padding: 8px 0 clamp(4px, 0.6vh, 6px);
+}
+
+.ion-table-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(4px, 1vh, 8px);
+  align-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.ion-table-cell {
+  flex-shrink: 0;
+  position: relative;
+  --ion-symbol-scale: 1;
+  width: clamp(52px, 5.2vw, 72px);
+}
+
+.ions-table-page .element {
+  justify-content: center;
+  align-items: center;
+  gap: clamp(2px, 2.4cqi, 6px);
+  padding: clamp(5px, 5cqi, 9px) clamp(4px, 4cqi, 7px);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ions-table-page .element .symbol {
+  order: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(clamp(1.15rem, 31cqi, 2rem) * var(--ion-symbol-scale, 1));
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+.ions-table-page .element .name {
+  order: 2;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: clip;
+  width: 100%;
+  max-width: 98%;
+  min-height: 0;
+  flex-shrink: 0;
+  margin-top: 0;
+  font-size: clamp(0.5rem, 13.8cqi, 1.06rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-align: center;
+  opacity: 0.82;
+}
+
+html[lang|="zh"] .ions-table-page .element {
+  gap: clamp(1px, 1.8cqi, 4px);
+}
+
+html[lang|="zh"] .ions-table-page .element .symbol {
+  font-size: calc(clamp(1.1rem, 29.5cqi, 1.94rem) * var(--ion-symbol-scale, 1));
+  font-weight: 700;
+  opacity: 1;
+  letter-spacing: -0.03em;
+}
+
+html[lang|="zh"] .ions-table-page .element .name {
+  font-size: clamp(0.75rem, 16cqi, 1.25rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  opacity: 0.92;
+  white-space: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: calc(2 * 1.05em);
+  max-height: calc(2 * 1.05em);
+  overflow: hidden;
+  word-break: break-all;
+}
+
+/* Enlarge 1-character names (like 氢, 锂) */
+html[lang|="zh"] .ions-table-page .element .name.name-single {
+  font-size: clamp(0.95rem, 21cqi, 1.6rem);
+}
+
+/* Slightly enlarge 2-character names */
+html[lang|="zh"] .ions-table-page .element .name.name-short {
+  font-size: clamp(0.85rem, 19cqi, 1.45rem);
+}
+
+/* Long formulas like CH₃COO⁻ need smaller symbol to avoid overflow */
+.ion-table-cell.ion-long-formula .symbol {
+  font-size: calc(clamp(0.8rem, 22cqi, 1.4rem) * var(--ion-symbol-scale, 1)) !important;
+  letter-spacing: -0.04em;
+}
+
 /* Polyatomic Colors */
 .element.polyatomic-cation {
   background-color: #ffd9a3;
@@ -142,7 +268,7 @@
 .ions-table-page .element .symbol sub,
 .ions-table-page .element .symbol sup,
 .ion-charge-sup {
-  font-size: 18cqi;
+  font-size: calc(18cqi * var(--ion-symbol-scale, 1));
   font-weight: 600;
   color: inherit;
 }

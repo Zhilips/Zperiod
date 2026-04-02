@@ -148,11 +148,14 @@ function getElementAnnotation(number, lang) {
 
 function localizeElementName(element) {
   if (!element || !element.number) return "";
+  
+  // Special translation for Lanthanide/Actinide block placeholders
+  if (element.symbol === "La-Lu") return t("tableLegend.lanthanide");
+  if (element.symbol === "Ac-Lr") return t("tableLegend.actinide");
+
   const lang = getLang();
   if (lang.startsWith("zh")) {
     const useTraditionalChinese = lang === "zh-Hant";
-    if (element.symbol === "La-Lu") return useTraditionalChinese ? "鑭系" : "镧系";
-    if (element.symbol === "Ac-Lr") return useTraditionalChinese ? "錒系" : "锕系";
     const localizedNames = useTraditionalChinese ? ELEMENT_NAMES_ZH_HANT : ELEMENT_NAMES_ZH;
     return localizedNames[element.number] || element.name;
   }

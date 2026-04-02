@@ -1012,8 +1012,6 @@ body.hide-nav .version-dropdown {
   flex-grow: 1;
   min-height: 120px;
 }
-  overflow: visible;
-}
 
 /* ── Changelog overrides ── */
 .sv-changelog {
@@ -1559,10 +1557,14 @@ body.reduce-motion * {
 }
 
 .sv-suggest-status {
+  position: absolute;
+  left: 14px;
+  bottom: 16px;
   font-size: 0.84rem;
   font-weight: 500;
   min-height: 1em;
   transition: all 0.2s ease;
+  pointer-events: none;
 }
 
 .sv-suggest-status.success {

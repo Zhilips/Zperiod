@@ -708,3 +708,73 @@
         justify-content: center;
     }
 }
+
+/* =========================================
+   Print / PDF Export Styles (Native Browser PDF)
+   ========================================= */
+@media print {
+    /* Hide all application chrome and sidebars */
+    #global-nav,
+    #version-dropdown,
+    #floating-about-btn,
+    .worksheet-controls,
+    .preview-header,
+    .preview-summary-bar,
+    .practice-actions {
+        display: none !important;
+    }
+
+    /* Reset layout constraints to allow full-page flowing */
+    body, html {
+        background: #fff !important;
+        margin: 0;
+        padding: 0;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    #app-viewport,
+    #main-container,
+    .page-container,
+    .worksheet-generator-page,
+    .worksheet-container,
+    .worksheet-preview,
+    .preview-content {
+        display: block !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Make the paper fill the printable area completely */
+    .worksheet-paper {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10mm !important;
+    }
+
+    /* Ensure equations aren't split across pages */
+    .question-row {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        border: 1px solid #e2e8f0 !important;
+        background: transparent !important; /* Strip practice colors for print */
+    }
+
+    .q-num {
+        color: #000 !important;
+    }
+
+    /* Enforce exact colors for answer keys */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}

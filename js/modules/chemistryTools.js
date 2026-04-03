@@ -714,7 +714,9 @@ export function balanceEquationModal(equation) {
     console.warn("Balancer error:", err.name, err.code, err.message);
 
     // Map error codes to user-friendly messages
-    if (err.code === "INVALID_FORMULA") {
+    if (err.code === "LEADING_COEFFICIENT") {
+      message = ct("chemTools.invalidFormatNoSpaces", `Invalid format. Write compounds without spaces or extra numbers in (${err.message})`, { formula: err.message });
+    } else if (err.code === "INVALID_FORMULA") {
       message = ct("balancer.invalidFormulaEx", `Invalid chemical formula: ${err.message}`, { msg: err.message });
     } else if (err.code === "IONIC_NOT_SUPPORTED") {
       message = ct("balancer.invalidFormulaEx", `Charged species / ionic notation is not supported.`, { msg: err.message });

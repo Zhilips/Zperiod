@@ -113,10 +113,7 @@ function hasUnsupportedChargeNotation(formula) {
 
 function ensureNoLeadingCoefficient(formula) {
   if (/^\d+\s*[A-Za-z([{]/.test(formula)) {
-    throw new FormulaError(
-      `Do not include leading coefficients inside a compound: "${formula}". ` +
-      `Enter compounds like "H2O", not "2H2O".`
-    );
+    throw new FormulaError(formula, "LEADING_COEFFICIENT");
   }
 }
 

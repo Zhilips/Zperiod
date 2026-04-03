@@ -40,6 +40,7 @@ export function initSettingsController(options = {}) {
   initWelcomeButton(onOpenWelcome);
   initAnimationControls();
   initPreferencesCard();
+  syncCardHeights();
   onLangChange(() => renderChangelog());
 
   const syncGlobalUnitButtons = initGlobalUnitControls({
@@ -53,6 +54,29 @@ export function initSettingsController(options = {}) {
   });
 
   return { syncGlobalUnitButtons };
+}
+
+function syncCardHeights() {
+  const linksGroup = document.querySelector('.sv-links-group');
+  const unitsCard = document.querySelector('.sv-card-units');
+  if (!linksGroup || !unitsCard) return;
+
+  const sync = () => {
+    unitsCard.style.minHeight = '';
+    requestAnimationFrame(() => {
+      const linksH = linksGroup.offsetHeight;
+      const unitsH = unitsCard.offsetHeight;
+      if (linksH > unitsH) {
+        unitsCard.style.minHeight = `${linksH}px`;
+      }
+    });
+  };
+
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(sync).observe(linksGroup);
+  }
+  window.addEventListener('resize', sync);
+  sync();
 }
 
 function renderChangelog() {

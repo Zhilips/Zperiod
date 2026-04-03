@@ -60,7 +60,40 @@ function ensureDriverTutorialAssets() {
                 background: rgba(0,0,0,0.1) !important;
                 transform: none !important;
             }
-            .custom-driver-popover .driver-popover-close-btn { display: none !important; }
+            .custom-driver-popover .driver-popover-close-btn {
+                position: absolute !important;
+                top: 12px !important;
+                right: 12px !important;
+                width: auto !important;
+                height: auto !important;
+                padding: 4px 14px !important;
+                background: rgba(0,0,0,0.06) !important;
+                border: none !important;
+                border-radius: 9999px !important;
+                font-size: 0 !important;
+                color: transparent !important;
+                cursor: pointer !important;
+                transition: all 0.2s ease !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                overflow: hidden !important;
+            }
+            .custom-driver-popover .driver-popover-close-btn:hover {
+                background: rgba(0,0,0,0.12) !important;
+            }
+            .custom-driver-popover .driver-popover-close-btn::after {
+                content: 'Skip';
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: rgba(0,0,0,0.45);
+            }
+            .custom-driver-popover .driver-popover-close-btn:hover::after {
+                color: rgba(0,0,0,0.7);
+            }
+            .custom-driver-popover .driver-popover-title {
+                padding-right: 60px !important;
+            }
             .driver-popover-arrow.driver-popover-arrow-side-top,
             .driver-popover-arrow.driver-popover-arrow-side-bottom {
                 left: calc(50% - 5px) !important;
@@ -158,7 +191,38 @@ export async function initElementTutorial(force = false) {
                     transform: none !important;
                 }
                 .custom-driver-popover .driver-popover-close-btn {
-                    display: none !important;
+                    position: absolute !important;
+                    top: 12px !important;
+                    right: 12px !important;
+                    width: auto !important;
+                    height: auto !important;
+                    padding: 4px 14px !important;
+                    background: rgba(0,0,0,0.06) !important;
+                    border: none !important;
+                    border-radius: 9999px !important;
+                    font-size: 0 !important;
+                    color: transparent !important;
+                    cursor: pointer !important;
+                    transition: all 0.2s ease !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    overflow: hidden !important;
+                }
+                .custom-driver-popover .driver-popover-close-btn:hover {
+                    background: rgba(0,0,0,0.12) !important;
+                }
+                .custom-driver-popover .driver-popover-close-btn::after {
+                    content: 'Skip';
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    color: rgba(0,0,0,0.45);
+                }
+                .custom-driver-popover .driver-popover-close-btn:hover::after {
+                    color: rgba(0,0,0,0.7);
+                }
+                .custom-driver-popover .driver-popover-title {
+                    padding-right: 60px !important;
                 }
                 .driver-popover-arrow.driver-popover-arrow-side-top,
                 .driver-popover-arrow.driver-popover-arrow-side-bottom {
@@ -217,7 +281,19 @@ export async function initBalancerTutorial(force = false) {
                     background: rgba(0,0,0,0.05) !important; color: #000000 !important; border: none !important; box-shadow: none !important; text-shadow: none !important; transition: background 0.2s ease !important;
                 }
                 .custom-driver-popover .driver-popover-next-btn:hover, .custom-driver-popover .driver-popover-prev-btn:hover { background: rgba(0,0,0,0.1) !important; transform: none !important; }
-                .custom-driver-popover .driver-popover-close-btn { display: none !important; }
+                .custom-driver-popover .driver-popover-close-btn {
+                    position: absolute !important; top: 12px !important; right: 12px !important;
+                    width: auto !important; height: auto !important; padding: 4px 14px !important;
+                    background: rgba(0,0,0,0.06) !important; border: none !important; border-radius: 9999px !important;
+                    font-size: 0 !important; color: transparent !important;
+                    cursor: pointer !important; transition: all 0.2s ease !important;
+                    display: flex !important; align-items: center !important; justify-content: center !important;
+                    overflow: hidden !important;
+                }
+                .custom-driver-popover .driver-popover-close-btn:hover { background: rgba(0,0,0,0.12) !important; }
+                .custom-driver-popover .driver-popover-close-btn::after { content: 'Skip'; font-size: 0.8rem; font-weight: 600; color: rgba(0,0,0,0.45); }
+                .custom-driver-popover .driver-popover-close-btn:hover::after { color: rgba(0,0,0,0.7); }
+                .custom-driver-popover .driver-popover-title { padding-right: 60px !important; }
                 .driver-popover-arrow.driver-popover-arrow-side-top, .driver-popover-arrow.driver-popover-arrow-side-bottom { left: calc(50% - 5px) !important; right: auto !important; }
             `;
             document.head.appendChild(style);
@@ -358,7 +434,7 @@ function startTutorial(driver, tutorialKey, delayMs = 1200) {
         tutorialDriver = driver({
             showProgress: true,
             animate: true,
-            allowClose: false,
+            allowClose: true,
             allowKeyboardControl: false, // We handle it custom to prevent scrolling
             prevBtnText: t("tutorial.previous"),
             nextBtnText: t("tutorial.next"),
@@ -457,7 +533,7 @@ function startBalancerTour(driver, tutorialKey, delayMs = 800) {
         tutorialDriver = driver({
             showProgress: true,
             animate: true,
-            allowClose: false,
+            allowClose: true,
             allowKeyboardControl: false,
             prevBtnText: t("tutorial.previous") || "Previous",
             nextBtnText: t("tutorial.next") || "Next",
@@ -589,7 +665,7 @@ function startPredictorTour(driver, tutorialKey, delayMs = 800) {
         tutorialDriver = driver({
             showProgress: true,
             animate: true,
-            allowClose: false,
+            allowClose: true,
             allowKeyboardControl: false,
             prevBtnText: t("tutorial.previous") || "Previous",
             nextBtnText: t("tutorial.next") || "Next",
@@ -714,7 +790,7 @@ function startMolarMassTour(driver, tutorialKey, delayMs = 800) {
         tutorialDriver = driver({
             showProgress: true,
             animate: true,
-            allowClose: false,
+            allowClose: true,
             allowKeyboardControl: false,
             prevBtnText: t("tutorial.previous") || "Previous",
             nextBtnText: t("tutorial.next") || "Next",
@@ -832,7 +908,7 @@ function startSolubilityTour(driver, tutorialKey, delayMs = 800) {
         tutorialDriver = driver({
             showProgress: true,
             animate: true,
-            allowClose: false,
+            allowClose: true,
             allowKeyboardControl: false,
             prevBtnText: t("tutorial.previous") || "Previous",
             nextBtnText: t("tutorial.next") || "Next",
@@ -960,7 +1036,7 @@ function startVirtualLabTour(driver, tutorialKey, delayMs = 800) {
         tutorialDriver = driver({
             showProgress: true,
             animate: true,
-            allowClose: false,
+            allowClose: true,
             allowKeyboardControl: false,
             prevBtnText: t("tutorial.previous") || "Previous",
             nextBtnText: t("tutorial.next") || "Next",

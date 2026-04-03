@@ -357,17 +357,15 @@
                                 <div class="meta-divider"></div>
 
                                 <div class="email-group">
-                                    <button class="email-row" onclick="copyEmail('440016162@gapps.yrdsb.ca', this)">
+                                    <button class="email-row" onclick="copyEmail('zhilips123123@gmail.com', this)">
                                         <div class="email-icon">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                                 stroke="currentColor" stroke-width="2">
-                                                <path
-                                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
-                                                </path>
-                                                <polyline points="22,6 12,13 2,6"></polyline>
+                                                <circle cx="12" cy="12" r="4"></circle>
+                                                <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
                                             </svg>
                                         </div>
-                                        <span class="email-text">440016162@gapps.yrdsb.ca</span>
+                                        <span class="email-text">zhilips123123@gmail.com</span>
                                         <div class="copy-feedback">
                                             <svg class="icon-copy" width="12" height="12" viewBox="0 0 24 24"
                                                 fill="none" stroke="currentColor" stroke-width="2">
@@ -382,15 +380,17 @@
                                             </svg>
                                         </div>
                                     </button>
-                                    <button class="email-row" onclick="copyEmail('zhilips123123@gmail.com', this)">
+                                    <button class="email-row" onclick="copyEmail('440016162@gapps.yrdsb.ca', this)">
                                         <div class="email-icon">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
                                                 stroke="currentColor" stroke-width="2">
-                                                <circle cx="12" cy="12" r="4"></circle>
-                                                <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
+                                                <path
+                                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                                                </path>
+                                                <polyline points="22,6 12,13 2,6"></polyline>
                                             </svg>
                                         </div>
-                                        <span class="email-text">zhilips123123@gmail.com</span>
+                                        <span class="email-text">440016162@gapps.yrdsb.ca</span>
                                         <div class="copy-feedback">
                                             <svg class="icon-copy" width="12" height="12" viewBox="0 0 24 24"
                                                 fill="none" stroke="currentColor" stroke-width="2">
@@ -858,7 +858,8 @@
 
             <!-- Left column: quick links -->
             <aside class="sv-sidebar">
-                    <a href="https://github.com/Zhilips/Zperiod" target="_blank" rel="noopener noreferrer" class="sv-link-card">
+                <div class="sv-links-group">
+                    <a href="https://github.com/Zhilips/Zperiod" target="_blank" rel="noopener noreferrer" class="sv-link-card sv-link-card-github">
                         <div class="sv-link-card-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                                 <path
@@ -874,7 +875,7 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                    <a href="https://buymeacoffee.com/zperiod" target="_blank" rel="noopener noreferrer" class="sv-link-card">
+                    <a href="https://buymeacoffee.com/zperiod" target="_blank" rel="noopener noreferrer" class="sv-link-card sv-link-card-coffee">
                         <div class="sv-link-card-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -894,7 +895,7 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </a>
-                    <button class="sv-link-card" id="settings-open-welcome">
+                    <button class="sv-link-card sv-link-card-about" id="settings-open-welcome">
                         <div class="sv-link-card-icon">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -912,6 +913,7 @@
                             <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
                     </button>
+                </div>
 
                     <!-- Electron animation control -->
                     <section class="sv-card sv-card-anim">

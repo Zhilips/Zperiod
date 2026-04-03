@@ -643,7 +643,7 @@ function generateBalancerToolContent() {
                 flex-direction: row;
                 gap: 20px;
                 flex: 1;
-                margin-top: 10px;
+                margin-top: 0; /* Fixed: aligned with balancer, previously 10px */
             }
             .predictor-panel.active { display: flex; }
 
@@ -685,6 +685,16 @@ function generateBalancerToolContent() {
                 padding: 24px;
                 position: relative;
                 box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.02);
+            }
+
+            @media (max-height: 850px) {
+                .predictor-left-col, .predictor-right-col {
+                    padding: clamp(14px, 2.5vh, 24px);
+                    gap: clamp(10px, 2vh, 22px);
+                }
+                .predictor-type-grid { gap: 8px !important; }
+                .predictor-type-card { padding: clamp(8px, 1.5vh, 16px) 14px !important; }
+                .predictor-result-card { padding: clamp(12px, 2vh, 20px) 24px !important; }
             }
 
             @container balancer (max-width: 600px) {

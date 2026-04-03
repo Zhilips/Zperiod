@@ -604,253 +604,178 @@ function balanceEquationGaussian(reactants, products) {
 }
 
 export function balanceEquationModal(equation) {
-  const normalizedEquation = normalizeBalancingEquation(equation);
-  const parts = normalizedEquation.split("→").map((s) => s.trim());
-  if (parts.length !== 2) {
-    throw new Error(ct("chemTools.equationMustContainArrow", "Equation must contain → (arrow)"));
-  }
-
-  const rawReactants = splitBalancingCompounds(parts[0]);
-  const rawProducts = splitBalancingCompounds(parts[1]);
-
-  // Declare result state up front so there is no temporal dead zone
   let result = null;
   let message = "";
   let check = "";
 
-  // ===== Pre-flight: Detect zero-for-O typos =====
-  // Runs on raw tokens before any normalization.
-  for (const token of [...rawReactants, ...rawProducts]) {
-    const tk = token.trim();
-    if (!tk) continue;
+  // 1. NORMALIZATION
+  const subscriptMap = {"₀":"0","₁":"1","₂":"2","₃":"3","₄":"4","₅":"5","₆":"6","₇":"7","₈":"8","₉":"9"};
+  let eqStr = String(equation)
+    .replace(/[₀-₉]/g, char => subscriptMap[char] || char)
+    .replace(/[→⟶⟹⇌⟷]/g, "->")
+    .replace(/\s*\((aq|s|l|g)\)\s*/gi, "")
+    .replace(/[·•]/g, "•")
+    .trim();
 
-    // Case 1: all-digit token like "02" → probably "O2"
-    if (/^\d+$/.test(tk)) {
-      if (/^0/.test(tk)) {
-        const suggestion = tk.replace(/^0/, "O");
-        throw new Error(
-          ct("chemTools.zeroAsFormula",
-            `"${tk}" is not a valid formula — did you type 0 (zero) instead of O (oxygen)? Try "${suggestion}".`,
-            { formula: tk, suggestion }),
-        );
-      } else {
-        throw new Error(
-          ct("chemTools.bareCoefficient",
-            `"${tk}" is not a valid compound formula. Write formulas starting with an element symbol, e.g. "H2O".`,
-            { formula: tk }),
-        );
+  // 2. BASIC SYNTAX VALIDATION
+  const arrowCount = (eqStr.match(/->/g) || []).length;
+  if (arrowCount !== 1) {
+    throw new Error(`<strong>${ct("balancer.checkFormatTitle", "Check the equation format")}</strong><br>${ct("balancer.equationMustContainArrow", "Make sure there is exactly one arrow.")}`);
+  }
+
+  const [leftSide, rightSide] = eqStr.split("->").map(s => s.trim());
+  if (!leftSide || !rightSide) {
+    throw new Error(`<strong>${ct("balancer.checkFormatTitle", "Check the equation format")}</strong><br>${ct("balancer.missingReactantsOrProducts", "Both sides must have formulas.")}`);
+  }
+
+  const checkSyntax = (side) => {
+    if (side.startsWith("+") || side.endsWith("+") || /\+\s*\+/.test(side)) {
+      throw new Error(`<strong>${ct("balancer.checkFormatTitle", "Check the equation format")}</strong><br>${ct("balancer.removeExtraPlus", "Remove the extra \"+\" sign.")}`);
+    }
+  };
+  checkSyntax(leftSide);
+  checkSyntax(rightSide);
+
+  const rawReactants = leftSide.split("+").map(s => s.trim());
+  const rawProducts = rightSide.split("+").map(s => s.trim());
+
+  // 3. LEADING COEFFICIENT SUPPORT
+  const extractLeading = (rawArr) => {
+    return rawArr.map(token => {
+      // Reject spaces: "2 H2" -> error
+      if (/^\d+\s+/.test(token)) {
+        throw new Error(`<strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}</strong><br>${ct("balancer.removeSpacesCoeff", "Remove spaces after coefficients.")}`);
+      }
+      // Reject symbols: "2*H2" -> error
+      if (/^\d+[^\w\(\[\{]/.test(token)) {
+        throw new Error(`<strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}</strong><br>${ct("balancer.invalidCoeff", "Invalid coefficient format.")}`);
+      }
+      const match = token.match(/^(\d+)(.*)/);
+      if (match) {
+        return { userCoeff: parseInt(match[1], 10), formula: match[2].trim() };
+      }
+      return { userCoeff: 1, formula: token };
+    });
+  };
+
+  const reactantsInfo = extractLeading(rawReactants);
+  const productsInfo = extractLeading(rawProducts);
+
+  // 4 & 5. FORMULA PARSING & HEURISTICS
+  const allInfo = [...reactantsInfo, ...productsInfo];
+  const strippedReactants = [];
+  const strippedProducts = [];
+
+  for (let i = 0; i < allInfo.length; i++) {
+    const item = allInfo[i];
+    let f = item.formula;
+
+    // Heuristic A: SPACE (e.g. "H2 O")
+    if (/\s/.test(f)) {
+      const compact = f.replace(/\s+/g, "");
+      try {
+        parseFormulaStrict(compact);
+        throw new Error(`<strong>${ct("balancer.checkProductReactantTitle", "Check the product/reactant formula")}</strong><br>${ct("balancer.didYouMean", "Did you mean <code>{suggestion}</code>?", {suggestion: compact})}`);
+      } catch (e) {
+        if (e.message.includes("mean <code>") || e.message.includes("你想写")) throw e;
+        throw new Error(`<strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}</strong><br>${ct("balancer.removeSpacesInside", "Remove spaces inside the chemical formula.")}`);
       }
     }
 
-    // Case 2: Zero embedded where O (oxygen) was likely intended.
-    // Only triggers for tokens like "Fe204", "H20", "C02" where the entire
-    // token after the element symbol is digits (no second element letter).
-    // Does NOT trigger on "H100O" which has an uppercase O — those go through
-    // the suspicious-formula validator instead.
-    const elemAndDigits = tk.match(/^([A-Z][a-z]?)(\d+)$/);
-    if (elemAndDigits) {
-      const [, elem, digits] = elemAndDigits;
-      if (digits.includes("0")) {
-        const suggestion = elem + digits.replace(/0/g, "O");
-        throw new Error(
-          ct("chemTools.zeroInSubscript",
-            `Did you type 0 (zero) instead of O (oxygen) in "${tk}"? Did you mean "${suggestion}"?`,
-            { formula: tk, suggestion }),
-        );
+    // Heuristic B: O / 0 CONFUSION
+    if (/0/.test(f)) {
+      const replaced = f.replace(/0/g, "O");
+      if (replaced !== f) {
+        try {
+          parseFormulaStrict(replaced);
+          throw new Error(`<strong>${ct("balancer.checkFormulaTitle", "Check the formula")}</strong><br>${ct("balancer.didYouMean", "Did you mean <code>{suggestion}</code>?", {suggestion: replaced})}`);
+        } catch(e) {
+          if (e.message.includes("mean <code>") || e.message.includes("你想写")) throw e;
+          // fallthrough
+        }
       }
     }
+
+    // Heuristic C: HYDRATE FORMAT VALIDATION
+    if (f.includes("•")) {
+      if (/\•\s*\•/.test(f) || /^\•/.test(f) || /\•$/.test(f)) {
+        throw new Error(`<span class="balancer-error">${ct("balancer.invalidHydrate", "Invalid hydrate notation")}</span>`);
+      }
+    }
+
+    // Formula Validation (Heuristic D: SUSPICIOUS FORMULA also uses demoChemistryValidator)
+    try {
+      const atomCounts = parseFormulaStrict(f);
+      demoChemistryValidator(f, atomCounts);
+    } catch(e) {
+      if (!e.message.includes("mean <code>") && !e.message.includes("你想写") && !e.message.includes("移除") && !e.message.includes("Remove") && !e.message.includes("Invalid hydrate") && !e.message.includes("looks unusual") && !e.message.includes("异常")) {
+         throw new Error(`<strong>${ct("balancer.checkFormulaTitle", "Check the formula")}</strong><br>${e.message}`);
+      }
+      throw e; 
+    }
+
+    if (i < reactantsInfo.length) strippedReactants.push(f);
+    else strippedProducts.push(f);
   }
-
-  const reactants = sanitizeBalancingCompounds(rawReactants);
-  const products = sanitizeBalancingCompounds(rawProducts);
-
-  if (reactants.length === 0 || products.length === 0) {
-    throw new Error(ct("chemTools.missingReactantsOrProducts", "Missing reactants or products"));
-  }
-
-  // ===== NO legacy pre-flight element-consistency check here =====
-  // The new robust engine handles all validation:
-  // - unknown elements → FormulaError(INVALID_FORMULA)
-  // - state symbols (aq),(s),(l),(g) → stripped automatically
-  // - charge notation (+/-) → FormulaError(IONIC_NOT_SUPPORTED)
-  // - leading coefficients → FormulaError(INVALID_FORMULA)
-  // - suspicious subscripts → FormulaError(SUSPICIOUS_FORMULA)
-  // - no balancing solution → EquationError(NO_SOLUTION)
 
   // Build explanation steps
   const steps = [];
   steps.push(`<h4>${ct("chemTools.stepByStepTitle", "Step-by-step balancing:")}</h4>`);
   steps.push("<ol>");
-  steps.push(
-    `<li><strong>${ct("chemTools.stepIdentify", "Identify elements:")}</strong> ${ct("chemTools.stepIdentifyDesc", "List all elements on both sides")}</li>`,
-  );
-  steps.push(
-    `<li><strong>${ct("chemTools.stepCount", "Count atoms:")}</strong> ${ct("chemTools.stepCountDesc", "Count atoms of each element")}</li>`,
-  );
-  steps.push(
-    `<li><strong>${ct("chemTools.stepBuild", "Build matrix:")}</strong> ${ct("chemTools.stepBuildDesc", "Create element × compound matrix")}</li>`,
-  );
-  steps.push(
-    `<li><strong>${ct("chemTools.stepGaussian", "Gaussian elimination:")}</strong> ${ct("chemTools.stepGaussianDesc", "Solve the linear system")}</li>`,
-  );
-  steps.push(
-    `<li><strong>${ct("chemTools.stepNormalize", "Normalize:")}</strong> ${ct("chemTools.stepNormalizeDesc", "Convert to smallest integer coefficients")}</li>`,
-  );
+  steps.push(`<li><strong>${ct("chemTools.stepIdentify", "Identify elements:")}</strong> ${ct("chemTools.stepIdentifyDesc", "List all elements")}</li>`);
+  steps.push(`<li><strong>${ct("chemTools.stepCount", "Count atoms:")}</strong> ${ct("chemTools.stepCountDesc", "Count atoms of each element")}</li>`);
+  steps.push(`<li><strong>${ct("chemTools.stepBuild", "Build matrix:")}</strong> ${ct("chemTools.stepBuildDesc", "Create matrix")}</li>`);
+  steps.push(`<li><strong>${ct("chemTools.stepGaussian", "Gaussian elimination:")}</strong> ${ct("chemTools.stepGaussianDesc", "Solve the system")}</li>`);
+  steps.push(`<li><strong>${ct("chemTools.stepNormalize", "Normalize:")}</strong> ${ct("chemTools.stepNormalizeDesc", "Convert to integers")}</li>`);
   steps.push("</ol>");
-  steps.push(
-    `<div class="warning-box"><strong>${ct("chemTools.important", "Important:")}</strong> ${ct("chemTools.importantDesc", "Never change subscripts, only coefficients!")}</div>`,
-  );
+  steps.push(`<div class="warning-box"><strong>${ct("chemTools.important", "Important:")}</strong> ${ct("chemTools.importantDesc", "Never change subscripts, only coefficients!")}</div>`);
 
-  // ===== Balance using the NEW robust engine (single source of truth) =====
+  // 6. SOLVER STAGE
   try {
-    const bal = balanceEquation({ reactants, products }, { chemistryValidator: demoChemistryValidator });
-
-    // Convert to format expected by the UI builder
+    const bal = balanceEquation({ reactants: strippedReactants, products: strippedProducts }, { chemistryValidator: demoChemistryValidator });
     result = {
       reactants: bal.reactants.map(r => r.coefficient),
       products: bal.products.map(p => p.coefficient)
     };
   } catch (err) {
-    console.warn("Balancer error:", err.name, err.code, err.message);
-
-    // Map error codes to user-friendly messages
-    if (err.code === "LEADING_COEFFICIENT") {
-      message = ct("chemTools.invalidFormatNoSpaces", `Invalid format. Write compounds without spaces or extra numbers in (${err.message})`, { formula: err.message });
-    } else if (err.code === "INVALID_FORMULA") {
-      message = ct("balancer.invalidFormulaEx", `Invalid chemical formula: ${err.message}`, { msg: err.message });
-    } else if (err.code === "IONIC_NOT_SUPPORTED") {
-      message = ct("balancer.invalidFormulaEx", `Charged species / ionic notation is not supported.`, { msg: err.message });
-    } else if (err.code === "SUSPICIOUS_FORMULA") {
-      message = ct("balancer.suspiciousFormula", "This formula looks unusual. Please check the subscripts.");
-    } else if (err.code === "NO_SOLUTION") {
-      // Determine if elements match on both sides for a better message
-      try {
-        const getEls = (compounds) => {
-          const elSet = new Set();
-          compounds.forEach((c) => {
-            // Use the NEW engine's parser which already handles states/hydrates
-            const normalized = normalizeBalancingFormula(c);
-            const atoms = parseFormulaStrict(normalized);
-            Object.keys(atoms).forEach((el) => elSet.add(el));
-          });
-          return elSet;
-        };
-        const rEls = getEls(reactants);
-        const pEls = getEls(products);
-        const sameElements = rEls.size === pEls.size && [...rEls].every(el => pEls.has(el));
-
-        if (sameElements) {
-          // HEURISTIC: Check if any formula was likely split by a space
-          const checkSplit = (sideStr) => {
-            const raw = String(sideStr || "").split("+").map(s => s.trim());
-            for (const r of raw) {
-              if (/\s/.test(r)) {
-                // Try removing spaces to see if it parses
-                const compact = r.replace(/\s+/g, "");
-                try {
-                  parseFormulaStrict(compact);
-                  return compact;
-                } catch (e) {
-                  // Ignore parse failures in heuristic check; we only need successful candidates.
-                }
-              }
-            }
-            return null;
-          };
-
-          const splitR = checkSplit(parts[0]);
-          const splitP = checkSplit(parts[1]);
-
-          if (splitR || splitP) {
-            const suggestion = splitR || splitP;
-            const titleKey = splitR ? "balancer.splitReactantFormulaTitle" : "balancer.splitProductFormulaTitle";
-            const titleFallback = splitR ? "Check the reactant formula" : "Check the product formula";
-            const title = `<strong>${ct(titleKey, titleFallback)}</strong>`;
-            
-            const desc = ct("balancer.splitFormulaDesc", `Did you mean <code>${suggestion}</code>?`, { suggestion });
-            message = `${title}<br>${desc}`;
-          } else {
-            // Further fallback check: if spaces exist but we can't confidently parse
-            const hasSpaceR = String(parts[0] || "").split("+").some(s => /\s/.test(s.trim()));
-            const hasSpaceP = String(parts[1] || "").split("+").some(s => /\s/.test(s.trim()));
-            if (hasSpaceR || hasSpaceP) {
-              const title = `<strong>${ct("balancer.splitFormulaTitleFallback", "Check the formula formatting")}</strong>`;
-              const desc = ct("balancer.splitFormulaDescFallback", "Remove spaces inside the formula.");
-              message = `${title}<br>${desc}`;
-            } else {
-              message = ct("balancer.noSolutionConserve", "The formulas are valid, but these compounds alone do not conserve atoms. Try adding a missing reactant or product.");
-            }
-          }
-        } else {
-          message = ct("balancer.noSolutionGeneral", "This equation cannot be balanced as entered. You may be missing a reactant or product.");
-        }
-      } catch (_) {
-        // If even the element-check parse fails, use generic message
-        message = ct("balancer.noSolutionGeneral", "This equation cannot be balanced as entered. You may be missing a reactant or product.");
-      }
-    } else {
-      // Unknown error from new engine — try legacy fallback
-      try {
-        result = balanceEquationGaussian(reactants, products);
-      } catch (_) {
-        // Both engines failed
-        message = ct("chemTools.couldNotAutoBalanceLong", "Could not auto-balance this equation. Check that each chemical formula is complete and that spaces only separate different compounds.");
-      }
-    }
+      throw new Error(`<strong>${ct("balancer.cantBalanceTitle", "Can't balance this equation")}</strong><br>${ct("balancer.checkBothSides", "Check the formulas on both sides.")}`);
   }
 
-  let balancedEq = normalizedEquation;
+  // 7. POST-SOLVE LOGIC
+  let alreadyBalanced = true;
+  for (let i = 0; i < reactantsInfo.length; i++) {
+     if (reactantsInfo[i].userCoeff !== result.reactants[i]) alreadyBalanced = false;
+  }
+  for (let i = 0; i < productsInfo.length; i++) {
+     if (productsInfo[i].userCoeff !== result.products[i]) alreadyBalanced = false;
+  }
 
-  if (result) {
-    // Build balanced equation string
-    const balancedReactants = reactants
-      .map((r, i) => {
-        const coef = result.reactants[i];
-        return coef === 1 ? r : coef + r;
-      })
-      .join(" + ");
+  let balancedEq = "";
+  const formatTerm = (coef, formula) => coef === 1 ? formula : `${coef}${formula}`;
+  const balancedReactants = strippedReactants.map((r, i) => formatTerm(result.reactants[i], r)).join(" + ");
+  const balancedProducts = strippedProducts.map((p, i) => formatTerm(result.products[i], p)).join(" + ");
+  balancedEq = balancedReactants + " → " + balancedProducts;
 
-    const balancedProducts = products
-      .map((p, i) => {
-        const coef = result.products[i];
-        return coef === 1 ? p : coef + p;
-      })
-      .join(" + ");
-
-    balancedEq = balancedReactants + " → " + balancedProducts;
-    check = generateAtomCheckModal(balancedEq);
+  if (alreadyBalanced) {
+      message = `<span style="color: #059669; font-weight: bold;">${ct("balancer.alreadyBalanced", "Already balanced ✓")}</span>`;
   } else {
-    // No result — try spacing hint only if we don't already have a specific message
-    if (!message) {
-      const spacingHint = findRecoverableSpacingHint(rawReactants, rawProducts);
-      message = spacingHint
-        ? ct("chemTools.spacingInline", "It looks like {spaced} was split by a space. Write {compact} instead. Use spaces or + only between different compounds.", { spaced: spacingHint.spaced, compact: spacingHint.compact })
-        : ct("chemTools.couldNotAutoBalanceLong", "Could not auto-balance this equation. Check that each chemical formula is complete and that spaces only separate different compounds.");
-      const hintHtml = spacingHint
-        ? `<p class="note-text"><strong>${ct("chemTools.spacingIssue", "Spacing issue:")}</strong> <code>${spacingHint.spaced}</code> ${ct("chemTools.spacingReadAs", "is being read as separate pieces.")}</p><p class="note-text">${ct("chemTools.spacingWrite", "Write")} <strong>${spacingHint.compact}</strong> ${ct("chemTools.spacingUseBetween", "instead, and use spaces or")} <strong>+</strong> ${ct("chemTools.spacingUseBetweenTail", "only between different compounds.")}</p>`
-        : "";
-      check = `<p class="note-text">${message}</p>${hintHtml}`;
-    } else {
-      // We have a specific error message from the engine — show it directly
-      check = `<p class="note-text">${message}</p>`;
-    }
+      // The old UI didn't render "Successfully balanced ✓" but we keep message empty if it's perfectly balanced but not by user
   }
 
-  // Create a plain text version for updating inputs (without Unicode subscripts)
+  check = generateAtomCheckModal(balancedEq);
+
+  // Return formatted payload
   const balancedPlain = balancedEq
-    .replace(/₂/g, "2")
-    .replace(/₃/g, "3")
-    .replace(/₄/g, "4")
-    .replace(/₅/g, "5")
-    .replace(/₆/g, "6");
+    .replace(/₂/g, "2").replace(/₃/g, "3").replace(/₄/g, "4")
+    .replace(/₅/g, "5").replace(/₆/g, "6");
 
   return {
     equation: balancedEq,
     balanced: balancedPlain,
     explanation: steps.join(""),
     check: check,
-    solved: !!result,
-    message,
+    solved: true,
+    message: message, // Can be empty or "Already balanced"
   };
 }
 

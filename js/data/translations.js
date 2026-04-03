@@ -20,6 +20,8 @@ export const translations = {
     mobile: {
       desktopOnlyTitle: "Desktop Experience Only",
       desktopOnlyText: "Please access Zperiod on a desktop browser.",
+      rotateTitle: "Rotate Your iPad",
+      rotateText: "Zperiod is best experienced in landscape mode. Please rotate your device.",
     },
     aria: {
       changeLanguage: "Change language",
@@ -632,6 +634,8 @@ export const translations = {
     mobile: {
       desktopOnlyTitle: "仅支持桌面端体验",
       desktopOnlyText: "请在桌面浏览器中访问 Zperiod。",
+      rotateTitle: "请横屏使用",
+      rotateText: "Zperiod 在横屏模式下体验更佳，请旋转您的设备。",
     },
     aria: {
       changeLanguage: "切换语言",
@@ -1245,6 +1249,8 @@ export const translations = {
     mobile: {
       desktopOnlyTitle: "Experience reservee au bureau",
       desktopOnlyText: "Veuillez acceder a Zperiod depuis un navigateur sur ordinateur.",
+      rotateTitle: "Tournez votre iPad",
+      rotateText: "Zperiod est optimisé en mode paysage. Veuillez tourner votre appareil.",
     },
     aria: {
       changeLanguage: "Changer la langue",
@@ -2261,6 +2267,8 @@ translations.ru = deepMerge(translations.en, {
   mobile: {
     desktopOnlyTitle: "Только для компьютера",
     desktopOnlyText: "Пожалуйста, откройте Zperiod в браузере на компьютере.",
+    rotateTitle: "Поверните iPad",
+    rotateText: "Zperiod лучше работает в альбомном режиме. Пожалуйста, поверните устройство.",
   },
   aria: {
     changeLanguage: "Сменить язык",
@@ -2800,6 +2808,8 @@ translations.fa = deepMerge(translations.en, {
   mobile: {
     desktopOnlyTitle: "فقط نسخه دسکتاپ",
     desktopOnlyText: "لطفا Zperiod را در مرورگر دسکتاپ باز کنید.",
+    rotateTitle: "آیپد را بچرخانید",
+    rotateText: "Zperiod در حالت افقی بهتر عمل می‌کند. لطفاً دستگاه خود را بچرخانید.",
   },
   aria: {
     changeLanguage: "تغییر زبان",
@@ -3339,6 +3349,8 @@ translations.ur = deepMerge(translations.en, {
   mobile: {
     desktopOnlyTitle: "صرف ڈیسک ٹاپ تجربہ",
     desktopOnlyText: "براہ کرم Zperiod کو ڈیسک ٹاپ براؤزر میں کھولیں۔",
+    rotateTitle: "آئی پیڈ کو گھمائیں",
+    rotateText: "Zperiod لینڈ اسکیپ موڈ میں بہتر کام کرتا ہے۔ براہ کرم اپنا آلہ گھمائیں۔",
   },
   aria: {
     changeLanguage: "زبان تبدیل کریں",
@@ -3878,6 +3890,8 @@ translations.tl = deepMerge(translations.en, {
   mobile: {
     desktopOnlyTitle: "Desktop Lamang",
     desktopOnlyText: "Pakibuksan ang Zperiod sa desktop browser.",
+    rotateTitle: "I-rotate ang iyong iPad",
+    rotateText: "Mas maganda ang Zperiod sa landscape mode. Mangyaring i-rotate ang iyong device.",
   },
   aria: {
     changeLanguage: "Palitan ang wika",

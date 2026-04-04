@@ -4,7 +4,7 @@
 // Then hands off to the robust balancer for coefficient determination
 // =============================================================================
 
-import { balanceEquation, demoChemistryValidator } from "./equationBalancer.js";
+import { balanceEquation, demoChemistryValidator, normalizeText } from "./equationBalancer.js";
 import { parseFormulaStrict, ct } from "./chemistryTools.js";
 
 // ============================================================
@@ -189,7 +189,8 @@ function buildIonicFormula(cation, anion) {
 
   // Cation part
   if (cSub === 1) {
-    result += cIsPolyatomic ? `(${cSymbol})` : cSymbol;
+    // Do not wrap polyatomic cation in parenthesis if there's only 1 (e.g. NH4NO3 instead of (NH4)NO3)
+    result += cSymbol;
   } else {
     result += cIsPolyatomic ? `(${cSymbol})${cSub}` : cSymbol + (cSub > 1 ? cSub : "");
   }
@@ -283,6 +284,37 @@ function classifyCompound(formula) {
 
   // Check for polyatomic ions (order matters — check longer patterns first)
   const ionDetection = detectIons(formula, atoms);
+  
+  // Dynamic Valence Extraction (Module 2 Fix)
+  // Calculate the actual charge of the cation by counter-balancing the anion.
+  if (ionDetection.cation && ionDetection.anion) {
+    let anionCharge = POLYATOMIC_IONS[ionDetection.anion]?.charge || getNonmetalCharge(ionDetection.anion) || -1;
+    const cationSym = ionDetection.cation.symbol;
+    
+    // Reverse-engineer exact charges from atom counts for metals
+    if (cationSym && cationSym !== "H" && cationSym !== "NH4") {
+      const catCount = atoms[cationSym] || 1;
+      const anFormula = ionDetection.anion;
+      let anCount = 1;
+      
+      if (POLYATOMIC_IONS[anFormula]) {
+        const polyAtoms = parseFormula(anFormula);
+        if (polyAtoms) {
+          const firstEl = Object.keys(polyAtoms)[0];
+          anCount = Math.floor((atoms[firstEl] || 0) / polyAtoms[firstEl]);
+        }
+      } else {
+        anCount = atoms[anFormula] || 1;
+      }
+      
+      if (anCount > 0 && catCount > 0) {
+        const calculatedCharge = Math.abs((anCount * Math.abs(anionCharge)) / catCount);
+        if (Number.isInteger(calculatedCharge) && calculatedCharge > 0) {
+          ionDetection.cation.charge = calculatedCharge;
+        }
+      }
+    }
+  }
 
   // Metal hydroxide: M(OH)n
   if (ionDetection.anion === "OH" && ionDetection.cation) {
@@ -315,7 +347,9 @@ function classifyCompound(formula) {
   }
 
   // Acid: starts with H + nonmetal/polyatomic anion
-  if (atoms.H && elements.length >= 2) {
+  // Protect NH4+ compounds from being misclassified as acids just because they contain H
+  const isAmmonium = ionDetection.cation && ionDetection.cation.symbol === "NH4";
+  if (atoms.H && elements.length >= 2 && !isAmmonium) {
     // Binary acid: HCl, HBr, HI, HF
     if (elements.length === 2 && HALOGEN_SET.has(elements.find(e => e !== "H"))) {
       const halogen = elements.find(e => e !== "H");
@@ -544,6 +578,38 @@ function predictSynthesis(reactants) {
       }
       return { error: `Unsupported nonmetal oxide synthesis: ${nmOxide.formula} + H₂O.` };
     }
+
+    // Pattern 4: Nonmetal + Nonmetal Synthesis (Specific common cases)
+    const nm1 = classified[0];
+    const nm2 = classified[1];
+    
+    if (nm1.type === "element" && nm2.type === "element" && !nm1.isMetal && !nm2.isMetal) {
+      const sym1 = nm1.symbol;
+      const sym2 = nm2.symbol;
+      const set = new Set([sym1, sym2]);
+
+      // H2 + O2 -> H2O
+      if (set.has("H") && set.has("O")) {
+        return { products: ["H2O"], explanation: ct("predictor.reasonSynthesisWater", "Hydrogen and oxygen combust/synthesize to form water.") || "Hydrogen and oxygen synthesize to form water." };
+      }
+      // H2 + Halogen -> HX
+      const halogen = (isHalogen(sym1) && sym1) || (isHalogen(sym2) && sym2);
+      if (set.has("H") && halogen) {
+        return { products: ["H" + halogen], explanation: ct("predictor.reasonSynthesisAcid", `Hydrogen and a halogen (${halogen}) synthesize to form hydrogen halide.`, { halogen }) || `Hydrogen and halogen synthesize to form a hydrogen halide.` };
+      }
+      // H2 + N2 -> NH3
+      if (set.has("H") && set.has("N")) {
+        return { products: ["NH3"], explanation: ct("predictor.reasonSynthesisAmmonia", "Hydrogen and nitrogen synthesize to form ammonia.") || "Hydrogen and nitrogen synthesize to form ammonia." };
+      }
+      // Nonmetal + Oxygen -> Oxide (Combustion-like synthesis)
+      if (set.has("O")) {
+        const otherNm = sym1 === "O" ? sym2 : sym1;
+        const oxideMap = { "C": "CO2", "S": "SO2", "P": "P2O5", "N": "NO2" };
+        if (oxideMap[otherNm]) {
+          return { products: [oxideMap[otherNm]], explanation: ct("predictor.reasonSynthesisOxide", `${otherNm} synthesizes with oxygen to form ${oxideMap[otherNm]}`) || "Nonmetal synthesizes with oxygen to form a nonmetal oxide." };
+        }
+      }
+    }
   }
 
   return { error: "These reactants do not match a supported synthesis pattern." };
@@ -689,15 +755,16 @@ function predictSingleDisplacement(reactants) {
         return { error: `Cannot determine reactivity between ${metalSym} and ${displacedMetal}.` };
       }
 
-      // Use the displaced metal's charge context when possible:
-      // Fe replacing Cu in CuSO4 should form FeSO4 (Fe²⁺), not Fe2(SO4)3 (Fe³⁺)
-      const charge = compoundCation.charge || getMetalCharge(metalSym) || 2;
+      // Prefer the replacing metal's natural charge for accurate valid cross (e.g., Al is always +3)
+      // fallback to the displaced cation's charge, then 2.
+      const charge = getMetalCharge(metalSym) || compoundCation.charge || 2;
       const newCompound = buildIonicFormula(
         { symbol: metalSym, charge },
         compound.anion,
       );
+      const displacedSpecies = elementFormula(displacedMetal);
       return {
-        products: [newCompound, displacedMetal],
+        products: [newCompound, displacedSpecies],
         explanation: `${metalSym} is more reactive than ${displacedMetal}, so it displaces ${displacedMetal} from the compound.`,
       };
     }
@@ -917,8 +984,9 @@ export function predictReaction(reactantInput, reactionType) {
     return { success: false, error: `Unknown reaction type: "${reactionType}".` };
   }
 
-  // Parse reactant input: split by + or spaces
-  const reactants = reactantInput
+  // Parse reactant input: normalize first (Zero-to-O sanitizer, etc.) then split by +
+  const normalizedInput = normalizeText(reactantInput);
+  const reactants = normalizedInput
     .replace(/[·.]/g, "•")                    // normalize hydrate dots
     .split(/\s*\+\s*/)                         // split on +
     .map(s => s.trim())

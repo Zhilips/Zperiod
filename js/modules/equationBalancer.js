@@ -60,9 +60,35 @@ const SUBSCRIPT_MAP = {
   "₅":"5","₆":"6","₇":"7","₈":"8","₉":"9"
 };
 
-function normalizeText(input) {
-  return String(input)
-    .replace(/[₀-₉]/g, ch => SUBSCRIPT_MAP[ch])
+export function normalizeText(input) {
+  let s = String(input)
+    .replace(/[₀-₉]/g, ch => SUBSCRIPT_MAP[ch]);
+
+  // ═══ Zero-to-O Sanitizer (character-level scan) ═══
+  // Core invariant: In chemistry, digit 0 can ONLY appear as a continuation
+  // of a multi-digit number (i.e., preceded by another digit 0-9).
+  // In ALL other positions (after a letter, bracket, space, or at start),
+  // a '0' must be the letter O.
+  let result = "";
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === "0") {
+      const prev = i > 0 ? s[i - 1] : "";
+      if (/[0-9]/.test(prev)) {
+        result += "0"; // Part of multi-digit number
+      } else {
+        result += "O"; // Must be the letter O
+      }
+    } else {
+      result += s[i];
+    }
+  }
+
+  // Explicitly fix standalone "H20" typos. Since the digit '2' correctly preserves 
+  // the '0', we need a manual override for this very common H2O spelling error,
+  // making sure not to break C9H20.
+  s = result.replace(/\bH20\b/g, "H2O");
+
+  return s
     .replace(/[→⟶⟹⇌⟷]/g, "->")
     .replace(/[·•]/g, "•")
     .replace(/\s+/g, " ")
@@ -246,6 +272,7 @@ function parseSingleFormula(formula) {
     if (!Number.isInteger(value) || value <= 0) {
       throw new FormulaError(`Invalid subscript in "${formula}".`);
     }
+    // Note: The previous arbitrary 20-subscript safeguard has been completely removed to support large organic molecules properly.
     return value;
   }
 
@@ -625,16 +652,8 @@ function formatTerm(coeff, formula) {
 // - You should expand it for your real app.
 export function demoChemistryValidator(formula, atomCounts) {
   // 1. Detect obviously suspicious high subscripts (e.g., Fe123O456, H100O)
-  //    Any single element with subscript >= 20 is suspicious for a
-  //    student-level chemistry tool.
-  for (const [el, count] of Object.entries(atomCounts)) {
-    if (count >= 20) {
-      throw new FormulaError(
-        `This formula looks unusual (${el}${count}). Please check the subscripts.`,
-        "SUSPICIOUS_FORMULA"
-      );
-    }
-  }
+  //    (This is now handled directly inside the parseNumber logic of parseFormulaStrict
+  //     to prevent false positives from hydrate multipliers like Al2(SO4)3•18H2O)
 
   // 2. Total atom count sanity: if the sum of all subscripts exceeds 200,
   //    flag it even if no single element is >= 20 on its own.
@@ -644,6 +663,28 @@ export function demoChemistryValidator(formula, atomCounts) {
       `This formula looks unusual (total ${totalAtoms} atoms). Please check the subscripts.`,
       "SUSPICIOUS_FORMULA"
     );
+  }
+
+  // 3. Strict Check: Pure elemental forms for diatromics (HOBrFINCl)
+  const elements = Object.keys(atomCounts);
+  if (elements.length === 1) {
+    const el = elements[0];
+    const count = atomCounts[el];
+    const diatomic = ["H", "N", "F", "Cl", "Br", "I"];
+    
+    if (diatomic.includes(el) && count !== 2) {
+      throw new FormulaError(
+        `${el} should be written as ${el}2, not ${formula}.`,
+        "INVALID_ELEMENTAL_FORM"
+      );
+    }
+    
+    if (el === "O" && count !== 2 && count !== 3) {
+      throw new FormulaError(
+        `Oxygen should be written as O2 (or O3), not ${formula}.`,
+        "INVALID_ELEMENTAL_FORM"
+      );
+    }
   }
 
   // 3. Specific case: H≥10 + O=1 (e.g. H10O, H100O)
@@ -661,4 +702,38 @@ export function demoChemistryValidator(formula, atomCounts) {
   }
 
   return true;
+}
+export function formatReactionError(errorMessage) {
+  if (!errorMessage || typeof errorMessage !== 'string') {
+    return "We couldn't parse this formula. Please double-check your spelling and formatting.";
+  }
+
+  // 1. 全小写 / 自然语言误触 (例: "asdfg" 或 "Water")
+  // 底层特征: 报 "Invalid character: [小写字母]"
+  if (/Invalid character:\s*[a-z]/.test(errorMessage)) {
+    return "Unrecognized element symbol. Remember that chemical elements must start with a capital letter (e.g., 'Na' instead of 'na', 'H2O' instead of 'Water').";
+  }
+
+  // 2. 括号不匹配 (例: "Ca(OH", "(PO4)3)")
+  // 底层特征: 包含 "matched", "bracket", "parenthes", "closed" 等特征的括号报错
+  if (/(unmatched|mismatched).*parenthes/i.test(errorMessage) || 
+      /(unmatched|mismatched).*bracket/i.test(errorMessage) || 
+      /unclosed/i.test(errorMessage)) {
+    return "Mismatched brackets. Please check your formula and make sure all parentheses are closed properly (e.g., 'Ca(OH)2').";
+  }
+
+  // 3. 非法特殊符号 (例: "H2O @ CO2", "NaCl!")
+  // 底层特征: 报 "Invalid character: [非字母数字的特殊符号]"
+  const specialCharMatch = errorMessage.match(/Invalid character:\s*([^a-zA-Z0-9\s])/);
+  if (specialCharMatch) {
+    const invalidChar = specialCharMatch[1];
+    return `Special characters like '${invalidChar}' are not allowed. Please use standard chemical formulas and '+' to separate reactants.`;
+  }
+
+  // 4. 兜底错误 (Fallback)
+  if (/Invalid|Parse|Syntax|undefined/i.test(errorMessage) || errorMessage.length < 25) {
+    return "We couldn't parse this formula. Please double-check your spelling and formatting.";
+  }
+
+  return errorMessage;
 }

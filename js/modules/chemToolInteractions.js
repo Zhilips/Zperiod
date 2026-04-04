@@ -8,6 +8,7 @@ import {
   formatFormulaHTML,
   atomicMasses,
 } from "./chemistryTools.js";
+import { formatReactionError } from "./equationBalancer.js";
 import { predictReaction } from "./reactionPredictor.js";
 import { t } from "./langController.js";
 
@@ -399,7 +400,7 @@ function attachBalancerListeners() {
         feedback.classList.remove("balanced");
         feedback.classList.add("unbalanced");
         // Show specific error message if available
-        const errorMsg = error.message || "";
+        const errorMsg = formatReactionError(error.message || "");
         if (errorMsg) {
           feedback.innerHTML = `<span class="status-icon">✕</span>${errorMsg}`;
         } else {
@@ -539,7 +540,7 @@ function attachBalancerListeners() {
     if (!res.success) {
       productsCard.classList.add(res.noReaction ? "no-reaction" : "error");
       productsLabel.textContent = res.noReaction ? (t("predictor.noReaction") || "No Reaction") : (t("predictor.error") || "Error");
-      productsText.textContent = res.error || (res.noReaction ? (t("predictor.noProducts") || "No products formed.") : (t("predictor.unknownError") || "Unknown error."));
+      productsText.textContent = formatReactionError(res.error || (res.noReaction ? (t("predictor.noProducts") || "No products formed.") : (t("predictor.unknownError") || "Unknown error.")));
       explanationText.textContent = res.explanation || (t("predictor.checkInputAgain") || "Please check your input and try again.");
       if (!res.explanation) explanation.style.display = "none";
       return;
@@ -547,21 +548,25 @@ function attachBalancerListeners() {
 
     productsLabel.textContent = t("predictor.predictedProducts") || "Predicted Products";
     productsText.innerHTML = formatChemicalEquation(res.products.join(" + "));
+    productsCard._copyText = res.products.join(" + ");
     
     if (res.balancedEquation) {
       balancedCard.style.display = "block";
       balancedLabel.textContent = t("predictor.balancedEquation") || "Balanced Equation";
       balancedText.innerHTML = formatChemicalEquation(res.balancedEquation);
+      balancedCard._copyText = res.balancedEquation;
     } else if (res.unbalancedEquation) {
       balancedCard.style.display = "block";
       balancedCard.classList.add("error");
       balancedLabel.textContent = t("predictor.unbalancedReaction") || "Unbalanced Reaction";
       balancedText.innerHTML = formatChemicalEquation(res.unbalancedEquation);
+      balancedCard._copyText = res.unbalancedEquation;
       if (res.balancingError) {
         explanationText.textContent = res.explanation ? res.explanation + " (" + res.balancingError + ")" : res.balancingError;
       }
     } else {
       balancedCard.style.display = "none";
+      balancedCard._copyText = "";
     }
 
     if (!res.balancingError) {
@@ -580,6 +585,29 @@ function attachBalancerListeners() {
       }
     });
   }
+
+  function setupPredictorCopy(card, textElement) {
+    if (!card || !textElement) return;
+    card.addEventListener("click", () => {
+      if (card._copyText && !card.classList.contains("error") && !card.classList.contains("no-reaction")) {
+        navigator.clipboard.writeText(card._copyText).then(() => {
+          const prev = textElement.innerHTML;
+          textElement.innerHTML = `<span>${t("balancer.copied") || "Copied!"}</span>`;
+          setTimeout(() => {
+            textElement.innerHTML = prev;
+          }, 1000);
+        });
+      }
+    });
+    // Visual hint
+    card.style.cursor = "pointer";
+    card.title = t("balancer.clickToCopy") || "Click to copy";
+  }
+
+  setupPredictorCopy(productsCard, productsText);
+  setupPredictorCopy(balancedCard, balancedText);
+
+  // ===== Virtual Lab Interaction Logic =====
 
   // Start initial animation with impulse
   startAnimation(true);

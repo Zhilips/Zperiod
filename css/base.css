@@ -946,7 +946,8 @@ body.hide-nav .version-dropdown {
   position: relative;
   align-items: stretch;
   justify-content: stretch;
-  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 #settings-page::before {

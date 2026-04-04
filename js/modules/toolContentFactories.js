@@ -687,7 +687,7 @@ function generateBalancerToolContent() {
                 box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.02);
             }
 
-            @media (max-height: 850px) {
+            @media (max-height: 700px) {
                 .predictor-left-col, .predictor-right-col {
                     padding: clamp(14px, 2.5vh, 24px);
                     gap: clamp(10px, 2vh, 22px);
@@ -759,17 +759,30 @@ function generateBalancerToolContent() {
             .predictor-result-area.show + .predictor-empty-state { display: none; }
 
             .predictor-result-card {
-                padding: 20px 24px; border-radius: 16px;
-                border: 1px solid rgba(167, 243, 208, 0.8);
-                background: rgba(236, 253, 245, 0.8);
+                padding: 18px 20px;
+                border-radius: 16px;
+                border: 2px solid transparent;
+                background: rgba(209, 250, 229, 0.72);
                 backdrop-filter: blur(16px);
-                box-shadow: 0 4px 16px rgba(16, 185, 129, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+                -webkit-backdrop-filter: blur(16px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+                transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .predictor-result-card:not(.error):not(.no-reaction):hover {
+                background: rgba(167, 243, 208, 0.72);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+                transform: translateY(-1px);
             }
             .predictor-result-card.error {
-                background: rgba(254, 243, 199, 0.72); border-color: rgba(253, 224, 71, 0.6);
+                background: rgba(254, 243, 199, 0.72);
             }
             .predictor-result-card.no-reaction {
-                background: rgba(241, 245, 249, 0.72); border-color: rgba(203, 213, 225, 0.6);
+                background: rgba(241, 245, 249, 0.72);
             }
             .predictor-result-label {
                 font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;

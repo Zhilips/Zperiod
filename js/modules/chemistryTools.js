@@ -620,17 +620,17 @@ export function balanceEquationModal(equation) {
   // 2. BASIC SYNTAX VALIDATION
   const arrowCount = (eqStr.match(/->/g) || []).length;
   if (arrowCount !== 1) {
-    throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormatTitle", "Check the equation format")}</strong><div>${ct("balancer.equationMustContainArrow", "Make sure there is exactly one arrow.")}</div></div>`);
+    throw new Error(`<span><strong>${ct("balancer.checkFormatTitle", "Check the equation format")}:</strong> ${ct("balancer.equationMustContainArrow", "Make sure there is exactly one arrow.")}</span>`);
   }
 
   const [leftSide, rightSide] = eqStr.split("->").map(s => s.trim());
   if (!leftSide || !rightSide) {
-    throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormatTitle", "Check the equation format")}</strong><div>${ct("balancer.missingReactantsOrProducts", "Both sides must have formulas.")}</div></div>`);
+    throw new Error(`<span><strong>${ct("balancer.checkFormatTitle", "Check the equation format")}:</strong> ${ct("balancer.missingReactantsOrProducts", "Both sides must have formulas.")}</span>`);
   }
 
   const checkSyntax = (side) => {
     if (side.startsWith("+") || side.endsWith("+") || /\+\s*\+/.test(side)) {
-      throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormatTitle", "Check the equation format")}</strong><div>${ct("balancer.removeExtraPlus", "Remove the extra \"+\" sign.")}</div></div>`);
+      throw new Error(`<span><strong>${ct("balancer.checkFormatTitle", "Check the equation format")}:</strong> ${ct("balancer.removeExtraPlus", "Remove the extra \"+\" sign.")}</span>`);
     }
   };
   checkSyntax(leftSide);
@@ -644,9 +644,9 @@ export function balanceEquationModal(equation) {
     if (/^\d+$/.test(tk)) {
       if (/^0/.test(tk)) {
         const suggestion = tk.replace(/^0/, "O");
-        throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormatTitle", "Check the equation format")}</strong><div>Did you type 0 (zero) instead of O (oxygen)? Try "<code>${suggestion}</code>"</div></div>`);
+        throw new Error(`<span><strong>${ct("balancer.checkFormatTitle", "Check the equation format")}:</strong> Did you type 0 (zero) instead of O (oxygen)? Try "<code>${suggestion}</code>"</span>`);
       } else {
-        throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}</strong><div>"${tk}" is not a valid compound formula.</div></div>`);
+        throw new Error(`<span><strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}:</strong> "${tk}" is not a valid compound formula.</span>`);
       }
     }
   }
@@ -656,11 +656,11 @@ export function balanceEquationModal(equation) {
     return rawArr.map(token => {
       // Reject spaces: "2 H2" -> error
       if (/^\d+\s+/.test(token)) {
-        throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}</strong><div>${ct("balancer.removeSpacesCoeff", "Remove spaces after coefficients.")}</div></div>`);
+        throw new Error(`<span><strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}:</strong> ${ct("balancer.removeSpacesCoeff", "Remove spaces after coefficients.")}</span>`);
       }
       // Reject symbols: "2*H2" -> error
       if (/^\d+[^\w([{]/.test(token)) {
-        throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}</strong><div>${ct("balancer.invalidCoeff", "Invalid coefficient format.")}</div></div>`);
+        throw new Error(`<span><strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}:</strong> ${ct("balancer.invalidCoeff", "Invalid coefficient format.")}</span>`);
       }
       const match = token.match(/^(\d+)(.*)/);
       if (match) {
@@ -683,6 +683,12 @@ export function balanceEquationModal(equation) {
     let f = item.formula;
 
     const compact = f.replace(/\s+/g, "");
+    
+    // Distinguish Reactant vs Product for error messaging
+    const isReactant = i < reactantsInfo.length;
+    const specificTitle = isReactant 
+       ? ct("balancer.splitReactantFormulaTitle", "Check the reactant formula")
+       : ct("balancer.splitProductFormulaTitle", "Check the product formula");
 
     // Heuristic B: O / 0 CONFUSION (Check BEFORE space parsing to catch Fe 203 correctly)
     if (/0/.test(compact)) {
@@ -690,7 +696,7 @@ export function balanceEquationModal(equation) {
       if (replaced !== compact) {
         try {
           parseFormulaStrict(replaced);
-          throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormulaTitle", "Check the formula")}</strong><div>${ct("balancer.didYouMean", "Did you mean <code>{suggestion}</code>?", {suggestion: replaced})}</div></div>`);
+          throw new Error(`<span><strong>${specificTitle}:</strong> ${ct("balancer.didYouMean", "Did you mean <code>{suggestion}</code>?", {suggestion: replaced})}</span>`);
         } catch(e) {
           if (e.message.includes("mean <code>") || e.message.includes("你想写")) throw e;
           // If it fails to parse, just fall through to Heuristic A
@@ -702,17 +708,17 @@ export function balanceEquationModal(equation) {
     if (/\s/.test(f)) {
       try {
         parseFormulaStrict(compact);
-        throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkProductReactantTitle", "Check the product/reactant formula")}</strong><div>${ct("balancer.didYouMean", "Did you mean <code>{suggestion}</code>?", {suggestion: compact})}</div></div>`);
+        throw new Error(`<span><strong>${specificTitle}:</strong> ${ct("balancer.didYouMean", "Did you mean <code>{suggestion}</code>?", {suggestion: compact})}</span>`);
       } catch (e) {
         if (e.message.includes("mean <code>") || e.message.includes("你想写")) throw e;
-        throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}</strong><div>${ct("balancer.removeSpacesInside", "Remove spaces inside the chemical formula.")}</div></div>`);
+        throw new Error(`<span><strong>${ct("balancer.checkFormulaFormatTitle", "Check the formula formatting")}:</strong> ${ct("balancer.removeSpacesInside", "Remove spaces inside the chemical formula.")}</span>`);
       }
     }
 
     // Heuristic C: HYDRATE FORMAT VALIDATION
     if (f.includes("•")) {
       if (/•\s*•/.test(f) || /^•/.test(f) || /•$/.test(f)) {
-        throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><span class="balancer-error">${ct("balancer.invalidHydrate", "Invalid hydrate notation")}</span></div>`);
+        throw new Error(`<span><strong class="balancer-error">${ct("balancer.invalidHydrate", "Invalid hydrate notation")}</strong></span>`);
       }
     }
 
@@ -721,13 +727,13 @@ export function balanceEquationModal(equation) {
       const atomCounts = parseFormulaStrict(f);
       demoChemistryValidator(f, atomCounts);
     } catch(e) {
-      if (!e.message.includes("mean <code>") && !e.message.includes("你想写") && !e.message.includes("移除") && !e.message.includes("Remove") && !e.message.includes("Invalid hydrate") && !e.message.includes("looks unusual") && !e.message.includes("异常") && !e.message.includes("<div>")) {
-         throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.checkFormulaTitle", "Check the formula")}</strong><div>${e.message}</div></div>`);
+      if (!e.message.includes("mean <code>") && !e.message.includes("你想写") && !e.message.includes("移除") && !e.message.includes("Remove") && !e.message.includes("Invalid hydrate") && !e.message.includes("looks unusual") && !e.message.includes("异常") && !e.message.includes("<span")) {
+         throw new Error(`<span><strong>${specificTitle}:</strong> ${e.message}</span>`);
       }
       throw e; 
     }
 
-    if (i < reactantsInfo.length) strippedReactants.push(f);
+    if (isReactant) strippedReactants.push(f);
     else strippedProducts.push(f);
   }
 
@@ -743,7 +749,7 @@ export function balanceEquationModal(equation) {
   steps.push("</ol>");
   steps.push(`<div class="warning-box"><strong>${ct("chemTools.important", "Important:")}</strong> ${ct("chemTools.importantDesc", "Never change subscripts, only coefficients!")}</div>`);
 
-    // 6. SOLVER STAGE
+  // 6. SOLVER STAGE
   try {
     const bal = balanceEquation({ reactants: strippedReactants, products: strippedProducts }, { chemistryValidator: demoChemistryValidator });
     result = {
@@ -751,7 +757,7 @@ export function balanceEquationModal(equation) {
       products: bal.products.map(p => p.coefficient)
     };
   } catch (err) {
-      throw new Error(`<div style="display:flex; flex-direction:column; gap:2px; text-align:left;"><strong>${ct("balancer.cantBalanceTitle", "Can't balance this equation")}</strong><div>${ct("balancer.checkBothSides", "Check the formulas on both sides.")}</div></div>`);
+      throw new Error(`<span><strong>${ct("balancer.cantBalanceTitle", "Can't balance this equation")}:</strong> ${ct("balancer.checkBothSides", "Check the formulas on both sides.")}</span>`);
   }
 
   // 7. POST-SOLVE LOGIC

@@ -34,7 +34,7 @@ export const ukUI = {
     "groupPeriod": "Група / Період",
     "phaseSTP": "Фаза за н.у.",
     "valenceElectrons": "Валентні e⁻",
-    "electronBlock": "Електронний блок",
+    "electronBlock": "Електронний шар",
     "commonIons": "Поширені іони",
     "noCommonIons": "Немає поширених іонів",
     "unknown": "Невідомо"

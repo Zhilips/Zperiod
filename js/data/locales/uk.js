@@ -1,6 +1,6 @@
 export const uk_elements = {
   "1": {
-    "name": "Водень",
+    "name": "Гідроген",
     "ions": "H⁺ (іон водню), H⁻ (гідрид)",
     "history": {
       "discoveryYear": "1766 рік",
@@ -108,7 +108,7 @@ export const uk_elements = {
     ]
   },
   "6": {
-    "name": "Вуглець",
+    "name": "Карбон",
     "ions": "Немає звичайних іонів",
     "history": {
       "discoveryYear": "Доісторичний",
@@ -132,7 +132,7 @@ export const uk_elements = {
     ]
   },
   "7": {
-    "name": "Азот",
+    "name": "Нітроген",
     "ions": "N³⁻ (нітрид)",
     "history": {
       "discoveryYear": "1772 рік",
@@ -153,7 +153,7 @@ export const uk_elements = {
     ]
   },
   "8": {
-    "name": "Кисень",
+    "name": "Оксиген",
     "ions": "O²⁻ (оксид)",
     "history": {
       "discoveryYear": "1774 рік",
@@ -175,7 +175,7 @@ export const uk_elements = {
     ]
   },
   "9": {
-    "name": "Фтор",
+    "name": "Флуор",
     "ions": "F⁻ (фторид)",
     "history": {
       "discoveryYear": "1886 рік",
@@ -282,7 +282,7 @@ export const uk_elements = {
     ]
   },
   "14": {
-    "name": "Кремній",
+    "name": "Силіцій",
     "ions": "Немає звичайних іонів",
     "history": {
       "discoveryYear": "1824 рік",
@@ -325,7 +325,7 @@ export const uk_elements = {
     ]
   },
   "16": {
-    "name": "Сірка",
+    "name": "Сульфур",
     "ions": "S²⁻ (сульфід)",
     "history": {
       "discoveryYear": "Доісторичний",
@@ -513,7 +513,7 @@ export const uk_elements = {
     ]
   },
   "25": {
-    "name": "Марганець",
+    "name": "Манган",
     "ions": "Mn²⁺ (Марганець (II)), Mn³⁺ (Марганець (III))",
     "history": {
       "discoveryYear": "1774 рік",
@@ -534,7 +534,7 @@ export const uk_elements = {
     ]
   },
   "26": {
-    "name": "Залізо",
+    "name": "Ферум",
     "ions": "Fe²⁺ (залізо (II)), Fe³⁺ (залізо (III))",
     "history": {
       "discoveryYear": "Доісторичний (~4000 р. до н. е.)",
@@ -602,7 +602,7 @@ export const uk_elements = {
     ]
   },
   "29": {
-    "name": "Мідь",
+    "name": "Купрум",
     "ions": "Cu⁺ (Мідь(I)), Cu²⁺ (Мідь(II))",
     "history": {
       "discoveryYear": "Доісторичний (~9000 р. до н. е.)",
@@ -687,7 +687,7 @@ export const uk_elements = {
     ]
   },
   "33": {
-    "name": "Миш'як",
+    "name": "Арсен",
     "ions": "Немає звичайних іонів",
     "history": {
       "discoveryYear": "~1250 (ізольовано)",
@@ -985,7 +985,7 @@ export const uk_elements = {
     ]
   },
   "47": {
-    "name": "Срібло",
+    "name": "Аргентум",
     "ions": "Ag⁺ (срібло)",
     "history": {
       "discoveryYear": "Доісторичний (~3000 р. до н. е.)",
@@ -1052,7 +1052,7 @@ export const uk_elements = {
     ]
   },
   "50": {
-    "name": "Олово",
+    "name": "Станум",
     "ions": "Sn²⁺ (олово(II)), Sn4⁺ (олово(IV))",
     "history": {
       "discoveryYear": "Доісторичний (~3000 р. до н. е.)",
@@ -1074,7 +1074,7 @@ export const uk_elements = {
     ]
   },
   "51": {
-    "name": "Сурма",
+    "name": "Стибій",
     "ions": "Sb³⁻ (антимонід), Sb³⁺ (сурма (III))",
     "history": {
       "discoveryYear": "~3000 р. до н.е",
@@ -1654,7 +1654,7 @@ export const uk_elements = {
     ]
   },
   "79": {
-    "name": "Золото",
+    "name": "Аурум",
     "ions": "Au⁺ (золото(I)), Au³⁺ (золото(III))",
     "history": {
       "discoveryYear": "Доісторичний (~6000 до н. е.)",
@@ -1675,7 +1675,7 @@ export const uk_elements = {
     ]
   },
   "80": {
-    "name": "Ртуть",
+    "name": "Меркурій",
     "ions": "Hg₂²⁺ (Ртуть(I)), Hg²⁺ (Ртуть(II))",
     "history": {
       "discoveryYear": "~1500 р. до н.е",
@@ -1717,7 +1717,7 @@ export const uk_elements = {
     ]
   },
   "82": {
-    "name": "Свинець",
+    "name": "Плюмбум",
     "ions": "Pb²⁺ (свинець (II)), Pb4⁺ (свинець (IV))",
     "history": {
       "discoveryYear": "~7000 р. до н.е",

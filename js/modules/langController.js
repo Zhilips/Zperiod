@@ -1,5 +1,5 @@
 // =============================================================================
-// Language Controller — global i18n for EN / ZH / ZH-HANT / FR / RU / FA / UR / TL
+// Language Controller — global i18n for EN / ZH / ZH-HANT / FR / RU / FA / UR / TL / ES
 // =============================================================================
 
 import { translations } from "../data/translations.js";

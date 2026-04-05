@@ -953,7 +953,7 @@ export const es_elements = {
       "Industria del automóvil (convertidores catalíticos para reducción de NOₓ)"
     ],
     "uses": [
-      "Catalizadores con converter (80% de uso)",
+      "Catalizadores con convertidor catalítico (80% de uso)",
       "Chapado de joyería (acabado blanco)"
     ],
     "hazards": [
@@ -1075,7 +1075,7 @@ export const es_elements = {
   },
   "51": {
     "name": "Antimonio",
-    "ions": "Sb³⁻ (Antimo niuro), Sb³⁺ (Antimonio(III))",
+    "ions": "Sb³⁻ (Antimoniuro), Sb³⁺ (Antimonio(III))",
     "history": {
       "discoveryYear": "~3000 a.C.",
       "discoveredBy": "Civilizaciones antiguas",

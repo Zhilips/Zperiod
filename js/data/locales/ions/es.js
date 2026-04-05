@@ -134,7 +134,7 @@ export const es_ions = {
           },
           {
             "formula": "Na₂CO₃",
-            "name": "Soda cáustica"
+            "name": "Carbonato de sodio"
           }
         ]
       },
@@ -1012,7 +1012,7 @@ export const es_ions = {
         "discoveredBy": "Daniel Rutherford",
         "namedBy": "Griego Nitron (Sosa)",
         "stse": [
-          "LED azул (Premio Nobel)",
+          "LED azul (Premio Nobel)",
           "Seguridad de los airbags"
         ],
         "commonUses": [

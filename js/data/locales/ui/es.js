@@ -627,7 +627,7 @@ export const esUI = {
     "card2Title": "Tutoriales interactivos guiados",
     "card2Body": "Guías interactivas paso a paso añadidas a cada herramienta y página de elemento para ayudarte a dominar los componentes de química al instante.",
     "card3Title": "Soporte de idiomas ampliado",
-    "card3Body": "Las páginas, herramientas y contenido técnico principales ahora cuentan con traducciones más completas en los 8 idiomas admitidos.",
+    "card3Body": "Las páginas, herramientas y contenido técnico principales ahora cuentan con traducciones más completas en los 9 idiomas admitidos.",
     "card4Title": "Limpieza del espacio de trabajo de herramientas",
     "card4Body": "Se eliminaron herramientas legadas redundantes y se simplificó la interfaz del espacio de trabajo para una experiencia más rápida y limpia.",
     "card5Title": "Diseño refinado y correcciones",

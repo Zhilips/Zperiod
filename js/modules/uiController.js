@@ -4,6 +4,8 @@
 // =============================================================================
 
 import { finallyData, elements } from "../data/elementsData.js";
+import { exceptionsData } from "../data/exceptionsData.js";
+import { initViewToggle, cleanupViewToggle } from "./energyDiagram.js";
 import { translations } from "../data/translations.js";
 import {
   ensureThreeLibLoaded,
@@ -2229,6 +2231,198 @@ function populateSimplifiedView(element) {
       }
     }
   }
+
+  // ─── Inject exception tooltips ───
+  injectExceptionBadges(element);
+}
+
+// =============================================================================
+// Exception & Anomaly Badges
+// =============================================================================
+function injectExceptionBadges(element) {
+  // Clean up any previous badges and body-level tooltips
+  document.querySelectorAll('.exception-badge').forEach(el => el.remove());
+  document.querySelectorAll('.exception-tooltip').forEach(el => el.remove());
+
+  const exc = exceptionsData[element.number];
+  if (!exc) return;
+
+  // ─── Electron Configuration exception ───
+  if (exc.config) {
+    const configNode = document.querySelector('#l2-configuration-value');
+    if (configNode) {
+      attachExceptionBadge(configNode, exc.config, 'config');
+    }
+  }
+
+  // ─── Ionization Energy exception ───
+  if (exc.ionization) {
+    const ieItem = document.querySelector('.l3-stat-item[data-metric="ie"]');
+    const ieLabel = ieItem?.querySelector('.l3-stat-label');
+    if (ieLabel) {
+      attachExceptionBadge(ieLabel, exc.ionization, 'ionization');
+    }
+  }
+
+  // ─── Electronegativity exception ───
+  if (exc.electronegativity) {
+    const enItems = document.querySelectorAll('.l3-stat-item');
+    for (const item of enItems) {
+      const label = item.querySelector('.l3-stat-label');
+      if (label && /electronegativity/i.test(label.textContent)) {
+        attachExceptionBadge(label, exc.electronegativity, 'electronegativity');
+        break;
+      }
+    }
+  }
+
+  // ─── Electron Affinity exception ───
+  if (exc.electronAffinity) {
+    const eaItem = document.querySelector('.l3-stat-item[data-metric="ea"]');
+    const eaLabel = eaItem?.querySelector('.l3-stat-label');
+    if (eaLabel) {
+      attachExceptionBadge(eaLabel, exc.electronAffinity, 'electronAffinity');
+    }
+  }
+
+  // ─── Atomic Radius exception ───
+  if (exc.atomicRadius) {
+    const arItems = document.querySelectorAll('.l3-stat-item');
+    for (const item of arItems) {
+      const label = item.querySelector('.l3-stat-label');
+      if (label && /atomic\s*radius/i.test(label.textContent)) {
+        attachExceptionBadge(label, exc.atomicRadius, 'atomicRadius');
+        break;
+      }
+    }
+  }
+
+  // ─── Oxidation State anomaly ───
+  if (exc.oxidation) {
+    const oxLabel = document.querySelector('.oxidation-container')?.previousElementSibling;
+    if (oxLabel) {
+      attachExceptionBadge(oxLabel, exc.oxidation, 'oxidation');
+    }
+  }
+
+  // ─── Placement anomaly ───
+  if (exc.placement) {
+    const typeLabel = document.querySelector('#l1-type-value');
+    if (typeLabel) {
+      attachExceptionBadge(typeLabel, exc.placement, 'placement');
+    }
+  }
+
+  // ─── Diagonal relationship ───
+  if (exc.diagonal) {
+    const groupLabel = document.querySelector('#l1-group-period-value');
+    if (groupLabel) {
+      attachExceptionBadge(groupLabel, exc.diagonal, 'diagonal');
+    }
+  }
+
+  // ─── Inert Pair Effect ───
+  if (exc.inertPair) {
+    const oxLabel = document.querySelector('.oxidation-container')?.previousElementSibling;
+    if (oxLabel) {
+      attachExceptionBadge(oxLabel, exc.inertPair, 'inertPair');
+    }
+  }
+}
+
+function attachExceptionBadge(parentEl, excData, type) {
+  if (!parentEl) return;
+
+  // Badge icon — placed inline next to the value
+  const badge = document.createElement('span');
+  badge.className = 'exception-badge';
+  badge.dataset.excType = type;
+  badge.innerHTML = `<span class="exception-badge-icon">⚠</span>`;
+  badge.setAttribute('aria-label', excData.title);
+
+  // Tooltip — rendered on body so it escapes overflow:hidden containers
+  const tooltip = document.createElement('div');
+  tooltip.className = 'exception-tooltip';
+  tooltip.dataset.excType = type;
+
+  let tooltipHtml = `<div class="exc-title">${excData.title}</div>`;
+
+  // Config exceptions show predicted vs actual
+  if (excData.predicted && excData.actual) {
+    tooltipHtml += `
+      <div class="exc-comparison">
+        <div class="exc-predicted"><span class="exc-label">Predicted:</span> <span class="exc-value">${excData.predicted}</span></div>
+        <div class="exc-actual"><span class="exc-label">Actual:</span> <span class="exc-value exc-highlight">${excData.actual}</span></div>
+      </div>`;
+  }
+
+  tooltipHtml += `<div class="exc-detail">${excData.detail}</div>`;
+  tooltip.innerHTML = tooltipHtml;
+
+  // Append tooltip to body, badge inline next to value
+  document.body.appendChild(tooltip);
+  parentEl.appendChild(badge);
+
+  function positionTooltip() {
+    const badgeRect = badge.getBoundingClientRect();
+    // Try above first
+    tooltip.style.left = '';
+    tooltip.style.top = '';
+    tooltip.classList.remove('arrow-top', 'arrow-bottom');
+
+    // Temporarily show to measure
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.opacity = '0';
+    tooltip.style.display = 'block';
+    const tipRect = tooltip.getBoundingClientRect();
+    tooltip.style.display = '';
+    tooltip.style.visibility = '';
+    tooltip.style.opacity = '';
+
+    const tipW = tipRect.width;
+    const tipH = tipRect.height;
+    const gap = 10;
+
+    // Horizontal: align right edge of tooltip with right edge of badge
+    let left = badgeRect.right - tipW + 20;
+    if (left < 8) left = 8;
+    if (left + tipW > window.innerWidth - 8) left = window.innerWidth - tipW - 8;
+
+    // Vertical: prefer above
+    let top = badgeRect.top - tipH - gap;
+    if (top < 8) {
+      // Show below
+      top = badgeRect.bottom + gap;
+      tooltip.classList.add('arrow-top');
+    } else {
+      tooltip.classList.add('arrow-bottom');
+    }
+
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+  }
+
+  // Show/hide tooltip
+  badge.addEventListener('mouseenter', () => {
+    // Close any other open tooltips
+    document.querySelectorAll('.exception-tooltip.visible').forEach(t => t.classList.remove('visible'));
+    positionTooltip();
+    tooltip.classList.add('visible');
+  });
+  badge.addEventListener('mouseleave', () => {
+    tooltip.classList.remove('visible');
+  });
+
+  // Touch support
+  badge.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isVisible = tooltip.classList.contains('visible');
+    document.querySelectorAll('.exception-tooltip.visible').forEach(t => t.classList.remove('visible'));
+    if (!isVisible) {
+      positionTooltip();
+      tooltip.classList.add('visible');
+    }
+  });
 }
 
 // ===== Show Modal (main element modal) =====
@@ -2803,6 +2997,7 @@ export function showModal(element) {
         onWindowResize();
         reset3DView();
         animateAtom();
+        initViewToggle(element);
         requestAnimationFrame(() => {
           atomContainer.style.opacity = "1";
         });
@@ -2813,6 +3008,7 @@ export function showModal(element) {
   } else {
     atomContainer.classList.remove("visible");
     cleanup3D();
+    cleanupViewToggle();
   }
 }
 

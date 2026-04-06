@@ -1224,6 +1224,222 @@
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ── View Toggle (Bohr / Energy Levels) ── */
+#atom-view-toggle {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: none; /* shown by JS when modal opens */
+  gap: 0;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 10px;
+  padding: 3px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07), 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.atom-view-btn {
+  border: none;
+  background: transparent;
+  color: #777;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  padding: 5px 14px;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.2px;
+}
+.atom-view-btn:hover { color: #333; background: rgba(0,0,0,0.04); }
+.atom-view-btn.active { background: #333; color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+
+/* ── Energy Level Diagram Container ── */
+#energy-diagram-container {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 12;
+  display: none; /* toggled by JS */
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 24px 24px 56px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+#energy-diagram-container.active {
+  display: flex;
+}
+
+/* ── Energy diagram internals ── */
+.energy-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+/* Energy axis */
+.energy-axis-label {
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(0,0,0,0.18);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.energy-axis-arrow {
+  position: absolute;
+  left: 16px;
+  top: 8px;
+  bottom: 8px;
+  width: 1.5px;
+  background: linear-gradient(to top, rgba(0,0,0,0.06), rgba(0,0,0,0.16));
+  border-radius: 1px;
+}
+.energy-axis-arrow::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 6px solid rgba(0,0,0,0.18);
+}
+
+/* Each sublevel row */
+.energy-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0 5px 32px;
+  position: relative;
+}
+
+.energy-row-label {
+  min-width: 32px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Inter', monospace;
+  text-align: right;
+  padding-right: 4px;
+  flex-shrink: 0;
+}
+.energy-row-label.type-s { color: #1976D2; }
+.energy-row-label.type-p { color: #E65100; }
+.energy-row-label.type-d { color: #2E7D32; }
+.energy-row-label.type-f { color: #7B1FA2; }
+
+/* Orbital boxes group */
+.orbital-boxes {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+}
+
+/* Single orbital box */
+.orbital-box {
+  width: 26px;
+  height: 32px;
+  border: 1.5px solid rgba(0,0,0,0.12);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  background: rgba(255,255,255,0.7);
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+.orbital-box.filled { background: rgba(255,255,255,0.95); }
+.orbital-box.type-s { border-color: rgba(25, 118, 210, 0.3); }
+.orbital-box.type-p { border-color: rgba(230, 81, 0, 0.3); }
+.orbital-box.type-d { border-color: rgba(46, 125, 50, 0.3); }
+.orbital-box.type-f { border-color: rgba(123, 31, 162, 0.3); }
+.orbital-box.filled.type-s { border-color: rgba(25, 118, 210, 0.5); background: rgba(25, 118, 210, 0.06); }
+.orbital-box.filled.type-p { border-color: rgba(230, 81, 0, 0.5); background: rgba(230, 81, 0, 0.06); }
+.orbital-box.filled.type-d { border-color: rgba(46, 125, 50, 0.5); background: rgba(46, 125, 50, 0.06); }
+.orbital-box.filled.type-f { border-color: rgba(123, 31, 162, 0.5); background: rgba(123, 31, 162, 0.06); }
+
+/* Arrows inside box */
+.arrow-up, .arrow-down {
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 700;
+}
+.arrow-up { transform: scaleX(0.8); }
+.arrow-down { transform: scaleX(0.8) rotate(180deg); }
+.arrow-up.type-s, .arrow-down.type-s { color: #1976D2; }
+.arrow-up.type-p, .arrow-down.type-p { color: #E65100; }
+.arrow-up.type-d, .arrow-down.type-d { color: #2E7D32; }
+.arrow-up.type-f, .arrow-down.type-f { color: #7B1FA2; }
+
+/* Noble gas core label */
+.energy-core-label {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.35);
+  padding: 8px 0 4px 32px;
+  letter-spacing: 0.3px;
+}
+.energy-core-divider {
+  margin: 4px 32px 6px;
+  border: none;
+  border-top: 1px dashed rgba(0,0,0,0.12);
+}
+
+/* Row electron count badge */
+.energy-row-count {
+  font-size: 11px;
+  color: rgba(0,0,0,0.3);
+  font-weight: 500;
+  margin-left: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Exception highlight on row */
+.energy-row.exception .orbital-boxes {
+  outline: 2px solid rgba(255, 171, 0, 0.4);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+.energy-row .exc-row-badge {
+  font-size: 10px;
+  color: #d49a00;
+  margin-left: 2px;
+}
+
+/* Diagram title */
+.energy-diagram-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(0,0,0,0.55);
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 0.3px;
+}
+.energy-diagram-config {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(0,0,0,0.35);
+  text-align: center;
+  margin-bottom: 16px;
+  font-family: 'Inter', monospace;
+}
+
 #modal-watermark {
   position: absolute;
   top: 50%;
@@ -3616,4 +3832,144 @@ body.tutorial-active .level-lock-btn {
   visibility: visible !important;
   pointer-events: auto !important;
   z-index: 9999 !important;
+}
+
+/* =============================================================================
+   Exception & Anomaly Badges
+   ============================================================================= */
+
+.exception-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  z-index: 15;
+  border-radius: 50%;
+  background: rgb(255, 210, 0);
+  box-shadow: 0 0 0 2px rgba(255, 210, 0, 0.3);
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  position: relative;
+  vertical-align: middle;
+  margin-left: 6px;
+  flex-shrink: 0;
+}
+
+.exception-badge:hover {
+  background: rgb(255, 220, 40);
+  box-shadow: 0 0 0 3px rgba(255, 210, 0, 0.45);
+  transform: scale(1.15);
+}
+
+.exception-badge-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: #222;
+}
+
+/* Tooltip — rendered fixed on body, floats above everything */
+.exception-tooltip {
+  position: fixed;
+  width: max-content;
+  max-width: 300px;
+  min-width: 210px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(24, 24, 30, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: #f0f0f0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  transform: translateY(6px);
+  z-index: 99999;
+}
+
+.exception-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Arrow */
+.exception-tooltip::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: rgba(24, 24, 30, 0.97);
+  transform: rotate(45deg);
+  z-index: -1;
+}
+/* Arrow bottom (tooltip above badge) */
+.exception-tooltip.arrow-bottom::after {
+  bottom: -5px;
+  right: 16px;
+}
+/* Arrow top (tooltip below badge) */
+.exception-tooltip.arrow-top::after {
+  top: -5px;
+  right: 16px;
+}
+
+.exc-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: #ffb84d;
+  margin-bottom: 8px;
+  letter-spacing: 0.2px;
+}
+
+.exc-comparison {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.exc-predicted,
+.exc-actual {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.exc-label {
+  color: #999;
+  font-size: 11px;
+  font-weight: 500;
+  min-width: 65px;
+}
+
+.exc-value {
+  font-family: 'Inter', monospace;
+  font-weight: 500;
+  color: #ccc;
+}
+
+.exc-value.exc-highlight {
+  color: #4FC3F7;
+  font-weight: 700;
+}
+
+.exc-predicted .exc-value {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.exc-detail {
+  color: #bbb;
+  font-size: 11.5px;
+  line-height: 1.55;
 }

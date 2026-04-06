@@ -148,7 +148,7 @@ function getElementAnnotation(number, lang) {
 
 function localizeElementName(element) {
   if (!element || !element.number) return "";
-  
+
   // Special translation for Lanthanide/Actinide block placeholders
   if (element.symbol === "La-Lu") return t("tableLegend.lanthanide");
   if (element.symbol === "Ac-Lr") return t("tableLegend.actinide");
@@ -254,6 +254,7 @@ function localizeNoAdditionalData() {
   if (lang.startsWith("fa")) return "اطلاعات تکمیلی موجود نیست.";
   if (lang.startsWith("ur")) return "مزید تفصیلی معلومات دستیاب نہیں۔";
   if (lang.startsWith("tl")) return "Wala pang karagdagang detalye.";
+  if (lang.startsWith("sq")) return "Nuk ka të dhëna shtesë.";
   return "No additional data available.";
 }
 
@@ -276,13 +277,16 @@ function buildLocalizedCommonIonNote(element, symbol) {
   if (lang.startsWith("tl")) {
     return `${symbol} ay isang karaniwang ion ng ${localizedName} sa mga karaniwang compound nito.`;
   }
+  if (lang.startsWith("sq")) {
+    return `${symbol} është një jon i zakonshëm i elementit ${localizedName} në përbërjet e tij të zakonshme.`
+  }
   return `${symbol} is a common ion of ${element.name} in its usual compounds.`;
 }
 
 function buildCommonIonDetailMarkup(element, symbol) {
   const override = COMMON_ION_DETAIL_OVERRIDES[element.symbol]?.[symbol];
   let note = override?.note || localizeNoAdditionalData();
-  
+
   const lang = getLang();
   if (lang.startsWith("zh")) {
     const commonIonNotes = lang === "zh-Hant" ? COMMON_ION_ZH_HANT : COMMON_ION_ZH;
@@ -294,7 +298,7 @@ function buildCommonIonDetailMarkup(element, symbol) {
   } else if (lang !== "en") {
     note = buildLocalizedCommonIonNote(element, symbol);
   }
-  
+
   return `<div class="ion-item-detail-inner"><p class="ion-detail-note">${escapeHtml(note)}</p></div>`;
 }
 
@@ -303,7 +307,7 @@ function localizeSimpleStatusText(value, fallback = "—") {
   if (!normalized) return fallback;
   if (/^unknown$/i.test(normalized)) return t("elementL1.unknown");
   if (/^no common ions$/i.test(normalized)) return t("elementL1.noCommonIons");
-  
+
   // Phase handling with proper short-circuit fallback
   const phaseMap = { Solid: 1, Liquid: 1, Gas: 1 };
   if (phaseMap[normalized]) {
@@ -333,35 +337,35 @@ function localizeValence(val) {
   if (lang.startsWith("zh")) {
     const replacements = lang === "zh-Hant"
       ? [
-          [/Variable \(outer s \+ d \+ f\)/i, "可變 (外層 s + d + f)"],
-          [/Variable \(outer s \+ d\)/i, "可變 (外層 s + d)"],
-          [/Variable \(outer s \+ f\)/i, "可變 (外層 s + f)"],
-          [/Variable \(outer d only here\)/i, "可變 (僅外層 d)"],
-          [/Variable/i, "可變"],
-          [/\(d-subshell is full\)/gi, "(d 子殼層已充滿)"],
-          [/\(s-subshell only\)/gi, "(僅 s 子殼層)"],
-          [/\(f-subshell filling\)/gi, "(f 子殼層填充中)"],
-          [/\(half-filled d\)/gi, "(d 半填充)"],
-          [/\(full d before s\)/gi, "(d 先於 s 充滿)"],
-          [/\(d-subshell\)/gi, "(d 子殼層)"],
-          [/subshell/gi, "子殼層"],
-          [/outer/gi, "外層"],
-        ]
+        [/Variable \(outer s \+ d \+ f\)/i, "可變 (外層 s + d + f)"],
+        [/Variable \(outer s \+ d\)/i, "可變 (外層 s + d)"],
+        [/Variable \(outer s \+ f\)/i, "可變 (外層 s + f)"],
+        [/Variable \(outer d only here\)/i, "可變 (僅外層 d)"],
+        [/Variable/i, "可變"],
+        [/\(d-subshell is full\)/gi, "(d 子殼層已充滿)"],
+        [/\(s-subshell only\)/gi, "(僅 s 子殼層)"],
+        [/\(f-subshell filling\)/gi, "(f 子殼層填充中)"],
+        [/\(half-filled d\)/gi, "(d 半填充)"],
+        [/\(full d before s\)/gi, "(d 先於 s 充滿)"],
+        [/\(d-subshell\)/gi, "(d 子殼層)"],
+        [/subshell/gi, "子殼層"],
+        [/outer/gi, "外層"],
+      ]
       : [
-          [/Variable \(outer s \+ d \+ f\)/i, "可变 (外层 s + d + f)"],
-          [/Variable \(outer s \+ d\)/i, "可变 (外层 s + d)"],
-          [/Variable \(outer s \+ f\)/i, "可变 (外层 s + f)"],
-          [/Variable \(outer d only here\)/i, "可变 (仅外层 d)"],
-          [/Variable/i, "可变"],
-          [/\(d-subshell is full\)/gi, "(d 子壳层已充满)"],
-          [/\(s-subshell only\)/gi, "(仅 s 子壳层)"],
-          [/\(f-subshell filling\)/gi, "(f 子壳层填充中)"],
-          [/\(half-filled d\)/gi, "(d 半填充)"],
-          [/\(full d before s\)/gi, "(d 先于 s 充满)"],
-          [/\(d-subshell\)/gi, "(d 子壳层)"],
-          [/subshell/gi, "子壳层"],
-          [/outer/gi, "外层"],
-        ];
+        [/Variable \(outer s \+ d \+ f\)/i, "可变 (外层 s + d + f)"],
+        [/Variable \(outer s \+ d\)/i, "可变 (外层 s + d)"],
+        [/Variable \(outer s \+ f\)/i, "可变 (外层 s + f)"],
+        [/Variable \(outer d only here\)/i, "可变 (仅外层 d)"],
+        [/Variable/i, "可变"],
+        [/\(d-subshell is full\)/gi, "(d 子壳层已充满)"],
+        [/\(s-subshell only\)/gi, "(仅 s 子壳层)"],
+        [/\(f-subshell filling\)/gi, "(f 子壳层填充中)"],
+        [/\(half-filled d\)/gi, "(d 半填充)"],
+        [/\(full d before s\)/gi, "(d 先于 s 充满)"],
+        [/\(d-subshell\)/gi, "(d 子壳层)"],
+        [/subshell/gi, "子壳层"],
+        [/outer/gi, "外层"],
+      ];
 
     return replacements.reduce(
       (localized, [pattern, replacement]) => localized.replace(pattern, replacement),
@@ -434,6 +438,18 @@ function localizeValence(val) {
       .replace(/subshell/gi, "subshell")
       .replace(/outer/gi, "panlabas");
   }
+  if (lang === "sq") {
+    return String(val)
+      .replace(/Variable \(outer s \+ d \+ f\)/i, "E ndryshueshme (s + d + f të jashtme)")
+      .replace(/Variable \(outer s \+ d\)/i, "E ndryshueshme (s + d të jashtme)")
+      .replace(/Variable \(outer s \+ f\)/i, "E ndryshueshme (s + f të jashtme)")
+      .replace(/Variable \(outer d only here\)/i, "E ndryshueshme (vetëm d e jashtme këtu)")
+      .replace(/Variable/i, "E ndryshueshme")
+      .replace(/\(d-subshell is full\)/gi, "(nënniveli d është i plotë)")
+      .replace(/\(acts like 1\)/gi, "(sillet si 1)")
+      .replace(/subshell/gi, "nënnivel")
+      .replace(/outer/gi, "i jashtëm");
+  }
   return val;
 }
 
@@ -446,6 +462,7 @@ function localizeNA() {
   if (lang.startsWith("fa")) return "ناموجود";
   if (lang.startsWith("ur")) return "دستیاب نہیں";
   if (lang.startsWith("tl")) return "Wala";
+  if (lang.startsWith("sq")) return "Asnjë";
   return "N/A";
 }
 
@@ -485,6 +502,15 @@ function compactLocalizedHistoryText(text) {
     .trim();
 }
 
+function buildElementAriaLabel(element) {
+  const localizedName = localizeElementName(element);
+  const lang = getLang();
+  if (lang.startsWith("sq")) {
+    return `${localizedName} (${element.symbol}), numri atomik ${element.number}`;
+  }
+  return `${localizedName} (${element.symbol}), atomic number ${element.number}`;
+}
+
 function buildTextDetailMarkup(note) {
   const normalizedNote = String(note || "").trim();
   if (!normalizedNote) return "";
@@ -507,7 +533,7 @@ function buildIsotopeFallbackNote(element, isotope) {
   const isRadioactive = /radioactive|decay|t½|half-life/i.test(percentText);
   const isStable = /stable/i.test(percentText) && !isRadioactive;
   const lang = getLang();
-  
+
   if (lang.startsWith("zh")) {
     if (lang === "zh-Hant") {
       if (isStable && abundance) return `穩定同位素；自然豐度 ${abundance}。`;
@@ -562,6 +588,14 @@ function buildIsotopeFallbackNote(element, isotope) {
     if (isRadioactive && /trace/i.test(percentText)) return "Radyoaktibong isotope na matatagpuan lamang sa bakas na dami sa kalikasan.";
     if (isRadioactive && abundance) return `Radyoaktibong isotope ng ${localizeElementName(element)}; likas na kasaganaan ${abundance}.`;
     if (isRadioactive) return `Radyoaktibong isotope ng ${localizeElementName(element)}.`;
+    return localizeNoAdditionalData();
+  }
+  if (lang.startsWith("sq")) {
+    if (isStable && abundance) return `Izotop i qëndrueshëm i ${localizeElementName(element)}; bollëku natyror ${abundance}.`;
+    if (isStable) return `Izotop i qëndrueshëm i ${localizeElementName(element)}.`;
+    if (isRadioactive && /trace/i.test(percentText)) return "Izotop radioaktiv i pranishëm vetëm në gjurmë natyrore.";
+    if (isRadioactive && abundance) return `Izotop radioaktiv i ${localizeElementName(element)}; bollëku natyror ${abundance}.`;
+    if (isRadioactive) return `Izotop radioaktiv i ${localizeElementName(element)}.`;
     return localizeNoAdditionalData();
   }
 
@@ -636,7 +670,7 @@ function buildIsotopeDetailMarkup(element, isotope, isotopeNotes) {
   const override = ISOTOPE_DETAIL_OVERRIDES[element.symbol]?.[isotope.name];
   const lang = getLang();
   let note = override || shortenDetailText(localizeIsotopeNotes(isotopeNotes), "") || buildIsotopeFallbackNote(element, isotope);
-  
+
   if (lang.startsWith("zh")) {
     const isotopeNotesByLang = lang === "zh-Hant" ? ISOTOPE_ZH_HANT : ISOTOPE_ZH;
     if (isotopeNotesByLang[element.symbol]?.[isotope.name]) {
@@ -645,7 +679,7 @@ function buildIsotopeDetailMarkup(element, isotope, isotopeNotes) {
   } else if (lang !== "en") {
     note = buildIsotopeFallbackNote(element, isotope);
   }
-  
+
   return `<div class="ion-item-detail-inner"><p class="ion-detail-note">${escapeHtml(note)}</p></div>`;
 }
 
@@ -857,8 +891,8 @@ const eitController = createEITController({
 function createLegend(container) {
   const legendContainer = document.createElement("div");
   legendContainer.id = "table-legend";
-  
-  window.createDefaultLegend = function() {
+
+  window.createDefaultLegend = function () {
     const lg = document.getElementById("table-legend");
     if (!lg) return;
     lg.innerHTML = "";
@@ -868,92 +902,92 @@ function createLegend(container) {
 
   function populateLegend(targetContainer) {
     const categories = [
-    // Row 1 (4 items)
-    { nameKey: "tableLegend.alkaliMetal", class: "alkali-metal" },
-    { nameKey: "tableLegend.alkalineEarth", class: "alkaline-earth-metal" },
-    { nameKey: "tableLegend.transitionMetal", class: "transition-metal" },
-    { nameKey: "tableLegend.metalloid", class: "metalloid" },
-    // Row 2 (4 items)
-    { nameKey: "tableLegend.halogen", class: "halogen" },
-    { nameKey: "tableLegend.nobleGas", class: "noble-gas" },
-    { nameKey: "tableLegend.lanthanide", class: "lanthanide" },
-    { nameKey: "tableLegend.actinide", class: "actinide" },
-    // Row 3 (2 wider items)
-    {
-      nameKey: "tableLegend.otherNonmetal",
-      class: "other-nonmetal",
-      layoutClass: "legend-wide-left",
-    },
-    {
-      nameKey: "tableLegend.postTransition",
-      class: "post-transition-metal",
-      layoutClass: "legend-wide-right",
-    },
-  ];
-  categories.forEach((cat) => {
-    const localizedName = t(cat.nameKey);
-    const item = document.createElement("div");
-    item.classList.add("legend-item");
-    if (cat.layoutClass) item.classList.add(cat.layoutClass);
-    item.setAttribute("data-category", cat.class);
-    item.setAttribute("data-name-key", cat.nameKey);
-    item.setAttribute("role", "button");
-    item.setAttribute("tabindex", "0");
-    item.setAttribute("aria-pressed", "false");
-    item.setAttribute(
-      "aria-label",
-      t("tableLegend.toggleHighlight").replace("{name}", localizedName),
-    );
-    const swatch = document.createElement("div");
-    swatch.className = `legend-swatch ${cat.class}`;
-    swatch.style.pointerEvents = "none";
-    const label = document.createElement("span");
-    label.className = "legend-label";
-    const labelText = document.createElement("span");
-    labelText.className = "legend-label-text";
-    labelText.textContent = localizedName;
-    label.appendChild(labelText);
-    label.style.pointerEvents = "none";
-    item.style.minWidth = `${getLegendItemMinWidth(cat.nameKey)}px`;
-    if (cat.nameKey === "tableLegend.alkalineEarth") {
-      item.classList.add("alkaline-earth-marquee");
-    }
-    item.classList.add("legend-marquee-item");
-    item.appendChild(swatch);
-    item.appendChild(label);
-    requestAnimationFrame(() => updateAlkalineEarthMarquee(item));
-    item.addEventListener("mouseenter", () => {
-      if (eitController.isLegendLocked()) return;
-      if (activeLegendCategory) return;
-      highlightCategory(container, cat.class);
-    });
-    item.addEventListener("mouseleave", () => {
-      if (eitController.isLegendLocked()) return;
-      if (activeLegendCategory) return;
-      clearHighlights(container);
-    });
-    const toggleLegendFilter = () => {
-      if (eitController.isLegendLocked()) return;
-      if (activeLegendCategory === cat.class) {
-        activeLegendCategory = null;
-        item.classList.remove("active");
-        item.setAttribute("aria-pressed", "false");
-        clearHighlights(container);
-      } else {
-        clearLegendSelection(container);
-        activeLegendCategory = cat.class;
-        item.classList.add("active");
-        item.setAttribute("aria-pressed", "true");
-        highlightCategory(container, cat.class);
+      // Row 1 (4 items)
+      { nameKey: "tableLegend.alkaliMetal", class: "alkali-metal" },
+      { nameKey: "tableLegend.alkalineEarth", class: "alkaline-earth-metal" },
+      { nameKey: "tableLegend.transitionMetal", class: "transition-metal" },
+      { nameKey: "tableLegend.metalloid", class: "metalloid" },
+      // Row 2 (4 items)
+      { nameKey: "tableLegend.halogen", class: "halogen" },
+      { nameKey: "tableLegend.nobleGas", class: "noble-gas" },
+      { nameKey: "tableLegend.lanthanide", class: "lanthanide" },
+      { nameKey: "tableLegend.actinide", class: "actinide" },
+      // Row 3 (2 wider items)
+      {
+        nameKey: "tableLegend.otherNonmetal",
+        class: "other-nonmetal",
+        layoutClass: "legend-wide-left",
+      },
+      {
+        nameKey: "tableLegend.postTransition",
+        class: "post-transition-metal",
+        layoutClass: "legend-wide-right",
+      },
+    ];
+    categories.forEach((cat) => {
+      const localizedName = t(cat.nameKey);
+      const item = document.createElement("div");
+      item.classList.add("legend-item");
+      if (cat.layoutClass) item.classList.add(cat.layoutClass);
+      item.setAttribute("data-category", cat.class);
+      item.setAttribute("data-name-key", cat.nameKey);
+      item.setAttribute("role", "button");
+      item.setAttribute("tabindex", "0");
+      item.setAttribute("aria-pressed", "false");
+      item.setAttribute(
+        "aria-label",
+        t("tableLegend.toggleHighlight").replace("{name}", localizedName),
+      );
+      const swatch = document.createElement("div");
+      swatch.className = `legend-swatch ${cat.class}`;
+      swatch.style.pointerEvents = "none";
+      const label = document.createElement("span");
+      label.className = "legend-label";
+      const labelText = document.createElement("span");
+      labelText.className = "legend-label-text";
+      labelText.textContent = localizedName;
+      label.appendChild(labelText);
+      label.style.pointerEvents = "none";
+      item.style.minWidth = `${getLegendItemMinWidth(cat.nameKey)}px`;
+      if (cat.nameKey === "tableLegend.alkalineEarth") {
+        item.classList.add("alkaline-earth-marquee");
       }
-    };
-    item.addEventListener("click", (e) => {
-      e.stopPropagation();
-      toggleLegendFilter();
+      item.classList.add("legend-marquee-item");
+      item.appendChild(swatch);
+      item.appendChild(label);
+      requestAnimationFrame(() => updateAlkalineEarthMarquee(item));
+      item.addEventListener("mouseenter", () => {
+        if (eitController.isLegendLocked()) return;
+        if (activeLegendCategory) return;
+        highlightCategory(container, cat.class);
+      });
+      item.addEventListener("mouseleave", () => {
+        if (eitController.isLegendLocked()) return;
+        if (activeLegendCategory) return;
+        clearHighlights(container);
+      });
+      const toggleLegendFilter = () => {
+        if (eitController.isLegendLocked()) return;
+        if (activeLegendCategory === cat.class) {
+          activeLegendCategory = null;
+          item.classList.remove("active");
+          item.setAttribute("aria-pressed", "false");
+          clearHighlights(container);
+        } else {
+          clearLegendSelection(container);
+          activeLegendCategory = cat.class;
+          item.classList.add("active");
+          item.setAttribute("aria-pressed", "true");
+          highlightCategory(container, cat.class);
+        }
+      };
+      item.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleLegendFilter();
+      });
+      bindKeyboardActivation(item, toggleLegendFilter);
+      targetContainer.appendChild(item);
     });
-    bindKeyboardActivation(item, toggleLegendFilter);
-    targetContainer.appendChild(item);
-  });
   }
 
   populateLegend(legendContainer);
@@ -1020,7 +1054,7 @@ function updatePeriodicTableLocalizedText(tableContainer) {
 
     cell.setAttribute(
       "aria-label",
-      `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
+      buildElementAriaLabel(element),
     );
   });
 }
@@ -1086,7 +1120,7 @@ export function buildPeriodicTable(tableContainer) {
           const openElementModal = () => showModal(element);
           cell.setAttribute(
             "aria-label",
-            `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
+            buildElementAriaLabel(element),
           );
           cell.addEventListener("click", openElementModal);
           bindKeyboardActivation(cell, openElementModal);
@@ -1116,7 +1150,7 @@ export function buildPeriodicTable(tableContainer) {
     cell.setAttribute("tabindex", "0");
     cell.setAttribute(
       "aria-label",
-      `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
+      buildElementAriaLabel(element),
     );
     if (element.category) {
       const catClass = normalizeCategoryClass(element.category
@@ -1147,7 +1181,7 @@ export function buildPeriodicTable(tableContainer) {
     cell.setAttribute("tabindex", "0");
     cell.setAttribute(
       "aria-label",
-      `${localizeElementName(element)} (${element.symbol}), atomic number ${element.number}`,
+      buildElementAriaLabel(element),
     );
     if (element.category) {
       const catClass = normalizeCategoryClass(element.category
@@ -1170,7 +1204,7 @@ export function buildPeriodicTable(tableContainer) {
     cell.style.gridColumn = 4 + index;
     tableContainer.appendChild(cell);
   });
-  
+
   // Apply text cramping and correct language classes initially
   updatePeriodicTableLocalizedText(tableContainer);
 
@@ -1289,11 +1323,11 @@ const L3_UNIT_CONFIGS = {
     const isPred = /pred/i.test(s);
     // Strip pred flags and standard units so they don't get into the template
     let clean = s.replace(/\(pred\)/ig, "")
-                 .replace(/g\/cm³/g, "")
-                 .replace(/kJ\/mol/g, "")
-                 .replace(/eV/ig, "")
-                 .replace(/°C/g, "")
-                 .trim();
+      .replace(/g\/cm³/g, "")
+      .replace(/kJ\/mol/g, "")
+      .replace(/eV/ig, "")
+      .replace(/°C/g, "")
+      .trim();
 
     if (clean === "—" || clean === "") return null;
 
@@ -1352,9 +1386,9 @@ const L3_UNIT_CONFIGS = {
       { unit: "kJ/mol", digits: 0 },
       { unit: "eV", digits: 2 },
     ],
-    parse(raw) { 
-        const isEV = String(raw).toLowerCase().includes("ev");
-        return L3_UNIT_CONFIGS._parseStr(raw, isEV); 
+    parse(raw) {
+      const isEV = String(raw).toLowerCase().includes("ev");
+      return L3_UNIT_CONFIGS._parseStr(raw, isEV);
     },
     convert(baseObj, unitIdx) {
       if (!baseObj) return { text: localizeNA(), isPred: false };
@@ -1502,24 +1536,24 @@ function getGlobalPhysicalExtremes() {
 
   eitRegistry.forEach(entry => {
     metrics.forEach(m => {
-       const val = entry.metrics[m];
-       if (Number.isFinite(val)) {
-           metricVals[m].push({ num: entry.number, val });
-       }
+      const val = entry.metrics[m];
+      if (Number.isFinite(val)) {
+        metricVals[m].push({ num: entry.number, val });
+      }
     });
   });
 
   metrics.forEach(m => {
-     const arr = metricVals[m];
-     if (arr.length === 0) return;
-     let min = arr[0].val; let max = arr[0].val;
-     arr.forEach(item => { if(item.val < min) min = item.val; if(item.val > max) max = item.val; });
-     _globalExtremes[m].min = min;
-     _globalExtremes[m].max = max;
-     arr.forEach(item => {
-        if(item.val === min) _globalExtremes[m].minElements.add(item.num);
-        if(item.val === max) _globalExtremes[m].maxElements.add(item.num);
-     });
+    const arr = metricVals[m];
+    if (arr.length === 0) return;
+    let min = arr[0].val; let max = arr[0].val;
+    arr.forEach(item => { if (item.val < min) min = item.val; if (item.val > max) max = item.val; });
+    _globalExtremes[m].min = min;
+    _globalExtremes[m].max = max;
+    arr.forEach(item => {
+      if (item.val === min) _globalExtremes[m].minElements.add(item.num);
+      if (item.val === max) _globalExtremes[m].maxElements.add(item.num);
+    });
   });
 
   return _globalExtremes;
@@ -1535,7 +1569,7 @@ function setupL3UnitConversion(blueCard, rawData, extData) {
     const baseVal = cfg.parse(rawData[metric]);
     const newItem = item.cloneNode(true);
     item.parentNode.replaceChild(newItem, item);
-    
+
     if (!baseVal) {
       newItem.style.cursor = "default";
       newItem.removeAttribute("title");
@@ -1560,13 +1594,14 @@ function setupL3UnitConversion(blueCard, rawData, extData) {
       if (valEl) valEl.textContent = textVal;
       const suffix = isPred ? " (pred)" : "";
       let extSuffix = (extData && extData[el._l3Metric]) ? `<span class="l3-stat-ext">${extData[el._l3Metric]}</span>` : "";
-      if (unitEl) unitEl.innerHTML = `${c.units[unitIdx].unit}${suffix}${postUnitNote} ${extSuffix}`;    }
+      if (unitEl) unitEl.innerHTML = `${c.units[unitIdx].unit}${suffix}${postUnitNote} ${extSuffix}`;
+    }
 
     const currentIdx = l3UnitState[metric] || 0;
     if (baseVal && currentIdx >= 0) {
       triggerRender(newItem, currentIdx);
     } else {
-        triggerRender(newItem, 0);
+      triggerRender(newItem, 0);
     }
 
     newItem.addEventListener("click", (e) => {
@@ -1897,7 +1932,7 @@ function populateSimplifiedView(element) {
           if (iso.symbol) {
             const match = iso.symbol.match(/[¹²³⁴⁵⁶⁷⁸⁹⁰]+/);
             if (match) {
-              const supToNum = { "⁰":"0","¹":"1","²":"2","³":"3","⁴":"4","⁵":"5","⁶":"6","⁷":"7","⁸":"8","⁹":"9" };
+              const supToNum = { "⁰": "0", "¹": "1", "²": "2", "³": "3", "⁴": "4", "⁵": "5", "⁶": "6", "⁷": "7", "⁸": "8", "⁹": "9" };
               return match[0].split("").map((c) => supToNum[c] || c).join("");
             }
           }
@@ -2043,9 +2078,9 @@ function populateSimplifiedView(element) {
     const arUnitEl = blueCard.querySelector(".l3-stat-item:nth-child(7) .l3-stat-unit");
     const arExt = getExt('atomicRadius');
     if (arUnitEl && arDisplay !== "N/A" && arDisplay !== localizeNA()) {
-        arUnitEl.innerHTML = `pm ${arExt ? `<span class="l3-stat-ext">${arExt}</span>` : ''}`;
+      arUnitEl.innerHTML = `pm ${arExt ? `<span class="l3-stat-ext">${arExt}</span>` : ''}`;
     } else if (arUnitEl) {
-        arUnitEl.innerHTML = "pm";
+      arUnitEl.innerHTML = "pm";
     }
 
     const shDisplay = sh && sh !== "N/A" ? sh.replace(" J/(g·°C)", "").trim() : localizeNA();
@@ -2053,18 +2088,18 @@ function populateSimplifiedView(element) {
     const shUnitEl = blueCard.querySelector(".l3-stat-item:nth-child(8) .l3-stat-unit");
     const shExt = getExt('specificHeat');
     if (shUnitEl && shDisplay !== "N/A" && shDisplay !== localizeNA()) {
-        shUnitEl.innerHTML = `J/(g·°C) ${shExt ? `<span class="l3-stat-ext">${shExt}</span>` : ''}`;
+      shUnitEl.innerHTML = `J/(g·°C) ${shExt ? `<span class="l3-stat-ext">${shExt}</span>` : ''}`;
     } else if (shUnitEl) {
-        shUnitEl.innerHTML = "J/(g·°C)";
+      shUnitEl.innerHTML = "J/(g·°C)";
     }
 
     // ---- Clickable unit conversion on L3 stat items ----
     setupL3UnitConversion(blueCard, { ie, ea, melt, boil, density: den }, {
-        ie: getExt('firstIonization'),
-        ea: getExt('electronAffinity'),
-        density: getExt('density'),
-        melt: getExt('meltingPoint'),
-        boil: getExt('boilingPoint')
+      ie: getExt('firstIonization'),
+      ea: getExt('electronAffinity'),
+      density: getExt('density'),
+      melt: getExt('meltingPoint'),
+      boil: getExt('boilingPoint')
     });
   }
   const redCard = document.querySelector(
@@ -2125,7 +2160,7 @@ function populateSimplifiedView(element) {
     }
 
     setText("#el-modal-l4-year", year);
-    
+
     let discoveredBy = finallyElementData.level4_history_stse?.history?.discoveredBy || "—";
     let namedBy = finallyElementData.level4_history_stse?.history?.namedBy || "—";
 
@@ -2250,7 +2285,7 @@ export function showModal(element) {
   element.etymology =
     finallyElementData.level4_history_stse?.history?.namedBy || "";
   element.description = (finallyElementData.level4_history_stse?.stseContext || []).join("; ");
-  
+
   const langCode = getLang();
   if (elementLocales[langCode]) {
     if (elementLocales[langCode][element.number]?.history) {
@@ -3070,27 +3105,27 @@ const textureModes = [
 let currentTextureIndex = 0;
 
 function applyTexture() {
-    const rectangles = document.querySelectorAll('.green-rectangle, .yellow-rectangle, .blue-rectangle, .red-rectangle');
-    const currentMode = textureModes[currentTextureIndex];
-    
-    rectangles.forEach(rect => {
-        textureModes.forEach(mode => {
-            if (mode.class) rect.classList.remove(mode.class);
-        });
-        if (currentMode.class) {
-            rect.classList.add(currentMode.class);
-        }
-    });
+  const rectangles = document.querySelectorAll('.green-rectangle, .yellow-rectangle, .blue-rectangle, .red-rectangle');
+  const currentMode = textureModes[currentTextureIndex];
 
-    const toggleBtns = document.querySelectorAll('.texture-toggle-btn');
-    toggleBtns.forEach(btn => {
-        btn.textContent = '✨ ' + t(currentMode.nameKey);
+  rectangles.forEach(rect => {
+    textureModes.forEach(mode => {
+      if (mode.class) rect.classList.remove(mode.class);
     });
+    if (currentMode.class) {
+      rect.classList.add(currentMode.class);
+    }
+  });
+
+  const toggleBtns = document.querySelectorAll('.texture-toggle-btn');
+  toggleBtns.forEach(btn => {
+    btn.textContent = '✨ ' + t(currentMode.nameKey);
+  });
 }
 
 document.addEventListener('click', (e) => {
-    if (e.target.closest('.texture-toggle-btn')) {
-        currentTextureIndex = (currentTextureIndex + 1) % textureModes.length;
-        applyTexture();
-    }
+  if (e.target.closest('.texture-toggle-btn')) {
+    currentTextureIndex = (currentTextureIndex + 1) % textureModes.length;
+    applyTexture();
+  }
 });

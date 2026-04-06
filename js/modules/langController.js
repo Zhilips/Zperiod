@@ -1,11 +1,11 @@
 // =============================================================================
-// Language Controller — global i18n for EN / ZH / ZH-HANT / FR / RU / FA / UR / TL
+// Language Controller — global i18n for EN / ZH / ZH-HANT / FR / RU / FA / UR / TL / SQ
 // =============================================================================
 
 import { translations } from "../data/translations.js";
 
 const STORAGE_KEY = "zperiod_lang";
-const SUPPORTED = ["en", "zh", "zh-Hant", "fr", "ru", "fa", "ur", "tl"];
+const SUPPORTED = ["en", "zh", "zh-Hant", "fr", "ru", "fa", "ur", "tl", "sq"];
 const DEFAULT = "en";
 
 let lang = DEFAULT;
@@ -44,6 +44,10 @@ const ELEMENT_LOCALE_LOADERS = {
     const module = await import("../data/locales/tl.js");
     return module.tl_elements;
   },
+  sq: async () => {
+    const module = await import("../data/locales/sq.js");
+    return module.sq_elements;
+  },
 };
 
 const ION_LOCALE_LOADERS = {
@@ -74,6 +78,10 @@ const ION_LOCALE_LOADERS = {
   tl: async () => {
     const module = await import("../data/locales/ions/tl.js");
     return module.tl_ions;
+  },
+  sq: async () => {
+    const module = await import("../data/locales/ions/sq.js");
+    return module.sq_ions;
   },
 };
 

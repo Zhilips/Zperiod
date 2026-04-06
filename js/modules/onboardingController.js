@@ -212,6 +212,7 @@ export function initOnboardingFlow() {
         <button class="lang-btn" data-lang="fa">فارسی</button>
         <button class="lang-btn" data-lang="ur">اردو</button>
         <button class="lang-btn" data-lang="tl">Tagalog</button>
+        <button class="lang-btn" data-lang="sq">Shqip</button>
       </div>
     </div>
   `;

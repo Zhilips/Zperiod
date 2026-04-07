@@ -188,13 +188,13 @@ export function initOnboardingFlow() {
       }
     </style>
     <div class="danmaku-container" id="danmaku-field"></div>
-    
+
     <div id="animation-stage" style="display:flex; flex-direction:column; align-items:center;">
         <div class="logo-container" id="onboarding-logo">
           <img src="logo.svg" class="logo-z" alt="Z">
           <span class="logo-text">Zperiod</span>
         </div>
-        
+
         <div class="start-btn-container" id="start-btn-box">
           <button class="onboarding-btn" id="onboarding-start-btn">Start</button>
         </div>
@@ -238,7 +238,7 @@ export function initOnboardingFlow() {
   }, 1600);
 
   function startDanmaku() {
-    const supportedLangs = ["en", "zh", "zh-Hant", "fr", "ru", "fa", "ur", "tl"];
+    const supportedLangs = ["en", "zh", "zh-Hant", "fr", "ru", "fa", "ur", "tl", "sq"];
     const allPhrases = [];
     supportedLangs.forEach(l => {
         const phrases = t(`onboarding.phrases`, [], l);
@@ -254,18 +254,18 @@ export function initOnboardingFlow() {
       const item = document.createElement("div");
       item.className = "danmaku-item";
       item.textContent = allPhrases[Math.floor(Math.random() * allPhrases.length)];
-      
-      const top = Math.random() * 85 + 5; 
-      const size = Math.random() * 0.8 + 0.9; 
-      const duration = Math.random() * 12 + 10; 
-      
+
+      const top = Math.random() * 85 + 5;
+      const size = Math.random() * 0.8 + 0.9;
+      const duration = Math.random() * 12 + 10;
+
       item.style.top = `${top}%`;
       item.style.fontSize = `${size}rem`;
       item.style.animationDuration = `${duration}s`;
-      
+
       danmakuField.appendChild(item);
       item.addEventListener("animationend", () => item.remove());
-      
+
       setTimeout(createItem, 1500 + Math.random() * 1000);
     };
 
@@ -278,7 +278,7 @@ export function initOnboardingFlow() {
     stage.style.transition = "all 0.5s ease";
     stage.style.opacity = "0";
     stage.style.transform = "translateY(-20px)";
-    
+
     setTimeout(() => {
         stage.style.display = "none";
         langScreen.classList.add("visible");
@@ -289,10 +289,10 @@ export function initOnboardingFlow() {
     const btn = e.target.closest(".lang-btn");
     if (!btn) return;
     const lang = btn.dataset.lang;
-    
+
     localStorage.setItem("zperiod_welcomed_v2", "true");
     sessionStorage.setItem("zperiod_lang_transition", "true");
-    
+
     // Smooth seamless transition: Create a temporary white overlay to hide the reload flash
     const transitionOverlay = document.createElement("div");
     Object.assign(transitionOverlay.style, {

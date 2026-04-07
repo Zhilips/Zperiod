@@ -27,6 +27,7 @@ LANG_CONFIG = {
     "fa": {"module": "fa.js", "export": "fa_ions", "target": "fa"},
     "ur": {"module": "ur.js", "export": "ur_ions", "target": "ur"},
     "tl": {"module": "tl.js", "export": "tl_ions", "target": "tl"},
+    "si": {"module": "si.js", "export": "si_ions", "target": "si"},
 }
 
 ZH_NAME_OVERRIDES = {
@@ -215,6 +216,7 @@ def load_element_names_by_symbol(lang_code: str, rows: list[dict[str, str]]) -> 
         "fa": ("js/data/locales/fa.js", "fa_elements"),
         "ur": ("js/data/locales/ur.js", "ur_elements"),
         "tl": ("js/data/locales/tl.js", "tl_elements"),
+        "si": ("js/data/locales/si.js", "si_elements"),
     }
     filename, export_name = locale_map[lang_code]
     payload = load_json_module(ROOT / filename, export_name)

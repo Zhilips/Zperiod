@@ -591,11 +591,11 @@ function buildIsotopeFallbackNote(element, isotope) {
     return localizeNoAdditionalData();
   }
   if (lang.startsWith("sq")) {
-    if (isStable && abundance) return `Izotop i qëndrueshëm i ${localizeElementName(element)}; bollëku natyror ${abundance}.`;
-    if (isStable) return `Izotop i qëndrueshëm i ${localizeElementName(element)}.`;
+    if (isStable && abundance) return `Izotop i qëndrueshëm i elementit ${localizeElementName(element)}; bollëku natyror ${abundance}.`;
+    if (isStable) return `Izotop i qëndrueshëm i elementit ${localizeElementName(element)}.`;
     if (isRadioactive && /trace/i.test(percentText)) return "Izotop radioaktiv i pranishëm vetëm në gjurmë natyrore.";
-    if (isRadioactive && abundance) return `Izotop radioaktiv i ${localizeElementName(element)}; bollëku natyror ${abundance}.`;
-    if (isRadioactive) return `Izotop radioaktiv i ${localizeElementName(element)}.`;
+    if (isRadioactive && abundance) return `Izotop radioaktiv i elementit ${localizeElementName(element)}; bollëku natyror ${abundance}.`;
+    if (isRadioactive) return `Izotop radioaktiv i elementit ${localizeElementName(element)}.`;
     return localizeNoAdditionalData();
   }
 

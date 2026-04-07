@@ -1,6 +1,6 @@
 export const sq_elements = {
   "1": {
-    "name": "Hidrogjeni",
+    "name": "Hidrogjen",
     "ions": "H⁺ (jon hidrogjeni), H⁻ (hidrid)",
     "history": {
       "discoveryYear": "1766",
@@ -22,7 +22,7 @@ export const sq_elements = {
     ]
   },
   "2": {
-    "name": "Heliumi",
+    "name": "Helium",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1868 (spektrale); 1895 (i izoluar)",
@@ -30,11 +30,11 @@ export const sq_elements = {
       "namedBy": "Lockyer & Frankland"
     },
     "stse": [
-      "Kriogjenikët (MRI supermagnetët)",
+      "Kriogjenikët (supermagnetët për Imazherinë me Rezonancë Magnetike)",
       "Ruajtja e burimeve jo të rinovueshme"
     ],
     "uses": [
-      "MRI ftohje",
+      "Ftohje për MRI",
       "Gazi ngritës (balona)",
       "Gaz mbrojtës (saldim)"
     ],
@@ -51,8 +51,8 @@ export const sq_elements = {
       "namedBy": "Jöns Jakob Berzelius"
     },
     "stse": [
-      "Teknologjia e baterisë (EV revolucion)",
-      "Shëndeti mendor (Stabilizuesit e humorit)"
+      "Teknologjia e baterisë (revolucion në mjetet elektrike EV)",
+      "Shëndeti mendor (stabilizuesit e humorit)"
     ],
     "uses": [
       "Bateritë Li-jon",
@@ -86,7 +86,7 @@ export const sq_elements = {
     ]
   },
   "5": {
-    "name": "Bori",
+    "name": "Bor",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1808",
@@ -108,11 +108,11 @@ export const sq_elements = {
     ]
   },
   "6": {
-    "name": "Karboni",
+    "name": "Karbon",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "Prehistorike",
-      "discoveredBy": "Ancient Civilizations",
+      "discoveredBy": "Qytetërimet e Lashta",
       "namedBy": "Antoine Lavoisier"
     },
     "stse": [
@@ -132,7 +132,7 @@ export const sq_elements = {
     ]
   },
   "7": {
-    "name": "Azoti",
+    "name": "Azot",
     "ions": "N³⁻ (Nitride)",
     "history": {
       "discoveryYear": "1772",
@@ -153,7 +153,7 @@ export const sq_elements = {
     ]
   },
   "8": {
-    "name": "Oksigjeni",
+    "name": "Oksigjen",
     "ions": "O²⁻ (Oksid)",
     "history": {
       "discoveryYear": "1774",
@@ -175,12 +175,12 @@ export const sq_elements = {
     ]
   },
   "9": {
-    "name": "Fluori",
+    "name": "Fluor",
     "ions": "F⁻ (Fluor)",
     "history": {
       "discoveryYear": "1886",
       "discoveredBy": "Henri Moissan",
-      "namedBy": "Humphry Davy (suggested)"
+      "namedBy": "Humphry Davy (sugjeruar)"
     },
     "stse": [
       "Shëndeti i dhëmbëve (fluorizimi i ujit)",
@@ -198,7 +198,7 @@ export const sq_elements = {
     ]
   },
   "10": {
-    "name": "Neoni",
+    "name": "Neon",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1898",
@@ -207,7 +207,7 @@ export const sq_elements = {
     },
     "stse": [
       "Teknologjia e ndriçimit",
-      "Laserët"
+      "Lazerët"
     ],
     "uses": [
       "Shenja neoni",
@@ -219,8 +219,8 @@ export const sq_elements = {
     ]
   },
   "11": {
-    "name": "Natriumi",
-    "ions": "Na⁺ (Natriumi)",
+    "name": "Natrium",
+    "ions": "Na⁺ (Natrium)",
     "history": {
       "discoveryYear": "1807",
       "discoveredBy": "Humphry Davy",
@@ -240,8 +240,8 @@ export const sq_elements = {
     ]
   },
   "12": {
-    "name": "Magnezi",
-    "ions": "Mg²⁺ (Magnezi)",
+    "name": "Magnez",
+    "ions": "Mg²⁺ (Magnez)",
     "history": {
       "discoveryYear": "1755 (Identifikuar); 1808 (I izoluar)",
       "discoveredBy": "Joseph Black (Id.); Humphry Davy (Iso.)",
@@ -261,8 +261,8 @@ export const sq_elements = {
     ]
   },
   "13": {
-    "name": "Alumini",
-    "ions": "Al³⁺ (Alumini)",
+    "name": "Alumin",
+    "ions": "Al³⁺ (Alumin)",
     "history": {
       "discoveryYear": "1825",
       "discoveredBy": "Hans Christian Ørsted",
@@ -282,7 +282,7 @@ export const sq_elements = {
     ]
   },
   "14": {
-    "name": "Silikoni",
+    "name": "Silikon",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1824",
@@ -303,12 +303,12 @@ export const sq_elements = {
     ]
   },
   "15": {
-    "name": "Fosfori",
+    "name": "Fosfor",
     "ions": "P³⁻ (Fosfid)",
     "history": {
       "discoveryYear": "1669",
       "discoveredBy": "Hennig Brand",
-      "namedBy": "Rrjedh nga greqishtja Dritambajtëse"
+      "namedBy": "Rrjedh nga greqishtja dritambajtëse"
     },
     "stse": [
       "Bujqësi (pleh esencial)",
@@ -325,12 +325,12 @@ export const sq_elements = {
     ]
   },
   "16": {
-    "name": "Squfuri",
+    "name": "Squfur",
     "ions": "S²⁻ (Sulfid)",
     "history": {
       "discoveryYear": "Prehistorike",
-      "discoveredBy": "Ancient Civilizations",
-      "namedBy": "Antoine Lavoisier (established as element)"
+      "discoveredBy": "Qytetërimet e Lashta",
+      "namedBy": "Antoine Lavoisier (përcaktuar si element)"
     },
     "stse": [
       "Kimia Industriale (prodhimi i acidit sulfurik)",
@@ -368,7 +368,7 @@ export const sq_elements = {
     ]
   },
   "18": {
-    "name": "Argoni",
+    "name": "Argon",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1894",
@@ -389,8 +389,8 @@ export const sq_elements = {
     ]
   },
   "19": {
-    "name": "Kaliumi",
-    "ions": "K⁺ (Kaliumi)",
+    "name": "Kalium",
+    "ions": "K⁺ (Kalium)",
     "history": {
       "discoveryYear": "1807",
       "discoveredBy": "Humphry Davy",
@@ -411,12 +411,12 @@ export const sq_elements = {
     ]
   },
   "20": {
-    "name": "Kalciumi",
-    "ions": "Ca²⁺ (Kalciumi)",
+    "name": "Kalcium",
+    "ions": "Ca²⁺ (Kalcium)",
     "history": {
       "discoveryYear": "1808",
       "discoveredBy": "Humphry Davy",
-      "namedBy": "Nga latinishtja calx (lime)"
+      "namedBy": "Nga latinishtja calx (gëlqere)"
     },
     "stse": [
       "Ndërtimtari (Kimi betoni/çimento)",
@@ -432,8 +432,8 @@ export const sq_elements = {
     ]
   },
   "21": {
-    "name": "Skandiumi",
-    "ions": "Sc³⁺ (Skandiumi)",
+    "name": "Skandium",
+    "ions": "Sc³⁺ (Skandium)",
     "history": {
       "discoveryYear": "1879",
       "discoveredBy": "Lars Fredrik Nilson",
@@ -477,7 +477,7 @@ export const sq_elements = {
     "history": {
       "discoveryYear": "1801",
       "discoveredBy": "Andrés Manuel del Río",
-      "namedBy": "Nils Gabriel Sefström (Vanadis, Norse goddess)"
+      "namedBy": "Nils Gabriel Sefström (Vanadis, perëndeshë nordike)"
     },
     "stse": [
       "Shkenca e Materialeve (Vegla çeliku me shpejtësi të lartë)"
@@ -491,8 +491,8 @@ export const sq_elements = {
     ]
   },
   "24": {
-    "name": "Kromi",
-    "ions": "Cr²⁺ (Chromium(II)), Cr³⁺ (Chromium(III))",
+    "name": "Krom",
+    "ions": "Cr²⁺ (Krom(II)), Cr³⁺ (Krom(III))",
     "history": {
       "discoveryYear": "1797",
       "discoveredBy": "Louis-Nicolas Vauquelin",
@@ -513,8 +513,8 @@ export const sq_elements = {
     ]
   },
   "25": {
-    "name": "Mangani",
-    "ions": "Mn²⁺ (mangani(II)), Mn³⁺ (mangani(III))",
+    "name": "Mangan",
+    "ions": "Mn²⁺ (mangan(II)), Mn³⁺ (mangan(III))",
     "history": {
       "discoveryYear": "1774",
       "discoveredBy": "Johan Gottlieb Gahn",
@@ -534,12 +534,12 @@ export const sq_elements = {
     ]
   },
   "26": {
-    "name": "Hekuri",
-    "ions": "Fe²⁺ (Hekuri(II)), Fe³⁺ (Hekuri(III))",
+    "name": "Hekur",
+    "ions": "Fe²⁺ (Hekur(II)), Fe³⁺ (Hekur(III))",
     "history": {
       "discoveryYear": "Prehistorike (~4000 BCE)",
-      "discoveredBy": "Ancient Civilizations (Iron Age)",
-      "namedBy": "Nga anglo-saksone iren (Symbol Fe nga latinishtja ferrum)"
+      "discoveredBy": "Qytetërimet e Lashta (epoka e hekurit)",
+      "namedBy": "Nga anglo-saksone iren (Simboli Fe nga latinishtja ferrum)"
     },
     "stse": [
       "Zhvillimi i qytetërimit (Infrastruktura e çelikut)",
@@ -594,7 +594,7 @@ export const sq_elements = {
     "uses": [
       "Çelik inox",
       "Bateritë",
-      "Plating",
+      "Veshje me pllaka metalike",
       "Monedha"
     ],
     "hazards": [
@@ -606,8 +606,8 @@ export const sq_elements = {
     "ions": "Cu⁺ (Bakri (I)), Cu²⁺ (Bakri (II))",
     "history": {
       "discoveryYear": "Prehistorike (~9000 BCE)",
-      "discoveredBy": "Middle Eastern Civilizations",
-      "namedBy": "Nga Latin Cyprium (Metal i Qipros)"
+      "discoveredBy": "Qytetërimet e Lindjes së Mesme",
+      "namedBy": "Nga Latinishtja cyprium (metal i Qipros)"
     },
     "stse": [
       "Elektrifikimi (rrjeti global)",
@@ -717,7 +717,7 @@ export const sq_elements = {
       "namedBy": "Nga greqishtja selene (hëna)"
     },
     "stse": [
-      "Procesi Xerox (Fotopërçueshmëri)",
+      "Procesi i fotokopjimit (fotopërçueshmëri)",
       "Gjurmë element biologjik"
     ],
     "uses": [
@@ -774,8 +774,8 @@ export const sq_elements = {
     ]
   },
   "37": {
-    "name": "Rubidiumi",
-    "ions": "Rb⁺ (Rubidiumi)",
+    "name": "Rubidium",
+    "ions": "Rb⁺ (Rubidium)",
     "history": {
       "discoveryYear": "1861",
       "discoveredBy": "Robert Bunsen & Gustav Kirchhoff",
@@ -795,8 +795,8 @@ export const sq_elements = {
     ]
   },
   "38": {
-    "name": "Stronciumi",
-    "ions": "Sr²⁺ (Stronciumi)",
+    "name": "Stroncium",
+    "ions": "Sr²⁺ (Stroncium)",
     "history": {
       "discoveryYear": "1790 (i identifikuar); 1808 (i izoluar)",
       "discoveredBy": "Adair Crawford (Id.); Humphry Davy (Iso.)",
@@ -838,7 +838,7 @@ export const sq_elements = {
     ]
   },
   "40": {
-    "name": "Zirkoni",
+    "name": "Zirkon",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1789",
@@ -985,11 +985,11 @@ export const sq_elements = {
     ]
   },
   "47": {
-    "name": "Argjendi",
-    "ions": "Ag⁺ (Argjendi)",
+    "name": "Argjend",
+    "ions": "Ag⁺ (Argjend)",
     "history": {
       "discoveryYear": "Prehistorike (~ 3000 BCE)",
-      "discoveredBy": "Ancient Civilizations",
+      "discoveredBy": "Qytetërimet e Lashta",
       "namedBy": "seolfor anglo-saksone (Symbol Ag nga latinishtja argentum)"
     },
     "stse": [
@@ -1056,7 +1056,7 @@ export const sq_elements = {
     "ions": "Sn²⁺ (Tin(II)), Sn⁴⁺ (Tin(IV))",
     "history": {
       "discoveryYear": "Prehistorike (~ 3000 BCE)",
-      "discoveredBy": "Ancient Civilizations (Bronze Age)",
+      "discoveredBy": "Qytetërimet e Lashta (Bronze Age)",
       "namedBy": "Teneqe anglo-saksone (Symbol Sn nga latinishtja stannum)"
     },
     "stse": [
@@ -1074,11 +1074,11 @@ export const sq_elements = {
     ]
   },
   "51": {
-    "name": "Antimoni",
-    "ions": "Sb³⁻ (Antimonid), Sb³⁺ (Antimoni(III))",
+    "name": "Antimonium",
+    "ions": "Sb³⁻ (Antimonium), Sb³⁺ (Antimonium(III))",
     "history": {
       "discoveryYear": "~ 3000 BCE",
-      "discoveredBy": "Ancient Civilizations",
+      "discoveredBy": "Qytetërimet e Lashta",
       "namedBy": "Symbol Sb nga latinishtja stibium (liner sysh)"
     },
     "stse": [
@@ -1118,8 +1118,8 @@ export const sq_elements = {
     ]
   },
   "53": {
-    "name": "Jodi",
-    "ions": "I⁻ (Jodid)",
+    "name": "Jod",
+    "ions": "I⁻ (Jod)",
     "history": {
       "discoveryYear": "1811",
       "discoveredBy": "Bernard Courtois",
@@ -1204,7 +1204,7 @@ export const sq_elements = {
     ]
   },
   "57": {
-    "name": "Lantani",
+    "name": "Lantanium",
     "ions": "La³⁺ (Lantani)",
     "history": {
       "discoveryYear": "1839",
@@ -1548,7 +1548,7 @@ export const sq_elements = {
     ]
   },
   "74": {
-    "name": "Tungsteni",
+    "name": "Tungsten",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1783",
@@ -1610,19 +1610,19 @@ export const sq_elements = {
     ]
   },
   "77": {
-    "name": "Iridiumi",
+    "name": "Iridium",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1803",
       "discoveredBy": "Smithson Tennant",
-      "namedBy": "Nga iris greke (ylber, për shkak të ngjyrave të kripës)"
+      "namedBy": "Nga greqishtja iris (ylber, për shkak të ngjyrave të kripës)"
     },
     "stse": [
       "Gjeologjia (prova e shtresës kufitare K-Pg për zhdukjen e dinosaurëve)"
     ],
     "uses": [
       "Kandelat",
-      "Crucibles",
+      "Enë për shkrirje metali",
       "Shiriti standard i njehsorit (aliazh Pt-Ir)"
     ],
     "hazards": [
@@ -1649,16 +1649,16 @@ export const sq_elements = {
       "Cisplatin (ilaç kundër kancerit)"
     ],
     "hazards": [
-      "Pt metalik është inert",
+      "Platiniumi metalik është inert",
       "kripërat mund të shkaktojnë astmë"
     ]
   },
   "79": {
-    "name": "Ari",
+    "name": "Ar",
     "ions": "Au⁺ (Ar (I)), Au³⁺ (Ar (III))",
     "history": {
       "discoveryYear": "Prehistorike (~ 6000 BCE)",
-      "discoveredBy": "Ancient Civilizations",
+      "discoveredBy": "Qytetërimet e Lashta",
       "namedBy": "Ari anglo-sakson (Symbol Au nga latinishtja aurum)"
     },
     "stse": [
@@ -1675,12 +1675,12 @@ export const sq_elements = {
     ]
   },
   "80": {
-    "name": "Mërkuri",
-    "ions": "Hg₂²⁺ (Merkuri(I)), Hg²⁺ (Merkuri(II))",
+    "name": "Mërkur",
+    "ions": "Hg₂²⁺ (Merkur(I)), Hg²⁺ (Merkur(II))",
     "history": {
       "discoveryYear": "~ 1500 BCE",
       "discoveredBy": "Ancient Egyptians/Chinese",
-      "namedBy": "Nga Planeti Mërkuri (Symbol Hg nga hydrargyrum)"
+      "namedBy": "Nga Planeti Mërkur (Symbol Hg nga hydrargyrum)"
     },
     "stse": [
       "Toksikologjia e Mjedisit (sëmundja Minamata)",
@@ -1696,7 +1696,7 @@ export const sq_elements = {
     ]
   },
   "81": {
-    "name": "Taliumi",
+    "name": "Talium",
     "ions": "Tl⁺ (Talium(I)), Tl³⁺ (Talium(III))",
     "history": {
       "discoveryYear": "1861",
@@ -1717,11 +1717,11 @@ export const sq_elements = {
     ]
   },
   "82": {
-    "name": "Plumbi",
+    "name": "Plumb",
     "ions": "Pb²⁺ (Plumb (II)), Pb⁴⁺ (Plumb (IV))",
     "history": {
       "discoveryYear": "~ 7000 BCE",
-      "discoveredBy": "Ancient Civilizations",
+      "discoveredBy": "Qytetërimet e Lashta",
       "namedBy": "Plumbi anglo-sakson (Symbol Pb nga latinishtja plumbum)"
     },
     "stse": [
@@ -1759,7 +1759,7 @@ export const sq_elements = {
     ]
   },
   "84": {
-    "name": "Poloniumi",
+    "name": "Polonium",
     "ions": "Po²⁺ (Polonium(II)), Po⁴⁺ (Polonium(IV))",
     "history": {
       "discoveryYear": "1898",
@@ -1798,7 +1798,7 @@ export const sq_elements = {
     ]
   },
   "86": {
-    "name": "Radoni",
+    "name": "Radon",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1900",
@@ -1836,12 +1836,12 @@ export const sq_elements = {
     ]
   },
   "88": {
-    "name": "Radiumi",
-    "ions": "Ra²⁺ (Radiumi)",
+    "name": "Radium",
+    "ions": "Ra²⁺ (Radium)",
     "history": {
       "discoveryYear": "1898",
       "discoveredBy": "Marie & Pierre Curie",
-      "namedBy": "Rrezja latine (rrezja)"
+      "namedBy": "Rrezja latine (radius)"
     },
     "stse": [
       "Të drejtat e punës (rastet e helmimit të \"Vajzave me Radium\")",
@@ -1861,7 +1861,7 @@ export const sq_elements = {
     "history": {
       "discoveryYear": "1899",
       "discoveredBy": "André-Louis Debierne",
-      "namedBy": "aktis (rreze) greke"
+      "namedBy": "Nga greqishtja aktis (rreze)"
     },
     "stse": [
       "Terapia Alfa e synuar (TAT) për kancerin"
@@ -1901,7 +1901,7 @@ export const sq_elements = {
     "history": {
       "discoveryYear": "1913",
       "discoveredBy": "Fajans & Göhring",
-      "namedBy": "Protos greke (e para) + aktinium"
+      "namedBy": "Nga greqishtja protos (e para) + aktinium"
     },
     "stse": [
       "Datimi radiometrik (datimi Protactinium-Thorium)"
@@ -1914,7 +1914,7 @@ export const sq_elements = {
     ]
   },
   "92": {
-    "name": "Uraniumi",
+    "name": "Uranium",
     "ions": "U³⁺ (Uranium(III)), U⁴⁺ (Uranium(IV))",
     "history": {
       "discoveryYear": "1789",
@@ -2029,7 +2029,7 @@ export const sq_elements = {
     ]
   },
   "98": {
-    "name": "Kaliforni",
+    "name": "Kalifornium",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1950",
@@ -2048,12 +2048,12 @@ export const sq_elements = {
     ]
   },
   "99": {
-    "name": "Ajnshtajni",
+    "name": "Ajnshtajn",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1952",
       "discoveredBy": "Albert Ghiorso et al.",
-      "namedBy": "Albert Einstein"
+      "namedBy": "Albert Ajnshtajn"
     },
     "stse": [
       "Shkenca e Luftës së Ftohtë (Zbuluar në mbetjet e bombës H \"Ivy Mike\")"
@@ -2084,7 +2084,7 @@ export const sq_elements = {
     ]
   },
   "101": {
-    "name": "Mendeleviumi",
+    "name": "Mendelevium",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1955",
@@ -2106,7 +2106,7 @@ export const sq_elements = {
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1966",
-      "discoveredBy": "JINR (Russia)",
+      "discoveredBy": "JINR (Rusi)",
       "namedBy": "Alfred Nobel"
     },
     "stse": [
@@ -2178,7 +2178,7 @@ export const sq_elements = {
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1974",
-      "discoveredBy": "Lawrence Berkeley Lab",
+      "discoveredBy": "Laboratori Lawrence Berkeley",
       "namedBy": "Glenn T. Seaborg"
     },
     "stse": [
@@ -2210,7 +2210,7 @@ export const sq_elements = {
     ]
   },
   "108": {
-    "name": "Hasiumi",
+    "name": "Hasium",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "1984",
@@ -2304,7 +2304,7 @@ export const sq_elements = {
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "2003",
-      "discoveredBy": "RIKEN (Japan)",
+      "discoveredBy": "RIKEN (Japoni)",
       "namedBy": "Nga Nihon (Japoni)"
     },
     "stse": [
@@ -2336,12 +2336,12 @@ export const sq_elements = {
     ]
   },
   "115": {
-    "name": "Moskovi",
+    "name": "Moskov",
     "ions": "Nuk ka jone të përbashkët",
     "history": {
       "discoveryYear": "2003",
       "discoveredBy": "JINR (Russia) & Vanderbilt/LLNL (USA)",
-      "namedBy": "Moscow Region"
+      "namedBy": "Rajoni i Moskës"
     },
     "stse": [
       "Sinteza e materies ekstreme"
@@ -2359,7 +2359,7 @@ export const sq_elements = {
     "history": {
       "discoveryYear": "2000",
       "discoveredBy": "LLNL (USA) & JINR (Russia)",
-      "namedBy": "Lawrence Livermore National Laboratory"
+      "namedBy": "Laboratori Kombëtar Lawrence Livermore"
     },
     "stse": [
       "Bashkëpunimi Ndërkombëtar i Shkencës"

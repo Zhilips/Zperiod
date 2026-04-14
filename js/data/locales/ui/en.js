@@ -626,7 +626,7 @@ export const enUI = {
     "card2Title": "Guided Interactive Tutorials",
     "card2Body": "Step-by-step interactive guides added to every tool and element page to help you master chemistry components instantly.",
     "card3Title": "Expanded Language Support",
-    "card3Body": "Core pages, tools, and technical content now features fuller translations across all 8 supported languages.",
+    "card3Body": "Core pages, tools, and technical content now features fuller translations across all 9 supported languages.",
     "card4Title": "Tool Workspace Cleanup",
     "card4Body": "Removed redundant legacy tools and streamlined the workspace interface for a faster and cleaner experience.",
     "card5Title": "Refined Design & Fixes",

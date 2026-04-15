@@ -24,6 +24,7 @@ LANG_CONFIG = {
     "fa": {"module": "fa.js", "export": "fa_elements", "target": "fa"},
     "ur": {"module": "ur.js", "export": "ur_elements", "target": "ur"},
     "tl": {"module": "tl.js", "export": "tl_elements", "target": "tl"},
+    "sq": {"module": "sq.js", "export": "sq_elements", "target": "sq"},
 }
 
 
@@ -126,6 +127,11 @@ DISCOVERY_YEAR_TERMS = {
         "prehistory": "Panahong prehistoriko",
         "bce": "BCE",
         "ce": "CE",
+    },
+    "sq": {
+        "prehistory": "Parahistoria",
+        "bce": "P.E.S",
+        "ce": "E.S.",
     },
 }
 

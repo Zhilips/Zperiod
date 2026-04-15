@@ -16,6 +16,7 @@ LOCALES = {
     "fa": ("fa.js", "fa_elements"),
     "ur": ("ur.js", "ur_elements"),
     "tl": ("tl.js", "tl_elements"),
+    "sq": ("sq.js", "sq_elements"),
     "zh": ("zh.js", "zh_elements"),
     "zh-Hant": ("zhHant.js", "zh_hant_elements"),
 }

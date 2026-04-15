@@ -25,6 +25,7 @@ LANGS = {
     "fa": "fa",
     "ur": "ur",
     "tl": "tl",
+    "sq": "sq",
 }
 
 

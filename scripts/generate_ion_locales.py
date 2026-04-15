@@ -27,6 +27,7 @@ LANG_CONFIG = {
     "fa": {"module": "fa.js", "export": "fa_ions", "target": "fa"},
     "ur": {"module": "ur.js", "export": "ur_ions", "target": "ur"},
     "tl": {"module": "tl.js", "export": "tl_ions", "target": "tl"},
+    "sq": {"module": "sq.js", "export": "sq_ions", "target": "sq"},
 }
 
 ZH_NAME_OVERRIDES = {
@@ -104,6 +105,17 @@ SLOT_LABEL_CANONICAL = {
     "COLOR": "Color",
     "SLIPPERY": "Slippery",
 }
+
+SQ_REPLACEMENTS = [
+    (r"\bGreek\b", "Greqisht"),
+    (r"\bw/\s*", "me "),
+    (r"\bPrecipitate\b", "precipitat"),
+    (r"\bKation / Acid\b", "Kation / acid"),
+    (r"\bAcid/Bazë\b", "acid/bazë"),
+    (r"\bFrom Sulfuric Acid\b", "Nga acidi sulfurik"),
+    (r"\bBëhet e Kuqe\b", "Bëhet e kuqe"),
+    (r"\bDark Blue\b", "Blu e errët"),
+]
 
 opencc = OpenCC("s2tw")
 
@@ -215,6 +227,7 @@ def load_element_names_by_symbol(lang_code: str, rows: list[dict[str, str]]) -> 
         "fa": ("js/data/locales/fa.js", "fa_elements"),
         "ur": ("js/data/locales/ur.js", "ur_elements"),
         "tl": ("js/data/locales/tl.js", "tl_elements"),
+        "sq": ("js/data/locales/sq.js", "sq_elements"),
     }
     filename, export_name = locale_map[lang_code]
     payload = load_json_module(ROOT / filename, export_name)
@@ -311,6 +324,9 @@ def normalize_text(lang_code: str, text: str) -> str:
     if lang_code in {"zh", "zh-Hant"}:
         normalized = normalized.replace(" / ", "/")
         normalized = normalized.replace("；", "; ")
+    if lang_code == "sq":
+        for pattern, replacement in SQ_REPLACEMENTS:
+            normalized = re.sub(pattern, replacement, normalized)
     return normalized
 
 
@@ -596,7 +612,7 @@ def parse_args() -> argparse.Namespace:
         "--langs",
         nargs="+",
         choices=sorted(list(LANG_CONFIG.keys()) + ["zh-Hant"]),
-        default=["zh", "zh-Hant", "fr", "ru", "fa", "ur", "tl"],
+        default=["zh", "zh-Hant", "fr", "ru", "fa", "ur", "tl", "sq"],
     )
     return parser.parse_args()
 

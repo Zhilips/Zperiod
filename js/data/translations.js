@@ -10,6 +10,7 @@ import { ruUI } from "./locales/ui/ru.js";
 import { faUI } from "./locales/ui/fa.js";
 import { urUI } from "./locales/ui/ur.js";
 import { tlUI } from "./locales/ui/tl.js";
+import { siUI } from "./locales/ui/si.js";
 
 /**
  * All UI translations organized by language code.
@@ -23,5 +24,6 @@ export const translations = {
   "ru": ruUI,
   "fa": faUI,
   "ur": urUI,
-  "tl": tlUI
+  "tl": tlUI,
+  "si": siUI
 };

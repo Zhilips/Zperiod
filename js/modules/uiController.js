@@ -254,6 +254,7 @@ function localizeNoAdditionalData() {
   if (lang.startsWith("fa")) return "اطلاعات تکمیلی موجود نیست.";
   if (lang.startsWith("ur")) return "مزید تفصیلی معلومات دستیاب نہیں۔";
   if (lang.startsWith("tl")) return "Wala pang karagdagang detalye.";
+  if (lang.startsWith("si")) return "තව විස්තරාත්මක දත්ත නොමැත.";
   return "No additional data available.";
 }
 
@@ -275,6 +276,9 @@ function buildLocalizedCommonIonNote(element, symbol) {
   }
   if (lang.startsWith("tl")) {
     return `${symbol} ay isang karaniwang ion ng ${localizedName} sa mga karaniwang compound nito.`;
+  }
+  if (lang.startsWith("si")) {
+    return `${symbol} යනු එහි පොදු සංයෝගවල දක්නට ලැබෙන ${localizedName} හි පොදු අයනයකි.`;
   }
   return `${symbol} is a common ion of ${element.name} in its usual compounds.`;
 }
@@ -562,6 +566,14 @@ function buildIsotopeFallbackNote(element, isotope) {
     if (isRadioactive && /trace/i.test(percentText)) return "Radyoaktibong isotope na matatagpuan lamang sa bakas na dami sa kalikasan.";
     if (isRadioactive && abundance) return `Radyoaktibong isotope ng ${localizeElementName(element)}; likas na kasaganaan ${abundance}.`;
     if (isRadioactive) return `Radyoaktibong isotope ng ${localizeElementName(element)}.`;
+    return localizeNoAdditionalData();
+  }
+  if (lang.startsWith("si")) {
+    if (isStable && abundance) return `ස්ථායී අයිසොටෝප්; ස්වභාවික ව්‍යාප්තිය ${abundance}.`;
+    if (isStable) return `ස්ථායී අයිසොටෝප් ${localizeElementName(element)}.`;
+    if (isRadioactive && /trace/i.test(percentText)) return "විකිරණශී ලී අයිසොටෝප් ස්වභාවිකව පමණක් සොයාගත හැකි පරිමාවක පවතී.";
+    if (isRadioactive && abundance) return `විකිරණශී ලී අයිසොටෝප් ${localizeElementName(element)}; ස්වභාවික ව්‍යාප්තිය ${abundance}.`;
+    if (isRadioactive) return `විකිරණශී ලී අයිසොටෝප් ${localizeElementName(element)}.`;
     return localizeNoAdditionalData();
   }
 

@@ -1,3 +1,6 @@
 {
-    "liveServer.settings.port": 5504
+    "liveServer.settings.port": 5504,
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false
 }

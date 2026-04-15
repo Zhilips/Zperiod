@@ -5,7 +5,7 @@
 import { translations } from "../data/translations.js";
 
 const STORAGE_KEY = "zperiod_lang";
-const SUPPORTED = ["en", "zh", "zh-Hant", "fr", "ru", "fa", "ur", "tl"];
+const SUPPORTED = ["en", "zh", "zh-Hant", "fr", "ru", "uk", "fa", "ur", "tl"];
 const DEFAULT = "en";
 
 let lang = DEFAULT;
@@ -44,6 +44,10 @@ const ELEMENT_LOCALE_LOADERS = {
     const module = await import("../data/locales/tl.js");
     return module.tl_elements;
   },
+  uk: async () => {
+    const module = await import("../data/locales/uk.js");
+    return module.uk_elements;
+  },
 };
 
 const ION_LOCALE_LOADERS = {
@@ -74,6 +78,10 @@ const ION_LOCALE_LOADERS = {
   tl: async () => {
     const module = await import("../data/locales/ions/tl.js");
     return module.tl_ions;
+  },
+  uk: async () => {
+    const module = await import("../data/locales/ions/uk.js");
+    return module.uk_ions;
   },
 };
 

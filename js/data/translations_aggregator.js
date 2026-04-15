@@ -12,6 +12,7 @@ import { ruUI } from "./locales/ui/ru.js";
 import { faUI } from "./locales/ui/fa.js";
 import { urUI } from "./locales/ui/ur.js";
 import { tlUI } from "./locales/ui/tl.js";
+import { ukUI } from "./locales/ui/uk.js";
 
 export const translations = {
   "en": enUI,
@@ -22,4 +23,5 @@ export const translations = {
   "fa": faUI,
   "ur": urUI,
   "tl": tlUI,
+  "uk": ukUI,
 };

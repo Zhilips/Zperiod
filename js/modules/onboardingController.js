@@ -209,6 +209,7 @@ export function initOnboardingFlow() {
         <button class="lang-btn" data-lang="zh-Hant">繁體中文</button>
         <button class="lang-btn" data-lang="fr">Français</button>
         <button class="lang-btn" data-lang="ru">Русский</button>
+        <button class="lang-btn" data-lang="uk">Українська</button>
         <button class="lang-btn" data-lang="fa">فارسی</button>
         <button class="lang-btn" data-lang="ur">اردو</button>
         <button class="lang-btn" data-lang="tl">Tagalog</button>
@@ -237,7 +238,7 @@ export function initOnboardingFlow() {
   }, 1600);
 
   function startDanmaku() {
-    const supportedLangs = ["en", "zh", "zh-Hant", "fr", "ru", "fa", "ur", "tl"];
+    const supportedLangs = ["en", "zh", "zh-Hant", "fr", "ru", "uk", "fa", "ur", "tl"];
     const allPhrases = [];
     supportedLangs.forEach(l => {
         const phrases = t(`onboarding.phrases`, [], l);
